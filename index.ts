@@ -1,24 +1,18 @@
-import express from 'express';
-// rest of the code remains same
-import {PrismaClient} from '@prisma/client'
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+
+
+//Import routes 
+import Index from './routes/main'
+import Users from './routes/users'
 
 const app = express();
 const PORT = 8080;
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-app.get('/', async (req, res) => {
-  
-  let {name, email} = req.query
-  // let user = await prisma.user.create({
-  //   data: {
-  //     email:"email1@yahoo.com",
-  //     password: "password"
-  //   }
-  // })
-  // console.log(user)
-  res.send({name, email})
-  });
 
+app.use('/', Index)
+app.use('/users', Users)
 
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
