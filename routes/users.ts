@@ -1,7 +1,6 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import db from '../lib/prisma'
 
-const prisma = new PrismaClient()
 const router = express.Router()
 
 router.get("/", async (req, res) => {
@@ -11,7 +10,7 @@ router.get("/", async (req, res) => {
       res.send({ error: "Invalid name" });
     }
     try {
-      let user = await prisma.user.create({
+      let user = await db.user.create({
         data: {
           email: `${name}@fakemail.oo`,
           password: "password",
