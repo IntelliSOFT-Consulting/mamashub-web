@@ -1,11 +1,11 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import * as SwaggerUI from 'swagger-ui-express'
+
+import swaggerDoc from './../swagger.json' 
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-
-    res.send({hey:"Amolo"})
-})
+router.use('/', SwaggerUI.serve)
+router.get('/', SwaggerUI.setup(swaggerDoc))
 
 export default router

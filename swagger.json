@@ -1,0 +1,23 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1",
+      "title": "NNDAK API",
+      "description": "NNDAK API",
+      "license": {
+        "name": "IntelliSOFT Consulting",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "API for users in the system"
+      }
+    ],
+    "schemes": ["http", "https"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+  }
