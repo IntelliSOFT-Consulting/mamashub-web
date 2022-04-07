@@ -13,9 +13,9 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "dev": "nodemon index.ts",
+    "dev": "nodemon ./src/index.ts",
     "start": "node ./build/index.js",
-    "build": "tsc --project ./",
+    "build": "tsc --project ./src",
     "migrate": "yarn prisma migrate dev --preview-feature",
     "studio": "yarn prisma studio"
   }
