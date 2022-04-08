@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const prisma_1 = __importDefault(require("../lib/prisma"));
 const router = express_1.default.Router();
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// Generate Access Token
+router.post("/oauth/token", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { name } = req.query;
     if (!name) {
         res.statusCode = 403;
@@ -38,4 +39,30 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 }));
+// Register User
+router.get("/oauth/token", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { name } = req.query;
+    if (!name) {
+        res.statusCode = 403;
+        res.send({ error: "Invalid name" });
+    }
+    try {
+        let user = yield prisma_1.default.user.create({
+            data: {
+                email: `${name}@fakemail.oo`,
+                password: "password",
+            },
+        });
+        console.log(user);
+        res.send({ data: user, status: "success" });
+    }
+    catch (error) {
+        res.statusCode = 401;
+        if (error.code == 'P2002') {
+            res.send({ status: "error", message: "User already exists" });
+        }
+    }
+}));
+// Login
+// Password Reset 
 exports.default = router;

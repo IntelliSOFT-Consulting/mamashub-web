@@ -14,7 +14,24 @@ generator client {
 model User{
 
   id String @default(uuid()) @id
+  names String?
+  roles ROLES[]
   email String @unique
   password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+}
+
+
+
+
+enum ROLES {
+  ADMINISTRATOR
+  STAFF
+  NURSE
+  PEDIATRICIAN
+  NURSE_COUNSELLOR
+  CLINICIAN
+  NUTRITIONIST
 }
