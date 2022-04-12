@@ -19,6 +19,7 @@
     "start": "node ./build/index.js",
     "build": "tsc --project ./src",
     "migrate": "yarn prisma migrate dev --preview-feature",
-    "studio": "yarn prisma studio"
+    "studio": "yarn prisma studio",
+    "getClient": "yarn prisma generate"
   }
 }
