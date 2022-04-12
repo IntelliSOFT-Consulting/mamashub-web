@@ -1,0 +1,103 @@
+import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
+import { useState, } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { setCookie } from '../lib/cookie'
+import * as qs from 'query-string';
+
+
+export default function SetNewPassword() {
+
+    let [password, setPassword] = useState({})
+    let [confirmPassword, setConfirmPassword] = useState({})
+    let navigate = useNavigate()
+    let [open, setOpen] = useState(false)
+    let [message, setMessage] = useState(false)
+
+    let args = qs.parse(window.location.search);
+    // console.log(args)
+
+    let setNewPassword = async () => {
+        if (confirmPassword !== password) {
+            setMessage("Passwords must match")
+            setOpen(true)
+            return
+        }
+        let data = (await (await fetch(`/api/method/fosa.api.auth.set_new_password`,
+            {
+                method: 'POST',
+                headers: { "Content-Type": "application/json", },
+                body: JSON.stringify({ email: (args.email ? args.email : null), password: password, token: (args.token ? args.token : null) })
+            }
+        )).json())
+        console.log(data)
+        if (data.status === "error") {
+            setMessage(data.error)
+            setOpen(true)
+            return
+        }
+        else {
+            setCookie("token", data.token, 24)
+            navigate('/login')
+            return
+        }
+
+    }
+    return (
+        <>
+            <Container>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    open={open}
+                    onClose={""}
+                    message={message}
+                    key={"loginAlert"}
+                />
+                <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
+                        <br />
+                        <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
+                            <CardHeader title="Reset Password" sx={{ color: "purple" }}></CardHeader>
+                            <CardContent>
+                                <TextField
+                                    sx={{ minWidth: "100%" }}
+                                    type="password"
+                                    placeholder="Password"
+                                    size="small"
+                                    onChange={e => { setPassword(e.target.value) }}
+
+                                />
+                                <br /><br />
+                                <TextField
+                                    sx={{ minWidth: "100%" }}
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    size="small"
+                                    onChange={e => { setConfirmPassword(e.target.value) }}
+
+                                />
+                                <br />
+                                <br />
+                                <Button variant="contained"
+                                    disableElevation onClick={e => { setNewPassword() }}
+                                    sx={{ width: "50%", marginLeft: "25%", backgroundColor: "purple" }}
+                                >RESET PASSWORD</Button>
+                            </CardContent>
+                        </Card>
+                        <br />
+                        <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ width: "50%", marginLeft: "25%", color: "purple" }}
+                        >BACK TO LOGIN</Button>
+                    </Grid>
+                </Grid>
+            </Container>
+        </>
+    )
+
+}
+
+
+
+
