@@ -5,10 +5,12 @@ export interface User {
     password: string;
 }
 
+
+// export type Role = 'admin'| ''
+
 export interface Session {
-    id: number;
     createdAt: number;
-    username: string;
+    userId: string;
     role: string;
     /**
      * Timestamp indicating when the session was created, in Unix milliseconds.
@@ -42,3 +44,7 @@ export type DecodeResult =
     | {
           type: "invalid-token";
       };
+
+
+
+export type ExpirationStatus = "expired" | "active" | "grace";
