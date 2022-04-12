@@ -1,10 +1,10 @@
 FROM node:alpine
-WORKDIR /usr/yourapplication-name
+WORKDIR /usr/nndak-api
 COPY package.json .
-RUN npm install\
-    && npm install typescript -g && npm install --global yarn
+RUN npm install typescript yarn -g --force
+RUN yarn install
 COPY . .
-RUN yarn migrate
+RUN yarn getClient
 RUN tsc
 EXPOSE 8080
 CMD ["node", "./build/index.js"]
