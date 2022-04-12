@@ -1,5 +1,5 @@
 import express, {Request, Response} from "express";
-import { requireJWTMiddleware as requireJWT } from "../lib/jwt";
+import { requireJWTMiddleware as requireJWT, encodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 
 const router = express.Router()
@@ -31,12 +31,31 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
 // Login
 router.post("/login", async (req: Request, res: Response) => {
     try {
-        let { email, password } = req.body;
-        let user = db.user.findFirst({
+        let { email ,username, password } = req.body;
+        if(!email && !password && !email){
+            res.statusCode = 400
+            res.json({status:"error", message: "email or username is required to login"})
+            return
+        }
+        let user = await db.user.findFirst({
             where: {
-                email: email
+                ...(email) && {email},
+                ...(username) && {username}
             }
         })
+        if(user?.password === password){
+            let session = encodeSession((process.env['SECRET_KEY'] as string), {
+                createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
+                userId: user?.id as string,
+                role: user?.role as string
+            })
+            res.json({status:"success",token:session.token, issued: session.issued, expires: session.expires})
+            return
+        }else{
+            res.statusCode = 401
+            res.json({status:"error", message: "Incorrect username/password or password provided"})
+            return
+        }
 
     } catch (error) {
         console.log(error)
@@ -44,14 +63,6 @@ router.post("/login", async (req: Request, res: Response) => {
         res.send({ error: "incorrect email or password" });
         return
     }
-
-
-
-    
-    res.statusCode = 401
-    res.send({ error: "incorrect email or password" });
-    return
-
 });
 
 
