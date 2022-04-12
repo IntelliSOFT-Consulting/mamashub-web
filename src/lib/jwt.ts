@@ -3,7 +3,6 @@ import { DecodeResult, EncodeResult, PartialSession, Session, ExpirationStatus }
 import { Request, Response, NextFunction } from 'express';
 
 
-let SECRET_KEY = 'not_a_secret_key'
 
 export function encodeSession(secretKey: string, partialSession: PartialSession): EncodeResult {
     // Always use HS512 to sign the token
@@ -108,10 +107,10 @@ export function requireJWTMiddleware(request: Request, response: Response, next:
         return;
     }
 
-    const decodedSession: DecodeResult = decodeSession(SECRET_KEY, header);
+    const decodedSession: DecodeResult = decodeSession(process.env['SECRET_KEY'] as string, header.split(' ')[1]);
     
     if (decodedSession.type === "integrity-error" || decodedSession.type === "invalid-token") {
-        unauthorized(`Failed to decode or validate authorization token. Reason: ${decodedSession.type}.`);
+        unauthorized(`Failed to validate authorization token. Reason: ${decodedSession.type}.`);
         return;
     }
 
@@ -126,7 +125,7 @@ export function requireJWTMiddleware(request: Request, response: Response, next:
 
     if (expiration === "grace") {
         // Automatically renew the session and send it back with the response
-        const { token, expires, issued } = encodeSession(SECRET_KEY, decodedSession.session);
+        const { token, expires, issued } = encodeSession(process.env['SECRET_KEY'] as string, decodedSession.session);
         session = {
             ...decodedSession.session,
             expires: expires,

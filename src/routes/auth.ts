@@ -1,5 +1,6 @@
 import express, {Request, Response} from "express";
-import { requireJWTMiddleware as requireJWT, encodeSession } from "../lib/jwt";
+import { read } from "fs";
+import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 
 const router = express.Router()
@@ -17,13 +18,36 @@ router.post("/token", async (req, res) => {
 
 // Get User Information.
 router.get("/me", [requireJWT], async (req: Request, res: Response) => {
-    let token = req.headers.authorization || null;
-
-    if (!token) {
-        res.statusCode = 401
-        res.send({ error: "invalid access token" });
+    try {
+        let token = req.headers.authorization || null;
+        if (!token) {
+            res.statusCode = 401
+            res.send({ error: "invalid access token" });
+            return
+        }
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
+        console.log(decodedSession)
+        if(decodedSession.type == 'valid'){
+            let userId = decodedSession.session.userId
+            let user = await db.user.findFirst({
+                where:{
+                    id: userId
+                }
+            })
+            let responseData = {id:user?.id, createdAt:user?.createdAt, updatedAt: user?.updatedAt, names:user?.names, email: user?.email, role: user?.role}
+            res.statusCode = 200
+            res.json(responseData)
+            return
+        }                   
+    } catch (error) {
+        console.log(error)
+        res.statusCode = 400
+        res.json(error)
         return
+        
     }
+    
+    
 
 });
 
@@ -91,8 +115,6 @@ router.post("/register", async (req: Request, res: Response) => {
 });
 
 
-
-// Password Reset
 // Register
 router.post("/reset-password", async (req: Request, res: Response) => {
     try {
