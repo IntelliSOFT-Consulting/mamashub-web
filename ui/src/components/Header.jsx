@@ -6,18 +6,9 @@ import { getCookie } from '../lib/cookie';
 
 
 export default function Header() {
-  let title = "Maslai SACCO"
+  let title = "Human Milk Bank"
   let pages = [
-    { 'My Loans': "/loans" },
-    { 'My Statement': "/statement" },
-    { 'Make Repayment': "/loan-repayment" },
-    { 'My Savings': "/savings" },
-    { 'My Loan Repayments': "/loan-repayments" },
-    { 'My Payments': "/payments" },
     { 'My Account': "/my-account" },
-    { 'Register Group': "/register-group" },
-    { 'Groups': "/my-groups" },
-
   ]
   let navigate = useNavigate()
   const settings = [{ 'My Account': '/my-account' }, { 'Logout': "/logout" },];
@@ -52,7 +43,7 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ color: 'white', backgroundColor: 'green' }}>
+      <AppBar position="fixed" sx={{ color: 'white', backgroundColor: '#115987' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography
@@ -95,7 +86,7 @@ export default function Header() {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={Object.keys(page)[0]} onClick={handleCloseNavMenu} sx={{ color: "green" }}>
+                  <MenuItem key={Object.keys(page)[0]} onClick={handleCloseNavMenu} sx={{ color: "#115987" }}>
                     <Typography textAlign="center" onClick={e => { navigate(`${page[Object.keys(page)[0]]}`) }}>{Object.keys(page)[0]}</Typography>
                   </MenuItem>
                 ))}
@@ -115,7 +106,7 @@ export default function Header() {
                 <Button
                   key={Object.keys(page)[0]}
                   onClick={e => { navigate(`${page[Object.keys(page)[0]]}`); handleCloseNavMenu() }}
-                  sx={{ my: 2, color: 'green', display: 'block' }}
+                  sx={{ my: 2, color: '#115987', display: 'block' }}
                 >
                   {Object.keys(page)[0]}
                 </Button>
@@ -150,7 +141,7 @@ export default function Header() {
                   </MenuItem>
                 ))}
               </Menu>
-            </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "green" }}>LOGIN</Button>}
+            </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
           </Toolbar>
         </Container>
       </AppBar>
