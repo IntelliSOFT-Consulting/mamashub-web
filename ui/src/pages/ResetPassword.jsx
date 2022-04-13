@@ -47,9 +47,9 @@ export default function ResetPassword(){
             <Grid item xs={12} lg={6} md={12} sx={{paddingTop:"10%"}}>
                 <br/>
             <Card sx={{maxWidth:"500px",backgroundColor:"", border:"1px black solid"}}>
-                <CardHeader title="Reset Password" sx={{color:"purple"}}></CardHeader>
+                <CardHeader title="Reset Password" sx={{color:"#115987"}}></CardHeader>
                 <CardContent>
-                    <TextField
+                    <TextField  
                     sx={{minWidth:"100%"}}
                     type="email"
                     placeholder="Email address"
@@ -59,12 +59,12 @@ export default function ResetPassword(){
                     <br/><br/>   
                     <Button variant="contained"
                      disableElevation onClick={e=>{resetPassword()}}
-                    sx={{width:"50%", marginLeft:"25%", backgroundColor:"purple"}}
+                    sx={{width:"50%", marginLeft:"25%", backgroundColor:"#115987"}}
                     >RESET PASSWORD</Button>
                 </CardContent>
             </Card>
             <br/>
-            <Button variant="outlined" onClick={e=>{navigate('/login')}} sx={{width:"50%", marginLeft:"25%", color:"purple"}}
+            <Button variant="outlined" onClick={e=>{navigate('/login')}} sx={{width:"50%", marginLeft:"25%", color:"#115987"}}
             >BACK TO LOGIN</Button>
             </Grid>
             </Grid>
