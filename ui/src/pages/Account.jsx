@@ -57,8 +57,6 @@ export default function Account() {
                     <Divider orientation="horizontal" />
                     <br />
 
-                    <Typography variant="h6">Loan Limit:</Typography>
-                    <Typography variant="h4">KES {profile.member.loan_limit}</Typography>
 
                     <br />
                     <Divider orientation="horizontal" />
