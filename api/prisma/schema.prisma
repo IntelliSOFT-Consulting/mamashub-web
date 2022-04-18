@@ -10,22 +10,21 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
 
-model User{
-
-  id String @default(uuid()) @id
-  names String
-  username String
-  role ROLE
-  email String @unique
-  password String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  String    @id @default(uuid())
+  names               String
+  username            String    @unique
+  role                ROLE
+  email               String    @unique
+  password            String
+  salt                String
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
 }
-
-
-
 
 enum ROLE {
   ADMINISTRATOR
