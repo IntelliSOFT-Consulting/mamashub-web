@@ -1,23 +1,224 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1",
-      "title": "NNDAK API",
-      "description": "NNDAK API",
-      "license": {
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Human Milk Bank",
+    "version": "0.1.0",
+    "description":
+        "API to support the Human Milk Bank applications.",
+    "license": {
         "name": "IntelliSOFT Consulting",
-        "url": "https://opensource.org/licenses/MIT"
+        "url": "https://intellisoftkenya.com"
+    },
+    "contact": {
+        "name": "IntelliSOFT Consulting",
+        "url": "https://intellisoftkenya.com",
+        "email": "dev@intellisoftkenya.com"
+    }
+  },
+  "servers": [{
+      "url": "http:/localhost:8080/",
+      "description": "Local Dev"
+    },
+    {
+      "url": "https://dev.nndak.intellisoftkenya.com/nndak-api/",
+      "description": "Test Server"
+    }
+  ],
+  "tags": [{
+    "name": "users",
+    "description": "API for users in the system"
+  }],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get all users in system as the administrator",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create a new user in system",
+        "requestBody": {
+          "description": "Cat Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Cat"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
       }
     },
-    "host": "localhost:8080",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "Users",
-        "description": "API for users in the system"
+    "/users/{id}": {
+      "parameters": [{
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID of the cat that we want to match",
+        "type": "string"
+      }],
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get cat with given ID",
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Cat with id",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cat"
+            }
+          },
+          "404": {
+            "description": "Failed. Cat not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update cat with given ID",
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "description": "Cat Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Cat"
+              }
+            }
+          }
+        },
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Cat with new values of properties",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cat"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "Failed. Cat not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete cat with given ID",
+        "tags": [
+          "users"
+        ],
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Delete Cat with id",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/id"
+            }
+          },
+          "404": {
+            "description": "Failed. Cat not found."
+          }
+        }
       }
-    ],
-    "schemes": ["http", "https"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"]
+    }
+  },
+  "definitions": {
+    "id": {
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "Cat": {
+      "type": "object",
+      "properties": {
+        "genus": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isHungry": {
+          "type": "boolean"
+        },
+        "lastFedDate": {
+          "type": "string"
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Cat"
+          }
+        }
+      }
+    }
   }
+}
