@@ -59,14 +59,14 @@ export default function HeaderDrawer({ content }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#115987' }}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#115987' }} elevation={0}>
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
            {title}
           </Typography>
           {getCookie("token") ? 
           (
-            <div>
+           
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -78,7 +78,7 @@ export default function HeaderDrawer({ content }) {
                 <AccountCircle />
               </IconButton>
              
-            </div>) : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
+            ) : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -93,7 +93,7 @@ export default function HeaderDrawer({ content }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#115987', color: 'white' }} >
           <List>
-            {['Dashboard', 'Maternity Registration', 'Assesment', 'New Born'].map((text, index) => (
+            {['Dashboard', 'Maternity Registration', 'Assessment', 'Post Natal Unit'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>
                   <Menu sx={{ color: 'white' }} />
@@ -104,7 +104,18 @@ export default function HeaderDrawer({ content }) {
           </List>
           <Divider />
           <List>
-            {['Post Natal', 'Human Milk Bank', 'Monitoring and Assessment', 'Patients List'].map((text, index) => (
+            {['New Born Unit', 'Human Milk Bank', 'Monitoring and Assessment', 'Patients List'].map((text, index) => (
+              <ListItem sx={{fontSize:'10px'}} button key={text}>
+                <ListItemIcon>
+                  <Menu sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText   primary={text} />
+              </ListItem>
+            ))}
+          </List>
+
+          <List>
+            {['Users', 'My Account', 'Settings'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>
                   <Menu sx={{ color: 'white' }} />
@@ -113,16 +124,12 @@ export default function HeaderDrawer({ content }) {
               </ListItem>
             ))}
           </List>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        {content}
+        <content/>
       </Box>
     </Box>
   );
