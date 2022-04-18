@@ -1,6 +1,6 @@
 ### Human Milk Bank
 
-This is web application created to
+This is a web application created to
 1. Support the [Android reference application](https://github.com/IntelliSOFT-Consulting/human-milk-bank) for the WHO NNDAK to support linking Newborn Units and Human Milk Banks.
 2. Support Administration Functionality of the same application.
 
