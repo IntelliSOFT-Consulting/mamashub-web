@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { setCookie } from '../lib/cookie'
 import * as qs from 'query-string';
 
 
@@ -17,27 +16,32 @@ export default function SetNewPassword() {
     // console.log(args)
 
     let setNewPassword = async () => {
+        setOpen(false)
         if (confirmPassword !== password) {
             setMessage("Passwords must match")
             setOpen(true)
             return
         }
-        let data = (await (await fetch(`/api/method/fosa.api.auth.set_new_password`,
+        let data = (await (await fetch(`/auth/new-password`,
             {
                 method: 'POST',
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify({ email: (args.email ? args.email : null), password: password, token: (args.token ? args.token : null) })
+                headers: { "Content-Type": "application/json", "Authorization":`Bearer ${args.token}`},
+                body: JSON.stringify({ id: args.id, password: password})
             }
         )).json())
         console.log(data)
+        setOpen(false)
         if (data.status === "error") {
             setMessage(data.error)
             setOpen(true)
             return
         }
         else {
-            setCookie("token", data.token, 24)
-            navigate('/login')
+            setMessage(data.message)
+            setOpen(true)
+            setTimeout(() => {
+                navigate('/login')
+            }, 3000);
             return
         }
 

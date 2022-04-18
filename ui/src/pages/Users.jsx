@@ -12,26 +12,26 @@ import { useNavigate } from 'react-router'
 // import { MdOutlineAccountBox } from 'react-icons/md'
 
 
-export default function Index() {
+export default function Users() {
 
-    let [user, setUser] = useState(null)
+    let [users, setUsers] = useState(null)
     let isMobile = useMediaQuery('(max-width:600px)');
     let navigate = useNavigate()
 
-    let getUser = async () => {
-        let response = (await (await fetch(`/auth/me`,
+    let getUsers = async () => {
+        let data = (await (await fetch(`/users`,
             { method: "GET", headers: { "Content-Type": "application/json",  "Authorization":`Bearer ${getCookie("token")}` } })).json())
-        setUser(response.data)
+        setUsers(data.users)
         return
     }
 
     useEffect(() => {
         if (getCookie("token")) {
-            getUser()
+            getUsers()
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/")
+            window.localStorage.setItem("next_page", "/users")
             return
         }
     }, [])
@@ -39,30 +39,29 @@ export default function Index() {
 
     return (
         <>
-            {isMobile?<Header /> : <HeaderDrawer content={PageContent}/> }
+            {isMobile? 
+                <Header />
+                : <HeaderDrawer /> }
+
+                <Container sx={{padding:'2em'}}>
+                    <Card sx={{ backgroundColor: "#115987", color: "black", opacity: ".75" }}>
+                        <CardContent> <br />
+                            <Divider sx={{ backgroundColor: "white" }}></Divider>
+        <Typography variant="h5" textAlign="center">Hahah</Typography>
+
+                            <br />
+                        </CardContent>
+                    </Card>
+        <br />
+        <br />
+        
+        <br />
+    </Container>
            
         </>
     )
 }
 
-
-let PageContent = () => {
-    return (
-        <Container>
-        <Card sx={{ backgroundColor: "#115987", color: "white", opacity: ".75" }}>
-            <CardContent> <br />
-                <Divider sx={{ backgroundColor: "white" }}></Divider>
-                <br />
-            </CardContent>
-        </Card>
-        <br />
-        <Typography variant="h5" textAlign="center">My Services</Typography>
-        <br />
-        
-        <br />
-    </Container>
-    )
-}
 
 let Icon = ({ title, url, icon = null }) => {
 
