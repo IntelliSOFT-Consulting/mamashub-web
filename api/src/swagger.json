@@ -3,20 +3,19 @@
   "info": {
     "title": "Human Milk Bank",
     "version": "0.1.0",
-    "description":
-        "API to support the Human Milk Bank applications.",
+    "description": "API to support the Human Milk Bank applications.",
     "license": {
-        "name": "IntelliSOFT Consulting",
-        "url": "https://intellisoftkenya.com"
+      "name": "IntelliSOFT Consulting",
+      "url": "https://intellisoftkenya.com"
     },
     "contact": {
-        "name": "IntelliSOFT Consulting",
-        "url": "https://intellisoftkenya.com",
-        "email": "dev@intellisoftkenya.com"
+      "name": "IntelliSOFT Consulting",
+      "url": "https://intellisoftkenya.com",
+      "email": "dev@intellisoftkenya.com"
     }
   },
   "servers": [{
-      "url": "http:/localhost:8080/",
+      "url": "/",
       "description": "Local Dev"
     },
     {
@@ -35,37 +34,84 @@
     "application/json"
   ],
   "paths": {
-    "/users": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Get all users in system as the administrator",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/users"
-            }
-          }
-        }
-      },
+    "/auth/login": {
       "post": {
         "tags": [
-          "users"
+          "auth"
         ],
-        "summary": "Create a new user in system",
+        "summary": "Login and generate access token",
         "requestBody": {
-          "description": "Cat Object",
+          "description": "Create a new user in system",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/definitions/Cat"
+                "$ref": "#/definitions/Login"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
+            }
+          },
+          "400": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Reset Password",
+        "requestBody": {
+          "description": "Send password reset request. Check email for password reset link.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Reset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
+            }
+          },
+          "400": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get user information for current user",
         "produces": [
           "application/json"
         ],
@@ -73,13 +119,46 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/id"
+              "$ref": "#/definitions/Login"
+            }
+          }
+        }
+      }
+    },
+    "/auth/new-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login and generate access token",
+        "requestBody": {
+          "description": "Create a new user in system",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
             }
           },
           "400": {
-            "description": "Failed. Bad post data."
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
           }
-        }
+        },
+        "produces": [
+          "application/json"
+        ]
       }
     },
     "/users/{id}": {
@@ -87,19 +166,19 @@
         "name": "id",
         "in": "path",
         "required": true,
-        "description": "ID of the cat that we want to match",
+        "description": "ID of the user that we want to match",
         "type": "string"
       }],
       "get": {
         "tags": [
           "users"
         ],
-        "summary": "Get cat with given ID",
+        "summary": "Get user with given ID",
         "parameters": [{
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Cat with id",
+          "description": "User with id",
           "schema": {
             "$ref": "#/definitions/id"
           }
@@ -112,17 +191,17 @@
             }
           },
           "404": {
-            "description": "Failed. Cat not found."
+            "description": "Failed. User not found."
           }
         }
       },
       "put": {
-        "summary": "Update cat with given ID",
+        "summary": "Update user with given ID",
         "tags": [
           "users"
         ],
         "requestBody": {
-          "description": "Cat Object",
+          "description": "User Object",
           "required": true,
           "content": {
             "application/json": {
@@ -136,7 +215,7 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Cat with new values of properties",
+          "description": "User with new values of properties",
           "schema": {
             "$ref": "#/definitions/id"
           }
@@ -152,12 +231,12 @@
             "description": "Failed. Bad post data."
           },
           "404": {
-            "description": "Failed. Cat not found."
+            "description": "Failed. User not found."
           }
         }
       },
       "delete": {
-        "summary": "Delete cat with given ID",
+        "summary": "Delete user with given ID",
         "tags": [
           "users"
         ],
@@ -165,7 +244,7 @@
           "in": "path",
           "name": "id",
           "required": true,
-          "description": "Delete Cat with id",
+          "description": "Delete User with id",
           "schema": {
             "$ref": "#/definitions/id"
           }
@@ -178,16 +257,29 @@
             }
           },
           "404": {
-            "description": "Failed. Cat not found."
+            "description": "Failed. User not found."
           }
         }
       }
     }
   },
   "definitions": {
-    "id": {
+    "data": {
       "properties": {
-        "uuid": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "error": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "status": {
           "type": "string"
         }
       }
@@ -209,13 +301,43 @@
         }
       }
     },
-    "users": {
+    "Login": {
       "type": "object",
       "properties": {
-        "users": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "Password": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        },
+        "Reset": {
           "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Cat"
+          "properties": {
+            "password": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "users": {
+            "type": "object",
+            "properties": {
+              "users": {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/definitions/Cat"
+                }
+              }
+            }
           }
         }
       }

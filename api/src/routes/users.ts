@@ -37,7 +37,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
 });
 
 // Modify User Details
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id",[], async (req: Request, res: Response) => {
     try {
         let data = req.body;
         let { id } = req.params
