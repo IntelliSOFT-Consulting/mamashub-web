@@ -6,6 +6,7 @@ import Index from './pages/Index'
 import ResetPassword from './pages/ResetPassword'
 import SetNewPassword from './pages/SetNewPassword'
 import Account from './pages/Account'
+import Users from './pages/Users'
 
 
 
@@ -19,8 +20,10 @@ function App() {
           <Route path="/logout" element={<Logout/>}/>
           <Route path="/register" element={<Register/>} />
           <Route path="/reset-password" element={<ResetPassword/>} />
-          <Route path="/set-new-password" element={<SetNewPassword/>} />
-          <Route path="/" element={<Index/>} />          
+          <Route path="/new-password" element={<SetNewPassword/>} />
+          <Route path="/" element={<Index/>} />
+          <Route path="/users" element={<Users/>} />
+
         </Routes>
     </Router>
         </div>
