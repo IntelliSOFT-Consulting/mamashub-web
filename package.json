@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  },
+  "scripts": {
+    "dev":"concurrently 'yarn dev:api' 'NODE_ENV=dev yarn dev:ui'",
+    "dev:api":"yarn workspace api dev",
+    "dev:ui":"yarn workspace ui start",
+    "docker:build:api":"docker build ./api",
+    "docker:build:ui":"docker build ./ui"
+  },
+  "workspaces":[
+    "api", "ui"
+  ],
+  "private":"true"
+}

@@ -1,5 +1,5 @@
 {
-  "name": "practice.lonius",
+  "name": "ui",
   "version": "0.1.0",
   "private": true,
   "homepage": "",
@@ -35,7 +35,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "https://dev.nndak.intellisoftkenya.com/nndak-api",
+  "proxy": "http://localhost:8080",
   "browserslist": {
     "production": [
       ">0.2%",
