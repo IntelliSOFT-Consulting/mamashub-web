@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import HeaderDrawer from '../components/HeaderDrawer'
 import { getCookie } from './../lib/cookie'
 import { useNavigate } from 'react-router'
+import Layout from '../components/Layout'
 // import { GiReceiveMoney, GiPayMoney, GiCash, GiChecklist } from 'react-icons/gi'
 // import { FaCashRegister } from 'react-icons/fa'
 // import { MdOutlineAccountBox } from 'react-icons/md'
@@ -39,30 +40,22 @@ export default function Index() {
 
     return (
         <>
-            {isMobile?<Header /> : <HeaderDrawer content={PageContent}/> }
-           
-        </>
-    )
-}
-
-
-let PageContent = () => {
-    return (
-        <Container>
-        <Card sx={{ backgroundColor: "#115987", color: "white", opacity: ".75" }}>
-            <CardContent> <br />
-                <Divider sx={{ backgroundColor: "white" }}></Divider>
-                <br />
-            </CardContent>
-        </Card>
+            <Layout>
+            <Container>
         <br />
         <Typography variant="h5" textAlign="center">My Services</Typography>
         <br />
         
         <br />
     </Container>
+            </Layout>
+           
+        </>
     )
 }
+
+
+
 
 let Icon = ({ title, url, icon = null }) => {
 

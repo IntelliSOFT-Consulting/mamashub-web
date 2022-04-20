@@ -14,16 +14,17 @@ import Menu from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
-import { Tooltip, IconButton, Avatar, MenuItem, Button } from '@mui/material';
+import { Tooltip, IconButton, Avatar, MenuItem, Button, Container } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
-
+import MenuIcon from '@mui/icons-material/Menu';
 const drawerWidth = 250;
 
-export default function HeaderDrawer({ content }) {
+export default function HeaderDrawer({ children }) {
 
   let title = "Human Milk Bank"
   let navigate = useNavigate()
   const settings = [{ 'My Account': '/my-account' }, { 'Logout': "/logout" },];
+  let pages = settings
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -60,26 +61,72 @@ export default function HeaderDrawer({ content }) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#115987' }} elevation={0}>
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-           {title}
-          </Typography>
-          {getCookie("token") ? 
-          (
-           
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenUserMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+        <Container maxWidth="xl">
+        <Toolbar disableGutters>
+        <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+              onClick={e => { navigate('/') }}
+            >
+              {title}
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'inline-block' } }}>
+              
              
-            ) : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
+            </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+              onClick={e => { navigate('/') }}
+            >
+              {title}
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Button
+                  key={Object.keys(page)[0]}
+                  onClick={e => { navigate(`${page[Object.keys(page)[0]]}`); handleCloseNavMenu() }}
+                  sx={{ my: 2, color: '#115987', display: 'block' }}
+                >
+                  {Object.keys(page)[0]}
+                </Button>
+              ))}
+            </Box>
+            {getCookie("token") ? <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Avatar" src="/avatar.png" />
+              </IconButton>
+            </Tooltip>
+            {/* <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu> */}
+          </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
         </Toolbar>
+        </Container>
       </AppBar>
       <Drawer
         variant="permanent"
@@ -92,24 +139,24 @@ export default function HeaderDrawer({ content }) {
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#115987', color: 'white' }} >
-          <List>
+          <List >
             {['Dashboard', 'Maternity Registration', 'Assessment', 'Post Natal Unit'].map((text, index) => (
-              <ListItem button key={text}>
+              <ListItem button key={text} >
                 <ListItemIcon>
                   <Menu sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}}/>
               </ListItem>
             ))}
           </List>
           <Divider />
           <List>
-            {['New Born Unit', 'Human Milk Bank', 'Monitoring and Assessment', 'Patients List'].map((text, index) => (
+            {['New Born Unit', 'Human Milk Bank', 'Monitoring & Assessment', 'Patients List'].map((text, index) => (
               <ListItem sx={{fontSize:'10px'}} button key={text}>
                 <ListItemIcon>
                   <Menu sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText   primary={text} />
+                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}}/>
               </ListItem>
             ))}
           </List>
@@ -120,7 +167,7 @@ export default function HeaderDrawer({ content }) {
                 <ListItemIcon>
                   <Menu sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText sx={{fontSize:'10px'}}  primary={text} />
+                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}} />
               </ListItem>
             ))}
           </List>
@@ -128,8 +175,11 @@ export default function HeaderDrawer({ content }) {
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <content/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+        {children}
       </Box>
     </Box>
   );
