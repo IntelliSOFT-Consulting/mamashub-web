@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { getCookie } from '../lib/cookie';
 
 
-export default function Header() {
+export default function Header({children}) {
   let title = "Human Milk Bank"
   let pages = [
     { 'My Account': "/my-account" },
@@ -145,7 +145,10 @@ export default function Header() {
           </Toolbar>
         </Container>
       </AppBar>
-      <br /><br /><br /><br />
+      <br /><br /><br />
+      <Container>
+      {children}
+      </Container>
     </>
   )
 }

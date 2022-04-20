@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import {
-    Grid, Container, Typography, Card, Divider,
+    Grid, CardMedia, Typography, Card, Stack,
     CardContent, Alert, useMediaQuery
 } from '@mui/material'
 import Header from '../components/Header'
 import HeaderDrawer from '../components/HeaderDrawer'
 import { getCookie } from './../lib/cookie'
 import { useNavigate } from 'react-router'
+import Layout from '../components/Layout'
+// import PostNatal from './../icons/PostNatal.svg'
 // import { GiReceiveMoney, GiPayMoney, GiCash, GiChecklist } from 'react-icons/gi'
 // import { FaCashRegister } from 'react-icons/fa'
 // import { MdOutlineAccountBox } from 'react-icons/md'
@@ -39,46 +41,51 @@ export default function Index() {
 
     return (
         <>
-            {isMobile?<Header /> : <HeaderDrawer content={PageContent}/> }
+            <Layout>
+            <br />
+            <Grid container>
+            <Icon title={"Newborn"} url={'/newborn'} />
+            <Icon title={"Post Natal"} url={'/post-natal-unit'} />
+            <Icon title={"Patients List"} url={'/patients-list'} />
+            <Icon title={"Monitoring & Assessment"} url={'/patients-list'} />
+            <Icon title={"Maternity Registration"} url={'/patients-list'} />
+            <Icon title={"Human Milk Bank"} url={'/patients-list'} />
+
+            </Grid>
+            <br />
+            </Layout>
            
         </>
     )
 }
 
 
-let PageContent = () => {
-    return (
-        <Container>
-        <Card sx={{ backgroundColor: "#115987", color: "white", opacity: ".75" }}>
-            <CardContent> <br />
-                <Divider sx={{ backgroundColor: "white" }}></Divider>
-                <br />
-            </CardContent>
-        </Card>
-        <br />
-        <Typography variant="h5" textAlign="center">My Services</Typography>
-        <br />
-        
-        <br />
-    </Container>
-    )
-}
 
-let Icon = ({ title, url, icon = null }) => {
+
+let Icon = ({ title, url, icon }) => {
 
     let navigate = useNavigate()
 
     return (
         <>
             <Grid item xs={6} lg={4} md={6} sx={{ padding: ".4em", textAlign: "center", alignItems: "center", }} onClick={e => { navigate(url) }}>
-                <Card sx={{ backgroundColor: "wheat", color: "#115987", borderRadius: "10px" }}>
-                    <CardContent>
-                        <Typography sx={{ textAlign: "center", fontSize: "40px" }} >{icon ? icon : ''}</Typography>
-                    </CardContent>
-                </Card>
-                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                <Stack sx={{ backgroundColor: "#115987", color: "white", borderRadius: "3px", maxHeight:"300px" }}>
+                {/* <CardMedia
+        component="img"
+        height="40px"
+        image="/icons/PostNatal.svg"
+        alt="green iguana"
+      /> */}
+                   
+                        <img src="/icons/PostNatal.svg" style={{height:'100px'}} alt="e"/>
+                   
+                    <Typography variant="p" sx={{ textAlign: "center" }}>
                     {title}
-                </Typography>
+                    </Typography>
+                    <br/>
+                    <br/>
+                </Stack>
+                
             </Grid>
         </>
     )

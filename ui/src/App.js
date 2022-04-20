@@ -7,7 +7,9 @@ import ResetPassword from './pages/ResetPassword'
 import SetNewPassword from './pages/SetNewPassword'
 import Account from './pages/Account'
 import Users from './pages/Users'
-
+import PatientDetails from './pages/PatientDetails'
+import PatientList from './pages/PatientList'
+import MaternityRegistration from './pages/MaternityRegistration'
 
 
 function App() {
@@ -15,14 +17,17 @@ function App() {
         <div>
       <Router>
           <Routes>
-          <Route exact path="/account" element={<Account/>} />
-          <Route exact path="/login" element={<Login/>}/>
-          <Route exact path="/logout" element={<Logout/>}/>
-          <Route exact path="/register" element={<Register/>} />
-          <Route exact path="/reset-password" element={<ResetPassword/>} />
-          <Route exact path="/new-password" element={<SetNewPassword/>} />
-          <Route exact path="/" element={<Index/>} />
-          <Route exact path="/users" element={<Users/>} />
+          <Route path="/account" element={<Account/>} />
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/logout" element={<Logout/>}/>
+          <Route path="/register" element={<Register/>} />
+          <Route path="/reset-password" element={<ResetPassword/>} />
+          <Route path="/new-password" element={<SetNewPassword/>} />
+          <Route path="/" element={<Index/>} />
+          <Route path="/users" element={<Users/>} />
+          <Route path="/patients" element={<PatientList/>} />
+          <Route path="/patients/:id" element={<PatientDetails/>} />
+          <Route path="/maternity-registration" element={<MaternityRegistration/>} />
 
         </Routes>
     </Router>
