@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
 import {useState,} from 'react'
 import {useNavigate} from 'react-router-dom'
+import { apiHost } from '../lib/api'
 
 
 export default function ResetPassword(){
@@ -11,7 +12,7 @@ export default function ResetPassword(){
     let [message, setMessage] = useState(false)
 
     let resetPassword = async () => {
-        let data = (await (await fetch(`/api/method/fosa.api.auth.reset_password`, 
+        let data = (await (await fetch(`${apiHost}/api/method/fosa.api.auth.reset_password`, 
             {   method:'POST', 
                 headers:{"Content-Type":"application/json", },
                 body: JSON.stringify(email)

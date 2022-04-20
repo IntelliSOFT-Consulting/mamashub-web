@@ -7,4 +7,5 @@ COPY . .
 RUN yarn getClient
 RUN tsc
 EXPOSE 8080
+EXPOSE 5555
 CMD ["node", "./build/index.js"]

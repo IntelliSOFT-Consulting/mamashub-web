@@ -1,6 +1,7 @@
 import { Divider, Container, TextField, Button, Stack, Typography, Snackbar, Paper, useMediaQuery, Box } from '@mui/material'
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiHost } from '../lib/api'
 import { setCookie } from '../lib/cookie'
 
 export default function Login() {
@@ -19,7 +20,7 @@ export default function Login() {
                 return
             }
         }
-        let data = (await (await fetch(`/auth/login`,
+        let data = (await (await fetch(`${apiHost}/auth/login`,
             {
                 method: 'POST',
                 headers: { "Content-Type": "application/json", },
