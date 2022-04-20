@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snac
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as qs from 'query-string';
+import { apiHost } from '../lib/api';
 
 
 export default function SetNewPassword() {
@@ -22,7 +23,7 @@ export default function SetNewPassword() {
             setOpen(true)
             return
         }
-        let data = (await (await fetch(`/auth/new-password`,
+        let data = (await (await fetch(`${apiHost}/auth/new-password`,
             {
                 method: 'POST',
                 headers: { "Content-Type": "application/json", "Authorization":`Bearer ${args.token}`},

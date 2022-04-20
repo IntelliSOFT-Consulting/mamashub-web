@@ -15,14 +15,14 @@ function App() {
         <div>
       <Router>
           <Routes>
-          <Route path="/account" element={<Account/>} />
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/logout" element={<Logout/>}/>
-          <Route path="/register" element={<Register/>} />
-          <Route path="/reset-password" element={<ResetPassword/>} />
-          <Route path="/new-password" element={<SetNewPassword/>} />
-          <Route path="/" element={<Index/>} />
-          <Route path="/users" element={<Users/>} />
+          <Route exact path="/account" element={<Account/>} />
+          <Route exact path="/login" element={<Login/>}/>
+          <Route exact path="/logout" element={<Logout/>}/>
+          <Route exact path="/register" element={<Register/>} />
+          <Route exact path="/reset-password" element={<ResetPassword/>} />
+          <Route exact path="/new-password" element={<SetNewPassword/>} />
+          <Route exact path="/" element={<Index/>} />
+          <Route exact path="/users" element={<Users/>} />
 
         </Routes>
     </Router>

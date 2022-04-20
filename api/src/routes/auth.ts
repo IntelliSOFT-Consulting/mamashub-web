@@ -151,7 +151,7 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         res.statusCode = 200
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
         console.log(resetUrl)
-        res.json({ message: `Password reset instructions have been sent to your email, ${user?.email}` , status:"success"});
+        res.json({ message: `Password reset instructions have been sent to your email, ${user?.email}` , status:"success", _reset_url:`${resetUrl}`});
         return
         
     } catch (error) {
@@ -203,6 +203,30 @@ router.post("/new-password",[requireJWT], async (req: Request, res: Response) =>
 });
 
 
+// Delete User
+router.delete("/", async (req: Request, res: Response) => {
+    try {
+        let { email, username, } = req.body;
+        let user = await db.user.delete({
+            where: {
+                ...(email) && {email},
+                ...(username) && {username}
+            }
+        })
+        let responseData = user
+        res.statusCode = 201
+        res.json({user:responseData, status: "success"})
+        return
+    } catch (error:any) {
+        res.statusCode = 400
+        if(error.code === 'P2002'){
+            res.json({status: "error", error: `User with the ${error.meta.target} provided already exists`});
+            return
+        }
+        res.json(error)
+        return
+    }
+});
 
 
 
