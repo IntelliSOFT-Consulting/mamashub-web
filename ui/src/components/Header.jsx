@@ -145,8 +145,10 @@ export default function Header({children}) {
           </Toolbar>
         </Container>
       </AppBar>
-      <br /><br /><br /><br />
+      <br /><br /><br />
+      <Container>
       {children}
+      </Container>
     </>
   )
 }

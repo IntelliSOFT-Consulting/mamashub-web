@@ -10,13 +10,11 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Menu from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
-import { Tooltip, IconButton, Avatar, MenuItem, Button, Container } from '@mui/material';
-import { AccountCircle } from '@mui/icons-material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
+import { AccountCircle, AppRegistration, BabyChangingStation, Biotech, ChildCare, Dashboard, Kitchen, ListAlt, MonitorHeart, People, Settings } from '@mui/icons-material';
 const drawerWidth = 250;
 
 export default function HeaderDrawer({ children }) {
@@ -140,37 +138,83 @@ export default function HeaderDrawer({ children }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#115987', color: 'white' }} >
           <List >
-            {['Dashboard', 'Maternity Registration', 'Assessment', 'Post Natal Unit'].map((text, index) => (
-              <ListItem button key={text} >
+          <ListItem button onClick={e=>navigate('/')}>
                 <ListItemIcon>
-                  <Menu sx={{ color: 'white' }} />
+                  <Dashboard sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}}/>
-              </ListItem>
-            ))}
+                <ListItemText primary='Dashboard' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/maternal-registration')}>
+                <ListItemIcon>
+                  <AppRegistration sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Maternal Registration' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/assessment')}>
+                <ListItemIcon>
+                  <Biotech sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Assessment' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/post-natal-unit')}>
+                <ListItemIcon>
+                  <ChildCare sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Post Natal Unit' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+
           </List>
           <Divider />
           <List>
-            {['New Born Unit', 'Human Milk Bank', 'Monitoring & Assessment', 'Patients List'].map((text, index) => (
-              <ListItem sx={{fontSize:'10px'}} button key={text}>
+          <ListItem button onClick={e=>navigate('/new-born-unit')}>
                 <ListItemIcon>
-                  <Menu sx={{ color: 'white' }} />
+                  <BabyChangingStation sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}}/>
-              </ListItem>
-            ))}
+                <ListItemText primary='New Born Unit' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button>
+                <ListItemIcon>
+                  <Kitchen sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Human Milk Bank' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button>
+                <ListItemIcon>
+                  <MonitorHeart sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Monitoring & Assessment' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button>
+                <ListItemIcon>
+                  <ListAlt sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Patients List' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
           </List>
-
+          <Divider />
           <List>
-            {['Users', 'My Account', 'Settings'].map((text, index) => (
-              <ListItem button key={text}>
+          <ListItem button>
                 <ListItemIcon>
-                  <Menu sx={{ color: 'white' }} />
+                  <People sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary={text} primaryTypographyProps={{fontSize:"13px"}} />
-              </ListItem>
-            ))}
+                <ListItemText primary='Users' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/account')}>
+                <ListItemIcon>
+                  <AccountCircle sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='My Account' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button>
+                <ListItemIcon>
+                  <Settings sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Settings' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
           </List>
+          <br/>
+          <br/>
+          <br/>
 
         </Box>
       </Drawer>
@@ -178,8 +222,9 @@ export default function HeaderDrawer({ children }) {
       <br/>
       <br/>
       <br/>
-      <br/>
+      <Container>
         {children}
+      </Container>
       </Box>
     </Box>
   );
