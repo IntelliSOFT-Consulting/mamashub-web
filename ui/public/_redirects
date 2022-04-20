@@ -1,3 +1,3 @@
-/api/*  https://z.dukr.xyz/api/:splat 200
+/auth/*  https://devnndak.intellisoftkenya.com/api/auth/:splat 200
 /files/*  https://z.dukr.xyz/files/:splat 200
 /* /  200

@@ -2,5 +2,5 @@
 
 
 
-export let apiHost = "https://x.dukr.xyz/api/method/fosa.api."
+export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "prod") ? process.env['REACT_APP_API_HOST'] : '';
 

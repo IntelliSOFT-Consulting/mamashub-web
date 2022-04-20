@@ -1,23 +1,346 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1",
-      "title": "NNDAK API",
-      "description": "NNDAK API",
-      "license": {
-        "name": "IntelliSOFT Consulting",
-        "url": "https://opensource.org/licenses/MIT"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Human Milk Bank",
+    "version": "0.1.0",
+    "description": "API to support the Human Milk Bank applications.",
+    "license": {
+      "name": "IntelliSOFT Consulting",
+      "url": "https://intellisoftkenya.com"
+    },
+    "contact": {
+      "name": "IntelliSOFT Consulting",
+      "url": "https://intellisoftkenya.com",
+      "email": "dev@intellisoftkenya.com"
+    }
+  },
+  "servers": [{
+      "url": "/",
+      "description": "Local Dev"
+    },
+    {
+      "url": "https://dev.nndak.intellisoftkenya.com/nndak-api/",
+      "description": "Test Server"
+    }
+  ],
+  "tags": [{
+    "name": "users",
+    "description": "API for users in the system"
+  }],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login and generate access token",
+        "requestBody": {
+          "description": "Create a new user in system",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
+            }
+          },
+          "400": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
       }
     },
-    "host": "localhost:8080",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "Users",
-        "description": "API for users in the system"
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Reset Password",
+        "requestBody": {
+          "description": "Send password reset request. Check email for password reset link.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Reset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
+            }
+          },
+          "400": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
       }
-    ],
-    "schemes": ["http", "https"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"]
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get user information for current user",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        }
+      }
+    },
+    "/auth/new-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login and generate access token",
+        "requestBody": {
+          "description": "Create a new user in system",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/data"
+            }
+          },
+          "400": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "parameters": [{
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID of the user that we want to match",
+        "type": "string"
+      }],
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user with given ID",
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "User with id",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cat"
+            }
+          },
+          "404": {
+            "description": "Failed. User not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user with given ID",
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "description": "User Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Cat"
+              }
+            }
+          }
+        },
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "User with new values of properties",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Cat"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "Failed. User not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user with given ID",
+        "tags": [
+          "users"
+        ],
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "description": "Delete User with id",
+          "schema": {
+            "$ref": "#/definitions/id"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/id"
+            }
+          },
+          "404": {
+            "description": "Failed. User not found."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "data": {
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "error": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "Cat": {
+      "type": "object",
+      "properties": {
+        "genus": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isHungry": {
+          "type": "boolean"
+        },
+        "lastFedDate": {
+          "type": "string"
+        }
+      }
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "Password": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        },
+        "Reset": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "users": {
+            "type": "object",
+            "properties": {
+              "users": {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/definitions/Cat"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
+}

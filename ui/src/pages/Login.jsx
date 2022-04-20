@@ -1,38 +1,41 @@
-import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Typography, Snackbar } from '@mui/material'
-import {useState,} from 'react'
-import {useNavigate} from 'react-router-dom'
+import { Divider, Container, TextField, Button, Stack, Typography, Snackbar, Paper, useMediaQuery, Box } from '@mui/material'
+import { useState, } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { apiHost } from '../lib/api'
 import { setCookie } from '../lib/cookie'
 
-export default function Login(){
+export default function Login() {
 
     let [loginInfo, setLoginInfo] = useState({})
     let navigate = useNavigate()
+    let isMobile = useMediaQuery('(max-width:600px)');
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
 
     let login = async () => {
         let requiredFields = ['email', 'password']
-        for(let i; i < requiredFields.length; i++){
-            if(!(requiredFields[i] in Object.keys(loginInfo))){
+        for (let i; i < requiredFields.length; i++) {
+            if (!(requiredFields[i] in Object.keys(loginInfo))) {
                 console.log(`${requiredFields[i]} is missing`)
                 return
             }
         }
-        let data = (await (await fetch(`/api/method/fosa.api.auth.login`, 
-            {   method:'POST', 
-                headers:{"Content-Type":"application/json", },
+        let data = (await (await fetch(`${apiHost}/auth/login`,
+            {
+                method: 'POST',
+                headers: { "Content-Type": "application/json", },
                 body: JSON.stringify(loginInfo)
             }
-            )).json())
+        )).json())
         console.log(data)
-        if(data.status === "error"){
-                setMessage(data.error)
-                setOpen(true)
-                return
+        if (data.status === "error") {
+            setMessage(data.message)
+            setOpen(true)
+            return
         }
-        else{
+        else {
             setCookie("token", data.token, 24)
-            if (window.localStorage.getItem("next_page")){
+            if (window.localStorage.getItem("next_page")) {
                 navigate(window.localStorage.getItem("next_page"))
                 window.localStorage.removeItem("next_page")
                 return
@@ -40,64 +43,100 @@ export default function Login(){
             navigate('/')
             return
         }
-            
+
     }
-    return(
+    return (
         <>
-            <Container>
+
             <Snackbar
-                anchorOrigin={{ vertical:'top', horizontal:'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 open={open}
                 onClose={""}
                 message={message}
                 key={"loginAlert"}
             />
-            <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
+            <Stack
+                direction={{ xs: 'column', sm: 'column', md: 'column', lg: 'row', xl: 'row' }}
+                spacing={2}
+                divider={<Divider orientation="vertical" sx={{ color: "#115987", backgroundColor: "#115987", maxWidth: '100%' }} flexItem />}
             >
-            <Grid item xs={12} lg={6} md={12} sx={{paddingTop:"10%"}}>
-            <Typography variant="h5" sx={{textAlign:"center"}}>Lonius Practice Manager</Typography>
-            <br/>
-            <Card sx={{maxWidth:"500px",backgroundColor:"", border:"1px black solid"}}>
-                <CardHeader title="Login" sx={{color:"green"}}></CardHeader>
-                <CardContent>
-                    <TextField
-                    sx={{minWidth:"100%"}}
-                    type="email"
-                    placeholder="Email Address"
-                    size="small"
-                    onChange={e=>{setLoginInfo({...loginInfo, id_number:e.target.value})}}
+                {/* Left Grid  */}
 
-                    />
-                    <br/><br/>
-                    <TextField
-                    type="password"
-                    placeholder="Password"
-                    sx={{minWidth:"100%"}}
-                    size="small"
-                    onChange={e=>{setLoginInfo({...loginInfo, password:e.target.value})}}
-                    />
+                <Box sx={{
+                    alignContent: 'center', justifyContent: 'center', alignItems: 'center', width: (isMobile) ? '100%' : '50%',
+                    minWidth: (isMobile) ? '100%' : '50%',
+                    maxWidth: (isMobile) ? '100%' : '50%'
+                }}>
+                    <Paper sx={{ backgroundColor: "#115987", color: 'white', minWidth: '100%' }}>
+                        <br />
+                        <Typography variant="h6" sx={{ textAlign: "center", fontWeight: 'bold' }}>Welcome to the Human Milk Bank</Typography>
+                        <br />
+                    </Paper>
+
+                    <br />
+                    <br />
+                    <br />
+                    <Typography variant="h4" sx={{ textAlign: "center", fontWeight: 'bold' }}>Login</Typography>
                     <br/>
-                    <br/>
-                    <Button variant="contained"
-                     disableElevation onClick={e=>{login()}}
-                    sx={{width:"50%", marginLeft:"25%", backgroundColor:"green"}}
-                    >Login</Button>
-                </CardContent>
-            </Card>
-            <br/>
-            <Typography sx={{textDecoration:"underline"}}
-                textAlign="center"
-            ><a href="/reset-password">Forgot Password? Reset.</a></Typography>
-            <br/>
-            <Typography sx={{textDecoration:"underline"}}
-                textAlign="center"
-            > <a href="/register">Don't have an account? Sign Up.</a></Typography>
-            </Grid>
-            </Grid>
-            </Container>
+                    <Container sx={{
+                        padding: '3.5em', alignContent: 'center',
+                        justifyContent: 'center', alignItems: 'center',
+                        textAlign: 'center',
+                        paddingTop: '2em'
+                    }}>
+                        <TextField
+                            sx={{ minWidth: "50%" }}
+                            type="email"
+                            label="Email Address"
+                            placeholder="Email Address"
+                            size="small"
+                            onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+
+                        />
+                        <br /><br />
+                        <TextField
+                            type="password"
+                            label="Password"
+                            placeholder="Password"
+                            sx={{ minWidth: "50%" }}
+                            size="small"
+                            onChange={e => { setLoginInfo({ ...loginInfo, password: e.target.value }) }}
+                        />
+                        <br />
+                        <br />
+                        <br />
+                        <Button variant="contained"
+                            disableElevation onClick={e => { login() }}
+                            sx={{ width: "45%", backgroundColor: "#115987", borderRadius: "10px" }}>Login</Button>
+
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <Typography sx={{ textDecoration: "underline", float:'right', color:'#115987' }}
+                            textAlign="center"
+                        ><a href="/reset-password">Forgot Password?</a></Typography>
+                        <br />
+
+
+                    </Container>
+                    {(!isMobile) && <><br /><br /><br /><br /></>}
+
+
+                </Box>
+
+
+
+                {/* Right Grid  */}
+                <Box sx={{ padding: '3em' }}>
+                    <br />
+                    <br />
+                    <br />
+                    {(!isMobile) &&
+                        <img src={'landing_page.svg'} style={{ width: "500px" }} alt="landing_page_img"></img>
+                    }
+                </Box>
+            </Stack>
         </>
     )
 

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
 import {useState,} from 'react'
 import {useNavigate} from 'react-router-dom'
+import { apiHost } from '../lib/api'
 
 
 export default function ResetPassword(){
@@ -11,7 +12,7 @@ export default function ResetPassword(){
     let [message, setMessage] = useState(false)
 
     let resetPassword = async () => {
-        let data = (await (await fetch(`/api/method/fosa.api.auth.reset_password`, 
+        let data = (await (await fetch(`${apiHost}/api/method/fosa.api.auth.reset_password`, 
             {   method:'POST', 
                 headers:{"Content-Type":"application/json", },
                 body: JSON.stringify(email)
@@ -47,9 +48,9 @@ export default function ResetPassword(){
             <Grid item xs={12} lg={6} md={12} sx={{paddingTop:"10%"}}>
                 <br/>
             <Card sx={{maxWidth:"500px",backgroundColor:"", border:"1px black solid"}}>
-                <CardHeader title="Reset Password" sx={{color:"purple"}}></CardHeader>
+                <CardHeader title="Reset Password" sx={{color:"#115987"}}></CardHeader>
                 <CardContent>
-                    <TextField
+                    <TextField  
                     sx={{minWidth:"100%"}}
                     type="email"
                     placeholder="Email address"
@@ -59,12 +60,12 @@ export default function ResetPassword(){
                     <br/><br/>   
                     <Button variant="contained"
                      disableElevation onClick={e=>{resetPassword()}}
-                    sx={{width:"50%", marginLeft:"25%", backgroundColor:"purple"}}
+                    sx={{width:"50%", marginLeft:"25%", backgroundColor:"#115987"}}
                     >RESET PASSWORD</Button>
                 </CardContent>
             </Card>
             <br/>
-            <Button variant="outlined" onClick={e=>{navigate('/login')}} sx={{width:"50%", marginLeft:"25%", color:"purple"}}
+            <Button variant="outlined" onClick={e=>{navigate('/login')}} sx={{width:"50%", marginLeft:"25%", color:"#115987"}}
             >BACK TO LOGIN</Button>
             </Grid>
             </Grid>

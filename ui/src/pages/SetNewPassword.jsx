@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { setCookie } from '../lib/cookie'
 import * as qs from 'query-string';
+import { apiHost } from '../lib/api';
 
 
 export default function SetNewPassword() {
@@ -17,27 +17,32 @@ export default function SetNewPassword() {
     // console.log(args)
 
     let setNewPassword = async () => {
+        setOpen(false)
         if (confirmPassword !== password) {
             setMessage("Passwords must match")
             setOpen(true)
             return
         }
-        let data = (await (await fetch(`/api/method/fosa.api.auth.set_new_password`,
+        let data = (await (await fetch(`${apiHost}/auth/new-password`,
             {
                 method: 'POST',
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify({ email: (args.email ? args.email : null), password: password, token: (args.token ? args.token : null) })
+                headers: { "Content-Type": "application/json", "Authorization":`Bearer ${args.token}`},
+                body: JSON.stringify({ id: args.id, password: password})
             }
         )).json())
         console.log(data)
+        setOpen(false)
         if (data.status === "error") {
             setMessage(data.error)
             setOpen(true)
             return
         }
         else {
-            setCookie("token", data.token, 24)
-            navigate('/login')
+            setMessage(data.message)
+            setOpen(true)
+            setTimeout(() => {
+                navigate('/login')
+            }, 3000);
             return
         }
 
@@ -60,7 +65,7 @@ export default function SetNewPassword() {
                     <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
                         <br />
                         <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
-                            <CardHeader title="Reset Password" sx={{ color: "purple" }}></CardHeader>
+                            <CardHeader title="Reset Password" sx={{ color: "#115987" }}></CardHeader>
                             <CardContent>
                                 <TextField
                                     sx={{ minWidth: "100%" }}
@@ -83,12 +88,12 @@ export default function SetNewPassword() {
                                 <br />
                                 <Button variant="contained"
                                     disableElevation onClick={e => { setNewPassword() }}
-                                    sx={{ width: "50%", marginLeft: "25%", backgroundColor: "purple" }}
+                                    sx={{ width: "50%", marginLeft: "25%", backgroundColor: "#115987" }}
                                 >RESET PASSWORD</Button>
                             </CardContent>
                         </Card>
                         <br />
-                        <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ width: "50%", marginLeft: "25%", color: "purple" }}
+                        <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ width: "50%", marginLeft: "25%", color: "#115987" }}
                         >BACK TO LOGIN</Button>
                     </Grid>
                 </Grid>
