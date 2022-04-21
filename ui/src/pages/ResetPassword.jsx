@@ -12,7 +12,7 @@ export default function ResetPassword(){
     let [message, setMessage] = useState(false)
 
     let resetPassword = async () => {
-        let data = (await (await fetch(`${apiHost}/api/method/fosa.api.auth.reset_password`, 
+        let data = (await (await fetch(`${apiHost}/auth/reset-password`, 
             {   method:'POST', 
                 headers:{"Content-Type":"application/json", },
                 body: JSON.stringify(email)
@@ -25,7 +25,9 @@ export default function ResetPassword(){
                 return
         }
         else{
-            navigate('/set-new-password')
+            setMessage(data.message)
+            setOpen(true)
+            // navigate('/set-new-password')
             return
         }
             

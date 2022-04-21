@@ -40,10 +40,8 @@ export default function MaternityRegistration({ id }) {
     return (
         <>
             <Layout>
-            {/* <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "60%", marginLeft: "20%", color: "#115987" }}>BACK TO PATIENTS LIST</Button>
-                <br /> */}
               
-            <Container sx={{border:'1px black dashed'}}>
+            <Container sx={{border:'1px white dashed'}}>
                 
                <p></p>
                 <Typography variant='p' sx={{fontSize:'large', fontWeight:'bold'}}>Biodata</Typography>
