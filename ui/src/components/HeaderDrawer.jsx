@@ -193,7 +193,7 @@ export default function HeaderDrawer({ children }) {
           </List>
           <Divider />
           <List>
-          <ListItem button>
+          <ListItem button onClick={e=>navigate('/users')}>
                 <ListItemIcon>
                   <People sx={{ color: 'white' }} />
                 </ListItemIcon>

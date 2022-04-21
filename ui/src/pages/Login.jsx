@@ -13,13 +13,17 @@ export default function Login() {
     let [message, setMessage] = useState(false)
 
     let login = async () => {
+        setOpen(false)
         let requiredFields = ['email', 'password']
         for (let i; i < requiredFields.length; i++) {
             if (!(requiredFields[i] in Object.keys(loginInfo))) {
                 console.log(`${requiredFields[i]} is missing`)
+                setMessage(`${requiredFields[i]} is missing`)
+                setOpen(true)
                 return
             }
         }
+        setOpen(false)
         let data = (await (await fetch(`${apiHost}/auth/login`,
             {
                 method: 'POST',
@@ -90,7 +94,7 @@ export default function Login() {
                             label="Email Address"
                             placeholder="Email Address"
                             size="small"
-                            onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                            onChange={e => { setLoginInfo({ ...loginInfo, email: e.target.value }) }}
 
                         />
                         <br /><br />
