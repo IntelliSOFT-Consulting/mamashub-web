@@ -50,6 +50,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
 router.post("/login", async (req: Request, res: Response) => {
     try {
         let { email ,username, password } = req.body;
+        console.log(email)
         if(!email && !password && !email){
             res.statusCode = 400
             res.json({status:"error", message: "email or username  and password are required to login"})
@@ -61,7 +62,8 @@ router.post("/login", async (req: Request, res: Response) => {
                 ...(username) && {username}
             }
         })
-        if(user?.resetToken){
+        if(user?.resetToken !== null){
+            console.log(user)
             res.statusCode = 401
             res.json({status:"error", message: "Kindly complete password reset or verify your account to proceed. Check reset instructions in your email."})
             return
@@ -186,7 +188,7 @@ router.post("/new-password",[requireJWT], async (req: Request, res: Response) =>
         }
         let salt = await bcrypt.genSalt(10)
         let _password = await bcrypt.hash(password, salt)
-        user = await db.user.update({
+        await db.user.update({
             where: {
                 id:id as string
             }, 
@@ -198,6 +200,7 @@ router.post("/new-password",[requireJWT], async (req: Request, res: Response) =>
         res.json({ message: "Password Reset Successfully" , status:"success"});
         return
     } catch (error) {
+        console.log(error)
         res.statusCode = 401
         res.json({ error: error , status:"error"});
         return
