@@ -184,7 +184,7 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Monitoring & Assessment' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={e=>navigate('/patients')}>
                 <ListItemIcon>
                   <ListAlt sx={{ color: 'white' }} />
                 </ListItemIcon>
