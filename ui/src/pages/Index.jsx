@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
     Grid, CardMedia, Typography, Card, Stack,
-    CardContent, Alert, useMediaQuery
+    CardContent, Alert,
 } from '@mui/material'
 import Header from '../components/Header'
 import HeaderDrawer from '../components/HeaderDrawer'
@@ -17,7 +17,6 @@ import Layout from '../components/Layout'
 export default function Index() {
 
     let [user, setUser] = useState(null)
-    let isMobile = useMediaQuery('(max-width:600px)');
     let navigate = useNavigate()
 
     let getUser = async () => {

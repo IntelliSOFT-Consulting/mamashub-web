@@ -5,13 +5,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { getCookie } from '../lib/cookie';
 
 
-export default function Header({children}) {
+export default function Header({ children }) {
   let title = "Human Milk Bank"
   let pages = [
-    { 'My Account': "/my-account" },
+    {
+      'Newborn Unit': '/newborn'
+    },
+    { 'My Account': "/account" },
+    { 'Post Natal Unit': '/post-natal-unit' },
+    { 'Patients List': '/patients' },
+    { 'Monitoring & Assessment': '/assessment' },
+    { 'Maternity Registration': '/maternity-registration' },
+    { 'Human Milk Bank': 'human-milk-bank' }
   ]
   let navigate = useNavigate()
-  const settings = [{ 'My Account': '/my-account' }, { 'Logout': "/logout" },];
+  const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -147,7 +155,7 @@ export default function Header({children}) {
       </AppBar>
       <br /><br /><br />
       <Container>
-      {children}
+        {children}
       </Container>
     </>
   )

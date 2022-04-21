@@ -144,11 +144,11 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Dashboard' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button onClick={e=>navigate('/maternal-registration')}>
+          <ListItem button onClick={e=>navigate('/maternity-registration')}>
                 <ListItemIcon>
                   <AppRegistration sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Maternal Registration' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Maternity Registration' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           <ListItem button onClick={e=>navigate('/assessment')}>
                 <ListItemIcon>
