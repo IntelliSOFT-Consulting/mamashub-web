@@ -75,8 +75,8 @@ export default function PatientList() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Patient Name</TableCell>
-                                    <TableCell align="right">ID</TableCell>
-                                    <TableCell align="right">Date of birth</TableCell>
+                                    <TableCell align="right">D.O.B</TableCell>
+                                    <TableCell align="right">Patient ID</TableCell>
                                     <TableCell align="right">Place of birth</TableCell>
                                     <TableCell align="right">Status</TableCell>
                                 </TableRow>
