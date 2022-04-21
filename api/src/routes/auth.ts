@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
+import { sendPasswordResetEmail } from "../lib/email";
 
 const router = express.Router()
 
@@ -150,8 +151,10 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         })
         res.statusCode = 200
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
-        console.log(resetUrl)
-        res.json({ message: `Password reset instructions have been sent to your email, ${user?.email}` , status:"success", _reset_url:`${resetUrl}`});
+        // console.log(resetUrl)
+        let response = await sendPasswordResetEmail(user, resetUrl)
+        console.log(response)
+        res.json({ message: `Password reset instructions have been sent to your email, ${user?.email}` , status:"success",});
         return
         
     } catch (error) {
