@@ -42,7 +42,7 @@ export let sendPasswordResetEmail = async (user:any, resetLink:string) => {
                 email: "railamolo@gmail.com"
             },
             body: `Dear ${user.names[0]},\n\n\nUse the link below to reset your password \n\n${resetLink}`,
-            html: `<h4>Dear ${user.email},<h4><br/>
+            html: `<h4>Dear ${user.names[0]},<h4><br/>
             <h5>Use the link below to reset your password<h5/><br/>
             <a href=${resetLink}><button style="background-color:'#115987'">Reset Link<button></a>
             <br/><br/>
