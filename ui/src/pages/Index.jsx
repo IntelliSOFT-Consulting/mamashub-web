@@ -46,7 +46,7 @@ export default function Index() {
             <Grid container>
             <Icon title={"Newborn"} url={'/newborn'} />
             <Icon title={"Post Natal"} url={'/post-natal-unit'} />
-            <Icon title={"Patients List"} url={'/patients-list'} />
+            <Icon title={"Patients List"} url={'/patients'} />
             <Icon title={"Monitoring & Assessment"} url={'/patients-list'} />
             <Icon title={"Maternity Registration"} url={'/patients-list'} />
             <Icon title={"Human Milk Bank"} url={'/patients-list'} />

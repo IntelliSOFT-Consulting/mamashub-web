@@ -1,13 +1,27 @@
-import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
+import { TableBody, Table, Paper, Stack, TextField, Button, TableCell, Snackbar, TableRow, TableContainer, TableHead, Container , useMediaQuery} from '@mui/material'
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as qs from 'query-string';
+import Layout from '../components/Layout';
 
+
+function createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
 
 export default function PatientList() {
 
     let [password, setPassword] = useState({})
     let [confirmPassword, setConfirmPassword] = useState({})
+    let isMobile = useMediaQuery('(max-width:600px)');
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
@@ -25,8 +39,8 @@ export default function PatientList() {
         let data = (await (await fetch(`/auth/new-password`,
             {
                 method: 'POST',
-                headers: { "Content-Type": "application/json", "Authorization":`Bearer ${args.token}`},
-                body: JSON.stringify({ id: args.id, password: password})
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${args.token}` },
+                body: JSON.stringify({ id: args.id, password: password })
             }
         )).json())
         console.log(data)
@@ -48,55 +62,45 @@ export default function PatientList() {
     }
     return (
         <>
-            <Container>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={open}
-                    onClose={""}
-                    message={message}
-                    key={"loginAlert"}
-                />
-                <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
-                        <br />
-                        <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
-                            <CardHeader title="Reset Password" sx={{ color: "#115987" }}></CardHeader>
-                            <CardContent>
-                                <TextField
-                                    sx={{ minWidth: "100%" }}
-                                    type="password"
-                                    placeholder="Password"
-                                    size="small"
-                                    onChange={e => { setPassword(e.target.value) }}
-
-                                />
-                                <br /><br />
-                                <TextField
-                                    sx={{ minWidth: "100%" }}
-                                    type="password"
-                                    placeholder="Confirm Password"
-                                    size="small"
-                                    onChange={e => { setConfirmPassword(e.target.value) }}
-
-                                />
-                                <br />
-                                <br />
-                                <Button variant="contained"
-                                    disableElevation onClick={e => { setNewPassword() }}
-                                    sx={{ width: "50%", marginLeft: "25%", backgroundColor: "#115987" }}
-                                >RESET PASSWORD</Button>
-                            </CardContent>
-                        </Card>
-                        <br />
-                        <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ width: "50%", marginLeft: "25%", color: "#115987" }}
-                        >BACK TO LOGIN</Button>
-                    </Grid>
-                </Grid>
-            </Container>
+            <Layout>
+                <br />
+                <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile? "1em":"2em", paddingRight: isMobile? "1em":"2em" }}>
+                    <TextField type={"text"} size="small" sx={{ width: "90%" }} placeholder='Patient Name or Patient ID' />
+                    <Button variant="contained" size='small' disableElevation>Search</Button>
+                </Stack>
+                <br/><br />
+                <Container maxWidth="lg">
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Patient Name</TableCell>
+                                    <TableCell align="right">ID</TableCell>
+                                    <TableCell align="right">Date of birth</TableCell>
+                                    <TableCell align="right">Place of birth</TableCell>
+                                    <TableCell align="right">Status</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow
+                                        key={row.name}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">{row.calories}</TableCell>
+                                        <TableCell align="right">{row.fat}</TableCell>
+                                        <TableCell align="right">{row.carbs}</TableCell>
+                                        <TableCell align="right">{row.protein}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Container>
+            </Layout>
         </>
     )
 
