@@ -38,7 +38,7 @@ export default function Login() {
             return
         }
         else {
-            setCookie("token", data.token, 24)
+            setCookie("token", data.token, 0.25)
             if (window.localStorage.getItem("next_page")) {
                 navigate(window.localStorage.getItem("next_page"))
                 window.localStorage.removeItem("next_page")

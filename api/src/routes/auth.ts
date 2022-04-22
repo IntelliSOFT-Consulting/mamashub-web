@@ -24,7 +24,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             return
         }
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
-        console.log(decodedSession)
+        // console.log(decodedSession)
         if(decodedSession.type == 'valid'){
             let userId = decodedSession.session.userId
             let user = await db.user.findFirst({
@@ -38,7 +38,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             return
         }                   
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.statusCode = 400
         res.json({status:"error", error:error})
         return   
