@@ -5,7 +5,7 @@ import Layout from '../components/Layout'
 import { getCookie } from '../lib/cookie'
 
 
-export default function MaternityRegistration({ id }) {
+export default function PostNatalUnit({ id }) {
 
     let [patient, setPatient] = useState({})
     let navigate = useNavigate()

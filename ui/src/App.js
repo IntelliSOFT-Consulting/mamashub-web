@@ -10,6 +10,9 @@ import Users from './pages/Users'
 import PatientDetails from './pages/PatientDetails'
 import PatientList from './pages/PatientList'
 import MaternityRegistration from './pages/MaternityRegistration'
+import NewBornUnit from './pages/NewBornUnit'
+import PostNatalUnit from './pages/PostNatalUnit'
+import HumanMilkBank from './pages/HumanMilkBank'
 
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
           <Route path="/new-password" element={<SetNewPassword/>} />
           <Route path="/" element={<Index/>} />
           <Route path="/users" element={<Users/>} />
+          <Route path="/new-born-unit" element={<NewBornUnit/>} />
+          <Route path="/post-natal-unit" element={<PostNatalUnit/>} />
+          <Route path="/human-milk-bank" element={<HumanMilkBank/>} />
           <Route path="/patients" element={<PatientList/>} />
           <Route path="/patients/:id" element={<PatientDetails/>} />
           <Route path="/maternity-registration" element={<MaternityRegistration/>} />

@@ -15,13 +15,15 @@ import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
 import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
 import { AccountCircle, AppRegistration, BabyChangingStation, Biotech, ChildCare, Dashboard, Kitchen, ListAlt, MonitorHeart, People, Settings } from '@mui/icons-material';
+import Menu from '@mui/material/Menu';
+import { MenuItem } from '@mui/material';
 const drawerWidth = 250;
 
 export default function HeaderDrawer({ children }) {
 
   let title = "Human Milk Bank"
   let navigate = useNavigate()
-  const settings = [{ 'My Account': '/my-account' }, { 'Logout': "/logout" },];
+  const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
   let pages = settings
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -43,7 +45,7 @@ export default function HeaderDrawer({ children }) {
   };
 
   useEffect(() => {
-    if (getCookie("token")) {
+    if(getCookie("token")) {
       return
     } else {
       navigate('/login')
@@ -95,34 +97,34 @@ export default function HeaderDrawer({ children }) {
               ))}
             </Box>
             {getCookie("token") ? <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Avatar" src="/avatar.png" />
-              </IconButton>
-            </Tooltip>
-            {/* <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu> */}
-          </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={Object.keys(setting)[0]} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center" onClick={e => { navigate(`${setting[Object.keys(setting)[0]]}`) }}>{Object.keys(setting)[0]}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
         </Toolbar>
         </Container>
       </AppBar>
@@ -150,12 +152,17 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Maternity Registration' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button onClick={e=>navigate('/assessment')}>
+          
+          <ListItem button onClick={e=>navigate('/new-born-unit')}>
                 <ListItemIcon>
-                  <Biotech sx={{ color: 'white' }} />
+                  <BabyChangingStation sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Assessment' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='New Born Unit' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
+          </List>
+          <Divider />
+         
+          <List>
           <ListItem button onClick={e=>navigate('/post-natal-unit')}>
                 <ListItemIcon>
                   <ChildCare sx={{ color: 'white' }} />
@@ -163,27 +170,13 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Post Natal Unit' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
 
-          </List>
-          <Divider />
-          <List>
-          <ListItem button onClick={e=>navigate('/new-born-unit')}>
-                <ListItemIcon>
-                  <BabyChangingStation sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='New Born Unit' primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem>
           <ListItem button>
                 <ListItemIcon>
                   <Kitchen sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary='Human Milk Bank' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button>
-                <ListItemIcon>
-                  <MonitorHeart sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='Monitoring & Assessment' primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem>
+          <Divider />
           <ListItem button onClick={e=>navigate('/patients')}>
                 <ListItemIcon>
                   <ListAlt sx={{ color: 'white' }} />
@@ -215,6 +208,11 @@ export default function HeaderDrawer({ children }) {
           <br/>
           <br/>
           <br/>
+          <br/>
+          <br/>
+          <br/>
+          <p></p>
+          <p></p>
 
         </Box>
       </Drawer>
