@@ -5,7 +5,7 @@ RUN npm install typescript yarn -g --force
 RUN yarn install
 COPY . .
 RUN yarn prisma:generate
-RUN tsc
+RUN yarn build
 EXPOSE 8080
 EXPOSE 5555
 CMD ["node", "./build/index.js"]
