@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
-
+import { fhirClient } from "../lib/fhir";
 
 const router = express.Router()
 
@@ -9,27 +9,12 @@ const router = express.Router()
 // Get User Information.
 router.get("/", [requireJWT], async (req: Request, res: Response) => {
     try {
-        let token = req.headers.authorization || '';
-        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
-        if (decodedSession.type == 'valid') {
-            let role = decodedSession.session.role
-            if (role !== 'ADMINISTRATOR') {
-                res.statusCode = 401
-                res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
-                return
-            }
-            let users = await db.user.findMany({
-                select: {
-                    id: true, names: true, email: true,
-                    createdAt: true, updatedAt: true, username: true,
-                    role: true
-                }
-            })
+            let data = await fhirClient.read("Patient")
             res.statusCode = 200
-            res.json({ status: "success", users })
+            res.json({ status: "success", data })
             return
-        }
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error)
         res.statusCode = 400
         res.json(error)
@@ -41,25 +26,9 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
 router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
     try {
         let { id } = req.params
-        let token = req.headers.authorization || '';
-        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
-        if (decodedSession.type == 'valid') {
-            let role = decodedSession.session.role
-            let userId = decodedSession.session.userId
-            if (role !== 'ADMINISTRATOR' || id !== userId) {
-                res.statusCode = 401
-                res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
-                return
-            }
-        }
-        let user = await db.user.findFirst({
-            where: {
-                id: id
-            }
-        })
-        let responseData = { id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role }
+        let patient = await fhirClient.read("Patient", id)
         res.statusCode = 201
-        res.json({ user: responseData, status: "success" })
+        res.json({ status: "success", data:patient })
         return
     } catch (error: any) {
         res.statusCode = 400

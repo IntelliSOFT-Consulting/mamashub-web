@@ -24,7 +24,8 @@ export default function Login() {
             }
         }
         setOpen(false)
-        let data = (await (await fetch(`${apiHost}/auth/login`,
+        try {
+            let data = (await (await fetch(`${apiHost}/auth/login`,
             {
                 method: 'POST',
                 headers: { "Content-Type": "application/json", },
@@ -45,6 +46,11 @@ export default function Login() {
                 return
             }
             navigate('/')
+            return
+        }
+        } catch (error) {
+            setMessage(error)
+            setOpen(true)
             return
         }
 

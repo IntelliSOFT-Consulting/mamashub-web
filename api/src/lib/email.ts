@@ -28,11 +28,17 @@ export async function sendEmail(data: {subject: string, to: {email:string, name:
 }
 
 
+export const validateEmail = (email: string) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
 export let sendPasswordResetEmail = async (user:any, resetLink:string) => {
 
     try {
         let response = await sendEmail({
-            subject: "Human Milk Bank Password Reset",
+            subject: "Reset Password: Human Milk Bank",
             to:{
                 email:user.email as string,
                 name: user.names as string
