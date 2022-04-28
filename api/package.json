@@ -32,7 +32,7 @@
   "scripts": {
     "dev": "nodemon --delay 500ms ./src/index.ts -w ./src --signal SIGTERM",
     "start": "node ./build/index.js",
-    "build": "tsc --project ./src",
+    "build": "yarn tsc --project tsconfig.json",
     "migrate": "yarn prisma migrate dev --preview-feature",
     "studio": "yarn prisma studio",
     "prisma:generate": "yarn prisma generate"
