@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
 import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
-import { AccountCircle, AppRegistration, BabyChangingStation, Biotech, ChildCare, Dashboard, Kitchen, ListAlt, MonitorHeart, People, Settings } from '@mui/icons-material';
+import { AccountCircle, AppRegistration, BabyChangingStation, ChildCare, Dashboard, Kitchen, ListAlt, People, Settings } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 const drawerWidth = 250;
@@ -124,7 +124,7 @@ export default function HeaderDrawer({ children }) {
                   </MenuItem>
                 ))}
               </Menu>
-            </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "#115987" }}>LOGIN</Button>}
+            </Box> : <Button variant="outlined" onClick={e => { navigate('/login') }} sx={{ color: "white" }}>LOGIN</Button>}
         </Toolbar>
         </Container>
       </AppBar>
@@ -146,11 +146,11 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Dashboard' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button onClick={e=>navigate('/maternity-registration')}>
+          <ListItem button onClick={e=>navigate('/maternity-unit')}>
                 <ListItemIcon>
                   <AppRegistration sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Maternity Registration' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Maternity Unit' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           
           <ListItem button onClick={e=>navigate('/new-born-unit')}>
@@ -170,7 +170,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Post Natal Unit' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
 
-          <ListItem button>
+          <ListItem button onClick={e=>navigate('/human-milk-bank')}>
                 <ListItemIcon>
                   <Kitchen sx={{ color: 'white' }} />
                 </ListItemIcon>

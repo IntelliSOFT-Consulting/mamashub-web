@@ -1,5 +1,5 @@
 import express from "express";
-
+import cors from 'cors'
 import * as dotenv from 'dotenv'
 
 dotenv.config() // Load environment variables
@@ -15,6 +15,7 @@ const app = express();
 const PORT = 8080;
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/', Index)
 app.use('/auth', Auth)

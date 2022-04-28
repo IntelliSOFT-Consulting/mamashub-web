@@ -3,6 +3,11 @@ import { useEffect, useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { getCookie } from '../lib/cookie'
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 
 export default function PostNatalUnit({ id }) {
@@ -12,6 +17,12 @@ export default function PostNatalUnit({ id }) {
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
+
+    const [value, setValue] = useState('1');
+
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
 
     let getPatientDetails = async ({ id }) => {
         setOpen(false)
@@ -42,9 +53,24 @@ export default function PostNatalUnit({ id }) {
             <Layout>
               
             <Container sx={{border:'1px white dashed'}}>
-                
-               {/* <p></p> */}
-                <Typography variant='p' sx={{fontSize:'large', fontWeight:'bold'}}>Biodata</Typography>
+
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList 
+           value={value}
+  onChange={handleChange}
+  variant="scrollable"
+  scrollButtons="auto"
+  aria-label="scrollable auto tabs example">
+            <Tab label="Milk Expression & Storage" value="1" />
+            <Tab label="Lactation Support" value="2" />
+            <Tab label="Baby's Feeding Effectiveness" value="3" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+             {/* <p></p> */}
+             <Typography variant='p' display={'none'} sx={{fontSize:'large', fontWeight:'bold'}}>Biodata</Typography>
                 <Grid container spacing={1} padding=".5em" >
                     <Grid item xs={12} md={12} lg={6}>
                         <TextField
@@ -227,6 +253,13 @@ export default function PostNatalUnit({ id }) {
                 <Button variant="contained" disableElevation sx={{backgroundColor:"#115987"}}>Save</Button>
                 </Stack>
                 <p></p>
+        </TabPanel>
+        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="3">Item Three</TabPanel>
+      </TabContext>
+    </Box>
+                
+              
 
                 </Container>
             </Layout>

@@ -43,11 +43,11 @@ export default function Index() {
             <Layout>
             <br />
             <Grid container>
-            <Icon title={"Newborn"} url={'/newborn'} />
+            <Icon title={"Newborn"} url={'/new-born-unit'} />
             <Icon title={"Post Natal"} url={'/post-natal-unit'} />
             <Icon title={"Patients List"} url={'/patients'} />
             <Icon title={"Monitoring & Assessment"} url={'/patients-list'} />
-            <Icon title={"Maternity Registration"} url={'/patients-list'} />
+            <Icon title={"Maternity Unit"} url={'/maternity-unit'} />
             <Icon title={"Human Milk Bank"} url={'/patients-list'} />
 
             </Grid>

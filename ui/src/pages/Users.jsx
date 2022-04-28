@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import {
     Grid, TextField, Typography, Modal, Box, Stack, Button, Alert, useMediaQuery, CardContent, LinearProgress,
-    FormControl, InputLabel, Select, MenuItem
+    FormControl, InputLabel, Select, MenuItem, Snackbar
 } from '@mui/material'
 import Layout from '../components/Layout'
-import HeaderDrawer from '../components/HeaderDrawer'
 import { getCookie } from './../lib/cookie'
 import { useNavigate } from 'react-router'
-import { DataGrid, GridRowsProp, GridColDef, daDK } from '@mui/x-data-grid'
-
+import { DataGrid } from '@mui/x-data-grid'
+import { apiHost } from '../lib/api'
 
 export default function Users() {
 
@@ -20,20 +19,75 @@ export default function Users() {
     let [selected, setSelected] = useState([])
     let isMobile = useMediaQuery('(max-width:600px)');
     let navigate = useNavigate()
+    let [openSnackBar, setOpenSnackBar] = useState(false)
+    let [message, setMessage] = useState(false)
 
+
+
+    // fetch users
     let getUsers = async () => {
-        let data = (await (await fetch(`/users`,
+        let data = (await (await fetch(`${apiHost}/users`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
         setUsers(data.users)
         return
     }
 
+    // delete users
+    let deleteUsers = async () => {
+        for(let i of selected){
+            setOpenSnackBar(false)
+            let response = (await (await fetch(`${apiHost}/auth/${i}`,
+                { method: "DELETE", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }   
+            })).json())
+            if(response.status === "error"){
+                setMessage(response.error || response.message)
+                setOpenSnackBar(true)
+                return
+            }
+            getUsers()
+            setOpen(false)
+        }
+        return
+    }
+
+
+    // reset Password
+    let resetPassword = async () => {
+        for(let i of selected){
+            setOpenSnackBar(false)
+            let response = (await (await fetch(`${apiHost}/auth/reset-password`,
+                { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
+                body:JSON.stringify({id: i})
+            })).json())
+            if(response.status === "error"){
+                setMessage(response.error || response.message)
+                setOpenSnackBar(true)
+                return
+            }
+            getUsers()
+            setMessage(response.error || response.message)
+            setOpenSnackBar(true)
+            setTimeout(() => {
+                setOpenSnackBar(false)
+            }, 3000);
+        }
+        return
+    }
+
+    // create user
     let createUser = async () => {
-        let response = (await (await fetch(`/users`,
+        setOpenSnackBar(false)
+        let response = (await (await fetch(`${apiHost}/auth/register`,
             { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-            body:{username:data.username, email:data.email, "names":data.names,"role":data.role}   
+            body:JSON.stringify({username:data.username, email:data.email, "names":data.names,"role":data.role})   
         })).json())
-        setUsers(response.users)
+        if(response.status === "error"){
+            setMessage(response.error || response.message)
+            setOpenSnackBar(true)
+            return
+        }
+        getUsers()
+        setOpen(false)
         return
     }
 
@@ -70,11 +124,19 @@ export default function Users() {
     return (
         <>
             <Layout>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                open={openSnackBar}
+                onClose={""}
+                message={message}
+                key={"loginAlert"}
+            />
+
                 <Stack direction="row" spacing={2} alignContent="right" >
                     {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '50%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" disableElevation sx={{ backgroundColor: 'red' }}>Delete User{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e=>{deleteUsers()}} disableElevation sx={{ backgroundColor: 'red' }}>Delete User{(selected.length > 1) && `s`}</Button>
                             <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Reset Password</Button>
                         </>
                     }
@@ -94,8 +156,6 @@ export default function Users() {
                     onSelectionModelChange={e => { setSelected(e) }}
                     onCellEditStop={e => { console.log(e) }}
                 />
-                {/* <><br/><br/><br/><LinearProgress variant='indeterminate'/></> */}
-                {/* } */}
 
                 {/* Add User Modal  */}
                 <Modal
@@ -110,8 +170,7 @@ export default function Users() {
                             ADD NEW USER
                         </Typography>
                         <Typography variant="p">Provide user information below</Typography>
-                        <br />
-                        <br />
+                        <br /><br />
                         <Stack direction="column" spacing={2}>
                             <TextField
                                 sx={{ width: "100%" }}
@@ -130,7 +189,6 @@ export default function Users() {
                                 size="small"
                                 onChange={e => { setData({ ...data, email: e.target.value }) }}
                             />
-
                             <TextField
                                 sx={{ width: "100%" }}
                                 type="text"
@@ -159,7 +217,6 @@ export default function Users() {
                             <Button variant='contained' sx={{ backgroundColor: "#115987" }} onClick={e=>{createUser()}}>Create User</Button>
                             <br/>
                         </Stack>
-
                     </Box>
                 </Modal>
             </Layout>
