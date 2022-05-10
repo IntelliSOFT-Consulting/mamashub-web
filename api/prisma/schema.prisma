@@ -28,10 +28,13 @@ model User {
 }
 
 model Patient {
-  id                  String    @id @default(uuid())
-  data Json
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  phone     String
+  patientId String? @unique
+  idNumber  String   @unique
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ROLE {
