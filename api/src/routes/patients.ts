@@ -1,15 +1,13 @@
 import express, { Request, Response } from "express";
-import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
+import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
-import { fhirClient } from "../lib/fhir";
 
 const router = express.Router()
-
 
 // Get User Information.
 router.get("/", [requireJWT], async (req: Request, res: Response) => {
     try {
-            let data = await fhirClient.read("Patient")
+            let data = await db.patient.findMany()
             res.statusCode = 200
             res.json({ status: "success", data })
             return
@@ -26,7 +24,11 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
 router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
     try {
         let { id } = req.params
-        let patient = await fhirClient.read("Patient", id)
+        let patient = await db.patient.findUnique({
+            where:{
+                id:id
+            }
+        })
         res.statusCode = 201
         res.json({ status: "success", data:patient })
         return
@@ -34,7 +36,7 @@ router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
         res.statusCode = 400
         console.error(error)
         if (error.code === 'P2002') {
-            res.json({ status: "error", message: `User with the ${error.meta.target} provided not found` });
+            res.json({ status: "error", message: `Patient with the ${error.meta.target} provided not found` });
             return
         }
         res.json(error)
@@ -42,7 +44,46 @@ router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
     }
 });
 
-// Modify User Details
+
+// Create Patient.
+router.post("/", [requireJWT], async (req: Request, res: Response) => {
+    try {
+        let { patientId, idNumber, phone } = req.body;
+        delete req.body.patientId
+        delete req.body.idNumber
+        delete req.body.phone
+        let token = req.headers.authorization || '';
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
+        if (decodedSession.type == 'valid') {
+            let role = decodedSession.session.role
+            if (role !== 'ADMINISTRATOR') {
+                res.statusCode = 401
+                res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
+                return
+            }
+        }
+        let patient = await db.patient.create({
+            data:{
+                idNumber, phone, patientId,
+                data:(req.body || {})
+            }
+        })
+        res.statusCode = 201
+        res.json({ data: patient, status: "success" })
+        return
+    } catch (error: any) {
+        res.statusCode = 400
+        console.error(error)
+        if (error.code === 'P2002') {
+            res.json({ status: "error", message: `User with the ${error.meta.target} provided already exists` });
+            return
+        }
+        res.json(error)
+        return
+    }
+});
+
+// Modify Patient Details
 router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
         let data = req.body;
