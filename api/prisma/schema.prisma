@@ -27,6 +27,13 @@ model User {
 
 }
 
+model Patient {
+  id                  String    @id @default(uuid())
+  data Json
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
 enum ROLE {
   ADMINISTRATOR
   STAFF
