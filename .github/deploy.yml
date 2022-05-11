@@ -6,7 +6,7 @@ on:
 jobs:
 
   build:
-    name: Build
+    name: Build and Deploy to Dev
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using password
