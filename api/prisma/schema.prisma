@@ -19,6 +19,7 @@ model User {
   email               String    @unique
   password            String
   salt                String
+  data                Json      @default("{ \"newUser\": true }")
   resetToken          String?
   resetTokenExpiresAt DateTime?
   createdAt           DateTime  @default(now())
@@ -30,7 +31,7 @@ model User {
 model Patient {
   id        String   @id @default(uuid())
   phone     String
-  patientId String? @unique
+  patientId String?  @unique
   idNumber  String   @unique
   data      Json
   createdAt DateTime @default(now())
