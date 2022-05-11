@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: 14
       - name: npm ci and build
+        working-directory: ./api
         run: |
           npm ci
           npm run build
