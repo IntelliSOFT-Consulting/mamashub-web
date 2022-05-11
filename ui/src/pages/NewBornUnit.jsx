@@ -73,6 +73,8 @@ export default function NewBornUnit({ id }) {
                                     <Tab label="Health Information Monitoring" value="6" />
                                 </TabList>
                             </Box>
+
+                            {/* 1. Mother Registration  */}
                             <TabPanel value="1">
                                 {/* <p></p> */}
                                 <Typography variant='p' display={'none'} sx={{ fontSize: 'large', fontWeight: 'bold' }}>Mother Medical Condition</Typography>
@@ -107,7 +109,6 @@ export default function NewBornUnit({ id }) {
                                             </Select>
                                         </FormControl>
                                     </Grid>
-
                                     <Grid item xs={12} md={12} lg={8}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Has mother shown any signs of antenatal Corticosteroids</InputLabel>
@@ -121,12 +122,10 @@ export default function NewBornUnit({ id }) {
                                             >
                                                 <MenuItem value={"Negative"}>Negative</MenuItem>
                                                 <MenuItem value={"Positive"}>Positive</MenuItem>
-
                                             </Select>
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-
                                 <Divider />
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Baby's Medical Condition</Typography>
@@ -150,7 +149,6 @@ export default function NewBornUnit({ id }) {
                                             placeholder="County"
                                             size="small"
                                         // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -161,7 +159,6 @@ export default function NewBornUnit({ id }) {
                                             placeholder="Ward"
                                             size="small"
                                         // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -172,7 +169,6 @@ export default function NewBornUnit({ id }) {
                                             placeholder="Street"
                                             size="small"
                                         // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
                                         />
                                     </Grid>
                                 </Grid>
@@ -188,7 +184,6 @@ export default function NewBornUnit({ id }) {
                                             placeholder="Gravidity"
                                             size="small"
                                         // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>

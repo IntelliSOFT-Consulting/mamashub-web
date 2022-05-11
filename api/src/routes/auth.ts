@@ -49,6 +49,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
 // Login
 router.post("/login", async (req: Request, res: Response) => {
     try {
+        let newUser = false
         let { email ,username, password } = req.body;
         if(!validateEmail(email)){
             res.statusCode = 400
@@ -66,6 +67,7 @@ router.post("/login", async (req: Request, res: Response) => {
                 ...(username) && {username}
             }
         })
+        
         if(user?.verified !== true){
             console.log(user)
             res.statusCode = 401
@@ -79,7 +81,20 @@ router.post("/login", async (req: Request, res: Response) => {
                 userId: user?.id as string,
                 role: user?.role as string
             })
-            res.json({status:"success", token:session.token, issued: session.issued, expires: session.expires})
+            let userData:any = user?.data
+            if(userData.newUser ===  true){
+                newUser = true
+                await db.user.update({
+                    where:{
+                        ...(email) && {email},
+                    ...(username) && {username}
+                    },
+                    data:{
+                        data:{...userData, newUser:false}
+                    }
+                })
+            }
+            res.json({status:"success", token:session.token, issued: session.issued, expires: session.expires, newUser  })
             return
         }else{
             res.statusCode = 401
