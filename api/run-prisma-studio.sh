@@ -1,1 +1,1 @@
-sudo docker-compose exec nndak-api yarn studio
+docker-compose exec nndak-api yarn studio
