@@ -27,5 +27,6 @@ jobs:
       - name: npm ci and build
         working-directory: ./api
         run: |
-          npm ci
-          npm run build
+          npm install --global yarn
+          yarn install
+          yarn build
