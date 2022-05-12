@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import {
-    Container, Typography, LinearProgress,
-    Divider,
+    Card, Typography, LinearProgress, Divider,
+    CardContent,
 } from '@mui/material'
 import { getCookie } from '../lib/cookie'
 import Layout from '../components/Layout'
@@ -37,6 +37,37 @@ export default function Account() {
     return (<>
        <Layout>
         <Typography>Account Information</Typography>
+
+        <Card>
+            <CardContent> 
+            <Typography>User ID:</Typography>
+            <Typography variant='h5'>{profile.id}</Typography>
+            <Divider/>
+            <Typography>Names:</Typography>
+            <Typography variant='h5'>{profile.names}</Typography>
+            <Divider/>
+            
+            <Typography>Email Address:</Typography>
+            <Typography variant='h5'>{profile.email}</Typography>
+            <Divider/>
+
+            <Typography>Role:</Typography>
+            <Typography variant='h5'>{profile.role}</Typography>
+            <Divider/>
+
+            <Typography>Created At:</Typography>
+            <Typography variant='h5'>{new Date(profile.createdAt).toLocaleString()}</Typography>
+            <Divider/>
+
+            <Typography>Last Updated At:</Typography>
+            <Typography variant='h5'>{new Date(profile.updatedAt).toLocaleString()}</Typography>
+            <Divider/>
+
+
+            </CardContent>
+
+
+        </Card>
 
        </Layout>
 
