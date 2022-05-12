@@ -27,5 +27,6 @@ jobs:
       - name: npm ci and build
         working-directory: ./ui
         run: |
-          npm install
-          npm run build
+          npm install --global yarn
+          yarn install
+          yarn build
