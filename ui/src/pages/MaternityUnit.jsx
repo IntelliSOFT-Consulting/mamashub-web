@@ -219,7 +219,6 @@ export default function MaternityUnit({ id }) {
                                             placeholder="Street"
                                             size="small"
                                         onChange={e=>{console.log(e)}}
-
                                         />
                                     </Grid>
                                 </Grid>
@@ -288,14 +287,20 @@ export default function MaternityUnit({ id }) {
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="HIV Status"
-                                            placeholder="HIV Status"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-                                        />
+                                    <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">HIV Status</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={data.labor_stage ? data.labor_stage : 1}
+                                                label="HIV Status"
+                                                size="small"
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem value={10}>Positive</MenuItem>
+                                                <MenuItem value={20}>Negative</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
 
                                 </Grid>
