@@ -96,7 +96,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Mother's Health Status"
                                                 placeholder="Mother's Health Status"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -173,7 +174,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Preventive Care Given"
                                                 placeholder="Preventive Care Given"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -184,7 +186,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Birth weight (g)"
                                                 placeholder="Birth weight (g)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                     </Grid>
@@ -200,7 +203,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Admission weight (g)"
                                                 placeholder="Admission weight (g)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={4}>
@@ -210,7 +214,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Baby's length (cm)"
                                                 placeholder="Baby's length (cm)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={4}>
@@ -220,7 +225,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Head Circumference (cm)"
                                                 placeholder="Head Circumference (cm)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -230,7 +236,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Temp(c)"
                                                 placeholder="Temp(c)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -240,7 +247,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Pulse (per min)"
                                                 placeholder="Pulse (per min)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -250,7 +258,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Respiration rate(bpm)"
                                                 placeholder="Respiration rate(bpm)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -260,7 +269,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Oxygen Sat(%)"
                                                 placeholder="Oxygen Sat(%)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
 
@@ -370,7 +380,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Last Name"
                                                 placeholder="Last Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -381,7 +392,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Hospital Name"
                                                 placeholder="Hospital Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -522,7 +534,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Mother's Health Status"
                                                 placeholder="Mother's Health Status"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -628,7 +641,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Method 1 of feeding"
                                                 placeholder="Method 1 of feeding"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -638,7 +652,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Method 2 of feeding"
                                                 placeholder="Method 2 of feeding"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -648,7 +663,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Amount offered (ml)"
                                                 placeholder="Amount offered (ml)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -658,7 +674,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Amount offered (ml)"
                                                 placeholder="Amount offered (ml)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -668,7 +685,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Amount taken (ml)"
                                                 placeholder="Amount taken (ml)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -678,7 +696,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Amount taken (ml)"
                                                 placeholder="Amount taken (ml)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
 
@@ -731,7 +750,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Current Weight"
                                                 placeholder="Current Weight"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={8}>
@@ -743,7 +763,8 @@ export default function NewBornUnit({ id }) {
                                             label="Remarks"
                                             placeholder="Remarks"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                     </Grid>
@@ -772,7 +793,8 @@ export default function NewBornUnit({ id }) {
                                                 label="Mother's Health Status"
                                                 placeholder="Mother's Health Status"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>

@@ -19,7 +19,8 @@ import FormLabel from '@mui/material/FormLabel';
 import countyToConstituency from './../data/county_to_consituencies.json'
 import counties from './../data/counties.json'
 import consituencyToWard from './../data/consituencies_to_ward.json'
-
+import consituencies from './../data/constituencies.json'
+import wards from './../data/wards.json'
 
 
 export default function MaternityUnit({ id }) {
@@ -36,6 +37,16 @@ export default function MaternityUnit({ id }) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+
+    let savePatientDetails = async () => {
+
+        let response = await(await fetch('/patients', {
+            body:JSON.stringify({})
+        }))
+
+        return
+    }
 
     let getPatientDetails = async ({ id }) => {
         setOpen(false)
@@ -93,8 +104,7 @@ export default function MaternityUnit({ id }) {
                                             label="First Name"
                                             placeholder="First Name"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -104,7 +114,8 @@ export default function MaternityUnit({ id }) {
                                             label="Last Name"
                                             placeholder="Last Name"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
+                                        // onChange={e=>{console.log(e)}}
 
                                         />
                                     </Grid>
@@ -114,15 +125,15 @@ export default function MaternityUnit({ id }) {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
-                                            value={value}
-                                            onChange={handleChange}
+                                            value={patient.dob}
+                                            onChange={e=>{setPatient({...patient, dob: e})}}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
-                                                value={value}
-                                                onChange={handleChange}
+                                                value={patient.dob}
+                                            onChange={e=>{setPatient({...patient, dob: e})}}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -133,7 +144,7 @@ export default function MaternityUnit({ id }) {
                                             label="Inpatient Number"
                                             placeholder="Inpatient Number"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -142,39 +153,64 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Residence</Typography>
                                 <Grid container spacing={1} padding=".5em" >
+                                    
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Region"
-                                            placeholder="Region"
-                                            size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">County</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={patient.county}
+                                                    label="County"
+                                                    onChange={e=>{console.log(e)}}
+                                                    size="small"
+                                                >
+                                                {counties && counties.map((county) => {
+                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
 
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="County"
-                                            placeholder="County"
-                                            size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                                })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} md={12} lg={6}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={patient.constituency}
+                                                    label="Constituency"
+                                                    onChange={e=>{console.log(e)}}
 
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Ward"
-                                            placeholder="Ward"
-                                            size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                                    size="small"
+                                                >
+                                                {consituencies && consituencies.map((county) => {
+                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
 
-                                        />
-                                    </Grid>
+                                                })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12} md={12} lg={6}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Ward</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={patient.ward}
+                                                    label="Ward"
+                                                    onChange={e=>{console.log(e)}}
+                                                    size="small"
+                                                >
+                                                {wards && wards.map((county) => {
+                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+
+                                                })}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
                                             fullWidth="100%"
@@ -182,7 +218,7 @@ export default function MaternityUnit({ id }) {
                                             label="Street"
                                             placeholder="Street"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
 
                                         />
                                     </Grid>
@@ -198,7 +234,8 @@ export default function MaternityUnit({ id }) {
                                             label="Gravidity"
                                             placeholder="Gravidity"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
@@ -209,7 +246,8 @@ export default function MaternityUnit({ id }) {
                                             label="Parity"
                                             placeholder="Parity"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
@@ -220,7 +258,8 @@ export default function MaternityUnit({ id }) {
                                             label="LNMP"
                                             placeholder="LNMP"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
@@ -231,7 +270,8 @@ export default function MaternityUnit({ id }) {
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
@@ -242,7 +282,8 @@ export default function MaternityUnit({ id }) {
                                             label="Gestation"
                                             placeholder="Gestation (weeks)"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
@@ -253,13 +294,11 @@ export default function MaternityUnit({ id }) {
                                             label="HIV Status"
                                             placeholder="HIV Status"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
-
+                                        onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
 
                                 </Grid>
-
 
                                 <p></p>
 
@@ -340,7 +379,8 @@ export default function MaternityUnit({ id }) {
                                             label="If CS, reason"
                                             placeholder="If CS, reason"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -492,7 +532,8 @@ export default function MaternityUnit({ id }) {
                                             label="Baby's Inpatient Number"
                                             placeholder="Baby's Inpatient Number"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -509,7 +550,8 @@ export default function MaternityUnit({ id }) {
                                             label="Gestation period at birth (weeks)"
                                             placeholder="Gestation period at birth (weeks)"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={8} >
@@ -594,7 +636,8 @@ export default function MaternityUnit({ id }) {
                                             label="Current Temperature"
                                             placeholder="Current Temperature"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -604,7 +647,8 @@ export default function MaternityUnit({ id }) {
                                             label="Birth Weight (g)"
                                             placeholder="Birth Weight (g)"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -634,7 +678,8 @@ export default function MaternityUnit({ id }) {
                                             label="If BBA, where?"
                                             placeholder="If BBA, where?"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -650,7 +695,8 @@ export default function MaternityUnit({ id }) {
                                             label="Mother's Health Status"
                                             placeholder="Mother's Health Status"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -680,7 +726,8 @@ export default function MaternityUnit({ id }) {
                                             label="Completed By"
                                             placeholder="Completed By"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -712,7 +759,8 @@ export default function MaternityUnit({ id }) {
                                             label="Mother's Health Status"
                                             placeholder="Mother's Health Status"
                                             size="small"
-                                        // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
 
                                         />
                                     </Grid>
