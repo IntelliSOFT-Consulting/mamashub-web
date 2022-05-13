@@ -88,7 +88,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Recepients Name"
                                                 placeholder="Recepients Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -99,7 +100,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Hospital ID"
                                                 placeholder="Hospital ID"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -109,7 +111,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Legal Guardian Name"
                                                 placeholder="Legal Guardian Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -119,7 +122,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Legal Guardian Signature"
                                                 placeholder="Legal Guardian Signature"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid> <Grid item xs={12} md={12} lg={6}>
                                             <TextField
@@ -128,7 +132,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Clinician Name"
                                                 placeholder="Clinician Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid> <Grid item xs={12} md={12} lg={6}>
                                             <TextField
@@ -137,7 +142,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Clinician Designation"
                                                 placeholder="Clinician Designation"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -179,7 +185,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Gestation of Recipient"
                                                 placeholder="Gestation of Recipient"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -190,7 +197,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Location of Recepient"
                                                 placeholder="Location of Recepient"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -201,7 +209,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Volume per feed (mls/hr)"
                                                 placeholder="Volume per feed (mls/hr)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -212,7 +221,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Preterm of term milk"
                                                 placeholder="Preterm of term milk"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -222,7 +232,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Name of prescriber"
                                                 placeholder="Name of prescriber"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={6}>
@@ -232,7 +243,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Nursing staff name"
                                                 placeholder="Nursing staff name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                     </Grid>
@@ -274,7 +286,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Amount of Total DHM Available"
                                                 placeholder="Amount of Total DHM Available"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={8}>
@@ -318,7 +331,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Recepient Name"
                                                 placeholder="Recepient Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={8}>
@@ -328,7 +342,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Reason for receiving DHM"
                                                 placeholder="Reason for receiving DHM"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
 
@@ -348,7 +363,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Donor ID"
                                                 placeholder="Donor ID"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
                                             />
                                         </Grid>
                                         <Grid item xs={12} md={12} lg={8}>
@@ -358,7 +374,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Batch Number"
                                                 placeholder="Batch Number"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -369,7 +386,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Volume of DHM Ordered (m/s)"
                                                 placeholder="Volume of DHM Ordered (m/s)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -415,7 +433,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Donor ID"
                                                 placeholder="Donor ID"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -426,7 +445,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Number of bottles"
                                                 placeholder="Number of bottles"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -437,7 +457,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Volume Dispenced (m/s)"
                                                 placeholder="Volume Dispenced (m/s)"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -448,7 +469,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Expiry Date"
                                                 placeholder="Expiry Date"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -459,7 +481,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Dispensing Staff Name"
                                                 placeholder="Dispensing Staff Name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
@@ -470,7 +493,8 @@ export default function HumanMilkBank({ id }) {
                                                 label="Receiving staff name"
                                                 placeholder="Receiving staff name"
                                                 size="small"
-                                            // onChange={e => { setLoginInfo({ ...loginInfo, id_number: e.target.value }) }}
+                                            onChange={e=>{console.log(e)}}
+
 
                                             />
                                         </Grid>
