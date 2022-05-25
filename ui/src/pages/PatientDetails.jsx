@@ -53,13 +53,13 @@ export default function PatientDetails({id}) {
                     <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
                         <br />
                         <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
-                            <CardHeader title={`Patient/${id}`} sx={{ color: "#115987" }}></CardHeader>
+                            <CardHeader title={`Patient/${id}`} sx={{ color: "#8A5EB5" }}></CardHeader>
                             <CardContent>
                                 {patient && JSON.stringify(patient)}
                             </CardContent>
                         </Card>
                         <br />
-                        <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "50%", marginLeft: "25%", color: "#115987" }}
+                        <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "50%", marginLeft: "25%", color: "#8A5EB5" }}
                         >BACK TO PATIENTS LIST</Button>
                     </Grid>
                 </Grid>

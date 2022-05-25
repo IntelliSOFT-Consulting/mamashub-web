@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { sendPasswordResetEmail, validateEmail } from "../lib/email";
 
 const router = express.Router()
+router.use(express.json())
 
 
 // Generate Access Token

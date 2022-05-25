@@ -3,6 +3,7 @@ import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 
 const router = express.Router()
+router.use(express.json())
 
 // Get User Information.
 router.get("/", [requireJWT], async (req: Request, res: Response) => {
