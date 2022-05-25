@@ -9,18 +9,20 @@ import Index from './routes/main'
 import Auth from './routes/auth'
 import Users from './routes/users'
 import Patients from './routes/patients'
+import FHIR from './routes/fhir'
+
 
 
 const app = express();
 const PORT = 8080;
 
-app.use(express.json())
 app.use(cors())
 
 app.use('/', Index)
 app.use('/auth', Auth)
 app.use('/users', Users)
 app.use('/patients', Patients)
+app.use('/fhir', FHIR)
 
 
 

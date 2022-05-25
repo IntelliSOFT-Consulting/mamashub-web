@@ -10,18 +10,20 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import {CancelPresentationRounded,BiotechRounded, LibraryBooks, CheckRounded , AppRegistration}
+ from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
 import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
-import { AccountCircle, AppRegistration, BabyChangingStation, ChildCare, Dashboard, Kitchen, ListAlt, People, Settings } from '@mui/icons-material';
+import { AccountCircle, Dashboard, ListAlt, People, Settings, ScheduleSend, DocumentScanner } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 const drawerWidth = 250;
 
 export default function HeaderDrawer({ children }) {
 
-  let title = "Human Milk Bank"
+  let title = "Kabarak MHIS"
   let navigate = useNavigate()
   const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
   let pages = settings
@@ -60,7 +62,7 @@ export default function HeaderDrawer({ children }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#115987' }} elevation={0}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#8A5EB5' }} elevation={0}>
         <Container maxWidth="xl">
         <Toolbar disableGutters>
         <Typography
@@ -90,7 +92,7 @@ export default function HeaderDrawer({ children }) {
                 <Button
                   key={Object.keys(page)[0]}
                   onClick={e => { navigate(`${page[Object.keys(page)[0]]}`); handleCloseNavMenu() }}
-                  sx={{ my: 2, color: '#115987', display: 'block' }}
+                  sx={{ my: 2, color: '#8A5EB5', display: 'block' }}
                 >
                   {Object.keys(page)[0]}
                 </Button>
@@ -138,7 +140,7 @@ export default function HeaderDrawer({ children }) {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto', backgroundColor: '#115987', color: 'white' }} >
+        <Box sx={{ overflow: 'auto', backgroundColor: '#8A5EB5', color: 'white' }} >
           <List >
           <ListItem button onClick={e=>navigate('/')}>
                 <ListItemIcon>
@@ -146,35 +148,53 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Dashboard' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
-          <ListItem button onClick={e=>navigate('/maternity-unit')}>
+          <Divider />
+          <ListItem button onClick={e=>navigate('/chv-referral-form')}>
                 <ListItemIcon>
-                  <AppRegistration sx={{ color: 'white' }} />
+                  <DocumentScanner sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Maternity Unit' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='CHV Referral Form' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           
-          <ListItem button onClick={e=>navigate('/new-born-unit')}>
+          <ListItem button onClick={e=>navigate('/community-referrals')}>
                 <ListItemIcon>
-                  <BabyChangingStation sx={{ color: 'white' }} />
+                  <ScheduleSend sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='New Born Unit' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Community Referrals' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           </List>
           <Divider />
          
           <List>
-          <ListItem button onClick={e=>navigate('/post-natal-unit')}>
+          <ListItem button onClick={e=>navigate('/patient-registration')}>
                 <ListItemIcon>
-                  <ChildCare sx={{ color: 'white' }} />
+                  <AppRegistration sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Post Natal Unit' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Patient Registration' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
 
-          <ListItem button onClick={e=>navigate('/human-milk-bank')}>
+          <ListItem button onClick={e=>navigate('/confirm-pregnancy')}>
                 <ListItemIcon>
-                  <Kitchen sx={{ color: 'white' }} />
+                  <CheckRounded sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Human Milk Bank' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Confirm Pregnancy' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/patient-profile')}>
+                <ListItemIcon>
+                  <LibraryBooks sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Patient's Profile" primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
+          <ListItem button onClick={e=>navigate('/physical-exam')}>
+                <ListItemIcon>
+                  <BiotechRounded sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Physical Exam" primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem><ListItem button onClick={e=>navigate('/close-anc-record')}>
+                <ListItemIcon>
+                  <CancelPresentationRounded sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Close ANC Record" primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           <Divider />
           <ListItem button onClick={e=>navigate('/patients')}>
@@ -205,14 +225,9 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Settings' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           </List>
+          {/* <br/> */}
           <br/>
           <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <p></p>
-          <p></p>
 
         </Box>
       </Drawer>

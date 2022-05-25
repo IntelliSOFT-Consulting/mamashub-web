@@ -38,27 +38,27 @@ export let sendPasswordResetEmail = async (user:any, resetLink:string) => {
 
     try {
         let response = await sendEmail({
-            subject: "Reset Password: Human Milk Bank",
+            subject: "Reset Password: Kabarak MHIS",
             to:{
                 email:user.email as string,
                 name: user.names as string
             },
             from:{
-                name: "Human Milk Bank",
+                name: "Kabarak MHIS",
                 email: "railamolo@gmail.com"
             },
             body: `Dear ${user.username},\n\n\nUse the link below to reset your password \n\n${resetLink}`,
             html: `
-            <a href=${"https://human-milk-bank.netlify.app"}><button style="background-color: #115987;border: none;padding: 15px 32px;color: white;width: 400px;font-weight: bold;">HUMAN MILK BANK</button></a>
+            <a href=${"https://devmhis.netlify.app"}><button style="background-color: #8A5EB5;border: none;padding: 15px 32px;color: white;width: 400px;font-weight: bold;">Kabarak MHIS</button></a>
             
             <br/>
             <p>Dear ${user.username},<p>
             <h3>Click on the button or link below to reset your password<h3/>
-            <a href=${resetLink}><button style="background-color:#115987;border: none;padding: 15px 32px;">Click Here</button></a>
+            <a href=${resetLink}><button style="background-color:#8A5EB5;border: none;padding: 15px 32px;">Click Here</button></a>
             <br/><br/>
             <a href=${resetLink}>Reset Link</a>
             <br/><br/>
-            <a href=${"https://human-milk-bank.netlify.app"}>Human Milk Bank Website</a>
+            <a href=${"https://devmhis.netlify.app"}>MHIS Website</a>
             `
         })
         return response

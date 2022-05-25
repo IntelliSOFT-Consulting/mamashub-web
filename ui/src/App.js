@@ -9,10 +9,13 @@ import Account from './pages/Account'
 import Users from './pages/Users'
 import PatientDetails from './pages/PatientDetails'
 import PatientList from './pages/PatientList'
-import MaternityRegistration from './pages/MaternityUnit'
-import NewBornUnit from './pages/NewBornUnit'
-import PostNatalUnit from './pages/PostNatalUnit'
-import HumanMilkBank from './pages/HumanMilkBank'
+import CloseANCRecord from './pages/CloseANCRecord'
+import PatientRegistration from './pages/PatientRegistration'
+import ConfirmPregnancy from './pages/ConfirmPregnancy'
+import PhysicalExam from './pages/PhysicalExam'
+import PatientProfile from './pages/PatientProfile'
+
+
 
 
 function App() {
@@ -28,13 +31,15 @@ function App() {
           <Route path="/new-password" element={<SetNewPassword/>} />
           <Route path="/" element={<Index/>} />
           <Route path="/users" element={<Users/>} />
-          <Route path="/new-born-unit" element={<NewBornUnit/>} />
-          <Route path="/post-natal-unit" element={<PostNatalUnit/>} />
-          <Route path="/human-milk-bank" element={<HumanMilkBank/>} />
           <Route path="/patients" element={<PatientList/>} />
           <Route path="/patients/:id" element={<PatientDetails/>} />
           <Route path="/settings" element={<PatientDetails/>} />
-          <Route path="/maternity-unit" element={<MaternityRegistration/>} />
+          <Route path="/close-anc-record" element={<CloseANCRecord/>} />
+          <Route path="/physical-exam" element={<PhysicalExam/>} />
+          <Route path="/patient-registration" element={<PatientRegistration/>} />
+          <Route path="/patient-profile" element={<PatientProfile/>} />
+          <Route path="/confirm-pregnancy" element={<ConfirmPregnancy/>} />
+
 
         </Routes>
     </Router>

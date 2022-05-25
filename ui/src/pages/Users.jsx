@@ -140,7 +140,7 @@ export default function Users() {
                             <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Reset Password</Button>
                         </>
                     }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#115987" }} onClick={handleOpen}>Create New User</Button>
+                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }} onClick={handleOpen}>Create New User</Button>
                 </Stack>
                 <p></p>
 
@@ -214,7 +214,7 @@ export default function Users() {
                                 </Select>
                             </FormControl>
 
-                            <Button variant='contained' sx={{ backgroundColor: "#115987" }} onClick={e=>{createUser()}}>Create User</Button>
+                            <Button variant='contained' sx={{ backgroundColor: "#8A5EB5" }} onClick={e=>{createUser()}}>Create User</Button>
                             <br/>
                         </Stack>
                     </Box>
