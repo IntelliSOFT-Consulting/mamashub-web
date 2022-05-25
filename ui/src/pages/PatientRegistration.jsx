@@ -13,19 +13,67 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {Patient} from '../lib/fhir/resources'
+import { Patient } from '../lib/fhir/resources'
 import { v4 as uuidv4 } from 'uuid';
-import {FhirApi} from './../lib/api'
+import { FhirApi } from './../lib/api'
+import * as qs from 'query-string';
+import { DataGrid } from '@mui/x-data-grid';
+
 
 export default function MaternityUnit({ id }) {
 
     let [patient, setPatient] = useState({})
+    let [patients, setPatients] = useState({})
     let navigate = useNavigate()
-    let [open, setOpen] = useState(false)
-    let [data, setData] = useState({})
-    let [message, setMessage] = useState(false)
+
+    let selectPatient = (id) => {
+        window.localStorage.setItem("currentPatient", id)
+    }
+
+    let getPatients = async () => {
+
+        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET'})
+        let p = data.data.entry.map((i) => {
+            let r = i.resource
+            return { id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
+                age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
+            }
+        })
+        setPatients(p)
+    }
+
+    let deletePatient = async () => {
+
+    }
+ 
+    useEffect(() => {
+        getPatients()
+    }, [])
+
+    useEffect(() => {
+        if (getCookie("token")) {
+            return
+        } else {
+            navigate('/login')
+            window.localStorage.setItem("next_page", "/")
+            return
+        }
+    }, [])
+
+
+    const [selectionModel, setSelectionModel] = useState([]);
+
+    const columns = [
+        { field: 'id', headerName: 'Patient ID', width: 150, },
+        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'age', headerName: 'Age', width: 200 },
+        // { field: 'role', headerName: 'Date of admission', width: 150 }
+    ];
+
     let isMobile = useMediaQuery('(max-width:600px)');
 
+    let args = qs.parse(window.location.search);
     const [value, setValue] = useState('1');
 
     const handleChange = (event, newValue) => {
@@ -37,8 +85,8 @@ export default function MaternityUnit({ id }) {
 
         let id = uuidv4()
         // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
-        let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({...patient, id:id}))})
-        
+        let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
+
         console.log(response)
 
         return
@@ -82,6 +130,8 @@ export default function MaternityUnit({ id }) {
                             <TabPanel value='1'>
                                 {/* <p></p> */}
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Biodata</Typography>
+                                <Divider/>
+                                <br/>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
@@ -112,14 +162,14 @@ export default function MaternityUnit({ id }) {
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
                                             value={patient.dob}
-                                            onChange={e => { console.log(e);setPatient({ ...patient, dob: e }) }}
+                                            onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
                                                 value={patient.dob}
-                                                onChange={e => { console.log(e);setPatient({ ...patient, dob: e }) }}
+                                                onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -157,7 +207,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{registerPatient()}} disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { registerPatient() }} disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -165,22 +215,35 @@ export default function MaternityUnit({ id }) {
                             <TabPanel value='2'>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registered Patients</Typography>
                                 <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-
-                                </Grid>
-
-                                <Grid container spacing={1} padding=".5em" >
-
-                                </Grid>
-                                <p></p>
-                                <Divider />
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                <br />
+                                <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
+                                    <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
+                                    <Button variant="contained" size='small' sx={{ width: "20%" }} disableElevation>Search</Button>
                                 </Stack>
+                                <br />
+                                <Container maxWidth="lg">
+                                    <DataGrid
+                                        loading={patients ? false : true}
+                                        rows={patients ? patients : []}
+                                        columns={columns}
+                                        pageSize={4}
+                                        rowsPerPageOptions={[5]}
+                                        checkboxSelection
+                                        autoHeight
+                                        disableSelectionOnClick
+                                        onCellEditStop={e => { console.log(e) }}
+                                        onSelectionModelChange={(selection) => {
+                                            if (selection.length > 1) {
+                                                const selectionSet = new Set(selectionModel);
+                                                const result = selection.filter((s) => !selectionSet.has(s));
+
+                                                setSelectionModel(result);
+                                            } else {
+                                                setSelectionModel(selection);
+                                            }
+                                        }}
+                                    />
+                                </Container>
                                 <p></p>
                             </TabPanel>
                             <TabPanel value='3'>

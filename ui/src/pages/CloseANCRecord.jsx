@@ -87,10 +87,10 @@ export default function MaternityUnit({ id }) {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Maternity Registration" value="1" />
-                                    <Tab label="Delivery Details" value="2" />
-                                    <Tab label="Newborn Registration" value="3" />
-                                    <Tab label="Mother's Health Assessment" value="4" />
+                                    <Tab label="Pregnancy Table" value="1" />
+                                    <Tab label="Close ANC Record" value="2" />
+                                    <Tab label="Closed Records" value="3" />
+                                    <Tab label="Reports" value="4" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
@@ -751,79 +751,26 @@ export default function MaternityUnit({ id }) {
 
                             {/* 4 - Mothers Health Assessment  */}
                             <TabPanel value='4'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Mother's Health Assessment</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>ANC Reports</Typography>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={8}>
-                                        <TextField
-                                            fullWidth="80%"
-                                            type="text"
-                                            multiline
-                                            minRows={4}
-                                            label="Mother's Health Status"
-                                            placeholder="Mother's Health Status"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
+                                    
                                 </Grid>
                                 <p></p>
 
                                 <Divider />
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}></Typography>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Does mother have any breast problems?</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Resuscitation"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-
-                                </Grid>
+                                
                                 <p></p>
                                 <Divider />
                                 <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Is the mother well?</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Baby Status"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
+                               
                                 <p></p>
                                 <Divider />
                                 <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
-                                </Stack>
+                                
                                 <p></p>
 
                             </TabPanel>

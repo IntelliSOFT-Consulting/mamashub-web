@@ -1,4 +1,4 @@
-import { Paper, Stack, TextField, Button, Container, useMediaQuery } from '@mui/material'
+import { Typography, Stack, TextField, Button, Container, useMediaQuery } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as qs from 'query-string';
@@ -11,6 +11,7 @@ import { FhirApi } from './../lib/api'
 export default function Index() {
     let [patients, setPatients] = useState()
     let navigate = useNavigate()
+    let [selected, setSelected] = useState([])
 
     let selectPatient = (id) => {
         window.localStorage.setItem("currentPatient", id)
@@ -50,11 +51,11 @@ export default function Index() {
     const [selectionModel, setSelectionModel] = useState([]);
 
     const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 150, editable: true },
-        { field: 'lastName', headerName: 'Last Name', width: 150, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 150, editable: true },
-        { field: 'age', headerName: 'Age', width: 200 },
-        { field: 'role', headerName: 'Date of admission', width: 150 }
+        { field: 'id', headerName: 'Patient ID', width: 150 },
+        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'age', headerName: 'Age', width: 200 }
+        // { field: 'role', headerName: 'Date of admission', width: 150 }
     ];
 
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -72,27 +73,29 @@ export default function Index() {
                 </Stack>
                 <br />
                 <Container maxWidth="lg">
-                    <DataGrid
-                        loading={patients ? false : true}
-                        rows={patients ? patients : []}
-                        columns={columns}
-                        pageSize={4}
-                        rowsPerPageOptions={[5]}
-                        checkboxSelection
-                        autoHeight
-                        disableSelectionOnClick
-                        onCellEditStop={e => { console.log(e) }}
-                        onSelectionModelChange={(selection) => {
-                            if (selection.length > 1) {
-                                const selectionSet = new Set(selectionModel);
-                                const result = selection.filter((s) => !selectionSet.has(s));
-
-                                setSelectionModel(result);
-                            } else {
-                                setSelectionModel(selection);
-                            }
-                        }}
-                    />
+                <Stack direction="row" spacing={2} alignContent="right" >
+                {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '68%' : '78%' }}></Typography>}
+                    {(selected.length === 1) &&
+                        <>
+                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'green' }}>View Patient</Button></>
+                    }
+                    {(selected.length === 1) && 
+                        <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Start Visit</Button>
+                    }
+                </Stack>
+                <br/>
+                <DataGrid
+                    loading={patients ? false : true}
+                    rows={patients?patients : []}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    autoHeight
+                    disableSelectionOnClick
+                    onSelectionModelChange={e => { setSelected(e) }}
+                    onCellEditStop={e => { console.log(e) }}
+                />
                 </Container>
             </Layout>
         </>

@@ -8,15 +8,14 @@ import { getCookie } from '../lib/cookie';
 export default function Header({ children }) {
   let title = "Kabarak MHIS"
   let pages = [
-    {
-      'Newborn Unit': '/newborn'
-    },
     { 'My Account': "/account" },
-    { 'Post Natal Unit': '/post-natal-unit' },
+    { 'MOH-100': '/moh-100' },
     { 'Patients List': '/patients' },
-    { 'Monitoring & Assessment': '/assessment' },
-    { 'Maternity Registration': '/maternity-registration' },
-    { 'Human Milk Bank': 'human-milk-bank' }
+    { 'Registration': '/patient-registration' },
+    { 'Confirm Pregnancy': '/confirm-pregancy' },
+    { 'Physical Exam': '/physical-exam' },
+    { 'Close ANC Record': '/close-anc-record' },
+    { 'Logout': '/logout' }
   ]
   let navigate = useNavigate()
   const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];

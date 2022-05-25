@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
 
-import { FhirApi } from './../lib/api'
+import { FhirApi } from '../lib/api'
 
 export default function PatientList() {
     let [patients, setPatients] = useState()
@@ -50,8 +50,8 @@ export default function PatientList() {
         { field: 'id', headerName: 'ID', width: 150 },
         { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
         { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
-        { field: 'age', headerName: 'Age', width: 200 },
-        // { field: 'role', headerName: 'Date of admission', width: 150 }
+        { field: 'age', headerName: 'Age', width: 150 },
+        { field: 'role', headerName: 'Date of referral', width: 200 }
     ];
 
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -71,15 +71,14 @@ export default function PatientList() {
                 </Stack>
                 <br />
                 <Stack direction="row" spacing={2} alignContent="right" >
-                {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '46%' : '78%' }}></Typography>}
+                {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '68%' : '78%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'red' }}>Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
+                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'red' }}>Delete Referral{(selected.length > 1) && `s`}</Button>                        </>
                     }
                     {(selected.length === 1) && 
                         <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Start Visit</Button>
                     }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }} onClick={e=>{navigate('/patient-registration')}}>Create New Patient</Button>
                 </Stack>
                 <br/>
                 <DataGrid

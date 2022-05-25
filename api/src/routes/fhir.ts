@@ -13,7 +13,7 @@ router.use(function (err:any, req: Request, res: Response, next: NextFunction) {
 });
 
 
-router.use('/fhir', [requireJWT, createProxyMiddleware(
+router.use('/', [requireJWT, createProxyMiddleware(
     {
         target: 'https://devhmis.intellisoftkenya.com', changeOrigin: true,
         pathRewrite: {
