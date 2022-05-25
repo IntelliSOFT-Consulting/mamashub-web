@@ -1,5 +1,11 @@
 ### Kabarak MHIS
 
+
+This is a web application created to
+1. Support the [Electronic version of the MCH Booklet that leverages the Android FHIR SDK](https://github.com/IntelliSOFT-Consulting/kabarak-mhmis-provider-app) 
+2. Support Administration Functionality of the same application.
+
+
 #### Development Mode
 
 `yarn dev`
@@ -34,3 +40,7 @@ Visiting http://{YOUR-IP-HERE}:8080 should display the Swagger UI Docs for the a
 #### Build the API only
 
 `docker build -t ./api` or `yarn docker:build:api`
+
+
+NOTE: Ensure to run Prisma migrations with
+`./api/run-dev-migrations.sh`

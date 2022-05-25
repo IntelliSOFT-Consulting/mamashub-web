@@ -24,15 +24,15 @@ services:
     links:
       - postgres
 
-  nndak-ui:
-    build: ./ui
-    restart:  always
-    depends_on:
-      - nndak-api
-    ports:
-      - '8082:80'
-    links:
-      - nndak-api
+  # nndak-ui:
+  #   build: ./ui
+  #   restart:  always
+  #   depends_on:
+  #     - nndak-api
+  #   ports:
+  #     - '8082:80'
+  #   links:
+  #     - nndak-api
   
 volumes:
   db:
