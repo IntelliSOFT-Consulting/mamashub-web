@@ -48,13 +48,12 @@ export default function Index() {
     }, [])
 
 
-    const [selectionModel, setSelectionModel] = useState([]);
 
     const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 150 },
-        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
-        { field: 'age', headerName: 'Age', width: 200 }
+        { field: 'id', headerName: 'Patient ID', width: 100 },
+        { field: 'lastName', headerName: 'Last Name', width: 250, },
+        { field: 'firstName', headerName: 'First Name', width: 250, },
+        { field: 'age', headerName: 'Age', width: 250 }
         // { field: 'role', headerName: 'Date of admission', width: 150 }
     ];
 

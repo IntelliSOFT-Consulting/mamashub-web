@@ -173,12 +173,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Patient Registration' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
 
-          <ListItem button onClick={e=>navigate('/confirm-pregnancy')}>
-                <ListItemIcon>
-                  <CheckRounded sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='Confirm Pregnancy' primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem>
+         
           <ListItem button onClick={e=>navigate('/patient-profile')}>
                 <ListItemIcon>
                   <LibraryBooks sx={{ color: 'white' }} />
@@ -231,7 +226,11 @@ export default function HeaderDrawer({ children }) {
           {/* <p></p> */}
           <br/>
           {/* <p></p> */}
+          <p></p>
+          {/* <p></p> */}
+          <br/>
 
+        
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

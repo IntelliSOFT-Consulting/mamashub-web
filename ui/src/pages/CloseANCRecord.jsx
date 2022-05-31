@@ -41,8 +41,8 @@ export default function MaternityUnit({ id }) {
 
     let savePatientDetails = async () => {
 
-        let response = await(await fetch('/patients', {
-            body:JSON.stringify({})
+        let response = await (await fetch('/patients', {
+            body: JSON.stringify({})
         }))
 
         return
@@ -114,7 +114,7 @@ export default function MaternityUnit({ id }) {
                                             label="Last Name"
                                             placeholder="Last Name"
                                             size="small"
-                                        onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
@@ -126,14 +126,14 @@ export default function MaternityUnit({ id }) {
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
                                             value={patient.dob}
-                                            onChange={e=>{setPatient({...patient, dob: e})}}
+                                            onChange={e => { setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
                                                 value={patient.dob}
-                                            onChange={e=>{setPatient({...patient, dob: e})}}
+                                                onChange={e => { setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -153,63 +153,63 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Residence</Typography>
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                     <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">County</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.county}
-                                                    label="County"
-                                                    onChange={e=>{console.log(e)}}
-                                                    size="small"
-                                                >
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">County</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.county}
+                                                label="County"
+                                                onChange={e => { console.log(e) }}
+                                                size="small"
+                                            >
                                                 {counties && counties.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.constituency}
-                                                    label="Constituency"
-                                                    onChange={e=>{console.log(e)}}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.constituency}
+                                                label="Constituency"
+                                                onChange={e => { console.log(e) }}
 
-                                                    size="small"
-                                                >
+                                                size="small"
+                                            >
                                                 {consituencies && consituencies.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Ward</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.ward}
-                                                    label="Ward"
-                                                    onChange={e=>{console.log(e)}}
-                                                    size="small"
-                                                >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Ward</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.ward}
+                                                label="Ward"
+                                                onChange={e => { console.log(e) }}
+                                                size="small"
+                                            >
                                                 {wards && wards.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
@@ -218,7 +218,7 @@ export default function MaternityUnit({ id }) {
                                             label="Street"
                                             placeholder="Street"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -233,7 +233,7 @@ export default function MaternityUnit({ id }) {
                                             label="Gravidity"
                                             placeholder="Gravidity"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
 
                                         />
@@ -245,7 +245,7 @@ export default function MaternityUnit({ id }) {
                                             label="Parity"
                                             placeholder="Parity"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
 
                                         />
@@ -257,7 +257,7 @@ export default function MaternityUnit({ id }) {
                                             label="LNMP"
                                             placeholder="LNMP"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
 
                                         />
@@ -269,7 +269,7 @@ export default function MaternityUnit({ id }) {
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
 
                                         />
@@ -281,13 +281,13 @@ export default function MaternityUnit({ id }) {
                                             label="Gestation"
                                             placeholder="Gestation (weeks)"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
 
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
-                                    <FormControl fullWidth>
+                                        <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">HIV Status</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
@@ -319,168 +319,34 @@ export default function MaternityUnit({ id }) {
 
                             </TabPanel>
                             <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Mother Delivery Details</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Infant Feeding</Typography>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Labor Stage</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Labor Stage"
-                                                size="small"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">ROM</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="ROM"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
+                                    <Grid item xs={12} md={12} lg={8}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                        >
 
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Delivery Method</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Delivery Method"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="If CS, reason"
-                                            placeholder="If CS, reason"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Is Placenta Complete?</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Delivery Method"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <p></p>
-
-                                <Divider />
-                                <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}></Typography>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Resuscitation</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Resuscitation"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Has the baby been given vitamin K</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Has the baby been given vitamin K"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                            <FormControlLabel value={0} control={<FormLabel />} label="Infant feeding counseling done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
 
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Does the baby show signs of prophylaxis? 1% TED</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Does the baby show signs of prophylaxis? 1% TED"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                                <MenuItem value={"No"}>No</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <p></p>
-                                <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Baby Status</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Baby Status"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                    <Grid item xs={12} md={12} lg={12}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                        >
+                                            <FormControlLabel value={0} control={<FormLabel />} label="Counseling on exclusive breastfeeding and benefits of colostrum done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
                                     </Grid>
                                 </Grid>
                                 <p></p>
@@ -494,142 +360,11 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
                             </TabPanel>
                             <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Newborn Registration</Typography>
+                                {/* <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Newborn Registration</Typography> */}
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Date of birth"
-                                            inputFormat="MM/dd/yyyy"
-                                            value={value}
-                                            onChange={handleChange}
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Date of birth"
-                                                inputFormat="MM/dd/yyyy"
-                                                value={value}
-                                                onChange={handleChange}
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Baby's Gender</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="Labor Stage"
-                                                size="small"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={"Male"}>Male</MenuItem>
-                                                <MenuItem value={"Female"}>Female</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Baby's Inpatient Number"
-                                            placeholder="Baby's Inpatient Number"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
 
-                                        />
-                                    </Grid>
-                                </Grid>
-
-                                <Divider />
-                                <Typography variant='p' sx={{ fontSize: 'medium', fontWeight: 'bold', p: '1em' }}>Baby Details</Typography>
-
-                                <Grid container spacing={1} padding=".5em" >
-
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Gestation period at birth (weeks)"
-                                            placeholder="Gestation period at birth (weeks)"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={8} >
-                                        <Card sx={{border:"1px solid black"}}> 
-                                        <CardContent sx={{alignContent:"center", textAlign:"center"}}>
-                                        <Typography variant='h5' sx={{textDecoration:"underline"}}>Apgar Chart</Typography>
-
-                                        <FormControl>
-                                            <RadioGroup
-                                                row
-                                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                                name="row-radio-buttons-group"
-                                            >
-                                                <FormControlLabel value={0} control={<FormLabel  />} label="Activity: " />
-                                                 
-                                                <FormControlLabel value={0} control={<Radio />} label="0 points" />
-                                                <FormControlLabel value={1} control={<Radio />} label="1 point" />
-                                                <FormControlLabel value={2} control={<Radio />} label="2 points" />
-                                                
-                                            </RadioGroup>
-                                            <RadioGroup
-                                                row
-                                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                                name="row-radio-buttons-group"
-                                            >
-                                                <FormControlLabel value={0} control={<FormLabel  />} label="Pulse: " />
-
-                                                <FormControlLabel value={0} control={<Radio />} label="0 points" />
-                                                <FormControlLabel value={1} control={<Radio />} label="1 point" />
-                                                <FormControlLabel value={2} control={<Radio />} label="2 points" />
-                                                
-                                            </RadioGroup>
-                                            <RadioGroup
-                                                row
-                                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                                name="row-radio-buttons-group"
-                                            >
-                                                <FormControlLabel value={0} control={<FormLabel  />} label="Grimace: " />
-
-                                                <FormControlLabel value={0} control={<Radio />} label="0 points" />
-                                                <FormControlLabel value={1} control={<Radio />} label="1 point" />
-                                                <FormControlLabel value={2} control={<Radio />} label="2 points" />
-                                                
-                                            </RadioGroup>
-                                            <RadioGroup
-                                                row
-                                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                                name="row-radio-buttons-group"
-                                            >
-                                                <FormControlLabel value={0} control={<FormLabel  />} label="Appearance: " />
-
-                                                <FormControlLabel value={0} control={<Radio />} label="0 points" />
-                                                <FormControlLabel value={1} control={<Radio />} label="1 point" />
-                                                <FormControlLabel value={2} control={<Radio />} label="2 points" />
-                                                
-                                            </RadioGroup>
-                                            <RadioGroup
-                                                row
-                                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                                name="row-radio-buttons-group"
-                                            >
-                                                <FormControlLabel value={0} control={<FormLabel  />} label="Respiration: " />
-
-                                                <FormControlLabel value={0} control={<Radio />} label="0 points" />
-                                                <FormControlLabel value={1} control={<Radio />} label="1 point" />
-                                                <FormControlLabel value={2} control={<Radio />} label="2 points" />
-                                                
-                                            </RadioGroup>
-                                        </FormControl>
-                                        </CardContent>
-                                        
-                                        </Card>
-                                    </Grid>
                                 </Grid>
                                 <Divider />
                                 <Typography variant='p' sx={{ fontSize: 'medium', fontWeight: 'bold', p: '1em' }}>Vital Signs</Typography>
@@ -641,7 +376,7 @@ export default function MaternityUnit({ id }) {
                                             label="Current Temperature"
                                             placeholder="Current Temperature"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
@@ -652,7 +387,7 @@ export default function MaternityUnit({ id }) {
                                             label="Birth Weight (g)"
                                             placeholder="Birth Weight (g)"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
@@ -683,45 +418,15 @@ export default function MaternityUnit({ id }) {
                                             label="If BBA, where?"
                                             placeholder="If BBA, where?"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
                                 </Grid>
                                 <Divider />
-                                <Typography variant='p' sx={{ fontSize: 'medium', fontWeight: 'bold', p: '1em' }}>Reasons for Admission</Typography>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="80%"
-                                            type="text"
-                                            multiline
-                                            minRows={4}
-                                            label="Mother's Health Status"
-                                            placeholder="Mother's Health Status"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
 
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <p></p>
-                                        <p></p>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Admitted From</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.admittedFrom ? data.admittedFrom : "No"}
-                                                label="Admitted From"
-                                                onChange={handleChange}
-                                                size="small"
-                                            >
-                                                <MenuItem value={"Yes"}>1</MenuItem>
-                                                <MenuItem value={"No"}>2</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
+
                                     <Grid item xs={12} md={12} lg={4}>
                                         <p></p>
                                         <p></p>
@@ -731,7 +436,7 @@ export default function MaternityUnit({ id }) {
                                             label="Completed By"
                                             placeholder="Completed By"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
@@ -755,22 +460,22 @@ export default function MaternityUnit({ id }) {
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                 </Grid>
                                 <p></p>
 
                                 <Divider />
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}></Typography>
-                                
+
                                 <p></p>
                                 <Divider />
                                 <p></p>
-                               
+
                                 <p></p>
                                 <Divider />
                                 <p></p>
-                                
+
                                 <p></p>
 
                             </TabPanel>

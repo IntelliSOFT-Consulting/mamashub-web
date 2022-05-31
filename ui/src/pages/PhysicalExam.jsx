@@ -87,7 +87,7 @@ export default function MaternityUnit({ id }) {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Conduct Physical Exam" value="1" />
+                                    <Tab label="Physical Examination" value="1" />
                                     <Tab label="Patient History" value="2" />
                                     <Tab label="Weight Monitoring Chart" value="3" />
                                     <Tab label="Reports" value="3" />
@@ -217,90 +217,6 @@ export default function MaternityUnit({ id }) {
                                 </Grid>
                                 <Divider />
                                 <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Pregnancy Details</Typography>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Gravidity"
-                                            placeholder="Gravidity"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Parity"
-                                            placeholder="Parity"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="LNMP"
-                                            placeholder="LNMP"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="EDD"
-                                            placeholder="EDD"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Gestation"
-                                            placeholder="Gestation (weeks)"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                    <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">HIV Status</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="HIV Status"
-                                                size="small"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={10}>Positive</MenuItem>
-                                                <MenuItem value={20}>Negative</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-                                </Grid>
-
-                                <p></p>
-
-                                <Divider />
                                 <p></p>
 
                                 <Stack direction="row" spacing={2} alignContent="right" >

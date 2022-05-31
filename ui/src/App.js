@@ -13,7 +13,7 @@ import CloseANCRecord from './pages/CloseANCRecord'
 import PatientRegistration from './pages/PatientRegistration'
 import ConfirmPregnancy from './pages/ConfirmPregnancy'
 import PhysicalExam from './pages/PhysicalExam'
-import PatientProfile from './pages/PatientProfile'
+import ANCProfile from './pages/ANCProfile'
 import MOH100 from './pages/MOH100'
 import CommunityReferrals from './pages/CommunityReferrals'
 
@@ -40,7 +40,7 @@ function App() {
           <Route path="/close-anc-record" element={<CloseANCRecord/>} />
           <Route path="/physical-exam" element={<PhysicalExam/>} />
           <Route path="/patient-registration" element={<PatientRegistration/>} />
-          <Route path="/patient-profile" element={<PatientProfile/>} />
+          <Route path="/patient-profile" element={<ANCProfile/>} />
           <Route path="/confirm-pregnancy" element={<ConfirmPregnancy/>} />
           <Route path="/community-referrals" element={<CommunityReferrals/>} />
           <Route path="/moh-100" element={<MOH100/>} />
