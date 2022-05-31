@@ -38,7 +38,7 @@ export default function Account() {
        <Layout>
         <Typography>Account Information</Typography>
 
-        <Card>
+        {profile && <Card>
             <CardContent> 
             <Typography>User ID:</Typography>
             <Typography variant='h5'>{profile.id}</Typography>
@@ -67,7 +67,7 @@ export default function Account() {
             </CardContent>
 
 
-        </Card>
+        </Card>}
 
        </Layout>
 

@@ -87,14 +87,15 @@ export default function MaternityUnit({ id }) {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Confirm Pregnancy" value="1" />
-                                    <Tab label="Confirmed Pregnancies" value="2" />
-                                    <Tab label="Reports" value="3" />
+                                    <Tab label="SECTION A: Patient / Client Data" value="1" />
+                                    <Tab label="SECTION B: Referral Back to the Community" value="2" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Biodata</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>SECTION A: Patient / Client Data</Typography>
+                                <Divider/>
+                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
@@ -136,14 +137,73 @@ export default function MaternityUnit({ id }) {
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Sex</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={data.admittedFrom ? data.admittedFrom : "No"}
+                                                label="Sex"
+                                                onChange={handleChange}
+                                                size="small"
+                                                defaultValue={"Female"}
+                                            >
+                                                <MenuItem value={"Male"}>Male</MenuItem>
+                                                <MenuItem value={"Female"}>Female</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
                                         <TextField
-                                            fullWidth="100%"
+                                            fullWidth="80%"
                                             type="text"
-                                            label="Inpatient Number"
-                                            placeholder="Inpatient Number"
+                                            multiline
+                                            minRows={3}
+                                            label="Reason(s) for Referral"
+                                            placeholder="Reason(s) for Referral"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        onChange={e=>{console.log(e)}}
+
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            multiline
+                                            minRows={3}
+                                            label="Main Problems"
+                                            placeholder="Main Problems"
+                                            size="small"
+                                        onChange={e=>{console.log(e)}}
+
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            multiline
+                                            minRows={3}
+                                            label="Treatment Given"
+                                            placeholder="Treatment Given"
+                                            size="small"
+                                        onChange={e=>{console.log(e)}}
+
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            multiline
+                                            minRows={3}
+                                            label="Comments"
+                                            placeholder="Comments"
+                                            size="small"
+                                        onChange={e=>{console.log(e)}}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -223,91 +283,6 @@ export default function MaternityUnit({ id }) {
                                 </Grid>
                                 <Divider />
                                 <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Pregnancy Details</Typography>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Gravidity"
-                                            placeholder="Gravidity"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Parity"
-                                            placeholder="Parity"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="LNMP"
-                                            placeholder="LNMP"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="EDD"
-                                            placeholder="EDD"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Gestation"
-                                            placeholder="Gestation (weeks)"
-                                            size="small"
-                                        onChange={e=>{console.log(e)}}
-
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                    <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">HIV Status</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="HIV Status"
-                                                size="small"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={10}>Positive</MenuItem>
-                                                <MenuItem value={20}>Negative</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-                                </Grid>
-
-                                <p></p>
-
-                                <Divider />
-                                <p></p>
 
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
@@ -318,10 +293,58 @@ export default function MaternityUnit({ id }) {
 
                             </TabPanel>
                             <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Confirmed Pregnancies</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>SECTION B: Referral back to the Community</Typography>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
+                                                <Grid item xs={12} md={12} lg={12}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Call made by referring officer</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={data.callMadeByReferringOfficer ? data.callMadeByReferringOfficer : "No"}
+                                                label="Call made by referring officer"
+                                                onChange={handleChange}
+                                                size="small"
+                                                // defaultValue={"Yes"}  
+                                            >
+                                                <MenuItem value={"Yes"}>Yes</MenuItem>
+                                                <MenuItem value={"No"}>No</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={8}>
+                                                <br/>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            readonly
+                                            value={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullaat. Duis aute irure dolor in reprehenderit in voluptate velit esse"}
+                                            multiline
+                                            minRows={3}
+                                            label="Kindly do the following to the patient"
+                                            placeholder="Kindly do the following to the patient"
+                                            size="small"
+                                        onChange={e=>{console.log(e)}}
+
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={8}>
+                                                <br/>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            readonly
+                                            multiline
+                                            minRows={3}
+                                            label="Signature"
+                                            placeholder="Signature"
+                                            size="small"
+                                        onChange={e=>{console.log(e)}}
+
+                                        />
+                                    </Grid>
                                     
                                 </Grid>
 

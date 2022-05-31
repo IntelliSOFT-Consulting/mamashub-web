@@ -6,16 +6,13 @@ import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
 
-import { FhirApi } from './../lib/api'
+import { FhirApi } from '../lib/api'
 
-export default function Index() {
+export default function PatientList() {
     let [patients, setPatients] = useState()
     let navigate = useNavigate()
-    let [selected, setSelected] = useState([])
 
-    let selectPatient = (id) => {
-        window.localStorage.setItem("currentPatient", id)
-    }
+    let [selected, setSelected] = useState([])
 
     let getPatients = async () => {
 
@@ -42,7 +39,7 @@ export default function Index() {
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/")
+            window.localStorage.setItem("next_page", "/patients")
             return
         }
     }, [])
@@ -50,11 +47,11 @@ export default function Index() {
 
 
     const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 100 },
-        { field: 'lastName', headerName: 'Last Name', width: 250, },
-        { field: 'firstName', headerName: 'First Name', width: 250, },
-        { field: 'age', headerName: 'Age', width: 250 }
-        // { field: 'role', headerName: 'Date of admission', width: 150 }
+        { field: 'id', headerName: 'ID', width: 150 },
+        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'age', headerName: 'Age', width: 150 },
+        { field: 'role', headerName: 'Date of referral', width: 200 }
     ];
 
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -66,17 +63,18 @@ export default function Index() {
         <>
             <Layout>
                 <br />
+                <Container maxWidth="lg">
+                <br/>
                 <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
                     <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
-                    <Button variant="contained" size='small' sx={{ width: "20%" }} disableElevation>Search</Button>
+                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor:"#8A5EB5" }} disableElevation>Search</Button>
                 </Stack>
                 <br />
-                <Container maxWidth="lg">
                 <Stack direction="row" spacing={2} alignContent="right" >
                 {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '68%' : '78%' }}></Typography>}
-                    {(selected.length === 1) &&
+                    {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'green' }}>View Patient</Button></>
+                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'red' }}>Delete Referral{(selected.length > 1) && `s`}</Button>                        </>
                     }
                     {(selected.length === 1) && 
                         <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Start Visit</Button>
@@ -95,6 +93,7 @@ export default function Index() {
                     onSelectionModelChange={e => { setSelected(e) }}
                     onCellEditStop={e => { console.log(e) }}
                 />
+
                 </Container>
             </Layout>
         </>

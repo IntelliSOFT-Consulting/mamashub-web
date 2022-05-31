@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../lib/cookie';
 import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
-import { AccountCircle, Dashboard, ListAlt, People, Settings, ScheduleSend, DocumentScanner } from '@mui/icons-material';
+import { PivotTableChart, Dashboard, ListAlt, People, Settings, ScheduleSend, DocumentScanner } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 const drawerWidth = 250;
@@ -149,7 +149,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Dashboard' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           <Divider />
-          <ListItem button onClick={e=>navigate('/chv-referral-form')}>
+          <ListItem button onClick={e=>navigate('/moh-100')}>
                 <ListItemIcon>
                   <DocumentScanner sx={{ color: 'white' }} />
                 </ListItemIcon>
@@ -173,17 +173,12 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Patient Registration' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
 
-          <ListItem button onClick={e=>navigate('/confirm-pregnancy')}>
-                <ListItemIcon>
-                  <CheckRounded sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='Confirm Pregnancy' primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem>
+         
           <ListItem button onClick={e=>navigate('/patient-profile')}>
                 <ListItemIcon>
                   <LibraryBooks sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary="Patient's Profile" primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary="ANC Profile" primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           <ListItem button onClick={e=>navigate('/physical-exam')}>
                 <ListItemIcon>
@@ -194,7 +189,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemIcon>
                   <CancelPresentationRounded sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary="Close ANC Record" primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary="Present Pregnancy Table" primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           <Divider />
           <ListItem button onClick={e=>navigate('/patients')}>
@@ -203,8 +198,16 @@ export default function HeaderDrawer({ children }) {
                 </ListItemIcon>
                 <ListItemText primary='Patients List' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
+          <Divider />
+          <ListItem button onClick={e=>navigate('/patients')}>
+                <ListItemIcon>
+                  <PivotTableChart sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='MOH Reports' primaryTypographyProps={{fontSize:"13px"}}/>
+          </ListItem>
           </List>
           <Divider />
+          
           <List>
           <ListItem button onClick={e=>navigate('/users')}>
                 <ListItemIcon>
@@ -214,21 +217,20 @@ export default function HeaderDrawer({ children }) {
           </ListItem>
           <ListItem button onClick={e=>navigate('/account')}>
                 <ListItemIcon>
-                  <AccountCircle sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='My Account' primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem>
-          <ListItem button>
-                <ListItemIcon>
                   <Settings sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='Settings' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='Account & Settings' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           </List>
-          {/* <br/> */}
+          <p></p>
+          {/* <p></p> */}
           <br/>
+          {/* <p></p> */}
+          <p></p>
+          {/* <p></p> */}
           <br/>
 
+        
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
