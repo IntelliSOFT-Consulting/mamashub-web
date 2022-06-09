@@ -322,7 +322,6 @@ export default function MaternityUnit({ id }) {
                                             fullWidth="80%"
                                             type="text"
                                             readonly
-                                            value={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullaat. Duis aute irure dolor in reprehenderit in voluptate velit esse"}
                                             multiline
                                             minRows={3}
                                             label="Kindly do the following to the patient"
