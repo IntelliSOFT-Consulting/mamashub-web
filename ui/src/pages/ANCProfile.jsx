@@ -21,6 +21,9 @@ import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
+import { v4 as uuidv4 } from 'uuid'
+import { FhirApi } from '../lib/api'
+import { Patient } from '../lib/fhir/resources'
 
 
 export default function MaternityUnit({ id }) {
@@ -39,11 +42,14 @@ export default function MaternityUnit({ id }) {
     };
 
 
-    let savePatientDetails = async () => {
+    let registerPatient = async () => {
 
-        let response = await (await fetch('/patients', {
-            body: JSON.stringify({})
-        }))
+        let id = uuidv4()
+        // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
+        let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
+
+        console.log(response)
+        // setOpen
 
         return
     }
@@ -86,9 +92,7 @@ export default function MaternityUnit({ id }) {
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
-
                     <Container sx={{ border: '1px white dashed' }}>
-
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -97,15 +101,13 @@ export default function MaternityUnit({ id }) {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Medical & Surgical History" value="1" />
-                                    <Tab label="Previous Pregnancy" value="2" />
+                                    <Tab label="Patient Information" value="1" />
+                                    <Tab label="Medical History" value="2" />
+                                    <Tab label="Birth Plan" value="3" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Education</Typography>
-                                <Divider />
-                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
@@ -158,7 +160,7 @@ export default function MaternityUnit({ id }) {
                                         </RadioGroup>
 
                                     </Grid>
-                                   
+
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
@@ -229,29 +231,135 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
                             </TabPanel>
                             <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Medical History</Typography>
-                                <Divider />
-                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
+
+                                            <FormControlLabel value={0} control={<FormLabel />} label="HB: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Specify"
+                                            placeholder="Specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={4}>
                                         <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">HIV Status</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">Blood Group</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={data.labor_stage ? data.labor_stage : 1}
-                                                label="HIV Status"
+                                                value={patient.bloodGroup ? patient.bloodGroup : null}
+                                                label="Blood Group"
+                                                onChange={e => { setPatient({ ...patient, bloodGroup: e.target.value }) }}
                                                 size="small"
-                                                onChange={handleChange}
+                                                defaultValue={"A"}
                                             >
-                                                <MenuItem value={10}>Positive</MenuItem>
-                                                <MenuItem value={20}>Negative</MenuItem>
+                                                <MenuItem value={"A"}>A</MenuItem>
+                                                <MenuItem value={"B"}>B</MenuItem>
+                                                <MenuItem value={"AB"}>AB</MenuItem>
+                                                <MenuItem value={"Positive"}>Positive</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Rhesus</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.rhesus ? patient.rhesus : null}
+                                                label="Rhesus"
+                                                onChange={e => { setPatient({ ...patient, rehsus: e.target.value }) }}
+                                                size="small"
+                                                defaultValue={"Negative"}
+                                            >
+
+                                                <MenuItem value={"Negative"}>Negative</MenuItem>
+                                                <MenuItem value={"Positive"}>Positive</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
+
+                                            <FormControlLabel value={0} control={<FormLabel />} label="Urinalysis: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Specify"
+                                            placeholder="Specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { setPatient({ ...patient, tbScreening: e.target.value }) }}
+
+                                        >
+
+                                            <FormControlLabel value={0} control={<FormLabel />} label="TB Screening: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Results</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.educationLevel ? patient.educationLevel : null}
+                                                label="Rhesus"
+                                                onChange={e => { setPatient({ ...patient, educationLevel: e.target.value }) }}
+                                                size="small"
+                                                defaultValue={""}
+                                            >
+
+                                                <MenuItem value={"Positive"}>Positive</MenuItem>
+                                                <MenuItem value={"Negative"}>Negative</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Grid>
@@ -266,19 +374,102 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
                             <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registration</Typography>
-                                <Divider />
+
+                                <Grid container spacing={1} padding=".5em" >
+
+
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        {!isMobile ? <DesktopDatePicker
+                                            label="EDD"
+                                            inputFormat="MM/dd/yyyy"
+                                            value={patient.edd}
+                                            onChange={e => { console.log(e); setPatient({ ...patient, edd: e }) }}
+                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                        /> :
+                                            <MobileDatePicker
+                                                label="EDD"
+                                                inputFormat="mm/dd/yyyy"
+                                                value={patient.edd}
+                                                onChange={e => { console.log(e); setPatient({ ...patient, edd: e }) }}
+                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                            />}
+                                    </Grid>
+
+                                    <Grid item xs={12} md={12} lg={8}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Birth Attendant"
+                                            placeholder="Birth Attendant"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Support Person / Birth Companion"
+                                            placeholder="Support Person / Birth Companion"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Health Facility Contact"
+                                            placeholder="Health Facility Contact"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Transport"
+                                            placeholder="Transport"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Blood Donor"
+                                            placeholder="Blood Donor"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Financial Plan for childbirth"
+                                            placeholder="Financial Plan for childbirth"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+
 
                                 <p></p>
+                                <Divider />
+
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 

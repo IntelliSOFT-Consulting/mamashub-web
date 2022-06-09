@@ -23,7 +23,7 @@ const drawerWidth = 250;
 
 export default function HeaderDrawer({ children }) {
 
-  let title = "Kabarak MHIS"
+  let title = "Mama's Hub"
   let navigate = useNavigate()
   const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
   let pages = settings
@@ -62,7 +62,7 @@ export default function HeaderDrawer({ children }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#8A5EB5' }} elevation={0}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#632165' }} elevation={0}>
         <Container maxWidth="xl">
         <Toolbar disableGutters>
         <Typography
@@ -92,7 +92,7 @@ export default function HeaderDrawer({ children }) {
                 <Button
                   key={Object.keys(page)[0]}
                   onClick={e => { navigate(`${page[Object.keys(page)[0]]}`); handleCloseNavMenu() }}
-                  sx={{ my: 2, color: '#8A5EB5', display: 'block' }}
+                  sx={{ my: 2, color: '#632165', display: 'block' }}
                 >
                   {Object.keys(page)[0]}
                 </Button>
@@ -140,7 +140,7 @@ export default function HeaderDrawer({ children }) {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto', backgroundColor: '#8A5EB5', color: 'white' }} >
+        <Box sx={{ overflow: 'auto', backgroundColor: '#632165', color: 'white' }} >
           <List >
           <ListItem button onClick={e=>navigate('/')}>
                 <ListItemIcon>
@@ -153,7 +153,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemIcon>
                   <DocumentScanner sx={{ color: 'white' }} />
                 </ListItemIcon>
-                <ListItemText primary='CHV Referral Form' primaryTypographyProps={{fontSize:"13px"}}/>
+                <ListItemText primary='CHW Referral Form' primaryTypographyProps={{fontSize:"13px"}}/>
           </ListItem>
           
           <ListItem button onClick={e=>navigate('/community-referrals')}>
@@ -185,7 +185,7 @@ export default function HeaderDrawer({ children }) {
                   <BiotechRounded sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Physical Exam" primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem><ListItem button onClick={e=>navigate('/close-anc-record')}>
+          </ListItem><ListItem button onClick={e=>navigate('/present-pregnancy-table')}>
                 <ListItemIcon>
                   <CancelPresentationRounded sx={{ color: 'white' }} />
                 </ListItemIcon>

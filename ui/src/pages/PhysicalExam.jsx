@@ -12,18 +12,10 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import countyToConstituency from '../data/county_to_consituencies.json'
-import counties from '../data/counties.json'
-import consituencyToWard from '../data/consituencies_to_ward.json'
-import consituencies from '../data/constituencies.json'
-import wards from '../data/wards.json'
 
 
-export default function MaternityUnit({ id }) {
+
+export default function PhysicalExam({ id }) {
 
     let [patient, setPatient] = useState({})
     let navigate = useNavigate()
@@ -39,8 +31,7 @@ export default function MaternityUnit({ id }) {
     };
 
 
-    let savePatientDetails = async () => {
-
+    let saveObservation = async (patientId, code, observationValue) => {
         let response = await(await fetch('/patients', {
             body:JSON.stringify({})
         }))
@@ -76,9 +67,7 @@ export default function MaternityUnit({ id }) {
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
-
                     <Container sx={{ border: '1px white dashed' }}>
-
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -90,7 +79,7 @@ export default function MaternityUnit({ id }) {
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Patient History" value="2" />
                                     <Tab label="Weight Monitoring Chart" value="3" />
-                                    <Tab label="Reports" value="3" />
+                                    <Tab label="Reports" value="4" />
 
                                 </TabList>
                             </Box>
@@ -222,7 +211,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -244,7 +233,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
@@ -256,7 +245,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 

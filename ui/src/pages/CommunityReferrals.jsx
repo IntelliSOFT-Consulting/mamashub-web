@@ -67,7 +67,7 @@ export default function PatientList() {
                 <br/>
                 <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
                     <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
-                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor:"#8A5EB5" }} disableElevation>Search</Button>
+                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor:"#632165" }} disableElevation>Search</Button>
                 </Stack>
                 <br />
                 <Stack direction="row" spacing={2} alignContent="right" >

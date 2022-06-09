@@ -12,7 +12,15 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DataGrid } from '@mui/x-data-grid';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import countyToConstituency from '../data/county_to_consituencies.json'
+import counties from '../data/counties.json'
+import consituencyToWard from '../data/consituencies_to_ward.json'
+import consituencies from '../data/constituencies.json'
+import wards from '../data/wards.json'
 
 
 export default function MaternityUnit({ id }) {
@@ -30,7 +38,6 @@ export default function MaternityUnit({ id }) {
         setValue(newValue);
     };
 
-    
 
     let savePatientDetails = async () => {
 
@@ -61,16 +68,6 @@ export default function MaternityUnit({ id }) {
             return
         }
     }
-    let [patients, setPatients] = useState()
-    const [selectionModel, setSelectionModel] = useState([]);
-
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 25 },
-        { field: 'names', headerName: 'Last Name', width: 150, editable: true },
-        { field: 'username', headerName: 'First Name', width: 150, editable: true },
-        { field: 'email', headerName: 'Age', width: 200 },
-        { field: 'role', headerName: 'Date of confirmation', width: 150 }
-    ];
 
     useEffect(() => {
         getPatientDetails(id)
@@ -90,35 +87,16 @@ export default function MaternityUnit({ id }) {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Confirm Pregnancy" value="1" />
-                                    <Tab label="Confirmed Pregnancies" value="2" />
-                                    <Tab label="Reports" value="3" />
+                                    <Tab label="Pregnancy Table" value="1" />
+                                    <Tab label="Close ANC Record" value="2" />
+                                    <Tab label="ANC Reports" value="3" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Confirm Pregnancy</Typography>
-                                <Divider />
-                                <Grid container spacing={1} padding=".5em" >
 
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Pregnacy Confirmed?</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.role}
-                                                label="Role"
-                                                onChange={e => { setData({ ...data, role: e.target.value }) }}
-                                                size="small"
-                                            >
-                                                <MenuItem value={true}>True</MenuItem>
-                                                <MenuItem value={false}>False</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
                                 <p></p>
+
                                 <Divider />
                                 <p></p>
 
@@ -131,47 +109,63 @@ export default function MaternityUnit({ id }) {
 
                             </TabPanel>
                             <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Confirmed Pregnancies</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Infant Feeding</Typography>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={8}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                        >
 
-                                </Grid>
+                                            <FormControlLabel value={0} control={<FormLabel />} label="Infant feeding counseling done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
 
-                                <Grid container spacing={1} padding=".5em" >
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={12}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                        >
+                                            <FormControlLabel value={0} control={<FormLabel />} label="Counseling on exclusive breastfeeding and benefits of colostrum done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
 
+                                    </Grid>
                                 </Grid>
                                 <p></p>
                                 <Divider />
                                 <p></p>
-                                <Container maxWidth="lg">
-                    <DataGrid
-                        loading={patients ? false : true}
-                        rows={patients ? patients : []}
-                        columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                        checkboxSelection
-                        autoHeight
-                        disableSelectionOnClick
-                        onCellEditStop={e => { console.log(e) }}
-                        onSelectionModelChange={(selection) => {
-                            if (selection.length > 1) {
-                                const selectionSet = new Set(selectionModel);
-                                const result = selection.filter((s) => !selectionSet.has(s));
-
-                                setSelectionModel(result);
-                            } else {
-                                setSelectionModel(selection);
-                            }
-                        }}
-                    />
-                </Container>
+                                <Stack direction="row" spacing={2} alignContent="right" >
+                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
+                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                </Stack>
+                                <p></p>
                             </TabPanel>
                             <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registration</Typography>
+                                {/* <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Newborn Registration</Typography> */}
                                 <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
 
+                                </Grid>
+                                <Divider />
+                                
+                                <Divider />
+                                
+                                <Grid container spacing={1} padding=".5em" >
+
+
+                                    
+                                </Grid>
+                                <Divider />
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
@@ -181,10 +175,6 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
 
                             </TabPanel>
-
-
-
-
                         </TabContext>
                     </Container>
                 </Layout>

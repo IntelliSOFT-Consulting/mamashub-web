@@ -2,7 +2,7 @@
 
 import {getCookie} from './cookie';
 
-export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "prod") ? process.env['REACT_APP_API_URL'] : '';
+export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? process.env['REACT_APP_API_URL'] : '/api';
 
 export let FhirApi = async (params) => {
     let _defaultHeaders = {

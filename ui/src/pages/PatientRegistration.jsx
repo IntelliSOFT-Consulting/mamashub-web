@@ -18,7 +18,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { FhirApi } from './../lib/api'
 import * as qs from 'query-string';
 import { DataGrid } from '@mui/x-data-grid';
-import countyToConstituency from '../data/county_to_consituencies.json'
 import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
@@ -26,7 +25,14 @@ import wards from '../data/wards.json'
 
 export default function MaternityUnit({ id }) {
 
+
+
+
     let [patient, setPatient] = useState({})
+    let [open, setOpen] = useState(false)
+    let [data, setData] = useState({})
+    let [message, setMessage] = useState(false)
+
     let [patients, setPatients] = useState({})
     let navigate = useNavigate()
 
@@ -36,10 +42,11 @@ export default function MaternityUnit({ id }) {
 
     let getPatients = async () => {
 
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET'})
+        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET' })
         let p = data.data.entry.map((i) => {
             let r = i.resource
-            return { id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
+            return {
+                id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
                 age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
             }
         })
@@ -49,7 +56,15 @@ export default function MaternityUnit({ id }) {
     let deletePatient = async () => {
 
     }
- 
+
+    useEffect(() => {
+        let _edd = new Date(patient.lmp?patient.lmp : new Date())
+        _edd.setDate(_edd.getDate() + (36 * 7))
+        console.log(_edd)
+        setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10)})
+
+    }, [patient.lmp])
+
     useEffect(() => {
         getPatients()
     }, [])
@@ -83,7 +98,8 @@ export default function MaternityUnit({ id }) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
+    let [selectedCounty, setCounty] = useState('')
+    let [selectedConsituency, setConstituency] = useState('')
 
     let registerPatient = async () => {
 
@@ -92,6 +108,9 @@ export default function MaternityUnit({ id }) {
         let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
 
         console.log(response)
+        setOpen(false)
+        setOpen(true)
+        setMessage(response.statusText)
 
         return
     }
@@ -134,7 +153,7 @@ export default function MaternityUnit({ id }) {
                             <TabPanel value='1'>
                                 {/* <p></p> */}
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Biodata</Typography>
-                                <Divider/>
+                                <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={4}>
@@ -234,7 +253,7 @@ export default function MaternityUnit({ id }) {
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
-                                    
+
                                     <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
@@ -251,20 +270,21 @@ export default function MaternityUnit({ id }) {
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
+                                    {patient.edd && <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
+                                            value={patient.edd ? patient.edd : null}
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
+                                        // onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
-                                    </Grid>
+                                    </Grid>}
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                <Grid item xs={12} md={12} lg={4}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
@@ -292,7 +312,7 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.educationLevel ? patient.educationLevel : null}
                                                 label="Education Level"
-                                                onChange={e=>{setPatient({...patient, educationLevel:e.target.value})}}
+                                                onChange={e => { setPatient({ ...patient, educationLevel: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"Primary School"}
                                             >
@@ -311,64 +331,63 @@ export default function MaternityUnit({ id }) {
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Residence</Typography>
                                 <Divider />
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                     <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">County</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.county}
-                                                    label="County"
-                                                    onChange={e=>{setPatient({...patient, county:e.target.value})}}
-                                                    size="small"
-                                                >
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">County</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.county}
+                                                label="County"
+                                                size="small"
+                                                onChange={e => { setCounty(e.target.value); setPatient({ ...patient, county: counties[parseInt(e.target.value)] }) }}>
                                                 {counties && counties.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
-
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Sub-County</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.constituency}
-                                                    label="Sub-County"
-                                                    onChange={e=>{setPatient({...patient, subCounty:e.target.value})}}
+
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Sub-County</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.constituency}
+                                                label="Sub-County"
+                                                onChange={e => { setPatient({ ...patient, subCounty: e.target.value }) }}
 
 
-                                                    size="small"
-                                                >
+                                                size="small"
+                                            >
                                                 {consituencies && consituencies.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Ward</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.ward}
-                                                    label="Ward"
-                                                    onChange={e=>{console.log(e)}}
-                                                    size="small"
-                                                >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Ward</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.ward}
+                                                label="Ward"
+                                                onChange={e => { console.log(e) }}
+                                                size="small"
+                                            >
                                                 {wards && wards.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
@@ -377,7 +396,7 @@ export default function MaternityUnit({ id }) {
                                             label="Street"
                                             placeholder="Street"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -387,7 +406,7 @@ export default function MaternityUnit({ id }) {
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Next of kin</Typography>
                                 <Divider />
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                     <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
@@ -406,9 +425,9 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.nextOfKinRelationship ? patient.nextOfKinRelationship : ""}
                                                 label="Relationship"
-                                                onChange={e=>{setPatient({...patient, nextOfKinRelationship: e.target.value})}}
+                                                onChange={e => { setPatient({ ...patient, nextOfKinRelationship: e.target.value }) }}
                                                 size="small"
-                                                // defaultValue={""}
+                                            // defaultValue={""}
                                             >
                                                 <MenuItem value={"Spouse"}>Spouse</MenuItem>
                                                 <MenuItem value={"Child"}>Child</MenuItem>
@@ -441,7 +460,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { registerPatient() }} disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { registerPatient() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -484,7 +503,7 @@ export default function MaternityUnit({ id }) {
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Reports</Typography>
                                 <Divider />
                                 <Grid container spacing={1} padding=".5em" >
-                                <Grid item xs={12} md={12} lg={8}>
+                                    <Grid item xs={12} md={12} lg={8}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Select Report</InputLabel>
                                             <Select
@@ -494,7 +513,7 @@ export default function MaternityUnit({ id }) {
                                                 label="Relationship"
                                                 onChange={handleChange}
                                                 size="small"
-                                                // defaultValue={""}
+                                            // defaultValue={""}
                                             >
                                                 <MenuItem value={"Spouse"}>Spouse</MenuItem>
                                                 <MenuItem value={"Child"}>Child</MenuItem>
@@ -503,13 +522,13 @@ export default function MaternityUnit({ id }) {
                                             </Select>
                                         </FormControl>
                                     </Grid>
-                                    </Grid>
+                                </Grid>
 
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
