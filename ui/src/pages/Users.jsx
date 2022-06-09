@@ -22,8 +22,6 @@ export default function Users() {
     let [openSnackBar, setOpenSnackBar] = useState(false)
     let [message, setMessage] = useState(false)
 
-
-
     // fetch users
     let getUsers = async () => {
         let data = (await (await fetch(`${apiHost}/users`,
@@ -50,7 +48,6 @@ export default function Users() {
         }
         return
     }
-
 
     // reset Password
     let resetPassword = async () => {

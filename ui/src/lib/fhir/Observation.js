@@ -1,11 +1,12 @@
+import {v4 as uuidv4} from 'uuid'
 
-
-export let Observation = (Observation, type=null) => {
+export let CreateObservation = (code=null, patientId=null, observationValue=null, id=null) => {
 
 
 return  {
-  "resourceType" : "Patient",
-//   ...(patient.id) && {"id" : patient.id},
+  "resourceType" : "Observation",
+  ...(id) && {"id" : id},
+  ...(!id) && {"id":uuidv4()},
 //   "meta" : {
 //     "profile" : [
 //       "http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-patient",
@@ -13,11 +14,11 @@ return  {
 //       "http://fhir.org/guides/who/core/StructureDefinition/who-patient"
 //     ]
 //   },
-//   "identifier" : [
-//     {
-//       "value" : patient.id
-//     }
-//   ],
+  "identifier" : [
+    {
+      "value" : patientId
+    }
+  ],
 //   "name" : [
 //     {
 //       "family" : patient.lastName,
