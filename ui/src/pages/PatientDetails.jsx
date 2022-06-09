@@ -13,7 +13,7 @@ export default function PatientDetails({id}) {
 
     let getPatientDetails = async ({id}) => {
         setOpen(false)
-        let data = (await (await fetch(`/patient/${id}`,
+        let data = (await (await fetch(`/api/fhir/Patient/${id}`,
             {
                 method: 'POST',
                 headers: { "Content-Type": "application/json", "Authorization":`Bearer ${getCookie("token")}`},
@@ -53,13 +53,13 @@ export default function PatientDetails({id}) {
                     <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
                         <br />
                         <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
-                            <CardHeader title={`Patient/${id}`} sx={{ color: "#8A5EB5" }}></CardHeader>
+                            <CardHeader title={`Patient/${id}`} sx={{ color: "#632165" }}></CardHeader>
                             <CardContent>
                                 {patient && JSON.stringify(patient)}
                             </CardContent>
                         </Card>
                         <br />
-                        <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "50%", marginLeft: "25%", color: "#8A5EB5" }}
+                        <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "50%", marginLeft: "25%", color: "#632165" }}
                         >BACK TO PATIENTS LIST</Button>
                     </Grid>
                 </Grid>

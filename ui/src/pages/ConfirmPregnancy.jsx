@@ -30,6 +30,7 @@ export default function MaternityUnit({ id }) {
         setValue(newValue);
     };
 
+    
 
     let savePatientDetails = async () => {
 
@@ -124,7 +125,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -175,7 +176,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 

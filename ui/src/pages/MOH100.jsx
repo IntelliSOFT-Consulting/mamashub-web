@@ -12,11 +12,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import countyToConstituency from '../data/county_to_consituencies.json'
+
 import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
@@ -31,6 +27,10 @@ export default function MaternityUnit({ id }) {
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
+    let saveReferralForm = async () => {
+
+
+    }
 
     const [value, setValue] = useState('1');
 
@@ -41,8 +41,8 @@ export default function MaternityUnit({ id }) {
 
     let savePatientDetails = async () => {
 
-        let response = await(await fetch('/patients', {
-            body:JSON.stringify({})
+        let response = await (await fetch('/patients', {
+            body: JSON.stringify({})
         }))
 
         return
@@ -94,7 +94,7 @@ export default function MaternityUnit({ id }) {
                             <TabPanel value='1'>
                                 {/* <p></p> */}
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>SECTION A: Patient / Client Data</Typography>
-                                <Divider/>
+                                <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
@@ -114,7 +114,7 @@ export default function MaternityUnit({ id }) {
                                             label="Last Name"
                                             placeholder="Last Name"
                                             size="small"
-                                        onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
@@ -126,14 +126,14 @@ export default function MaternityUnit({ id }) {
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
                                             value={patient.dob}
-                                            onChange={e=>{setPatient({...patient, dob: e})}}
+                                            onChange={e => { setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
                                                 value={patient.dob}
-                                            onChange={e=>{setPatient({...patient, dob: e})}}
+                                                onChange={e => { setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -143,9 +143,9 @@ export default function MaternityUnit({ id }) {
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={data.admittedFrom ? data.admittedFrom : "No"}
+                                                value={patient.sex ? patient.sex : ""}
                                                 label="Sex"
-                                                onChange={handleChange}
+                                                onChange={e => { setPatient({ ...patient, sex: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"Female"}
                                             >
@@ -163,7 +163,7 @@ export default function MaternityUnit({ id }) {
                                             label="Reason(s) for Referral"
                                             placeholder="Reason(s) for Referral"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { setPatient({ ...patient, reasonsForReferral: e.target.value }) }}
 
                                         />
                                     </Grid>
@@ -176,7 +176,8 @@ export default function MaternityUnit({ id }) {
                                             label="Main Problems"
                                             placeholder="Main Problems"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { setPatient({ ...patient, mainProblems: e.target.value }) }}
+
 
                                         />
                                     </Grid>
@@ -189,7 +190,8 @@ export default function MaternityUnit({ id }) {
                                             label="Treatment Given"
                                             placeholder="Treatment Given"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { setPatient({ ...patient, treatmentGiven: e.target.value }) }}
+
 
                                         />
                                     </Grid>
@@ -202,7 +204,7 @@ export default function MaternityUnit({ id }) {
                                             label="Comments"
                                             placeholder="Comments"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
@@ -212,63 +214,62 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Residence</Typography>
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                     <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">County</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.county}
-                                                    label="County"
-                                                    onChange={e=>{console.log(e)}}
-                                                    size="small"
-                                                >
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">County</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.county}
+                                                label="County"
+                                                onChange={e => { console.log(e) }}
+                                                size="small"
+                                            >
                                                 {counties && counties.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.constituency}
-                                                    label="Constituency"
-                                                    onChange={e=>{console.log(e)}}
-
-                                                    size="small"
-                                                >
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.constituency}
+                                                label="Constituency"
+                                                onChange={e => { setPatient({ ...patient, consituency: e.target.value }) }}
+                                                size="small"
+                                            >
                                                 {consituencies && consituencies.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
-                                        <Grid item xs={12} md={12} lg={6}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Ward</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={patient.ward}
-                                                    label="Ward"
-                                                    onChange={e=>{console.log(e)}}
-                                                    size="small"
-                                                >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Ward</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={patient.ward}
+                                                label="Ward"
+                                                onChange={e => { console.log(e) }}
+                                                size="small"
+                                            >
                                                 {wards && wards.map((county) => {
                                                     return <MenuItem value={county.code}>{county.name}</MenuItem>
 
                                                 })}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
@@ -277,7 +278,7 @@ export default function MaternityUnit({ id }) {
                                             label="Street"
                                             placeholder="Street"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -287,7 +288,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -297,7 +298,7 @@ export default function MaternityUnit({ id }) {
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                                <Grid item xs={12} md={12} lg={12}>
+                                    <Grid item xs={12} md={12} lg={12}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Call made by referring officer</InputLabel>
                                             <Select
@@ -305,9 +306,10 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={data.callMadeByReferringOfficer ? data.callMadeByReferringOfficer : "No"}
                                                 label="Call made by referring officer"
-                                                onChange={handleChange}
+                                                onChange={e => { setPatient({ ...patient, callMadeByReferringOfficer: e.target.value }) }}
+
                                                 size="small"
-                                                // defaultValue={"Yes"}  
+                                                defaultValue={"Yes"}
                                             >
                                                 <MenuItem value={"Yes"}>Yes</MenuItem>
                                                 <MenuItem value={"No"}>No</MenuItem>
@@ -315,7 +317,7 @@ export default function MaternityUnit({ id }) {
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={8}>
-                                                <br/>
+                                        <br />
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
@@ -326,12 +328,12 @@ export default function MaternityUnit({ id }) {
                                             label="Kindly do the following to the patient"
                                             placeholder="Kindly do the following to the patient"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            onChange={e => { console.log(e) }}
 
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={8}>
-                                                <br/>
+                                        <br />
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
@@ -341,15 +343,17 @@ export default function MaternityUnit({ id }) {
                                             label="Signature"
                                             placeholder="Signature"
                                             size="small"
-                                        onChange={e=>{console.log(e)}}
+                                            // onChange={e=>{console.log(e)}}
+                                            onChange={e => { setPatient({ ...patient, signature: e.target.value }) }}
+
 
                                         />
                                     </Grid>
-                                    
+
                                 </Grid>
 
                                 <Grid container spacing={1} padding=".5em" >
-                                    
+
                                 </Grid>
                                 <p></p>
                                 <Divider />
@@ -357,19 +361,19 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveReferralForm() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
                             <TabPanel value='3'>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registration</Typography>
                                 <Divider />
-                                
+
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#8A5EB5" }}>Save</Button>
+                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -377,7 +381,7 @@ export default function MaternityUnit({ id }) {
 
 
 
-                            
+
                         </TabContext>
                     </Container>
                 </Layout>

@@ -68,7 +68,7 @@ export default function Login() {
             <Stack
                 direction={{ xs: 'column', sm: 'column', md: 'column', lg: 'row', xl: 'row' }}
                 spacing={2}
-                divider={<Divider orientation="vertical" sx={{ color: "#8A5EB5", backgroundColor: "#8A5EB5", maxWidth: '100%' }} flexItem />}
+                divider={<Divider orientation="vertical" sx={{ color: "#632165", backgroundColor: "#632165", maxWidth: '100%' }} flexItem />}
             >
                 {/* Left Grid  */}
 
@@ -77,9 +77,9 @@ export default function Login() {
                     minWidth: (isMobile) ? '100%' : '50%',
                     maxWidth: (isMobile) ? '100%' : '50%'
                 }}>
-                    <Paper sx={{ backgroundColor: "#8A5EB5", color: 'white', minWidth: '100%' }}>
+                    <Paper sx={{ backgroundColor: "#632165", color: 'white', minWidth: '100%' }}>
                         <br />
-                        <Typography variant="h6" sx={{ textAlign: "center", fontWeight: 'bold' }}>Welcome to the Kabarak MHIS</Typography>
+                        <Typography variant="h6" sx={{ textAlign: "center", fontWeight: 'bold' }}>Welcome to Mama's Hub</Typography>
                         <br />
                     </Paper>
 
@@ -117,13 +117,13 @@ export default function Login() {
                         <br />
                         <Button variant="contained"
                             disableElevation onClick={e => { login() }}
-                            sx={{ width: "45%", backgroundColor: "#8A5EB5", borderRadius: "10px" }}>Login</Button>
+                            sx={{ width: "45%", backgroundColor: "#632165", borderRadius: "10px" }}>Login</Button>
 
                         <br />
                         <br />
                         <br />
                         <br />
-                        <Typography sx={{ textDecoration: "underline", float:'right', color:'#8A5EB5' }}
+                        <Typography sx={{ textDecoration: "underline", float:'right', color:'#632165' }}
                             textAlign="center"
                         ><a href="/reset-password">Forgot Password?</a></Typography>
                         <br />
@@ -143,7 +143,7 @@ export default function Login() {
                     <br />
                     <br />
                     {(!isMobile) &&
-                        <img src={'landing_page.png'} style={{ height: "400px", paddingLeft:"100px" }} alt="landing_page_img"></img>
+                        <img src={'landing_page.png'} style={{ height: "500px", paddingLeft:"50px" }} alt="landing_page_img"></img>
                     }
                 </Box>
             </Stack>

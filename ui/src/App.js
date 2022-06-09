@@ -16,6 +16,8 @@ import PhysicalExam from './pages/PhysicalExam'
 import ANCProfile from './pages/ANCProfile'
 import MOH100 from './pages/MOH100'
 import CommunityReferrals from './pages/CommunityReferrals'
+import Observations from './pages/Observations'
+
 
 
 
@@ -44,6 +46,7 @@ function App() {
           <Route path="/confirm-pregnancy" element={<ConfirmPregnancy/>} />
           <Route path="/community-referrals" element={<CommunityReferrals/>} />
           <Route path="/moh-100" element={<MOH100/>} />
+          <Route path="/observations" element={<Observations/>} />
 
 
 
