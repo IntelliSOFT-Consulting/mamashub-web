@@ -14,7 +14,7 @@ export default function Header({ children }) {
     { 'Registration': '/patient-registration' },
     { 'Confirm Pregnancy': '/confirm-pregancy' },
     { 'Physical Exam': '/physical-exam' },
-    { 'Close ANC Record': '/close-anc-record' },
+    { 'Close ANC Record': '/present-pregnancy-table' },
     { 'Logout': '/logout' }
   ]
   let navigate = useNavigate()

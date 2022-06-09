@@ -21,7 +21,7 @@ import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { FhirApi } from '../lib/api'
 import { Patient } from '../lib/fhir/resources'
 
@@ -49,6 +49,7 @@ export default function MaternityUnit({ id }) {
         let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
 
         console.log(response)
+        // setOpen
 
         return
     }
@@ -91,9 +92,7 @@ export default function MaternityUnit({ id }) {
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
-
                     <Container sx={{ border: '1px white dashed' }}>
-
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -104,13 +103,11 @@ export default function MaternityUnit({ id }) {
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Patient Information" value="1" />
                                     <Tab label="Medical History" value="2" />
+                                    <Tab label="Birth Plan" value="3" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Education</Typography>
-                                <Divider />
-                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
@@ -163,7 +160,7 @@ export default function MaternityUnit({ id }) {
                                         </RadioGroup>
 
                                     </Grid>
-                                   
+
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
@@ -240,9 +237,6 @@ export default function MaternityUnit({ id }) {
 
                             </TabPanel>
                             <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Medical History</Typography>
-                                <Divider />
-                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
@@ -270,7 +264,7 @@ export default function MaternityUnit({ id }) {
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                <Grid item xs={12} md={12} lg={4}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Blood Group</InputLabel>
                                             <Select
@@ -278,7 +272,7 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.bloodGroup ? patient.bloodGroup : null}
                                                 label="Blood Group"
-                                                onChange={e=>{setPatient({...patient, bloodGroup:e.target.value})}}
+                                                onChange={e => { setPatient({ ...patient, bloodGroup: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"A"}
                                             >
@@ -297,18 +291,18 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.rhesus ? patient.rhesus : null}
                                                 label="Rhesus"
-                                                onChange={e=>{setPatient({...patient, rehsus:e.target.value})}}
+                                                onChange={e => { setPatient({ ...patient, rehsus: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"Negative"}
                                             >
-                                                
+
                                                 <MenuItem value={"Negative"}>Negative</MenuItem>
                                                 <MenuItem value={"Positive"}>Positive</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                
+
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
@@ -359,11 +353,11 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.educationLevel ? patient.educationLevel : null}
                                                 label="Rhesus"
-                                                onChange={e=>{setPatient({...patient, educationLevel:e.target.value})}}
+                                                onChange={e => { setPatient({ ...patient, educationLevel: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={""}
                                             >
-                                                
+
                                                 <MenuItem value={"Positive"}>Positive</MenuItem>
                                                 <MenuItem value={"Negative"}>Negative</MenuItem>
                                             </Select>
@@ -385,10 +379,11 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
                             </TabPanel>
                             <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registration</Typography>
-                                <Divider />
+
 
                                 <p></p>
+                                <Divider />
+
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>

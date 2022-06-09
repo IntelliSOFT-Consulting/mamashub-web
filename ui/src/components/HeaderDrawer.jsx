@@ -185,7 +185,7 @@ export default function HeaderDrawer({ children }) {
                   <BiotechRounded sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Physical Exam" primaryTypographyProps={{fontSize:"13px"}}/>
-          </ListItem><ListItem button onClick={e=>navigate('/close-anc-record')}>
+          </ListItem><ListItem button onClick={e=>navigate('/present-pregnancy-table')}>
                 <ListItemIcon>
                   <CancelPresentationRounded sx={{ color: 'white' }} />
                 </ListItemIcon>

@@ -19,6 +19,7 @@ const PORT = 8080;
 app.use(cors())
 
 app.use('/', Index)
+
 app.use('/auth', Auth)
 app.use('/users', Users)
 app.use('/patients', Patients)

@@ -29,6 +29,9 @@ export default function MaternityUnit({ id }) {
 
 
     let [patient, setPatient] = useState({})
+    let [open, setOpen] = useState(false)
+    let [data, setData] = useState({})
+    let [message, setMessage] = useState(false)
 
     let [patients, setPatients] = useState({})
     let navigate = useNavigate()
@@ -105,7 +108,9 @@ export default function MaternityUnit({ id }) {
         let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
 
         console.log(response)
-
+        setOpen(false)
+        setOpen(true)
+        setMessage(response.statusText)
 
         return
     }
