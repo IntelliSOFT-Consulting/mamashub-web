@@ -22,6 +22,10 @@ import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
+import { startVisit } from '../lib/startVisit'
+import { CreateObservation } from '../lib/fhir/Observation'
+import observationCodes from '../lib/fhir/observationCodes.json'
+import { parse } from '../lib/fhir/parser'
 
 export default function MaternityUnit({ id }) {
 
@@ -32,13 +36,22 @@ export default function MaternityUnit({ id }) {
     let [open, setOpen] = useState(false)
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
-
+    let [selectedCounty, setCounty] = useState('')
+    let [selectedConsituency, setConstituency] = useState('')
     let [patients, setPatients] = useState({})
+    let [selectionModel, setSelectionModel] = useState([]);
     let navigate = useNavigate()
+    let isMobile = useMediaQuery('(max-width:600px)');
+    let args = qs.parse(window.location.search);
+    const [value, setValue] = useState('1');
 
-    let selectPatient = (id) => {
-        window.localStorage.setItem("currentPatient", id)
-    }
+    const columns = [
+        { field: 'id', headerName: 'Patient ID', width: 150, },
+        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'age', headerName: 'Age', width: 200 },
+    ];
+
 
     let getPatients = async () => {
 
@@ -58,10 +71,10 @@ export default function MaternityUnit({ id }) {
     }
 
     useEffect(() => {
-        let _edd = new Date(patient.lmp?patient.lmp : new Date())
+        let _edd = new Date(patient.lmp ? patient.lmp : new Date())
         _edd.setDate(_edd.getDate() + (36 * 7))
         console.log(_edd)
-        setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10)})
+        setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10) })
 
     }, [patient.lmp])
 
@@ -80,39 +93,44 @@ export default function MaternityUnit({ id }) {
     }, [])
 
 
-    const [selectionModel, setSelectionModel] = useState([]);
 
-    const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 150, },
-        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
-        { field: 'age', headerName: 'Age', width: 200 },
-        // { field: 'role', headerName: 'Date of admission', width: 150 }
-    ];
 
-    let isMobile = useMediaQuery('(max-width:600px)');
-
-    let args = qs.parse(window.location.search);
-    const [value, setValue] = useState('1');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    let [selectedCounty, setCounty] = useState('')
-    let [selectedConsituency, setConstituency] = useState('')
+
 
     let registerPatient = async () => {
+        try {
+            let id = uuidv4()
+            let encounterId = uuidv4()
+            // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
+            let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
+            console.log(response)
+            setOpen(false)
+            setOpen(true)
+            setMessage(response.statusText)
 
-        let id = uuidv4()
-        // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
-        let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
+            // //Create Encounter
+            // let encounter = await FhirApi({
+            //     url: `/fhir/Encounter/${encounterId}`, method: 'PUT',
+            //     data: JSON.stringify(Patient({ ...patient, id: id }))
+            // })
 
-        console.log(response)
-        setOpen(false)
-        setOpen(true)
-        setMessage(response.statusText)
-
-        return
+            //Create and Post Observations
+            let observations = ["bodyWeight", "height", "gravida", "parity", "lmp", "edd"]
+            for (let o in observations) {
+                let observation = CreateObservation(observationCodes[o], id, data[o], encounterId)
+                console.log(observation)
+            }
+            navigate(`/patient/${id}`)
+            return
+        } catch (error) {
+            setOpen(true)
+            setMessage(error)
+            return
+        }
     }
 
     useEffect(() => {
@@ -152,9 +170,7 @@ export default function MaternityUnit({ id }) {
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Biodata</Typography>
-                                <Divider />
-                                <p></p>
+
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={4}>
                                         <TextField
@@ -195,14 +211,14 @@ export default function MaternityUnit({ id }) {
                                     <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
-                                            inputFormat="MM/dd/yyyy"
+                                            inputFormat="yyyy-MM-dd"
                                             value={patient.dob}
                                             onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
-                                                inputFormat="mm/dd/yyyy"
+                                                inputFormat="yyyy-MM-dd"
                                                 value={patient.dob}
                                                 onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
@@ -215,7 +231,7 @@ export default function MaternityUnit({ id }) {
                                             label="Gravida"
                                             placeholder="Gravida"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, otherNames: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, gravida: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -226,7 +242,7 @@ export default function MaternityUnit({ id }) {
                                             label="Parity"
                                             placeholder="Parity"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, otherNames: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, parity: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -237,7 +253,7 @@ export default function MaternityUnit({ id }) {
                                             label="Height(cm)"
                                             placeholder="Height(cm)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, otherNames: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, bodyHeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
@@ -249,7 +265,7 @@ export default function MaternityUnit({ id }) {
                                             label="Weight (kg)"
                                             placeholder="Weight (kg)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, otherNames: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, bodyWeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -257,14 +273,14 @@ export default function MaternityUnit({ id }) {
                                     <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
-                                            inputFormat="MM/dd/yyyy"
+                                            inputFormat="yyyy-MM-dd"
                                             value={patient.lmp}
                                             onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="LMP"
-                                                inputFormat="MM/dd/yyyy"
+                                                inputFormat="yyyy-MM-dd"
                                                 value={patient.lmp}
                                                 onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
@@ -278,7 +294,7 @@ export default function MaternityUnit({ id }) {
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                        // onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>}
@@ -301,7 +317,7 @@ export default function MaternityUnit({ id }) {
                                             label="Phone Number"
                                             placeholder="Phone Number"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, phoneNumber: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, patientPhoneNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -443,7 +459,7 @@ export default function MaternityUnit({ id }) {
                                             label="Next of Kin's contact/phone no."
                                             placeholder="Next of Kin's contact/phone no."
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, contactPhoneNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -489,7 +505,6 @@ export default function MaternityUnit({ id }) {
                                             if (selection.length > 1) {
                                                 const selectionSet = new Set(selectionModel);
                                                 const result = selection.filter((s) => !selectionSet.has(s));
-
                                                 setSelectionModel(result);
                                             } else {
                                                 setSelectionModel(selection);
@@ -499,44 +514,7 @@ export default function MaternityUnit({ id }) {
                                 </Container>
                                 <p></p>
                             </TabPanel>
-                            <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Reports</Typography>
-                                <Divider />
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={8}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select Report</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={""}
-                                                label="Relationship"
-                                                onChange={handleChange}
-                                                size="small"
-                                            // defaultValue={""}
-                                            >
-                                                <MenuItem value={"Spouse"}>Spouse</MenuItem>
-                                                <MenuItem value={"Child"}>Child</MenuItem>
-                                                <MenuItem value={"Parent"}>Parent</MenuItem>
-                                                <MenuItem value={"Relatives"}>Relatives</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
-
-                            </TabPanel>
-
-
-
-
+                           
                         </TabContext>
                     </Container>
                 </Layout>

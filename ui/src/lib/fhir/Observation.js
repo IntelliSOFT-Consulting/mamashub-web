@@ -1,55 +1,51 @@
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
-export let CreateObservation = (code=null, patientId=null, observationValue=null, id=null) => {
-
-
-return  {
-  "resourceType" : "Observation",
-  ...(id) && {"id" : id},
-  ...(!id) && {"id":uuidv4()},
-//   "meta" : {
-//     "profile" : [
-//       "http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-patient",
-//       "http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-base-patient",
-//       "http://fhir.org/guides/who/core/StructureDefinition/who-patient"
-//     ]
-//   },
-  "identifier" : [
-    {
-      "value" : patientId
-    }
-  ],
-//   "name" : [
-//     {
-//       "family" : patient.lastName,
-//       "given" : [
-//         patient.firstName
-//       ]
-//     }
-//   ],
-//   "telecom" : [
-//     {
-//       "value" : "pgmitchv75x2e0ng"
-//     }
-//   ],
-//   "birthDate" : new Date(patient.dob).toISOString().slice(0, 10),
-//   "address" : [
-//     {
-//       "line" : [
-//         "3vanfiig97ar0klcac"
-//       ]
-//     }
-//   ],
-//   "contact" : [
-//     {
-//       "telecom" : [
-//         {
-//           "value" : patient.phoneNumber
-//         }
-//       ]
-//     }
-//   ]
+export let CreateObservationValue = (value, type, unit, code, system = "http://unitsofmeasure.org") => {
+  if (!value || !unit || !code) {
+    throw Error("value, unit and code are required to create an observation")
+  }
+  return {
+    value, unit, code, system, type
+  }
 }
+
+export let CreateObservation = (code = null, patientId = null, observationValue = null, id = null, encounterId = null) => {
+
+  let value = CreateObservationValue(observationValue)
+
+
+  return {
+    "resourceType": "Observation",
+    ...(id) && { "id": id },
+    ...(!id) && { "id": uuidv4() },
+    status: "final",
+    code: {
+      coding: [
+        {
+          "system": (code.system === "snomed") ? "http://snomed.info/sct" : (code.system === "loinc") ? "http://loinc.org" : "http://example.com",
+          "code": code.code,
+          "display": code.display
+        }
+      ]
+    },
+    subject: {
+      reference: `Patient/${patientId}`
+    },
+    encounter: {
+      reference: `Encounter/${encounterId}`
+    },
+    effectiveDateTime: new Date().toLocaleString(),
+    issued: new Date().toLocaleString(),
+    ...(value.type === "Boolean") && { valueBoolean: value.value },
+    ...(value.type !== "Boolean") && { valueQuantity: {...value, type: null} },
+    meta: {
+      "profile": [
+        "http://fhir.org/guides/who/core/StructureDefinition/who-observation",
+        "http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-observation",
+        "http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-b4-de1"
+      ]
+    },
+  }
 }
 
 

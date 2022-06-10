@@ -28,14 +28,14 @@ return  {
   ],
   "telecom" : [
     {
-      "value" : "pgmitchv75x2e0ng"
+      "value" : patient.patientPhoneNumber,
     }
   ],
-  "birthDate" : new Date(patient.dob).toISOString().slice(0, 10),
+  "birthDate" : String(new Date(patient.dob).toISOString()).slice(0, 10),
   "address" : [
     {
       "line" : [
-        "3vanfiig97ar0klcac"
+        patient.address
       ]
     }
   ],
@@ -43,7 +43,7 @@ return  {
     {
       "telecom" : [
         {
-          "value" : patient.phoneNumber
+          "value" : patient.contactPhoneNumber
         }
       ]
     }

@@ -13,49 +13,7 @@ export default function Index() {
     let navigate = useNavigate()
     let [selected, setSelected] = useState([])
 
-    let selectPatient = (id) => {
-        window.localStorage.setItem("currentPatient", id)
-    }
-
-    let getPatients = async () => {
-
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET'})
-        let p = data.data.entry.map((i) => {
-            let r = i.resource
-            return { id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
-                age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
-            }
-        })
-        setPatients(p)
-    }
-
-    let deletePatient = async () => {
-
-    }
- 
-    useEffect(() => {
-        getPatients()
-    }, [])
-
-    useEffect(() => {
-        if (getCookie("token")) {
-            return
-        } else {
-            navigate('/login')
-            window.localStorage.setItem("next_page", "/")
-            return
-        }
-    }, [])
-
-
-
-    const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 100 },
-        { field: 'lastName', headerName: 'Last Name', width: 250, },
-        { field: 'firstName', headerName: 'First Name', width: 250, },
-        { field: 'age', headerName: 'Age', width: 250 }
-        // { field: 'role', headerName: 'Date of admission', width: 150 }
-    ];
+    
 
     let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -83,18 +41,7 @@ export default function Index() {
                     }
                 </Stack>
                 <br/>
-                <DataGrid
-                    loading={patients ? false : true}
-                    rows={patients?patients : []}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    autoHeight
-                    disableSelectionOnClick
-                    onSelectionModelChange={e => { setSelected(e) }}
-                    onCellEditStop={e => { console.log(e) }}
-                />
+                
                 </Container>
             </Layout>
         </>

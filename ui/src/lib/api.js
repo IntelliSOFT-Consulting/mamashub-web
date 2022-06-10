@@ -14,7 +14,7 @@ export let FhirApi = async (params) => {
         let response = await fetch(String(`${apiHost}${params.url}`), {
             headers: _defaultHeaders,
             method: params.method ? String(params.method) : 'GET',
-            ...(params.method !== 'GET') && { body: String(params.data) }
+            ...(params.method !== 'GET') && (params.method !== 'DELETE') && { body: String(params.data) }
         })
         let responseJSON = await response.json()
         let res = {
