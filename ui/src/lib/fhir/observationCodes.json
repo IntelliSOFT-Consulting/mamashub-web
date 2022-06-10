@@ -1,0 +1,13 @@
+{
+    "height":"loinc:8302-2:Body height:cm",
+    "bodyWeight":"loinc:29463-7:Body weight:kgs",
+    "lmp":"loinc:8665-2:LMP:weeks",
+    "edd":"loinc:11778-8:EDD:weeks",
+    "gravida":"loinc:11996-6:Gravida",
+    "parity":"loinc:11977-6:Parity",
+    "educationLevel":"loinc:82589-3:Highest level of education",
+    "age":"loinc:63900-5:Current age or age at death:years",
+    "patientPhoneNumber":"loinc:42077-8:Patient phone number",
+    "contactPhoneNumber":"loinc:89060-8:Contact Phone Number",
+    "physicalAddress":"loinc:56799-0:Address" 
+}
