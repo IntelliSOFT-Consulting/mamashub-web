@@ -5,16 +5,10 @@ let loincRegex = RegExp('')
 let snomedRegex = RegExp('')
 
 
-export let parse = async (obj) => {
-
-    for(let i in obj){
-        console.log(String(obj[i]).split(':'))
-    }
+export let parse = async (obj, key) => {
 
 
     return {
-
+        
     }
 }
-
-parse(observationCodes)

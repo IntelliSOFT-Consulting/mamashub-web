@@ -77,7 +77,6 @@ export default function PhysicalExam({ id }) {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Physical Examination" value="1" />
-                                    <Tab label="Patient History" value="2" />
                                     <Tab label="Weight Monitoring Chart" value="3" />
                                     <Tab label="Reports" value="4" />
 

@@ -26,6 +26,7 @@ import { startVisit } from '../lib/startVisit'
 import { CreateObservation } from '../lib/fhir/Observation'
 import observationCodes from '../lib/fhir/observationCodes.json'
 import { parse } from '../lib/fhir/parser'
+import { CreateEncounter } from '../lib/fhir/Encounter'
 
 export default function MaternityUnit({ id }) {
 
@@ -106,29 +107,47 @@ export default function MaternityUnit({ id }) {
             let id = uuidv4()
             let encounterId = uuidv4()
             // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
+
             let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
             console.log(response)
-            setOpen(false)
-            setOpen(true)
-            setMessage(response.statusText)
+            if (response.status === "success") {
+                setOpen(false)
+                setMessage("Patient created successfully")
+                setOpen(true)
+            }
 
-            // //Create Encounter
-            // let encounter = await FhirApi({
-            //     url: `/fhir/Encounter/${encounterId}`, method: 'PUT',
-            //     data: JSON.stringify(Patient({ ...patient, id: id }))
-            // })
+
+            //Create Encounter
+            let encounter = await FhirApi({
+                url: `/fhir/Encounter/${encounterId}`, method: 'PUT',
+                data: JSON.stringify(CreateEncounter(id, encounterId))
+            })
 
             //Create and Post Observations
-            let observations = ["bodyWeight", "height", "gravida", "parity", "lmp", "edd"]
-            for (let o in observations) {
-                let observation = CreateObservation(observationCodes[o], id, data[o], encounterId)
+            let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]
+            for (let o of observations) {
+                let p = String(observationCodes[o]).split(":")
+                console.log(p)
+                let observationId = uuidv4()
+                let observation = CreateObservation(
+                    { system: p[0], code: p[1], display: p[2] }, id,
+                    { value: patient[o] },
+                    observationId, encounterId)
                 console.log(observation)
+                // let response = await FhirApi({ url: `/fhir/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(observation) })
+                // console.log(response)
+                // if (response.status === "success") {
+                //     setOpen(false)
+                //     setMessage("Patient created successfully")
+                //     setOpen(true)
+                // }
             }
-            navigate(`/patient/${id}`)
+            navigate(`/patients/${id}`)
             return
         } catch (error) {
             setOpen(true)
-            setMessage(error)
+            console.log(error)
+            setMessage(String(error))
             return
         }
     }
@@ -154,7 +173,13 @@ export default function MaternityUnit({ id }) {
                 <Layout>
 
                     <Container sx={{ border: '1px white dashed' }}>
-
+                        <Snackbar
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={open}
+                            onClose={""}
+                            message={message}
+                            key={"loginAlert"}
+                        />
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -514,7 +539,7 @@ export default function MaternityUnit({ id }) {
                                 </Container>
                                 <p></p>
                             </TabPanel>
-                           
+
                         </TabContext>
                     </Container>
                 </Layout>
