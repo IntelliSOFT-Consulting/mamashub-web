@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid'
 
 export let CreateObservationValue = (value, type, unit, code, system = "http://unitsofmeasure.org") => {
-  if (!value || !unit || !code) {
-    throw Error("value, unit and code are required to create an observation")
-  }
+  // if (!value || !unit || !code) {
+  //   throw Error("value, unit and code are required to create an observation")
+  // }
   return {
     value, unit, code, system, type
   }
@@ -11,7 +11,7 @@ export let CreateObservationValue = (value, type, unit, code, system = "http://u
 
 export let CreateObservation = (code = null, patientId = null, observationValue = null, id = null, encounterId = null) => {
 
-  let value = CreateObservationValue(observationValue)
+  let value = observationValue
 
 
   return {
@@ -37,7 +37,7 @@ export let CreateObservation = (code = null, patientId = null, observationValue 
     effectiveDateTime: new Date().toLocaleString(),
     issued: new Date().toLocaleString(),
     ...(value.type === "Boolean") && { valueBoolean: value.value },
-    ...(value.type !== "Boolean") && { valueQuantity: {...value, type: null} },
+    ...(value.type !== "Boolean") && { valueQuantity: value.value },
     meta: {
       "profile": [
         "http://fhir.org/guides/who/core/StructureDefinition/who-observation",

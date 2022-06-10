@@ -46,8 +46,6 @@ export default function PatientList() {
 
         }
         getPatients()
-
-
     }
  
     useEffect(() => {
