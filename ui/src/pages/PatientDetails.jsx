@@ -60,7 +60,7 @@ export default function PatientDetails() {
                             <CardHeader title={`Patient/${id}`} sx={{ color: "#632165" }}></CardHeader>
                             <CardContent>
                                 {patient && Object.keys(patient).map((k)=>{
-                                    return <p>{patient[k]}</p>
+                                    return <p>{k, JSON.stringify(patient[k])}</p>
                                 })}
                             </CardContent>
                         </Card>
