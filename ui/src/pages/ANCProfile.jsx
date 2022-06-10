@@ -117,7 +117,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Surgical Operation: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Surgical Operation: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -141,7 +141,7 @@ export default function MaternityUnit({ id }) {
                                             name="row-radio-buttons-group"
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Diabetes: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Diabetes: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -154,7 +154,7 @@ export default function MaternityUnit({ id }) {
                                             name="row-radio-buttons-group"
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Hypertension: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Hypertension: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -169,7 +169,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Any drug allergies: " />
+                                            <FormControlLabel value={0}  sx={{width:"50%"}} control={<FormLabel />} label="Any drug allergies: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -204,7 +204,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Twins: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Twins: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -218,7 +218,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Tuberculosis: " />
+                                            <FormControlLabel value={0}  sx={{width:"50%"}} control={<FormLabel />} label="Tuberculosis: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -246,7 +246,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="HB: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="HB: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -264,7 +264,7 @@ export default function MaternityUnit({ id }) {
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={4}>
+                                    <Grid item xs={12} md={12} lg={6}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Blood Group</InputLabel>
                                             <Select
@@ -283,7 +283,7 @@ export default function MaternityUnit({ id }) {
                                             </Select>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
+                                    <Grid item xs={12} md={12} lg={6}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Rhesus</InputLabel>
                                             <Select
@@ -291,7 +291,7 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.rhesus ? patient.rhesus : null}
                                                 label="Rhesus"
-                                                onChange={e => { setPatient({ ...patient, rehsus: e.target.value }) }}
+                                                onChange={e => { setPatient({ ...patient, rhesus: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"Negative"}
                                             >
@@ -312,7 +312,7 @@ export default function MaternityUnit({ id }) {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="Urinalysis: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Urinalysis: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -339,7 +339,7 @@ export default function MaternityUnit({ id }) {
 
                                         >
 
-                                            <FormControlLabel value={0} control={<FormLabel />} label="TB Screening: " />
+                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="TB Screening: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -351,9 +351,9 @@ export default function MaternityUnit({ id }) {
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={patient.educationLevel ? patient.educationLevel : null}
-                                                label="Rhesus"
-                                                onChange={e => { setPatient({ ...patient, educationLevel: e.target.value }) }}
+                                                value={patient.tbResults ? patient.tbResults : null}
+                                                label="Results"
+                                                onChange={e => { setPatient({ ...patient, tbResults: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={""}
                                             >

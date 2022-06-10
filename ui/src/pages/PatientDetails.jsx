@@ -14,7 +14,11 @@ export default function PatientDetails() {
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
 
-    let getPatientDetails = async ({id}) => {
+    useEffect(() => {
+        getPatientDetails(id)
+    })
+
+    let getPatientDetails = async (id) => {
         setOpen(false)
         let data = await FhirApi({
             url: `/fhir/Patient/${id}`, method: 'GET',
@@ -27,7 +31,7 @@ export default function PatientDetails() {
             return
         }
         else {
-            setPatient(data.patient)
+            setPatient(data.data)
             return
         }
     }
@@ -55,7 +59,9 @@ export default function PatientDetails() {
                         <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
                             <CardHeader title={`Patient/${id}`} sx={{ color: "#632165" }}></CardHeader>
                             <CardContent>
-                                {patient && JSON.stringify(patient)}
+                                {patient && Object.keys(patient).map((k)=>{
+                                    return <p>{patient[k]}</p>
+                                })}
                             </CardContent>
                         </Card>
                         <br />
