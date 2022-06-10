@@ -1,24 +1,24 @@
 import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
 import { useEffect, useState, } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {getCookie} from '../lib/cookie'
+import {FhirApi} from '../lib/api'
+import Layout from '../components/Layout'
 
 
-export default function PatientDetails({id}) {
+export default function PatientDetails() {
 
     let [patient, setPatient] = useState({})
+    let { id } = useParams();
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
 
     let getPatientDetails = async ({id}) => {
         setOpen(false)
-        let data = (await (await fetch(`/api/fhir/Patient/${id}`,
-            {
-                method: 'POST',
-                headers: { "Content-Type": "application/json", "Authorization":`Bearer ${getCookie("token")}`},
-            }
-        )).json())
+        let data = await FhirApi({
+            url: `/fhir/Patient/${id}`, method: 'GET',
+        })
         console.log(data)
         setOpen(false)
         if (data.status === "error") {
@@ -37,6 +37,7 @@ export default function PatientDetails({id}) {
     },[])
     return (
         <>
+        <Layout>
             <Container>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -50,8 +51,7 @@ export default function PatientDetails({id}) {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "10%" }}>
-                        <br />
+                    <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "2%" }}>
                         <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
                             <CardHeader title={`Patient/${id}`} sx={{ color: "#632165" }}></CardHeader>
                             <CardContent>
@@ -64,6 +64,7 @@ export default function PatientDetails({id}) {
                     </Grid>
                 </Grid>
             </Container>
+            </Layout>
         </>
     )
 
