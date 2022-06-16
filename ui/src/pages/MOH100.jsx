@@ -14,23 +14,26 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import counties from '../data/counties.json'
+import countyMap from '../data/code_to_counties_map.json'
+import subCountyMap from '../data/code_to_constituencies_map.json'
+import wardMap from '../data/code_to_wards_map.json'
+import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
 
 
-export default function MaternityUnit({ id }) {
+export default function MOH100({ id }) {
 
-    let [patient, setPatient] = useState({})
+    let [referral, setReferral] = useState({})
     let navigate = useNavigate()
+    let [selectedCounty, setCounty] = useState('')
+    let [selectedSubCounty, setSubCounty] = useState('')
     let [open, setOpen] = useState(false)
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
-    let saveReferralForm = async () => {
 
-
-    }
 
     const [value, setValue] = useState('1');
 
@@ -39,46 +42,55 @@ export default function MaternityUnit({ id }) {
     };
 
 
-    let savePatientDetails = async () => {
-
-        let response = await (await fetch('/patients', {
-            body: JSON.stringify({})
-        }))
-
-        return
-    }
-
-    let getPatientDetails = async ({ id }) => {
+    let createReferral = async () => {
         setOpen(false)
-        let data = (await (await fetch(`/patient/${id}`,
-            {
-                method: 'POST',
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
+        try {
+            let fields = ['phone', 'firstName', 'lastName', 'reasonsForReferral', 'mainProblems', 'sex', 'dob', 'county', 'subCounty', 'ward']
+            for (let f of fields) {
+                if (Object.keys(referral).indexOf(f) < 0) {
+                    setMessage(`${f} is a required field`)
+                    setOpen(true)
+                    return
+                }
             }
-        )).json())
-        console.log(data)
-        setOpen(false)
-        if (data.status === "error") {
-            setMessage(data.error)
+            referral.county = countyMap[referral.county]
+            referral.subCounty = subCountyMap[referral.subCounty]
+            referral.ward = wardMap[referral.ward]
+            // console.log(JSON.stringify(referral))
+            let response = await (await fetch('/referrals',
+                { method: "POST", body: JSON.stringify(referral), headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json()
+            console.log(response)
+            if (response.status === "success") {
+                setMessage("Referral created successfully")
+                setOpen(true)
+                setTimeout(() => {
+                    navigate('/community-referrals')
+                }, 1500)
+                return
+            }
+            setMessage(response.error)
+            setOpen(true)
+            return
+        } catch (error) {
+            setMessage(JSON.stringify(error))
             setOpen(true)
             return
         }
-        else {
-            setPatient(data.patient)
-            return
-        }
     }
 
-    useEffect(() => {
-        getPatientDetails(id)
-    }, [])
+
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
-
                     <Container sx={{ border: '1px white dashed' }}>
-
+                        <Snackbar
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={open}
+                            onClose={""}
+                            message={message}
+                            key={"loginAlert"}
+                        />
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -104,7 +116,7 @@ export default function MaternityUnit({ id }) {
                                             label="First Name"
                                             placeholder="First Name"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, firstName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -114,26 +126,26 @@ export default function MaternityUnit({ id }) {
                                             label="Last Name"
                                             placeholder="Last Name"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, lastName: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, lastName: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
-                                            value={patient.dob}
-                                            onChange={e => { setPatient({ ...patient, dob: e }) }}
+                                            value={referral.dob}
+                                            onChange={e => { setReferral({ ...referral, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
-                                                value={patient.dob}
-                                                onChange={e => { setPatient({ ...patient, dob: e }) }}
+                                                value={referral.dob}
+                                                onChange={e => { setReferral({ ...referral, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -143,16 +155,26 @@ export default function MaternityUnit({ id }) {
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={patient.sex ? patient.sex : ""}
+                                                value={referral.sex ? referral.sex : ""}
                                                 label="Sex"
-                                                onChange={e => { setPatient({ ...patient, sex: e.target.value }) }}
+                                                onChange={e => { setReferral({ ...referral, sex: e.target.value }) }}
                                                 size="small"
-                                                defaultValue={"Female"}
                                             >
                                                 <MenuItem value={"Male"}>Male</MenuItem>
                                                 <MenuItem value={"Female"}>Female</MenuItem>
                                             </Select>
                                         </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth
+                                            type="tel"
+                                            label="Phone Number"
+                                            placeholder="Phone Number"
+                                            size="small"
+                                            onChange={e => { setReferral({ ...referral, phone: e.target.value }) }}
+
+                                        />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
                                         <TextField
@@ -163,7 +185,7 @@ export default function MaternityUnit({ id }) {
                                             label="Reason(s) for Referral"
                                             placeholder="Reason(s) for Referral"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, reasonsForReferral: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, reasonsForReferral: e.target.value }) }}
 
                                         />
                                     </Grid>
@@ -176,7 +198,7 @@ export default function MaternityUnit({ id }) {
                                             label="Main Problems"
                                             placeholder="Main Problems"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, mainProblems: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, mainProblems: e.target.value }) }}
 
 
                                         />
@@ -190,7 +212,7 @@ export default function MaternityUnit({ id }) {
                                             label="Treatment Given"
                                             placeholder="Treatment Given"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, treatmentGiven: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, treatmentGiven: e.target.value }) }}
 
 
                                         />
@@ -204,7 +226,8 @@ export default function MaternityUnit({ id }) {
                                             label="Comments"
                                             placeholder="Comments"
                                             size="small"
-                                            onChange={e => { console.log(e) }}
+                                            onChange={e => { setReferral({ ...referral, comments: e.target.value }) }}
+
 
                                         />
                                     </Grid>
@@ -219,15 +242,13 @@ export default function MaternityUnit({ id }) {
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">County</InputLabel>
                                             <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={patient.county}
+                                                defaultValue={32}
                                                 label="County"
-                                                onChange={e => { console.log(e) }}
+                                                onChange={e => { setReferral({ ...referral, county: e.target.value }); console.log(e.target.value) }}
                                                 size="small"
                                             >
                                                 {counties && counties.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+                                                    return <MenuItem key={county.code} value={county.code}>{county.name}</MenuItem>
 
                                                 })}
                                             </Select>
@@ -235,17 +256,16 @@ export default function MaternityUnit({ id }) {
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Constituency</InputLabel>
+                                            <InputLabel id="demo-simple-select-label">Sub-County</InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={patient.constituency}
-                                                label="Constituency"
-                                                onChange={e => { setPatient({ ...patient, consituency: e.target.value }) }}
+                                                label="Sub-County"
+                                                onChange={e => { setReferral({ ...referral, subCounty: e.target.value }) }}
                                                 size="small"
                                             >
-                                                {consituencies && consituencies.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+                                                {referral.county && countyToConstituency[referral.county].map((subCounty) => {
+                                                    return <MenuItem key={subCounty.code} value={subCounty.code}>{subCounty.name}</MenuItem>
 
                                                 })}
                                             </Select>
@@ -258,13 +278,13 @@ export default function MaternityUnit({ id }) {
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={patient.ward}
+                                                value={referral.ward}
                                                 label="Ward"
-                                                onChange={e => { console.log(e) }}
+                                                onChange={e => { setReferral({ ...referral, ward: e.target.value }) }}
                                                 size="small"
                                             >
-                                                {wards && wards.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+                                                {referral.subCounty && consituencyToWard[referral.subCounty].map((ward) => {
+                                                    return <MenuItem key={ward.code} value={ward.code}>{ward.name}</MenuItem>
 
                                                 })}
                                             </Select>
@@ -278,7 +298,8 @@ export default function MaternityUnit({ id }) {
                                             label="Street"
                                             placeholder="Street"
                                             size="small"
-                                            onChange={e => { console.log(e) }}
+                                            onChange={e => { setReferral({ ...referral, street: e.target.value }) }}
+
                                         />
                                     </Grid>
                                 </Grid>
@@ -287,8 +308,8 @@ export default function MaternityUnit({ id }) {
 
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant='contained' onClick={e => { setReferral({}) }} disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
+                                    <Button variant="contained" onClick={e => { createReferral() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -306,7 +327,7 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={data.callMadeByReferringOfficer ? data.callMadeByReferringOfficer : "No"}
                                                 label="Call made by referring officer"
-                                                onChange={e => { setPatient({ ...patient, callMadeByReferringOfficer: e.target.value }) }}
+                                                onChange={e => { setReferral({ ...referral, callMadeByReferringOfficer: e.target.value }) }}
 
                                                 size="small"
                                                 defaultValue={"Yes"}
@@ -324,8 +345,8 @@ export default function MaternityUnit({ id }) {
                                             readonly
                                             multiline
                                             minRows={3}
-                                            label="Kindly do the following to the patient"
-                                            placeholder="Kindly do the following to the patient"
+                                            label="Kindly do the following to the referral"
+                                            placeholder="Kindly do the following to the referral"
                                             size="small"
                                             onChange={e => { console.log(e) }}
 
@@ -343,7 +364,7 @@ export default function MaternityUnit({ id }) {
                                             placeholder="Signature"
                                             size="small"
                                             // onChange={e=>{console.log(e)}}
-                                            onChange={e => { setPatient({ ...patient, signature: e.target.value }) }}
+                                            onChange={e => { setReferral({ ...referral, signature: e.target.value }) }}
 
 
                                         />
@@ -360,7 +381,7 @@ export default function MaternityUnit({ id }) {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveReferralForm() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { createReferral() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>

@@ -23,6 +23,39 @@ router.use('/', [requireJWT, createProxyMiddleware(
 })]);
 
 
+router.post('/referrals', [requireJWT], async(req: Request, res: Response) => {
+
+
+    let data = req.body
+
+    return
+})
+
+
+router.get('/referrals', [requireJWT], async(req: Request, res: Response) => {
+
+    let data = req.body
+
+    return
+})
+
+router.get('/referrals/:id', [requireJWT], async(req: Request, res: Response) => {
+
+    let data = req.body
+
+    return
+})
+
+
+router.post('/createObservations', [requireJWT], async (req: Request, res: Response) => {
+
+    let observations = req.body
+    
+
+
+    return
+    
+})
 
 
 export default router

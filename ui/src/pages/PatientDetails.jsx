@@ -1,10 +1,9 @@
-import { Card, CardContent, CardHeader, Container, TextField, Button, Grid, Snackbar } from '@mui/material'
+import { Card, CardContent, CardHeader, Container, Typography, Button, Grid, Snackbar, Divider } from '@mui/material'
 import { useEffect, useState, } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {getCookie} from '../lib/cookie'
-import {FhirApi} from '../lib/api'
+import { getCookie } from '../lib/cookie'
+import { FhirApi } from '../lib/api'
 import Layout from '../components/Layout'
-
 
 export default function PatientDetails() {
 
@@ -16,7 +15,7 @@ export default function PatientDetails() {
 
     useEffect(() => {
         getPatientDetails(id)
-    })
+    }, [])
 
     let getPatientDetails = async (id) => {
         setOpen(false)
@@ -36,46 +35,45 @@ export default function PatientDetails() {
         }
     }
 
-    useEffect(() => {
-        getPatientDetails(id)
-    },[])
     return (
         <>
-        <Layout>
-            <Container>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={open}
-                    onClose={""}
-                    message={message}
-                    key={"loginAlert"}
-                />
-                <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Grid item xs={12} lg={6} md={12} sx={{ paddingTop: "2%" }}>
-                        <Card sx={{ maxWidth: "500px", backgroundColor: "", border: "1px black solid" }}>
-                            <CardHeader title={`Patient/${id}`} sx={{ color: "#632165" }}></CardHeader>
-                            <CardContent>
-                                {patient && Object.keys(patient).map((k)=>{
-                                    return <p>{k, JSON.stringify(patient[k])}</p>
-                                })}
-                            </CardContent>
-                        </Card>
-                        <br />
-                        <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "50%", marginLeft: "25%", color: "#632165" }}
-                        >BACK TO PATIENTS LIST</Button>
+            <Layout>
+                <Container>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                        open={open}
+                        onClose={""}
+                        message={message}
+                        key={"loginAlert"}
+                    />
+                    <Button variant="outlined" onClick={e => { navigate('/patients') }} sx={{ width: "30%", marginLeft: "25%", color: "#632165" }}
+                    >BACK TO PATIENTS LIST</Button>
+                    <br />
+                    <Grid
+                        container
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <Grid item xs={12} lg={10} md={12} sx={{ paddingTop: "2%" }}>
+
+                            <Card sx={{ backgroundColor: "", border: "1px black solid" }}>
+                                <CardHeader title={`Patient Card`} sx={{ color: "#632165" }}></CardHeader>
+                                <Divider></Divider>
+                                <CardContent>
+                                    {patient ? <>
+                                        <Typography variant="h5">{patient.name.family || ''} {patient.name.given[0] || ''}  </Typography>
+                                        <Typography>Patient ID: {id}</Typography>
+                                        <Typography>Age {patient.birthDate}</Typography>
+
+                                    </> : <Typography>Loading</Typography>}
+
+                                </CardContent>
+                            </Card>
+
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Container>
+                </Container>
             </Layout>
         </>
     )
-
 }
-
-
-
-

@@ -20,10 +20,11 @@ export default function PatientList() {
 
     let getPatients = async () => {
 
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET'})
+        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET' })
         let p = data.data.entry.map((i) => {
             let r = i.resource
-            return { id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
+            return {
+                id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
                 age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
             }
         })
@@ -31,23 +32,31 @@ export default function PatientList() {
     }
 
     let startPatientVisit = async () => {
-        if(selected.length === 1){
+        if (selected.length === 1) {
             startVisit(selected)
         }
 
     }
 
+
+    let viewPatient = async () => {
+        if (selected.length === 1) {
+            navigate(`/patients/${selected[0]}`)
+        }
+        return
+    }
+
     let deletePatients = async () => {
-        if(selected.length > 0){
-            for (let i of selected){
-                let data = await FhirApi({ url: `/fhir/Patient/${i}`, method: 'DELETE'})
+        if (selected.length > 0) {
+            for (let i of selected) {
+                let data = await FhirApi({ url: `/fhir/Patient/${i}`, method: 'DELETE' })
                 console.log(data)
             }
 
         }
         getPatients()
     }
- 
+
     useEffect(() => {
         getPatients()
     }, [])
@@ -82,36 +91,39 @@ export default function PatientList() {
             <Layout>
                 <br />
                 <Container maxWidth="lg">
-                <br/>
-                <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
-                    <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
-                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor:"#632165" }} disableElevation>Search</Button>
-                </Stack>
-                <br />
-                <Stack direction="row" spacing={2} alignContent="right" >
-                {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '46%' : '78%' }}></Typography>}
-                    {(selected.length > 0) &&
-                        <>
-                            <Button variant="contained" onClick={e=>{deletePatients()}} disableElevation sx={{ backgroundColor: 'red' }}>Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
-                    }
-                    {(selected.length === 1) && 
-                        <Button variant="contained" onClick={e=>{startPatientVisit()}} disableElevation sx={{ backgroundColor: 'gray' }}>Start Visit</Button>
-                    }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e=>{navigate('/patient-registration')}}>Create New Patient</Button>
-                </Stack>
-                <br/>
-                <DataGrid
-                    loading={patients ? false : true}
-                    rows={patients?patients : []}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    autoHeight
-                    disableSelectionOnClick
-                    onSelectionModelChange={e => { setSelected(e) }}
-                    onCellEditStop={e => { console.log(e) }}
-                />
+                    <br />
+                    <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
+                        <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
+                        <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor: "#632165" }} disableElevation>Search</Button>
+                    </Stack>
+                    <br />
+                    <Stack direction="row" spacing={2} alignContent="right" >
+                        {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '34%' : '70%' }}></Typography>}
+                        {(selected.length > 0) &&
+                            <>
+                                <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
+                        }
+                        {(selected.length === 1) &&
+                            <>
+                                <Button variant="contained" onClick={e => { startPatientVisit() }} disableElevation sx={{ backgroundColor: 'blue' }}>Start Visit</Button>
+                                <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ backgroundColor: 'green' }}>View Patient</Button>
+                            </>
+                        }
+                        <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { navigate('/patient-registration') }}>Create New Patient</Button>
+                    </Stack>
+                    <br />
+                    <DataGrid
+                        loading={patients ? false : true}
+                        rows={patients ? patients : []}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        checkboxSelection
+                        autoHeight
+                        disableSelectionOnClick
+                        onSelectionModelChange={e => { setSelected(e) }}
+                        onCellEditStop={e => { console.log(e) }}
+                    />
 
                 </Container>
             </Layout>

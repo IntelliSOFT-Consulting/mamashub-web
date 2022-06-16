@@ -10,6 +10,8 @@ import Auth from './routes/auth'
 import Users from './routes/users'
 import Patients from './routes/patients'
 import FHIR from './routes/fhir'
+import Referrals from './routes/referrals'
+
 
 
 
@@ -24,6 +26,8 @@ app.use('/auth', Auth)
 app.use('/users', Users)
 app.use('/patients', Patients)
 app.use('/fhir', FHIR)
+app.use('/referrals', Referrals)
+
 
 
 
