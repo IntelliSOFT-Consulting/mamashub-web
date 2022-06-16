@@ -1,9 +1,13 @@
-export let CreateEncounter = async (patientId,encounterId ) => {
+export let CreateEncounter = async (patientId, encounterId ) => {
 
 
     return {
         resourceType:"Encounter",
-        id: encounterId
+        id: encounterId,
+        reference:{
+            "patient":`Patient/${patientId}`
+        },
+        
 
         
 

@@ -38,10 +38,22 @@ model Patient {
   updatedAt DateTime @updatedAt
 }
 
+model Referral {
+  id        String   @id @default(uuid())
+  phone     String
+  firstName String   @unique
+  lastName  String   @unique
+  dob       DateTime
+  sex       String   @default("Female")
+  data      Json
+  residence Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum ROLE {
   ADMINISTRATOR
   NURSE
   CHW
-  PEDIATRICIAN
   CLINICIAN
 }

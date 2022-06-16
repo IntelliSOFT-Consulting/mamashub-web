@@ -211,8 +211,9 @@ export default function Users() {
                                     size="small"
                                 >
                                     <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
-                                    <MenuItem value={"STAFF"}>Staff</MenuItem>
-                                    <MenuItem value={"PRACTITIONER"}>Practitioner</MenuItem>
+                                    <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
+                                    <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
+                                    <MenuItem value={"CHW"}>CHW</MenuItem>
                                 </Select>
                             </FormControl>
 

@@ -16,12 +16,8 @@ import PhysicalExam from './pages/PhysicalExam'
 import ANCProfile from './pages/ANCProfile'
 import MOH100 from './pages/MOH100'
 import CommunityReferrals from './pages/CommunityReferrals'
-import Observations from './pages/Observations'
-
-
-
-
-
+import Observations from './pages/Observations' 
+import ViewMOH100 from './pages/ViewMOH100' 
 
 function App() {
     return ( 
@@ -47,8 +43,7 @@ function App() {
           <Route path="/community-referrals" element={<CommunityReferrals/>} />
           <Route path="/moh-100" element={<MOH100/>} />
           <Route path="/observations" element={<Observations/>} />
-
-
+          <Route path="/referral/:id" element={<ViewMOH100/>} />
 
         </Routes>
     </Router>

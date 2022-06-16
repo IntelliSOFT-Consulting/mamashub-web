@@ -5,33 +5,70 @@ import * as qs from 'query-string';
 import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
+import { apiHost } from '../lib/api';
 
-import { FhirApi } from '../lib/api'
+function timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = seconds / 31536000;
+
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 
 export default function PatientList() {
-    let [patients, setPatients] = useState()
+    let [referrals, setReferrals] = useState([])
     let navigate = useNavigate()
 
     let [selected, setSelected] = useState([])
 
-    let getPatients = async () => {
-
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET'})
-        let p = data.data.entry.map((i) => {
-            let r = i.resource
-            return { id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
-                age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
+    let getReferrals = async () => {
+        let data = (await (await fetch(`${apiHost}/referrals`,
+            { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
+        console.log(data)
+        if (data.status === "success" && data.data.length > 0) {
+            for (let v of data.data) {
+                v.createdAt = timeSince(new Date(v.createdAt)) + " ago"
+                v.dob = timeSince(new Date(v.dob)) + " old"
             }
-        })
-        setPatients(p)
+        }
+        setReferrals(data.data)
+        return
     }
 
-    let deletePatient = async () => {
+    let previewReferral = async () => {
+        if (selected.length === 1) {
+            navigate(`/referral/${selected[0]}`)
+            return
+        }
+        return
+    }
+
+    let deleteReferrals = async () => {
 
     }
- 
+
     useEffect(() => {
-        getPatients()
+        getReferrals()
     }, [])
 
     useEffect(() => {
@@ -39,7 +76,7 @@ export default function PatientList() {
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/patients")
+            window.localStorage.setItem("next_page", "/community-referrals")
             return
         }
     }, [])
@@ -50,8 +87,8 @@ export default function PatientList() {
         { field: 'id', headerName: 'ID', width: 150 },
         { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
         { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
-        { field: 'age', headerName: 'Age', width: 150 },
-        { field: 'role', headerName: 'Date of referral', width: 200 }
+        { field: 'dob', headerName: 'Age', width: 150 },
+        { field: 'createdAt', headerName: 'Referral Time', width: 200 }
     ];
 
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -64,35 +101,35 @@ export default function PatientList() {
             <Layout>
                 <br />
                 <Container maxWidth="lg">
-                <br/>
-                <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
-                    <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
-                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor:"#632165" }} disableElevation>Search</Button>
-                </Stack>
-                <br />
-                <Stack direction="row" spacing={2} alignContent="right" >
-                {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '68%' : '78%' }}></Typography>}
-                    {(selected.length > 0) &&
-                        <>
-                            <Button variant="contained" onClick={e=>{"deleteUsers()"}} disableElevation sx={{ backgroundColor: 'red' }}>Delete Referral{(selected.length > 1) && `s`}</Button>                        </>
-                    }
-                    {(selected.length === 1) && 
-                        <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }}>Start Visit</Button>
-                    }
-                </Stack>
-                <br/>
-                <DataGrid
-                    loading={patients ? false : true}
-                    rows={patients?patients : []}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    autoHeight
-                    disableSelectionOnClick
-                    onSelectionModelChange={e => { setSelected(e) }}
-                    onCellEditStop={e => { console.log(e) }}
-                />
+                    <br />
+                    <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
+                        <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
+                        <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor: "#632165" }} disableElevation>Search</Button>
+                    </Stack>
+                    <br />
+                    <Stack direction="row" spacing={2} alignContent="right" >
+                        {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '63%' : '73%' }}></Typography>}
+                        {(selected.length > 0) &&
+                            <>
+                                <Button variant="contained" onClick={e => { "deleteUsers()" }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Referral{(selected.length > 1) && `s`}</Button>                        </>
+                        }
+                        {(selected.length === 1) &&
+                            <Button variant="contained" onClick={e => { previewReferral() }} disableElevation sx={{ backgroundColor: 'gray' }}>Preview Referral</Button>
+                        }
+                    </Stack>
+                    <br />
+                    <DataGrid
+                        loading={(referrals && (referrals.length > 0)) ? false : (referrals.length === 0) ? false : true}
+                        rows={referrals ? referrals : []}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        checkboxSelection
+                        autoHeight
+                        disableSelectionOnClick
+                        onSelectionModelChange={e => { setSelected(e) }}
+                        onCellEditStop={e => { console.log(e) }}
+                    />
 
                 </Container>
             </Layout>
