@@ -44,6 +44,7 @@ export default function ANCProfile() {
         setTimeout(() => {
             setOpen(false)
         }, 2000)
+        return
     }
 
     useEffect(() => {
