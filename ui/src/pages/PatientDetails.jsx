@@ -4,10 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getCookie } from '../lib/cookie'
 import { FhirApi } from '../lib/api'
 import Layout from '../components/Layout'
+import { timeSince } from '../lib/timeSince'
 
 export default function PatientDetails() {
 
-    let [patient, setPatient] = useState({})
+    let [patient, setPatient] = useState()
     let { id } = useParams();
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
@@ -61,10 +62,10 @@ export default function PatientDetails() {
                                 <Divider></Divider>
                                 <CardContent>
                                     {patient ? <>
-                                        <Typography variant="h5">{patient.name.family || ''} {patient.name.given[0] || ''}  </Typography>
+                                        <Typography variant="h5">{patient.name[0].family || ''} {patient.name[0].given[0] || ''} </Typography>
                                         <Typography>Patient ID: {id}</Typography>
-                                        <Typography>Age {patient.birthDate}</Typography>
-
+                                        <Typography>Age: {timeSince(new Date(patient.birthDate))}</Typography>
+                                        <Typography>Phone: {patient.telecom[0].value || "Not Provided"}</Typography>
                                     </> : <Typography>Loading</Typography>}
 
                                 </CardContent>

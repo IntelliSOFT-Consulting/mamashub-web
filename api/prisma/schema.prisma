@@ -41,8 +41,8 @@ model Patient {
 model Referral {
   id        String   @id @default(uuid())
   phone     String
-  firstName String   @unique
-  lastName  String   @unique
+  firstName String
+  lastName  String
   dob       DateTime
   sex       String   @default("Female")
   data      Json

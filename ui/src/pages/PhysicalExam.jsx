@@ -13,56 +13,85 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+var Highcharts = require('highcharts');
+// Load module after Highcharts is loaded
+require('highcharts/modules/exporting')(Highcharts);
 
 
-export default function PhysicalExam({ id }) {
+export default function PhysicalExam() {
 
     let [patient, setPatient] = useState({})
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
+    let [notes, setNotes] = useState('')
+    let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
 
     const [value, setValue] = useState('1');
 
+    let saveClinicalNotes = async () => {
+        setNotesDisplay(notesDisplay + "\n" + notes)
+        setNotes('')
+        return
+    }
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    // useEffect(() => )
+
+    useEffect(() => {
+
+        if (window) {
+            Highcharts.chart('container',
+                {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Weight Monitoring'
+                    },
+                    subtitle: {
+                        text: 'Reload to refresh data'
+                    },
+                    xAxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Weight'
+                        }
+                    },
+                    plotOptions: {
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [{
+                        name: 'Patient',
+                        data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                    }]
+                }
+            );
+            return
+        }
+    }, [window])
 
 
     let saveObservation = async (patientId, code, observationValue) => {
-        let response = await(await fetch('/patients', {
-            body:JSON.stringify({})
+        let response = await (await fetch('/patients', {
+            body: JSON.stringify({})
         }))
 
         return
     }
 
-    let getPatientDetails = async ({ id }) => {
-        setOpen(false)
-        let data = (await (await fetch(`/patient/${id}`,
-            {
-                method: 'POST',
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-            }
-        )).json())
-        console.log(data)
-        setOpen(false)
-        if (data.status === "error") {
-            setMessage(data.error)
-            setOpen(true)
-            return
-        }
-        else {
-            setPatient(data.patient)
-            return
-        }
-    }
 
-    useEffect(() => {
-        getPatientDetails(id)
-    }, [])
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -77,7 +106,8 @@ export default function PhysicalExam({ id }) {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Physical Examination" value="1" />
-                                    <Tab label="Weight Monitoring Chart" value="3" />
+                                    <Tab label="Weight Monitoring Chart" value="2" />
+                                    <Tab label="Clinical Notes" value="3" />
                                     <Tab label="Reports" value="4" />
 
                                 </TabList>
@@ -85,7 +115,7 @@ export default function PhysicalExam({ id }) {
                             <TabPanel value='1'>
                                 {/* <p></p> */}
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>General Examination</Typography>
-                                <Divider/>
+                                <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={3}>
@@ -128,10 +158,10 @@ export default function PhysicalExam({ id }) {
                                             onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
                                         />
                                     </Grid>
-                                    
+
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                <Grid item xs={12} md={12} lg={3}>
+                                    <Grid item xs={12} md={12} lg={3}>
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
@@ -177,8 +207,8 @@ export default function PhysicalExam({ id }) {
                                 <p></p>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Respiration</Typography>
                                 <Grid container spacing={1} padding=".5em" >
-                                    
-                                <Grid item xs={12} md={12} lg={6}>
+
+                                    <Grid item xs={12} md={12} lg={6}>
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Respiration Exam Results</InputLabel>
                                             <Select
@@ -215,44 +245,51 @@ export default function PhysicalExam({ id }) {
                                 <p></p>
 
                             </TabPanel>
-                            <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Patient History</Typography>
-                                <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-                                    
-                                </Grid>
 
-                                <Grid container spacing={1} padding=".5em" >
-                                    
-                                </Grid>
-                                <p></p>
+                            <TabPanel value='2'>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Weight Monitoring</Typography>
                                 <Divider />
+
                                 <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
+                                <div id="container" style={{ width: "100%", height: "400px" }}></div>
                                 <p></p>
+
                             </TabPanel>
                             <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registration</Typography>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Clinical Notes</Typography>
                                 <Divider />
-                                
+                                <p></p>
+                                <Typography variant='p' sx={{ fontSize: 'small', fontWeight: 'bold' }}>{notesDisplay}</Typography>
+
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={8}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            multiline
+                                            minRows={3}
+                                            label="Clinical Notes"
+                                            placeholder="Clinical Notes"
+                                            size="small"
+                                            onChange={e => { setNotes(e.target.value) }}
+
+                                        />
+                                    </Grid>
+
+                                </Grid>
+                                <p></p>
+                                <Divider />
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveClinicalNotes() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
-
                             </TabPanel>
 
 
 
-                            
                         </TabContext>
                     </Container>
                 </Layout>

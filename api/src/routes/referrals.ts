@@ -47,6 +47,7 @@ router.post('/', [requireJWT], async (req: Request, res: Response) => {
         return
 
     } catch (error) {
+        console.error(error)
         res.statusCode = 400
         res.json({ error, status: "error" })
         return
