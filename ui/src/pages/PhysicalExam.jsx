@@ -1,5 +1,5 @@
 import { Container, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
-import { useEffect, useState, } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import { getCookie } from '../lib/cookie'
@@ -9,9 +9,10 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, FormControl, InputLabel, Select, MenuItem, Card, CardContent } from '@mui/material'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import CurrentPatient from '../components/CurrentPatient'
+
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -24,6 +25,7 @@ export default function PhysicalExam() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState('')
+    let [visit, setVisit] = useState()
     let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
@@ -37,14 +39,27 @@ export default function PhysicalExam() {
         return
     }
 
+    let saveSuccessfully = async () => {
+        setMessage("Data saved successfully")
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 2000)
+    }
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     // useEffect(() => )
+    useEffect(() => {
+        let visit = window.localStorage.getItem("currentPatient")
+        if(!visit){return}
+        setVisit(JSON.parse(visit))
+        return
+    }, [])
 
     useEffect(() => {
 
-        if (window) {
+        if (document.getElementById('container')) {
             Highcharts.chart('container',
                 {
                     chart: {
@@ -57,7 +72,10 @@ export default function PhysicalExam() {
                         text: 'Reload to refresh data'
                     },
                     xAxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                        categories: ['4', '6', '8', '10', '12', '14', '16', '18', '20', '22', '24', '26'],
+                        title:{
+                            text:'Gestation in weeks'
+                        }
                     },
                     yAxis: {
                         title: {
@@ -74,13 +92,13 @@ export default function PhysicalExam() {
                     },
                     series: [{
                         name: 'Patient',
-                        data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                        data: [70, 69, 69, 72, 73, 73, 72, 74, 76, 78, 77, 77]
                     }]
                 }
             );
             return
         }
-    }, [window])
+    }, [document.getElementById('container')])
 
 
     let saveObservation = async (patientId, code, observationValue) => {
@@ -97,6 +115,15 @@ export default function PhysicalExam() {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
                     <Container sx={{ border: '1px white dashed' }}>
+                    <Snackbar
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={open}
+                            onClose={""}
+                            message={message}
+                            key={"loginAlert"}
+                        />
+                    {visit && <CurrentPatient data={visit}/>}
+
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -108,7 +135,6 @@ export default function PhysicalExam() {
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Weight Monitoring Chart" value="2" />
                                     <Tab label="Clinical Notes" value="3" />
-                                    <Tab label="Reports" value="4" />
 
                                 </TabList>
                             </Box>
@@ -240,7 +266,7 @@ export default function PhysicalExam() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
