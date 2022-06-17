@@ -43,7 +43,7 @@ export default function MOH100({ id }) {
 
 
     let createReferral = async () => {
-        setOpen(false)
+        // setOpen(false)
         try {
             let fields = ['phone', 'firstName', 'lastName', 'reasonsForReferral', 'mainProblems', 'sex', 'dob', 'county', 'subCounty', 'ward']
             for (let f of fields) {
@@ -53,27 +53,27 @@ export default function MOH100({ id }) {
                     return
                 }
             }
-            referral.county = countyMap[referral.county]
-            referral.subCounty = subCountyMap[referral.subCounty]
-            referral.ward = wardMap[referral.ward]
+            let county = countyMap[referral.county]
+            let subCounty = subCountyMap[referral.subCounty]
+            let ward = wardMap[referral.ward]
             // console.log(JSON.stringify(referral))
             let response = await (await fetch('/referrals',
-                { method: "POST", body: JSON.stringify(referral), headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json()
+                { method: "POST", body: JSON.stringify({...referral, county, subCounty, ward}), headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json()
             console.log(response)
             if (response.status === "success") {
-                setMessage("Referral created successfully")
                 setOpen(true)
+                setMessage("Referral created successfully")
                 setTimeout(() => {
                     navigate('/community-referrals')
                 }, 1500)
                 return
             }
-            setMessage(response.error)
             setOpen(true)
+            setMessage(response.error)
             return
         } catch (error) {
-            setMessage(JSON.stringify(error))
             setOpen(true)
+            setMessage(JSON.stringify(error))
             return
         }
     }

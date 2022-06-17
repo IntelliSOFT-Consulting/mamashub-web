@@ -10,11 +10,8 @@ import { startVisit } from '../lib/startVisit';
 import { FhirApi } from './../lib/api'
 
 export default function PatientList() {
-    let [patients, setPatients] = useState()
+    let [patients, setPatients] = useState([])
     let navigate = useNavigate()
-
-
-
 
     let [selected, setSelected] = useState([])
 
@@ -33,7 +30,7 @@ export default function PatientList() {
 
     let startPatientVisit = async () => {
         if (selected.length === 1) {
-            startVisit(selected)
+            startVisit(selected[0])
         }
 
     }
@@ -49,7 +46,7 @@ export default function PatientList() {
     let deletePatients = async () => {
         if (selected.length > 0) {
             for (let i of selected) {
-                let data = await FhirApi({ url: `/fhir/Patient/${i}`, method: 'DELETE' })
+                let data = await FhirApi({ url: `/fhir/Patient/${i}?_cascade=delete`, method: 'DELETE' })
                 console.log(data)
             }
 
@@ -113,11 +110,11 @@ export default function PatientList() {
                     </Stack>
                     <br />
                     <DataGrid
-                        loading={patients ? false : true}
+                        loading={(patients && (patients.length > 0))  ? false : (patients.length === 0) ? false : true}
                         rows={patients ? patients : []}
                         columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
                         checkboxSelection
                         autoHeight
                         disableSelectionOnClick

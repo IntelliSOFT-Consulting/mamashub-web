@@ -98,6 +98,151 @@ export default function MaternityUnit({ id }) {
                                 <p></p>
 
                                 <Divider />
+
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="Urine"
+                                            placeholder="Urine"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="MUAC (cm)"
+                                            placeholder="MUAC (cm)"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={2}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="Systolic Blood Pressure"
+                                            placeholder="Systolic Blood Pressure"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={2}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Diastolic Blood Pressure"
+                                            placeholder="Diastolic Blood Pressure"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="HB"
+                                            placeholder="HB"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="Pallor"
+                                            placeholder="Pallor"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Gestation in weeks"
+                                            placeholder="Gestation in weeks"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Fundal Height"
+                                            placeholder="Fundal Height"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Presentation"
+                                            placeholder="Presentation"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Lie"
+                                            placeholder="Lie"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Foetal Heart Rate"
+                                            placeholder="Foetal Heart Rate"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Foetal Movement"
+                                            placeholder="Foetal Movement"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        {!isMobile ? <DesktopDatePicker
+                                            label="Next Visit"
+                                            inputFormat="yyyy-MM-dd"
+                                            value={patient.dob || new Date()}
+                                            onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
+                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                        /> :
+                                            <MobileDatePicker
+                                                label="Next Visit"
+                                                inputFormat="yyyy-MM-dd"
+                                                value={patient.dob || new Date()}
+                                                onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
+                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                            />}
+                                    </Grid>
+                                </Grid>
+                                <Divider />
                                 <p></p>
 
                                 <Stack direction="row" spacing={2} alignContent="right" >
@@ -157,13 +302,13 @@ export default function MaternityUnit({ id }) {
 
                                 </Grid>
                                 <Divider />
-                                
+
                                 <Divider />
-                                
+
                                 <Grid container spacing={1} padding=".5em" >
 
 
-                                    
+
                                 </Grid>
                                 <Divider />
                                 <p></p>

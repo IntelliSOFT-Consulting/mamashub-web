@@ -16,19 +16,16 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
-import countyToConstituency from '../data/county_to_consituencies.json'
-import counties from '../data/counties.json'
-import consituencyToWard from '../data/consituencies_to_ward.json'
-import consituencies from '../data/constituencies.json'
-import wards from '../data/wards.json'
 import { v4 as uuidv4 } from 'uuid'
 import { FhirApi } from '../lib/api'
 import { Patient } from '../lib/fhir/resources'
+import CurrentPatient from '../components/CurrentPatient'
 
 
-export default function MaternityUnit({ id }) {
+export default function ANCProfile() {
 
     let [patient, setPatient] = useState({})
+    let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [data, setData] = useState({})
@@ -41,42 +38,11 @@ export default function MaternityUnit({ id }) {
         setValue(newValue);
     };
 
-
-    let registerPatient = async () => {
-
-        let id = uuidv4()
-        // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
-        let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
-
-        console.log(response)
-        // setOpen
-
-        return
-    }
-
-    let getPatientDetails = async ({ id }) => {
-        setOpen(false)
-        let data = (await (await fetch(`/patient/${id}`,
-            {
-                method: 'POST',
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-            }
-        )).json())
-        console.log(data)
-        setOpen(false)
-        if (data.status === "error") {
-            setMessage(data.error)
-            setOpen(true)
-            return
-        }
-        else {
-            setPatient(data.patient)
-            return
-        }
-    }
-
     useEffect(() => {
-        getPatientDetails(id)
+        let visit = window.localStorage.getItem("currentPatient")
+        if(!visit){return}
+        setVisit(JSON.parse(visit))
+        return
     }, [])
 
     useEffect(() => {
@@ -93,6 +59,7 @@ export default function MaternityUnit({ id }) {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
                     <Container sx={{ border: '1px white dashed' }}>
+                        {visit && <CurrentPatient data={visit}/>}
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
