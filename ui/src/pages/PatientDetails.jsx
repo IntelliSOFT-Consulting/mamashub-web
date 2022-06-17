@@ -62,7 +62,7 @@ export default function PatientDetails() {
                                 <Divider></Divider>
                                 <CardContent>
                                     {patient ? <>
-                                        <Typography variant="h5">{patient.name[0].family || ''} {patient.name[0].given[0] || ''} </Typography>
+                                        <Typography variant="h5">{patient.name[0].family || ''} </Typography>
                                         <Typography>Patient ID: {id}</Typography>
                                         <Typography>Age: {timeSince(new Date(patient.birthDate))}</Typography>
                                         <Typography>Phone: {patient.telecom[0].value || "Not Provided"}</Typography>

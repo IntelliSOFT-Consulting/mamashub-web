@@ -21,11 +21,13 @@ import counties from '../data/counties.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
+import CurrentPatient from '../components/CurrentPatient'
 
 
 export default function MaternityUnit({ id }) {
 
     let [patient, setPatient] = useState({})
+    let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [data, setData] = useState({})
@@ -37,6 +39,13 @@ export default function MaternityUnit({ id }) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        let visit = window.localStorage.getItem("currentPatient")
+        if(!visit){return}
+        setVisit(JSON.parse(visit))
+        return
+    }, [])
 
 
     let savePatientDetails = async () => {
@@ -78,6 +87,14 @@ export default function MaternityUnit({ id }) {
                 <Layout>
 
                     <Container sx={{ border: '1px white dashed' }}>
+                    <Snackbar
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={open}
+                            onClose={""}
+                            message={message}
+                            key={"loginAlert"}
+                        />
+                    {visit && <CurrentPatient data={visit}/>}
 
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
