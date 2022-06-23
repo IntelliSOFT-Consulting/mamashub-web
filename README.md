@@ -1,9 +1,9 @@
-### Kabarak MHIS
+### Mama's Hub
 
 
-This is a web application created to
+This is an admin web application created to
 1. Support the [Electronic version of the MCH Booklet that leverages the Android FHIR SDK](https://github.com/IntelliSOFT-Consulting/kabarak-mhmis-provider-app) 
-2. Support Administration Functionality of the same application.
+2. Support Administration Functionality such as user management, reporting etc of the same application.
 
 
 #### Development Mode
@@ -21,16 +21,18 @@ To run a production build
 
 #### Using Docker
 
-You are able to use Docker to build images for the entire project or for the respective repos.
+Use Docker and docker-compose to build and run the images for the entire project or just for the respective repos.
 
 #### Build entire project
 
 `docker-compose up -d --build`
 
-This should bring up the application.
-By default, the application will be exposed on port 8080
+This should bring up the following application.
 
-Visiting http://{YOUR-IP-HERE}:8080 should display the Swagger UI Docs for the application.
+NOTE: By default, the application will be exposed on ports 8080 and 8081
+
+http://[YOUR-IP-HERE]:8081 - Web UI for the application.
+http://[YOUR-IP-HERE]:8080 - Swagger UI Docs for the application's API.
 
 
 #### Build the UI only
@@ -42,5 +44,9 @@ Visiting http://{YOUR-IP-HERE}:8080 should display the Swagger UI Docs for the a
 `docker build -t ./api` or `yarn docker:build:api`
 
 
-NOTE: Ensure to run Prisma migrations with
+Confirm the services are up and running.
+
+`docker-compose ps`
+
+If this is the case. Ensure to run Prisma migrations to apply any pending database schema changes with
 `./api/run-dev-migrations.sh`

@@ -1,11 +1,10 @@
 import express, {NextFunction, Response, Request} from "express";
 import { createProxyMiddleware, fixRequestBody} from 'http-proxy-middleware';
-import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
+import { requireJWTMiddleware as requireJWT } from "../lib/jwt";
 
 const router = express.Router()
 
 router.use(express.json())
-
 
 router.use(function (err:any, req: Request, res: Response, next: NextFunction) {
     console.error('Got an error!', err);
@@ -23,39 +22,46 @@ router.use('/', [requireJWT, createProxyMiddleware(
 })]);
 
 
-router.post('/referrals', [requireJWT], async(req: Request, res: Response) => {
 
 
-    let data = req.body
+router.post('/observations', [requireJWT], async (req: Request, res: Response) => {
 
-    return
-})
+    let {observations, patientId} = req.body
+    let builtObservations: any[]
+    // for(let observation of observations){
+    //     //create observations
+    //     builtObservations.push(CreateObservation(
+    //         code: observation.code.
+    //         patientId: patientId,
+    //         observationValue: observation.value,
+    //         id = 
+    //     ))
+    // }
 
+    //post observations
 
-router.get('/referrals', [requireJWT], async(req: Request, res: Response) => {
-
-    let data = req.body
-
-    return
-})
-
-router.get('/referrals/:id', [requireJWT], async(req: Request, res: Response) => {
-
-    let data = req.body
-
-    return
-})
-
-
-router.post('/createObservations', [requireJWT], async (req: Request, res: Response) => {
-
-    let observations = req.body
-    
-
-
+    // CreateObservation = (code = null, patientId = null, observationValue = null, id = null, encounterId = null) => {
     return
     
 })
+
+
+router.get('/observations/:id', [requireJWT], async (req: Request, res: Response) => {
+    
+    return
+})
+
+router.post('/encounters', [requireJWT], async (req: Request, res: Response) => {
+    // if exists, update
+    return
+})
+
+router.get('/encounters/:id', [requireJWT], async (req: Request, res: Response) => {
+    // get encounter information + observations
+    
+    return    
+})
+
 
 
 export default router
