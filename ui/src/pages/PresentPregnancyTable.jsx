@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, FormControl, InputLabel, Select, MenuItem, Card, CardContent } from '@mui/material'
+import { Box } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -16,15 +16,10 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
-import countyToConstituency from '../data/county_to_consituencies.json'
-import counties from '../data/counties.json'
-import consituencyToWard from '../data/consituencies_to_ward.json'
-import consituencies from '../data/constituencies.json'
-import wards from '../data/wards.json'
 import CurrentPatient from '../components/CurrentPatient'
 
 
-export default function MaternityUnit({ id }) {
+export default function PresentPregnancyTable() {
 
     let [patient, setPatient] = useState({})
     let [visit, setVisit] = useState()
@@ -86,9 +81,6 @@ export default function MaternityUnit({ id }) {
         }
     }
 
-    useEffect(() => {
-        getPatientDetails(id)
-    }, [])
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -323,10 +315,7 @@ export default function MaternityUnit({ id }) {
                                 {/* <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Newborn Registration</Typography> */}
                                 <Divider />
                                 <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-
-                                </Grid>
-                                <Divider />
+                               
 
                                 <Divider />
 

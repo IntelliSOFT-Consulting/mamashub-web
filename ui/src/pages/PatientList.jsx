@@ -95,15 +95,15 @@ export default function PatientList() {
                     </Stack>
                     <br />
                     <Stack direction="row" spacing={2} alignContent="right" >
-                        {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '34%' : '70%' }}></Typography>}
+                        {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '30%' : '70%' }}></Typography>}
                         {(selected.length > 0) &&
                             <>
-                                <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
+                                <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ color: "#632165", backgroundColor:"white" }}> 🗑️Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
                         }
                         {(selected.length === 1) &&
                             <>
-                                <Button variant="contained" onClick={e => { startPatientVisit() }} disableElevation sx={{ backgroundColor: 'blue' }}>Start Visit</Button>
-                                <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ backgroundColor: 'green' }}>View Patient</Button>
+                                <Button variant="contained" onClick={e => { startPatientVisit() }} disableElevation sx={{ backgroundColor: "#632165" }}>Start Visit</Button>
+                                <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ color: "#632165", backgroundColor:"white" }}>View Patient</Button>
                             </>
                         }
                         <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { navigate('/patient-registration') }}>Create New Patient</Button>

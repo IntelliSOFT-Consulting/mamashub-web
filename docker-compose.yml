@@ -13,6 +13,7 @@ services:
 
   nndak-api:
     build: ./api
+    container_name: nndak_api
     restart: always
     depends_on:
       - postgres
