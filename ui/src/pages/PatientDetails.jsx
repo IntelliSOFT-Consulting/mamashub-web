@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, Container, Box, Typography, Button, Grid
 import { useEffect, useState, } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getCookie } from '../lib/cookie'
-import { FhirApi } from '../lib/api'
+import { FhirApi, apiHost } from '../lib/api'
 import Layout from '../components/Layout'
 import { timeSince } from '../lib/timeSince'
 
@@ -27,7 +27,7 @@ export default function PatientDetails() {
 
     let getFacilityVisits = async (patientId) => {
 
-        let visits = await (await fetch(`/crud/encounters?patient=${patientId}`)).json()
+        let visits = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}`)).json()
         setEncounters(visits.encounters)
         console.log(visits)
         return
@@ -35,7 +35,7 @@ export default function PatientDetails() {
     }
 
     let getPatientObservations = async (patientId) => {
-        let observations = await (await fetch(`/crud/observations?patientId=${patientId}`))
+        let observations = await (await fetch(`${apiHost}/crud/observations?patientId=${patientId}`))
         setObservations(observations.observations)
         return
 
@@ -44,7 +44,7 @@ export default function PatientDetails() {
     let getEncounterObservations = async (encounter) => {
         setObservations([])
         handleOpen()
-        let observations = await (await fetch(`/crud/observations?encounter=${encounter}`)).json()
+        let observations = await (await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)).json()
         console.log(observations)
         setObservations(observations.observations)
         return
