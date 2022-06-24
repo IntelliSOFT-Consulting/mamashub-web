@@ -17,7 +17,7 @@ export default function PatientList() {
 
     let getPatients = async () => {
 
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET' })
+        let data = await FhirApi({ url: '/fhir/Patient?_limit=50', method: 'GET' })
         let p = data.data.entry.map((i) => {
             let r = i.resource
             return {
@@ -113,8 +113,8 @@ export default function PatientList() {
                         loading={(patients && (patients.length > 0))  ? false : (patients.length === 0) ? false : true}
                         rows={patients ? patients : []}
                         columns={columns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
+                        pageSize={30}
+                        rowsPerPageOptions={[30]}
                         checkboxSelection
                         autoHeight
                         disableSelectionOnClick
