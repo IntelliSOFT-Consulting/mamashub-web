@@ -19,9 +19,11 @@ import { FhirApi } from './../lib/api'
 import * as qs from 'query-string';
 import { DataGrid } from '@mui/x-data-grid';
 import counties from '../data/counties.json'
+import countyMap from '../data/code_to_counties_map.json'
+import subCountyMap from '../data/code_to_constituencies_map.json'
+import wardMap from '../data/code_to_wards_map.json'
+import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
-import consituencies from '../data/constituencies.json'
-import wards from '../data/wards.json'
 import { startVisit } from '../lib/startVisit'
 import { CreateObservation } from '../lib/fhir/Observation'
 import observationCodes from '../lib/fhir/observationCodes.json'
@@ -70,11 +72,11 @@ export default function MaternityUnit({ id }) {
 
     }
 
-    let createEncounter = async (patientId, encounterType=1) => {
+    let createEncounter = async (patientId, encounterType = 1) => {
         let encounter = await (await fetch('/fhir/encounters', {
             method: 'PUT',
             body: JSON.stringify({
-                encounterType:encounterType,
+                encounterType: encounterType,
                 patientId: patientId
             }),
             headers: { "Content-Type": "application/json" }
@@ -386,16 +388,15 @@ export default function MaternityUnit({ id }) {
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">County</InputLabel>
                                             <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={patient.county}
+                                                // defaultValue={null}
                                                 label="County"
+                                                onChange={e => { setPatient({ ...patient, county: e.target.value }); console.log(e.target.value) }}
                                                 size="small"
-                                                onChange={e => { setCounty(e.target.value); setPatient({ ...patient, county: counties[parseInt(e.target.value)] }) }}>
+                                            >
                                                 {counties && counties.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
-                                                })}
+                                                    return <MenuItem key={county.code} value={county.code}>{county.name}</MenuItem>
 
+                                                })}
                                             </Select>
                                         </FormControl>
                                     </Grid>
@@ -408,12 +409,10 @@ export default function MaternityUnit({ id }) {
                                                 value={patient.constituency}
                                                 label="Sub-County"
                                                 onChange={e => { setPatient({ ...patient, subCounty: e.target.value }) }}
-
-
                                                 size="small"
                                             >
-                                                {consituencies && consituencies.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+                                                {patient.county && countyToConstituency[patient.county].map((subCounty) => {
+                                                    return <MenuItem key={subCounty.code} value={subCounty.code}>{subCounty.name}</MenuItem>
 
                                                 })}
                                             </Select>
@@ -428,11 +427,12 @@ export default function MaternityUnit({ id }) {
                                                 id="demo-simple-select"
                                                 value={patient.ward}
                                                 label="Ward"
-                                                onChange={e => { console.log(e) }}
+                                                onChange={e => { setPatient({ ...patient, ward: e.target.value }) }}
+
                                                 size="small"
                                             >
-                                                {wards && wards.map((county) => {
-                                                    return <MenuItem value={county.code}>{county.name}</MenuItem>
+                                                {patient.subCounty && consituencyToWard[patient.subCounty].map((ward) => {
+                                                    return <MenuItem key={ward.code} value={ward.code}>{ward.name}</MenuItem>
 
                                                 })}
                                             </Select>

@@ -243,7 +243,7 @@ export default function MOH100({ id }) {
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">County</InputLabel>
                                             <Select
-                                                defaultValue={32}
+                                                // defaultValue={32}
                                                 label="County"
                                                 onChange={e => { setReferral({ ...referral, county: e.target.value }); console.log(e.target.value) }}
                                                 size="small"
