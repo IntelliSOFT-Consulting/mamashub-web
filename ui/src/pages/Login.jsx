@@ -11,8 +11,8 @@ export default function Login() {
     let isMobile = useMediaQuery('(max-width:600px)');
     let [open, setOpen] = useState(false)
     let [message, setMessage] = useState(false)
-    
-    
+
+
 
     let login = async () => {
         setOpen(false)
@@ -43,7 +43,7 @@ export default function Login() {
             else {
                 setCookie("token", data.token, 0.25)
                 if (window.localStorage.getItem("next_page")) {
-                // window.localStorage.setItem("activeTab", "dashboard")
+                    // window.localStorage.setItem("activeTab", "dashboard")
                     navigate(window.localStorage.getItem("next_page"))
                     window.localStorage.removeItem("next_page")
                     return
@@ -69,24 +69,21 @@ export default function Login() {
                 message={message}
                 key={"loginAlert"}
             />
-            {/* <Paper sx={{ backgroundColor: "#632165", color: 'white', minWidth: '100%' }}>
-                <br />
-                <Typography variant="h5" sx={{ textAlign: "center", fontWeight: 'bold' }}>Mama's Hub</Typography>
-                <br />
-            </Paper> */}
+
             <Box sx={{
                 margin: "auto",
                 alignContent: 'center', justifyContent: 'center', alignItems: 'center', width: (isMobile) ? '100%' : '50%',
                 minWidth: (isMobile) ? '100%' : '50%',
                 maxWidth: (isMobile) ? '100%' : '50%'
             }}>
-
-
                 <br />
                 <br />
                 <br />
-                <Typography variant="h4" sx={{ textAlign: "center", fontWeight: 'bold' }}>Login</Typography>
                 <br />
+                <img src="/landing_page.png" style={{ marginLeft: "42%", textAlign: "center" }} height="100px" alt="logo" />
+                <br />
+                <Typography variant="h5" sx={{ textAlign: "center", fontWeight: 'bold' }}>Login</Typography>
+                
                 <Container sx={{
                     padding: '3.5em', alignContent: 'center',
                     justifyContent: 'center', alignItems: 'center',
