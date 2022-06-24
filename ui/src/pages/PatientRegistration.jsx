@@ -128,7 +128,6 @@ export default function MaternityUnit({ id }) {
                 setOpen(true)
             }
 
-
             //Create Encounter
             let patientId = id
             let encounter = await createEncounter(patientId)
@@ -147,11 +146,12 @@ export default function MaternityUnit({ id }) {
                 console.log(observation)
                 // let response = await FhirApi({ url: `/fhir/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(observation) })
                 // console.log(response)
-                // if (response.status === "success") {
-                //     setOpen(false)
-                //     setMessage("Patient created successfully")
-                //     setOpen(true)
-                // }
+                
+            }
+            if (response.status === "success") {
+                setOpen(false)
+                setMessage("Patient created successfully")
+                setOpen(true)
             }
             navigate(`/patients/${id}`)
             return
@@ -248,14 +248,14 @@ export default function MaternityUnit({ id }) {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
                                             inputFormat="yyyy-MM-dd"
-                                            value={patient.dob}
+                                            value={patient.dob || null}
                                             onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="yyyy-MM-dd"
-                                                value={patient.dob}
+                                                value={patient.dob || null}
                                                 onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
@@ -310,14 +310,14 @@ export default function MaternityUnit({ id }) {
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
                                             inputFormat="yyyy-MM-dd"
-                                            value={patient.lmp}
+                                            value={patient.lmp || null }
                                             onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="LMP"
                                                 inputFormat="yyyy-MM-dd"
-                                                value={patient.lmp}
+                                                value={patient.lmp || null}
                                                 onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
