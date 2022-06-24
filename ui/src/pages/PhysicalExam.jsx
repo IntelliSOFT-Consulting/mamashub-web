@@ -380,15 +380,15 @@ export default function PhysicalExam() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date given"
                                             inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
-                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dob: e }) }}
+                                            // value={referral.dateGiven}
+                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date given"
                                                 inputFormat="MM/dd/yyyy"
-                                                // value={referral.dob}
-                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dob: e }) }}
+                                                // value={referral.dateGiven }
+                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -396,15 +396,15 @@ export default function PhysicalExam() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Next visit"
                                             inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
-                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dob: e }) }}
+                                            // value={referral.nextVisitDate}
+                                            onChange={e => { setPreventiveServices({ ...preventiveServices, nextVisitDate: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Next visit"
                                                 inputFormat="MM/dd/yyyy"
-                                                // value={preventiveServices.dob}
-                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dob: e }) }}
+                                                // value={preventiveServices.nextVisitDate}
+                                                onChange={e => { setPreventiveServices({ ...preventiveServices, nextVisitDate: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -453,14 +453,14 @@ export default function PhysicalExam() {
                                             label="Date test done"
                                             inputFormat="MM/dd/yyyy"
                                             // value={referral.dob}
-                                            // onChange={e => { setReferral({ ...referral, dob: e }) }}
+                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date test done"
                                                 inputFormat="MM/dd/yyyy"
                                                 // value={referral.dob}
-                                                // onChange={e => { setReferral({ ...referral, dob: e }) }}
+                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -471,6 +471,8 @@ export default function PhysicalExam() {
                                             inputFormat="MM/dd/yyyy"
                                             // value={referral.dob}
                                             // onChange={e => { setReferral({ ...referral, dob: e }) }}
+                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
+
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
@@ -478,6 +480,8 @@ export default function PhysicalExam() {
                                                 inputFormat="MM/dd/yyyy"
                                                 // value={referral.dob}
                                                 // onChange={e => { setReferral({ ...referral, dob: e }) }}
+                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
+
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
