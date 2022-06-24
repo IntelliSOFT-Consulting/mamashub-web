@@ -452,15 +452,15 @@ export default function PhysicalExam() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date test done"
                                             inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
-                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
+                                            value={maternalSerology.dateTestDone}
+                                            onChange={e => { console.log(e); setMaternalSerology({ ...maternalSerology, dateTestDone: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date test done"
                                                 inputFormat="MM/dd/yyyy"
-                                                // value={referral.dob}
-                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
+                                                value={maternalSerology.dateTestDone}
+                                                onChange={e => { console.log(e); setMaternalSerology({ ...maternalSerology, dateTestDone: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
@@ -469,18 +469,18 @@ export default function PhysicalExam() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of next appointment"
                                             inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
+                                            value={maternalSerology.dateOfNextAppointment}
                                             // onChange={e => { setReferral({ ...referral, dob: e }) }}
-                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
+                                            onChange={e => { console.log(e); setMaternalSerology({ ...maternalSerology, dateOfNextAppointment: e }) }}
 
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of next appointment"
                                                 inputFormat="MM/dd/yyyy"
-                                                // value={referral.dob}
+                                                value={maternalSerology.dateOfNextAppointment}
                                                 // onChange={e => { setReferral({ ...referral, dob: e }) }}
-                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
+                                                onChange={e => { console.log(e); setMaternalSerology({ ...maternalSerology, dateOfNextAppointment: e }) }}
 
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
