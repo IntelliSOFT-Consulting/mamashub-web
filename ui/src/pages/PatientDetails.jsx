@@ -123,9 +123,9 @@ export default function PatientDetails() {
                                                         <Typography variant="h6">Time: {new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
                                                         <Typography variant="p">Encounter Code: {encounter.resource.reasonCode[0].text}</Typography>
                                                         <br />
-                                                        <Typography variant="p"
+                                                        <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}
-                                                        >Visit Information</Typography>
+                                                        >Visit Information</Button>
 
                                                     </Box>
                                                     <p></p>
@@ -171,7 +171,7 @@ export default function PatientDetails() {
                         <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
                             Encounter Information
                         </Typography>
-                        {((observations && observations.length < 1 )|| (!observations)) && <>
+                        {((observations && observations.length < 1) || (!observations)) && <>
                             <CircularProgress />
                             <Typography variant="h6">Loading</Typography>
 
@@ -180,7 +180,14 @@ export default function PatientDetails() {
                             return <>
                                 <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
                                     <Typography variant="h6">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography>
-                                    <Typography variant="p">Observation Code: {JSON.stringify(observation)}</Typography>
+                                    {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
+                                    {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
+                                        return <>
+                                            <Typography variant="p">{entry.code}</Typography>
+                                            <br />
+                                        </>
+
+                                    })}
                                     <br />
 
                                 </Box>
