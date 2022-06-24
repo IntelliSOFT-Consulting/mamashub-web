@@ -26,7 +26,6 @@ import { startVisit } from '../lib/startVisit'
 import { CreateObservation } from '../lib/fhir/Observation'
 import observationCodes from '../lib/fhir/observationCodes.json'
 import { parse } from '../lib/fhir/parser'
-import { CreateEncounter } from '../lib/fhir/Encounter'
 
 export default function MaternityUnit({ id }) {
 
@@ -71,6 +70,18 @@ export default function MaternityUnit({ id }) {
 
     }
 
+    let createEncounter = async (patientId, encounterType=1) => {
+        let encounter = await (await fetch('/fhir/encounters', {
+            method: 'PUT',
+            body: JSON.stringify({
+                encounterType:encounterType,
+                patientId: patientId
+            }),
+            headers: { "Content-Type": "application/json" }
+        })).json()
+        console.log(encounter)
+    }
+
     useEffect(() => {
         let _edd = new Date(patient.lmp ? patient.lmp : new Date())
         _edd.setDate(_edd.getDate() + (36 * 7))
@@ -105,7 +116,6 @@ export default function MaternityUnit({ id }) {
     let registerPatient = async () => {
         try {
             let id = uuidv4()
-            let encounterId = uuidv4()
             // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
 
             let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
@@ -118,10 +128,9 @@ export default function MaternityUnit({ id }) {
 
 
             //Create Encounter
-            let encounter = await FhirApi({
-                url: `/fhir/Encounter/${encounterId}`, method: 'PUT',
-                data: JSON.stringify(CreateEncounter(id, encounterId))
-            })
+            let patientId = id
+            let encounter = await createEncounter(patientId)
+            let encounterId = encounter.id
 
             //Create and Post Observations
             let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]

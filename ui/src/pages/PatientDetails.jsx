@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Container, Typography, Button, Grid, Snackbar, Divider } from '@mui/material'
+import { Card, CardContent, CardHeader, Container, Box, Typography, Button, Grid, Snackbar, Divider, Modal, CircularProgress } from '@mui/material'
 import { useEffect, useState, } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getCookie } from '../lib/cookie'
@@ -12,11 +12,45 @@ export default function PatientDetails() {
     let { id } = useParams();
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
+    let [openModal, setOpenModal] = useState(false)
     let [message, setMessage] = useState(false)
+    let [observations, setObservations] = useState([])
+    let [encounters, setEncounters] = useState(null)
+    const handleClose = () => setOpenModal(false);
+    const handleOpen = () => setOpenModal(true);
+
+
 
     useEffect(() => {
         getPatientDetails(id)
     }, [])
+
+    let getFacilityVisits = async (patientId) => {
+
+        let visits = await (await fetch(`/crud/encounters?patient=${patientId}`)).json()
+        setEncounters(visits.encounters)
+        console.log(visits)
+        return
+
+    }
+
+    let getPatientObservations = async (patientId) => {
+        let observations = await (await fetch(`/crud/observations?patientId=${patientId}`))
+        setObservations(observations.observations)
+        return
+
+    }
+
+    let getEncounterObservations = async (encounter) => {
+        setObservations([])
+        handleOpen()
+        let observations = await (await fetch(`/crud/observations?encounter=${encounter}`)).json()
+        console.log(observations)
+        setObservations(observations.observations)
+        return
+
+
+    }
 
     let getPatientDetails = async (id) => {
         setOpen(false)
@@ -35,6 +69,12 @@ export default function PatientDetails() {
             return
         }
     }
+    useEffect(() => {
+        getFacilityVisits(id)
+        // getPatientObservations(id)
+    }, [])
+
+
 
     return (
         <>
@@ -68,12 +108,88 @@ export default function PatientDetails() {
                                         <Typography>Phone: {patient.telecom[0].value || "Not Provided"}</Typography>
                                     </> : <Typography>Loading</Typography>}
 
+                                    <Divider />
+                                    {
+                                        encounters &&
+                                        <>
+                                            <p></p>
+                                            <Typography variant="h6">Facility Visits</Typography>
+                                            <p></p>
+
+                                            {/* <Typography>{JSON.stringify(encounters)}</Typography> */}
+                                            {encounters.map((encounter) => {
+                                                return <>
+                                                    <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
+                                                        <Typography variant="h6">Time: {new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                                        <Typography variant="p">Encounter Code: {encounter.resource.reasonCode[0].text}</Typography>
+                                                        <br />
+                                                        <Typography variant="p"
+                                                            onClick={e => { getEncounterObservations(encounter.resource.id) }}
+                                                        >Visit Information</Typography>
+
+                                                    </Box>
+                                                    <p></p>
+                                                </>
+                                            })}
+
+                                        </>
+                                    }
+                                    <Divider />
+                                    {/* {
+                                        observations &&
+                                        <>
+                                            <Typography>Facility Visits</Typography>
+                                            <Typography>{JSON.stringify(observations)}</Typography>
+
+                                        </>
+                                    } */}
                                 </CardContent>
                             </Card>
 
                         </Grid>
                     </Grid>
                 </Container>
+                {/* Add User Modal  */}
+                <Modal
+                    keepMounted
+                    open={openModal}
+                    onClose={handleClose}
+                    aria-labelledby="keep-mounted-modal-title"
+                    aria-describedby="keep-mounted-modal-description"
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 600,
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}>
+                        <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+                            Encounter Information
+                        </Typography>
+                        {((observations && observations.length < 1 )|| (!observations)) && <>
+                            <CircularProgress />
+                            <Typography variant="h6">Loading</Typography>
+
+                        </>}
+                        {observations && observations.map((observation) => {
+                            return <>
+                                <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
+                                    <Typography variant="h6">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                    <Typography variant="p">Observation Code: {JSON.stringify(observation)}</Typography>
+                                    <br />
+
+                                </Box>
+                                <p></p>
+                            </>
+                        })}
+
+                    </Box>
+                </Modal>
             </Layout>
         </>
     )
