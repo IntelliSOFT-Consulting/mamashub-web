@@ -105,15 +105,5 @@ router.put('/:id', [requireJWT], async (req: Request, res: Response) => {
     return
 })
 
-router.post('/createObservations', [requireJWT], async (req: Request, res: Response) => {
-
-    let observations = req.body
-
-
-
-    return
-
-})
-
 
 export default router
