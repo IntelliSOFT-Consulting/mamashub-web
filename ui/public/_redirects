@@ -1,5 +1,4 @@
 /api/*  https://devhmis.intellisoftkenya.com/api/:splat 200
 /fhir/*  https://devhmis.intellisoftkenya.com/api/fhir/:splat 200
 
-/files/*  https://z.dukr.xyz/files/:splat 200
 /* /  200

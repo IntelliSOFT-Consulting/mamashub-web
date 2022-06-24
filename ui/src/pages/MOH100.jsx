@@ -21,6 +21,7 @@ import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import consituencies from '../data/constituencies.json'
 import wards from '../data/wards.json'
+import {apiHost} from '../lib/api'
 
 
 export default function MOH100({ id }) {
@@ -57,7 +58,7 @@ export default function MOH100({ id }) {
             let subCounty = subCountyMap[referral.subCounty]
             let ward = wardMap[referral.ward]
             // console.log(JSON.stringify(referral))
-            let response = await (await fetch('/referrals',
+            let response = await (await fetch(`${apiHost}/referrals`,
                 { method: "POST", body: JSON.stringify({...referral, county, subCounty, ward}), headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json()
             console.log(response)
             if (response.status === "success") {
