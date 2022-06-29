@@ -6,8 +6,7 @@ import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
 import { startVisit } from '../lib/startVisit';
-
-import { FhirApi } from './../lib/api'
+import { FhirApi } from './../lib/api';
 
 export default function PatientList() {
     let [patients, setPatients] = useState([])
@@ -79,7 +78,6 @@ export default function PatientList() {
     ];
 
     let isMobile = useMediaQuery('(max-width:600px)');
-
     let args = qs.parse(window.location.search);
     // console.log(args)
 
@@ -121,7 +119,6 @@ export default function PatientList() {
                         onSelectionModelChange={e => { setSelected(e) }}
                         onCellEditStop={e => { console.log(e) }}
                     />
-
                 </Container>
             </Layout>
         </>

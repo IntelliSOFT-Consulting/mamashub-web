@@ -18,6 +18,7 @@ import MOH100 from './pages/MOH100'
 import CommunityReferrals from './pages/CommunityReferrals'
 import Observations from './pages/Observations' 
 import ViewMOH100 from './pages/ViewMOH100' 
+import Treatment from './pages/Treatment' 
 
 function App() {
     return ( 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/patient-profile" element={<ANCProfile/>} />
           <Route path="/confirm-pregnancy" element={<ConfirmPregnancy/>} />
           <Route path="/community-referrals" element={<CommunityReferrals/>} />
+          <Route path="/counselling-treatment" element={<Treatment/>} />
           <Route path="/moh-100" element={<MOH100/>} />
           <Route path="/observations" element={<Observations/>} />
           <Route path="/referral/:id" element={<ViewMOH100/>} />

@@ -26,28 +26,11 @@ export default function PhysicalExam() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState('')
-    let preventiveServicesList = {
-        "1st injection": "First visit",
-        "2nd injection": "4 weeks after 1st dose but 2 weeks before childbirth",
-        "3rd injection": "6 months after 2nd dose",
-        "4th injection": "1 year after 3rd inj/ subsequent pregnancy",
-        "5th injection": "1 year after 4th inj/ subsequent pregnancy"
-    }
-    let maternalSerologyList = {
-        "1st injection": "First visit",
-        "2nd injection": "4 weeks after 1st dose but 2 weeks before childbirth",
-        "3rd injection": "6 months after 2nd dose",
-        "4th injection": "1 year after 3rd inj/ subsequent pregnancy",
-        "5th injection": "1 year after 4th inj/ subsequent pregnancy"
-    }
-    let [serologyList, setSerologyList] = useState([])
-    let [preventiveServiceList, setPreventiveServiceList] = useState([])
+    
+    
     let [visit, setVisit] = useState()
     let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
-    let [preventiveServices, setPreventiveServices] = useState(null)
-    let [preventiveService, setPreventiveService] = useState(null)
-    let [maternalSerology, setMaternalSerology] = useState(null)
     let [contact, setContact] = useState(null)
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -161,8 +144,7 @@ export default function PhysicalExam() {
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Weight Monitoring Chart" value="2" />
                                     <Tab label="Clinical Notes" value="3" />
-                                    <Tab label="Preventive Services" value="4" />
-                                    <Tab label="Maternal Serology" value="5" />
+                                    
 
 
 
@@ -343,163 +325,6 @@ export default function PhysicalExam() {
                                 </Stack>
                                 <p></p>
                             </TabPanel>
-                            <TabPanel value='4'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Preventive Services</Typography>
-                                <Divider />
-                                {preventiveService && <><p></p>
-                                    <Typography variant='p' sx={{ padding: "1em" }}>{preventiveService}</Typography>
-                                    <p></p>
-                                </>}
-
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={8}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Tetanus Diphtheria (TD) injection</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={preventiveService ? preventiveService : ""}
-                                                label="Tetanus Diphtheria (TD) injection"
-                                                onChange={e => { setPreventiveService(e.target.value); console.log(e.target.value) }}
-                                                size="small"
-                                            >
-                                                {Object.keys(preventiveServicesList).map((service) => {
-                                                    return <MenuItem value={preventiveServicesList[service]}>{service}</MenuItem>
-
-                                                })}
-                                            </Select>
-                                        </FormControl>
-
-                                    </Grid>
-                                </Grid>
-                                <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Date given"
-                                            inputFormat="MM/dd/yyyy"
-                                            // value={referral.dateGiven}
-                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Date given"
-                                                inputFormat="MM/dd/yyyy"
-                                                // value={referral.dateGiven }
-                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Next visit"
-                                            inputFormat="MM/dd/yyyy"
-                                            // value={referral.nextVisitDate}
-                                            onChange={e => { setPreventiveServices({ ...preventiveServices, nextVisitDate: e }) }}
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Next visit"
-                                                inputFormat="MM/dd/yyyy"
-                                                // value={preventiveServices.nextVisitDate}
-                                                onChange={e => { setPreventiveServices({ ...preventiveServices, nextVisitDate: e }) }}
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-
-                                </Grid>
-                                <p></p>
-                                <Divider />
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveSuccessfully() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
-                            </TabPanel>
-                            <TabPanel value='5'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Maternal Serology</Typography>
-                                <Divider />
-                                {/* <p></p>
-                                <Typography variant='p' sx={{ padding: "1em" }}>{contact}</Typography>
-                                <p></p> */}
-
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={12}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Serology Results: " />
-                                            <FormControlLabel value={"reactive"} control={<Radio />} label="Reactive" />
-                                            <FormControlLabel value={"non-reactive"} control={<Radio />} label="Non-Reactive" />
-                                            <FormControlLabel value={"not-tested"} control={<Radio />} label="Not Tested" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                </Grid>
-                                <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Date test done"
-                                            inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
-                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Date test done"
-                                                inputFormat="MM/dd/yyyy"
-                                                // value={referral.dob}
-                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateTestDone: e}) }}
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Date of next appointment"
-                                            inputFormat="MM/dd/yyyy"
-                                            // value={referral.dob}
-                                            // onChange={e => { setReferral({ ...referral, dob: e }) }}
-                                            onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
-
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Date of next appointment"
-                                                inputFormat="MM/dd/yyyy"
-                                                // value={referral.dob}
-                                                // onChange={e => { setReferral({ ...referral, dob: e }) }}
-                                                onChange={e => { console.log(e);setMaternalSerology({...maternalSerology, dateOfNextAppointment: e}) }}
-
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-
-
-                                </Grid>
-                                <p></p>
-                                <Divider />
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveSuccessfully() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
-                            </TabPanel>
-
-
 
                         </TabContext>
                     </Container>

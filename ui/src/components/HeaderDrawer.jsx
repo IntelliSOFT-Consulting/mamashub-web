@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration }
+import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration, MedicationRounded }
   from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -196,6 +196,12 @@ export default function HeaderDrawer({ children }) {
                 <BiotechRounded sx={{ color: isActiveTab("physical-exam") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary="Physical Exam" primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
+            <ListItem button onClick={e => { activateTab("counselling-treatment"); navigate('/counselling-treatment') }} sx={{ backgroundColor: isActiveTab("counselling-treatment") ? "white" : '#632165', color: isActiveTab("counselling-treatment") ? '#632165' : "white" }}>
+              <ListItemIcon>
+                <MedicationRounded sx={{ color: isActiveTab("counselling-treatment") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary="Counselling & Treatment" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
             <ListItem button onClick={e => { activateTab("present-pregnancy-table"); navigate('/present-pregnancy-table') }} sx={{ backgroundColor: isActiveTab("present-pregnancy-table") ? "white" : '#632165', color: isActiveTab("present-pregnancy-table") ? '#632165' : "white" }}>
               <ListItemIcon>
