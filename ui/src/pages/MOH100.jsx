@@ -138,14 +138,14 @@ export default function MOH100({ id }) {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
                                             inputFormat="MM/dd/yyyy"
-                                            value={referral.dob}
+                                            value={referral.dob || null}
                                             onChange={e => { setReferral({ ...referral, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
                                                 inputFormat="MM/dd/yyyy"
-                                                value={referral.dob}
+                                                value={referral.dob || null }
                                                 onChange={e => { setReferral({ ...referral, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}

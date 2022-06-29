@@ -131,7 +131,6 @@ export default function Users() {
                     message={message}
                     key={"loginAlert"}
                 />
-
                 <Stack direction="row" spacing={2} alignContent="right" >
                     {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '50%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
@@ -145,7 +144,6 @@ export default function Users() {
                     <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={handleOpen}>Create New User</Button>
                 </Stack>
                 <p></p>
-
                 <DataGrid
                     loading={users ? false : true}
                     rows={users ? users : []}
@@ -158,7 +156,6 @@ export default function Users() {
                     onSelectionModelChange={e => { setSelected(e) }}
                     onCellEditStop={e => { console.log(e) }}
                 />
-
                 {/* Add User Modal  */}
                 <Modal
                     keepMounted
@@ -181,7 +178,6 @@ export default function Users() {
                                 placeholder="Names"
                                 size="small"
                                 onChange={e => { setData({ ...data, names: e.target.value }) }}
-
                             />
                             <TextField
                                 sx={{ width: "100%" }}
@@ -199,7 +195,6 @@ export default function Users() {
                                 size="small"
                                 onChange={e => { setData({ ...data, username: e.target.value }) }}
                             />
-
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Role</InputLabel>
                                 <Select
@@ -216,7 +211,6 @@ export default function Users() {
                                     <MenuItem value={"CHW"}>CHW</MenuItem>
                                 </Select>
                             </FormControl>
-
                             <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createUser() }}>Create User</Button>
                             <br />
                         </Stack>

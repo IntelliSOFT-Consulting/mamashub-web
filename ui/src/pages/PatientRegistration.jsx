@@ -15,7 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Patient } from '../lib/fhir/resources'
 import { v4 as uuidv4 } from 'uuid';
-import { FhirApi } from './../lib/api'
+import { FhirApi, apiHost } from './../lib/api'
 import * as qs from 'query-string';
 import { DataGrid } from '@mui/x-data-grid';
 import counties from '../data/counties.json'
@@ -26,23 +26,20 @@ import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import { startVisit } from '../lib/startVisit'
 import { CreateObservation } from '../lib/fhir/Observation'
-import observationCodes from '../lib/fhir/observationCodes.json'
 import { parse } from '../lib/fhir/parser'
+import { display } from '@mui/system'
 
-export default function MaternityUnit({ id }) {
+export default function PatientRegistration() {
 
-
-
-
-    let [patient, setPatient] = useState({})
-    let [open, setOpen] = useState(false)
-    let [data, setData] = useState({})
-    let [message, setMessage] = useState(false)
-    let [selectedCounty, setCounty] = useState('')
-    let [selectedConsituency, setConstituency] = useState('')
-    let [patients, setPatients] = useState({})
+    let [patient, setPatient] = useState({});
+    let [open, setOpen] = useState(false);
+    let [data, setData] = useState({});
+    let [message, setMessage] = useState(false);
+    let [selectedCounty, setCounty] = useState('');
+    let [selectedConsituency, setConstituency] = useState('');
+    let [patients, setPatients] = useState({});
     let [selectionModel, setSelectionModel] = useState([]);
-    let navigate = useNavigate()
+    let navigate = useNavigate();
     let isMobile = useMediaQuery('(max-width:600px)');
     let args = qs.parse(window.location.search);
     const [value, setValue] = useState('1');
@@ -54,34 +51,68 @@ export default function MaternityUnit({ id }) {
         { field: 'age', headerName: 'Age', width: 200 },
     ];
 
-
+    let displayAlert = async (message) => {
+        setMessage(message);
+        setOpen(true);
+        setTimeout(() => {
+            setOpen(false);
+        }, 1500);
+        return
+    }
     let getPatients = async () => {
-
-        let data = await FhirApi({ url: '/fhir/Patient', method: 'GET' })
+        let data = await FhirApi({ url: `${apiHost}/fhir/Patient`, method: 'GET' });
         let p = data.data.entry.map((i) => {
-            let r = i.resource
+            let r = i.resource;
             return {
                 id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
                 age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
             }
-        })
-        setPatients(p)
+        });
+        setPatients(p);
+        return
     }
 
     let deletePatient = async () => {
 
+        return
     }
 
     let createEncounter = async (patientId, encounterType = 1) => {
-        let encounter = await (await fetch('/fhir/encounters', {
-            method: 'PUT',
-            body: JSON.stringify({
-                encounterType: encounterType,
-                patientId: patientId
-            }),
-            headers: { "Content-Type": "application/json" }
-        })).json()
-        console.log(encounter)
+        try {
+            let encounter = await (await fetch(`${apiHost}/fhir/encounters`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    encounterType: encounterType,
+                    patientId: patientId
+                }),
+                headers: { "Content-Type": "application/json" }
+            })).json()
+            console.log(encounter)
+            displayAlert(`Encounter created successfully`)
+
+            return encounter.id
+        } catch (error) {
+            displayAlert("Failed to create encounter")
+            return null
+        }
+    }
+    let createObservation = async (observation, value) => {
+        try {
+            let o = await (await fetch(`${apiHost}/fhir/observations`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    value: value,
+                    observation: observation
+                }),
+                headers: { "Content-Type": "application/json" }
+            })).json()
+            console.log(0)
+            displayAlert(`Observation created successfully`)
+            return o.id
+        } catch (error) {
+            displayAlert("Failed to create encounter")
+            return null
+        }
     }
 
     useEffect(() => {
@@ -89,7 +120,7 @@ export default function MaternityUnit({ id }) {
         _edd.setDate(_edd.getDate() + (36 * 7))
         console.log(_edd)
         setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10) })
-
+        return
     }, [patient.lmp])
 
     useEffect(() => {
@@ -106,20 +137,14 @@ export default function MaternityUnit({ id }) {
         }
     }, [])
 
-
-
-
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        return
     };
-
 
     let registerPatient = async () => {
         try {
             let id = uuidv4()
-            // let response = await FhirApi({ url: `/fhir/Patient`, method: 'POST', data: JSON.stringify(Patient({...patient}))})
-
             let response = await FhirApi({ url: `/fhir/Patient/${id}`, method: 'PUT', data: JSON.stringify(Patient({ ...patient, id: id })) })
             console.log(response)
             if (response.status === "success") {
@@ -127,26 +152,18 @@ export default function MaternityUnit({ id }) {
                 setMessage("Patient created successfully")
                 setOpen(true)
             }
-
             //Create Encounter
             let patientId = id
             let encounter = await createEncounter(patientId)
-            let encounterId = encounter.id
+            if(!encounter){
+                return
+            }
 
             //Create and Post Observations
             let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]
             for (let o of observations) {
-                let p = String(observationCodes[o]).split(":")
-                console.log(p)
-                let observationId = uuidv4()
-                let observation = CreateObservation(
-                    { system: p[0], code: p[1], display: p[2] }, id,
-                    { value: patient[o] },
-                    observationId, encounterId)
-                console.log(observation)
-                // let response = await FhirApi({ url: `/fhir/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(observation) })
-                // console.log(response)
-                
+                let res = await(await fetch(`${apiHost}/`)).json()
+
             }
             if (response.status === "success") {
                 setOpen(false)
@@ -310,7 +327,7 @@ export default function MaternityUnit({ id }) {
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
                                             inputFormat="yyyy-MM-dd"
-                                            value={patient.lmp || null }
+                                            value={patient.lmp || null}
                                             onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :

@@ -106,7 +106,6 @@ export default function PresentPregnancyTable() {
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Pregnancy Table" value="1" />
                                     <Tab label="Close ANC Record" value="2" />
-                                    <Tab label="ANC Reports" value="3" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
@@ -311,27 +310,7 @@ export default function PresentPregnancyTable() {
                                 </Stack>
                                 <p></p>
                             </TabPanel>
-                            <TabPanel value='3'>
-                                {/* <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Newborn Registration</Typography> */}
-                                <Divider />
-                                <p></p>
-                               
-
-                                <Divider />
-
-                                <Grid container spacing={1} padding=".5em" >
-
-                                </Grid>
-                                <Divider />
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
-
-                            </TabPanel>
+                            
                         </TabContext>
                     </Container>
                 </Layout>
