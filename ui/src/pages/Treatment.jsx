@@ -92,7 +92,6 @@ export default function PhysicalExam() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    // useEffect(() => )
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
         if (!visit) { return }
