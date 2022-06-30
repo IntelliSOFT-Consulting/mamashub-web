@@ -40,6 +40,7 @@ export default function PatientRegistration() {
     let [patients, setPatients] = useState({});
     let [selectionModel, setSelectionModel] = useState([]);
     let navigate = useNavigate();
+    let [observation, setObservations] = useState({})
     let isMobile = useMediaQuery('(max-width:600px)');
     let args = qs.parse(window.location.search);
     const [value, setValue] = useState('1');
@@ -96,18 +97,15 @@ export default function PatientRegistration() {
             return null
         }
     }
-    let createObservation = async (observation, value) => {
+    let createObservations = async (observations) => {
         try {
             let o = await (await fetch(`${apiHost}/fhir/observations`, {
                 method: 'PUT',
-                body: JSON.stringify({
-                    value: value,
-                    observation: observation
-                }),
+                body: JSON.stringify(observations),
                 headers: { "Content-Type": "application/json" }
             })).json()
-            console.log(0)
-            displayAlert(`Observation created successfully`)
+            console.log(o)
+            displayAlert(`Observations created successfully`)
             return o.id
         } catch (error) {
             displayAlert("Failed to create encounter")
@@ -155,14 +153,14 @@ export default function PatientRegistration() {
             //Create Encounter
             let patientId = id
             let encounter = await createEncounter(patientId)
-            if(!encounter){
+            if (!encounter) {
                 return
             }
 
             //Create and Post Observations
             let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]
             for (let o of observations) {
-                let res = await(await fetch(`${apiHost}/`)).json()
+                let res = await (await fetch(`${apiHost}/`)).json()
 
             }
             if (response.status === "success") {

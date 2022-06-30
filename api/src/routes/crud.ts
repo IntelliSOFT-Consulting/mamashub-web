@@ -67,7 +67,6 @@ router.get('/observations', [], async (req: Request, res: Response) => {
         if (!patientId && !encounter) {
             response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation`)).json()
         }
-        // console.log(response)
         res.json({ observations: response.entry || [], status: "success" })
         return
     } catch (error) {
@@ -105,11 +104,9 @@ router.get('/encounters', [], async (req: Request, res: Response) => {
         } else {
             response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter`)).json()
         }
-        // console.log(response)
         res.json({ encounters: response.entry, status: "success" })
         return
     } catch (error) {
-        // console.log(error)
         res.json({ error, status: "error" })
         return
     }
