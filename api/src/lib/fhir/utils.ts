@@ -1,20 +1,22 @@
 import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
 
-export let createObservationValue = (value: any, type: any, unit: any, code: any, system = "http://unitsofmeasure.org") => {
-    // if (!value || !unit || !code) {
-    //   throw Error("value, unit and code are required to create an observation")
-    // }
+export let createObservationValue = (value: number | string, unit: any, code: any) => {
+
     return {
-        value, unit, code, system, type
+        data: {
+            value,
+            unit,
+            system: "http://unitsofmeasure.org"
+        },
+        code
     }
 }
 
-export let createObservation = (code: any, patientId: string, observationValue: any, id: string, encounterId: string) => {
-
-    let value = observationValue
-
-
+export let createObservation = (patientId: string, observationValue: any, id: string, encounterId: string) => {
+    let value = observationValue.data
+    let coding = observationValue.code
+    
     return {
         "resourceType": "Observation",
         ...(id) && { "id": id },
@@ -23,9 +25,9 @@ export let createObservation = (code: any, patientId: string, observationValue: 
         code: {
             coding: [
                 {
-                    "system": (code.system === "snomed") ? "http://snomed.info/sct" : (code.system === "loinc") ? "http://loinc.org" : "http://example.com",
-                    "code": code.code,
-                    "display": code.display
+                    "system": (coding.system === "snomed") ? "http://snomed.info/sct" : (coding.system === "loinc") ? "http://loinc.org" : "http://intellisoftkenya.com",
+                    "code": coding.code,
+                    "display": coding.display
                 }
             ]
         },
@@ -35,10 +37,9 @@ export let createObservation = (code: any, patientId: string, observationValue: 
         encounter: {
             reference: `Encounter/${encounterId}`
         },
-        effectiveDateTime: new Date().toLocaleString(),
-        issued: new Date().toLocaleString(),
-        ...(value.type === "Boolean") && { valueBoolean: value.value },
-        ...(value.type !== "Boolean") && { valueQuantity: value.value },
+        valueQuantity: value,
+        effectiveDateTime: new Date().toISOString(),
+        issued: new Date().toISOString(),
         meta: {
             "profile": [
                 "http://fhir.org/guides/who/core/StructureDefinition/who-observation",
@@ -50,8 +51,11 @@ export let createObservation = (code: any, patientId: string, observationValue: 
 }
 
 
-
 export let createEncounter = (patientId: string, encounterId: string, encounterType: number) => {
+    if (encounterType > 3) {
+        console.error("Encounter type is either 1, 2 or 3")
+        return
+    }
 
 
     return {
@@ -82,8 +86,8 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
             "reference": `Patient/${patientId}`
         },
         "period": {
-            "start": new Date().toLocaleString(),
-            "end": new Date().toLocaleString()
+            "start": new Date().toUTCString(),
+            "end": new Date().toUTCString()
         },
         "reasonCode": [
             {
@@ -117,3 +121,8 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
 }
 
 
+
+// create location resources
+export let registerFacility = async () => {
+    return 8
+}
