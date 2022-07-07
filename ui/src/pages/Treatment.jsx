@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, FormControl, InputLabel, Select, MenuItem, Card, CardContent } from '@mui/material'
+import { Box, FormControl, InputLabel, Select, MenuItem, } from '@mui/material'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -15,9 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient'
 
 
-
-
-export default function PhysicalExam() {
+export default function Treatment() {
 
     let [patient, setPatient] = useState({})
     let navigate = useNavigate()
@@ -52,10 +50,8 @@ export default function PhysicalExam() {
         "6 - 36 weeks gestation": "14 tablets",
         "7 - 38 weeks gestation": "14 tablets",
         "8 - 40 weeks gestation": "14 tablets",
-
-
-
     }
+
     let [serologyList, setSerologyList] = useState([])
     let [malariaProphylaxis, setMalariaProphylaxis] = useState()
     let [preventiveServiceList, setPreventiveServiceList] = useState([])

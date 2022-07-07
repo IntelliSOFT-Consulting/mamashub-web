@@ -40,7 +40,7 @@ export default function PatientRegistration() {
     let [patients, setPatients] = useState({});
     let [selectionModel, setSelectionModel] = useState([]);
     let navigate = useNavigate();
-    let [observation, setObservations] = useState({})
+    let [observations, setObservations] = useState({})
     let isMobile = useMediaQuery('(max-width:600px)');
     let args = qs.parse(window.location.search);
     const [value, setValue] = useState('1');
@@ -80,7 +80,7 @@ export default function PatientRegistration() {
 
     let createEncounter = async (patientId, encounterType = 1) => {
         try {
-            let encounter = await (await fetch(`${apiHost}/fhir/encounters`, {
+            let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     encounterType: encounterType,
@@ -99,7 +99,7 @@ export default function PatientRegistration() {
     }
     let createObservations = async (observations) => {
         try {
-            let o = await (await fetch(`${apiHost}/fhir/observations`, {
+            let o = await (await fetch(`${apiHost}/crud/observations`, {
                 method: 'PUT',
                 body: JSON.stringify(observations),
                 headers: { "Content-Type": "application/json" }
@@ -114,12 +114,12 @@ export default function PatientRegistration() {
     }
 
     useEffect(() => {
-        let _edd = new Date(patient.lmp ? patient.lmp : new Date())
+        let _edd = new Date(observations.lmp ? observations.lmp : new Date())
         _edd.setDate(_edd.getDate() + (36 * 7))
         console.log(_edd)
-        setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10) })
+        setPatient({ ...observations, edd: _edd.toISOString().substring(0, 10) })
         return
-    }, [patient.lmp])
+    }, [observations.lmp])
 
     useEffect(() => {
         getPatients()
@@ -158,12 +158,13 @@ export default function PatientRegistration() {
             }
 
             //Create and Post Observations
-            let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]
-            for (let o of observations) {
-                let res = await (await fetch(`${apiHost}/`)).json()
+                let res = await (await fetch(`${apiHost}/crud/observations`, {
+                    body: JSON.stringify({patientId, encounterId: encounter, observations:observations})
+                })).json()
+                console.log(res)
 
-            }
-            if (response.status === "success") {
+        
+            if (res.status === "success") {
                 setOpen(false)
                 setMessage("Patient created successfully")
                 setOpen(true)
@@ -282,7 +283,7 @@ export default function PatientRegistration() {
                                             label="Gravida"
                                             placeholder="Gravida"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, gravida: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, gravida: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -293,7 +294,7 @@ export default function PatientRegistration() {
                                             label="Parity"
                                             placeholder="Parity"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, parity: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, parity: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -304,7 +305,7 @@ export default function PatientRegistration() {
                                             label="Height(cm)"
                                             placeholder="Height(cm)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, bodyHeight: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, bodyHeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
@@ -316,7 +317,7 @@ export default function PatientRegistration() {
                                             label="Weight (kg)"
                                             placeholder="Weight (kg)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, bodyWeight: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, bodyWeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -325,27 +326,27 @@ export default function PatientRegistration() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
                                             inputFormat="yyyy-MM-dd"
-                                            value={patient.lmp || null}
-                                            onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
+                                            value={observations.lmp || null}
+                                            onChange={e => { console.log(e); setObservations({ ...observations, lmp: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="LMP"
                                                 inputFormat="yyyy-MM-dd"
-                                                value={patient.lmp || null}
-                                                onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
+                                                value={observations.lmp || null}
+                                                onChange={e => { console.log(e); setObservations({ ...observations, lmp: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
-                                    {patient.edd && <Grid item xs={12} md={12} lg={4}>
+                                    {observations.edd && <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
-                                            value={patient.edd ? patient.edd : null}
+                                            value={observations.edd ? observations.edd : null}
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, edd: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>}
@@ -368,7 +369,7 @@ export default function PatientRegistration() {
                                             label="Phone Number"
                                             placeholder="Phone Number"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, patientPhoneNumber: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, patientPhoneNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
