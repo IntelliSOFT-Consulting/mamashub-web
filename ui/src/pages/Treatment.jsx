@@ -21,6 +21,8 @@ export default function Treatment() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState('')
+    let [viralLoad, setViralLoad] = useState({})
+    let [artForLife, setArtForLife] = useState({})
     let preventiveServicesList = {
         "1st injection": "First visit",
         "2nd injection": "4 weeks after 1st dose but 2 weeks before childbirth",
@@ -52,6 +54,7 @@ export default function Treatment() {
         "8 - 40 weeks gestation": "14 tablets",
     }
 
+   
     let [serologyList, setSerologyList] = useState([])
     let [malariaProphylaxis, setMalariaProphylaxis] = useState()
     let [preventiveServiceList, setPreventiveServiceList] = useState([])
@@ -131,7 +134,9 @@ export default function Treatment() {
                                     <Tab label="Preventive Services" value="1" />
                                     <Tab label="Malaria Prophylaxis" value="2" />
                                     <Tab label="Maternal Serology" value="3" />
-                                    <Tab label="Iron and Folic Acid Supplementation" value="4" />
+                                    <Tab label="IFAS" value="4" />
+                                    <Tab label="PMTCT Interventions" value="5" />
+
                                 </TabList>
                             </Box>
 
@@ -449,6 +454,86 @@ export default function Treatment() {
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
+                                </Grid>
+                                <p></p>
+                                <Divider />
+                                <p></p>
+                                <Stack direction="row" spacing={2} alignContent="right" >
+                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
+                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
+                                    <Button variant="contained" onClick={e => { saveSuccessfully() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                </Stack>
+                                <p></p>
+                            </TabPanel>
+                            {/* PMTCT Interventions */}
+                            <TabPanel value='5'>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>PMTCT Interventions</Typography>
+                                <Divider />
+                                {ifas && <><p></p>
+                                    <Alert severity="info">{"Prescribe and dispense: " + ifas}</Alert>
+                                    <p></p>
+                                </>}
+                             
+                                <p></p>
+                                <Typography>ART for life</Typography>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            label="Regimen" size="small" type="number"
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        {!isMobile ? <DesktopDatePicker
+                                            label="Visit Date"
+                                            inputFormat="MM/dd/yyyy"
+                                            value={preventiveServices.dateGiven ? preventiveServices.dateGiven : new Date()}
+                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
+                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                        /> :
+                                            <MobileDatePicker
+                                                label="Visit Date"
+                                                inputFormat="MM/dd/yyyy"
+                                                value={preventiveServices.dateGiven ? preventiveServices.dateGiven : new Date()}
+                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
+                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                            />}
+                                    </Grid>
+                                </Grid>
+                                <p></p>
+
+                                <Divider />
+                                {/* {ifas && <><p></p>
+                                    <Alert severity="info">{"Prescribe and dispense: " + ifas}</Alert>
+                                    <p></p>
+                                </>} */}
+
+                                <p></p>
+                                <Typography>Viral Load (VL) Sample</Typography>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            label="Results" size="small" type="number"
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        {!isMobile ? <DesktopDatePicker
+                                            label="Date Viral load taken"
+                                            inputFormat="MM/dd/yyyy"
+                                            value={preventiveServices.dateGiven ? preventiveServices.dateGiven : new Date()}
+                                            onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
+                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                        /> :
+                                            <MobileDatePicker
+                                                label="Date Viral load taken"
+                                                inputFormat="MM/dd/yyyy"
+                                                value={preventiveServices.dateGiven ? preventiveServices.dateGiven : new Date()}
+                                                onChange={e => { setPreventiveServices({ ...preventiveServices, dateGiven: e }) }}
+                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                            />}
+                                    </Grid>
+
                                 </Grid>
                                 <p></p>
                                 <Divider />
