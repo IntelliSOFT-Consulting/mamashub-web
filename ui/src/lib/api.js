@@ -2,7 +2,7 @@
 
 import {getCookie} from './cookie';
 
-export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? process.env['REACT_APP_API_URL'] : '/api';
+export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? process.env['REACT_APP_API_URL'] : 'https://devmhis.netlify.app/api';
 
 export let FhirApi = async (params) => {
     let _defaultHeaders = {

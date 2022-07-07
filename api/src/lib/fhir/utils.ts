@@ -16,7 +16,7 @@ export let createObservationValue = (value: number | string, unit: any, code: an
 export let createObservation = (patientId: string, observationValue: any, id: string, encounterId: string) => {
     let value = observationValue.data
     let coding = observationValue.code
-    
+
     return {
         "resourceType": "Observation",
         ...(id) && { "id": id },
@@ -52,7 +52,7 @@ export let createObservation = (patientId: string, observationValue: any, id: st
 
 
 export let createEncounter = (patientId: string, encounterId: string, encounterType: number) => {
-    if (encounterType > 3) {
+    if (encounterType > 3 || encounterType < 1) {
         console.error("Encounter type is either 1, 2 or 3")
         return
     }

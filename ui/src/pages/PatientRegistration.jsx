@@ -25,9 +25,6 @@ import wardMap from '../data/code_to_wards_map.json'
 import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import { startVisit } from '../lib/startVisit'
-import { CreateObservation } from '../lib/fhir/Observation'
-import { parse } from '../lib/fhir/parser'
-import { display } from '@mui/system'
 
 export default function PatientRegistration() {
 
@@ -40,17 +37,11 @@ export default function PatientRegistration() {
     let [patients, setPatients] = useState({});
     let [selectionModel, setSelectionModel] = useState([]);
     let navigate = useNavigate();
-    let [observation, setObservations] = useState({})
+    let [observations, setObservations] = useState({})
     let isMobile = useMediaQuery('(max-width:600px)');
-    let args = qs.parse(window.location.search);
     const [value, setValue] = useState('1');
 
-    const columns = [
-        { field: 'id', headerName: 'Patient ID', width: 150, },
-        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
-        { field: 'age', headerName: 'Age', width: 200 },
-    ];
+    
 
     let displayAlert = async (message) => {
         setMessage(message);
@@ -60,27 +51,13 @@ export default function PatientRegistration() {
         }, 1500);
         return
     }
-    let getPatients = async () => {
-        let data = await FhirApi({ url: `${apiHost}/fhir/Patient`, method: 'GET' });
-        let p = data.data.entry.map((i) => {
-            let r = i.resource;
-            return {
-                id: r.id, lastName: r.name[0].family, firstName: r.name[0].given[0],
-                age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
-            }
-        });
-        setPatients(p);
-        return
-    }
+    
 
-    let deletePatient = async () => {
-
-        return
-    }
+    
 
     let createEncounter = async (patientId, encounterType = 1) => {
         try {
-            let encounter = await (await fetch(`${apiHost}/fhir/encounters`, {
+            let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     encounterType: encounterType,
@@ -99,7 +76,7 @@ export default function PatientRegistration() {
     }
     let createObservations = async (observations) => {
         try {
-            let o = await (await fetch(`${apiHost}/fhir/observations`, {
+            let o = await (await fetch(`${apiHost}/crud/observations`, {
                 method: 'PUT',
                 body: JSON.stringify(observations),
                 headers: { "Content-Type": "application/json" }
@@ -114,16 +91,17 @@ export default function PatientRegistration() {
     }
 
     useEffect(() => {
-        let _edd = new Date(patient.lmp ? patient.lmp : new Date())
-        _edd.setDate(_edd.getDate() + (36 * 7))
-        console.log(_edd)
-        setPatient({ ...patient, edd: _edd.toISOString().substring(0, 10) })
-        return
-    }, [patient.lmp])
+
+    }, [patient.dob])
 
     useEffect(() => {
-        getPatients()
-    }, [])
+        let _edd = new Date(observations.lmp ? observations.lmp : new Date())
+        _edd.setDate(_edd.getDate() + (36 * 7))
+        console.log(_edd)
+        setObservations({ ...observations, edd: _edd.toLocaleDateString('en-GB') })
+        return
+    }, [observations.lmp])
+
 
     useEffect(() => {
         if (getCookie("token")) {
@@ -154,16 +132,20 @@ export default function PatientRegistration() {
             let patientId = id
             let encounter = await createEncounter(patientId)
             if (!encounter) {
+                setOpen(false)
+                setMessage("Failed to create Maternal Profile encounter")
+                setOpen(true)
                 return
             }
 
             //Create and Post Observations
-            let observations = ["bodyWeight", "bodyHeight", "gravida", "parity", "lmp", "edd"]
-            for (let o of observations) {
-                let res = await (await fetch(`${apiHost}/`)).json()
+                let res = await (await fetch(`${apiHost}/crud/observations`, {
+                    body: JSON.stringify({patientId, encounterId: encounter, observations:observations})
+                })).json()
+                console.log(res)
 
-            }
-            if (response.status === "success") {
+        
+            if (res.status === "success") {
                 setOpen(false)
                 setMessage("Patient created successfully")
                 setOpen(true)
@@ -215,8 +197,7 @@ export default function PatientRegistration() {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Maternal Profile" value="1" />
-                                    <Tab label="Registered Patients" value="2" />
-                                    {/* <Tab label="Reports" value="3" /> */}
+                                    
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
@@ -262,14 +243,14 @@ export default function PatientRegistration() {
                                     <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="Date of birth"
-                                            inputFormat="yyyy-MM-dd"
+                                            inputFormat="dd/MM/yyyy"
                                             value={patient.dob || null}
                                             onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Date of birth"
-                                                inputFormat="yyyy-MM-dd"
+                                                inputFormat="dd/MM/yyyy"
                                                 value={patient.dob || null}
                                                 onChange={e => { console.log(e); setPatient({ ...patient, dob: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
@@ -282,7 +263,7 @@ export default function PatientRegistration() {
                                             label="Gravida"
                                             placeholder="Gravida"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, gravida: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, gravida: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -293,7 +274,7 @@ export default function PatientRegistration() {
                                             label="Parity"
                                             placeholder="Parity"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, parity: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, parity: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -304,7 +285,7 @@ export default function PatientRegistration() {
                                             label="Height(cm)"
                                             placeholder="Height(cm)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, bodyHeight: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, bodyHeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
 
                                         />
@@ -316,7 +297,7 @@ export default function PatientRegistration() {
                                             label="Weight (kg)"
                                             placeholder="Weight (kg)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, bodyWeight: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, bodyWeight: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -324,28 +305,28 @@ export default function PatientRegistration() {
                                     <Grid item xs={12} md={12} lg={4}>
                                         {!isMobile ? <DesktopDatePicker
                                             label="LMP"
-                                            inputFormat="yyyy-MM-dd"
-                                            value={patient.lmp || null}
-                                            onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
+                                            inputFormat="dd/MM/yyyy"
+                                            value={observations.lmp || null}
+                                            onChange={e => { console.log(e); setObservations({ ...observations, lmp: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="LMP"
-                                                inputFormat="yyyy-MM-dd"
-                                                value={patient.lmp || null}
-                                                onChange={e => { console.log(e); setPatient({ ...patient, lmp: e }) }}
+                                                inputFormat="dd/MM/yyyy"
+                                                value={observations.lmp || null}
+                                                onChange={e => { console.log(e); setObservations({ ...observations, lmp: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
-                                    {patient.edd && <Grid item xs={12} md={12} lg={4}>
+                                    {observations.lmp && <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="80%"
                                             type="text"
-                                            value={patient.edd ? patient.edd : null}
+                                            value={observations.edd ? observations.edd : null}
                                             label="EDD"
                                             placeholder="EDD"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, edd: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, edd: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>}
@@ -368,7 +349,7 @@ export default function PatientRegistration() {
                                             label="Phone Number"
                                             placeholder="Phone Number"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, patientPhoneNumber: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, patientPhoneNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -530,40 +511,7 @@ export default function PatientRegistration() {
                                 <p></p>
 
                             </TabPanel>
-                            <TabPanel value='2'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Registered Patients</Typography>
-                                <Divider />
-                                <br />
-                                <Stack direction="row" gap={1} sx={{ paddingLeft: isMobile ? "1em" : "2em", paddingRight: isMobile ? "1em" : "2em" }}>
-                                    <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name or Patient ID' />
-                                    <Button variant="contained" size='small' sx={{ width: "20%" }} disableElevation>Search</Button>
-                                </Stack>
-                                <br />
-                                <Container maxWidth="lg">
-                                    <DataGrid
-                                        loading={patients ? false : true}
-                                        rows={patients ? patients : []}
-                                        columns={columns}
-                                        pageSize={4}
-                                        rowsPerPageOptions={[5]}
-                                        checkboxSelection
-                                        autoHeight
-                                        disableSelectionOnClick
-                                        onCellEditStop={e => { console.log(e) }}
-                                        onSelectionModelChange={(selection) => {
-                                            if (selection.length > 1) {
-                                                const selectionSet = new Set(selectionModel);
-                                                const result = selection.filter((s) => !selectionSet.has(s));
-                                                setSelectionModel(result);
-                                            } else {
-                                                setSelectionModel(selection);
-                                            }
-                                        }}
-                                    />
-                                </Container>
-                                <p></p>
-                            </TabPanel>
-
+                           
                         </TabContext>
                     </Container>
                 </Layout>
