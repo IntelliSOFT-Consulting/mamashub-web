@@ -129,14 +129,14 @@ export default function PatientRegistration() {
                 setOpen(true)
             }
             //Create Encounter
-            let patientId = id
-            let encounter = await createEncounter(patientId)
-            if (!encounter) {
-                setOpen(false)
-                setMessage("Failed to create Maternal Profile encounter")
-                setOpen(true)
-                return
-            }
+            // let patientId = id
+            // let encounter = await createEncounter(patientId)
+            // if (!encounter) {
+            //     setOpen(false)
+            //     setMessage("Failed to create Maternal Profile encounter")
+            //     setOpen(true)
+            //     return
+            // }
 
             //Create and Post Observations
                 let res = await (await fetch(`${apiHost}/crud/observations`, {
