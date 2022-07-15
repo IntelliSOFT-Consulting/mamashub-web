@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as qs from 'query-string';
 import Layout from '../components/Layout';
-import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
 
 import { FhirApi } from './../lib/api'

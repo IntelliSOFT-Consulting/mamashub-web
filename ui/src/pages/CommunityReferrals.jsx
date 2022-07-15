@@ -84,9 +84,8 @@ export default function PatientList() {
 
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 150 },
-        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'lastName', headerName: 'Last Name', width: 250, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
         { field: 'dob', headerName: 'Age', width: 150 },
         { field: 'createdAt', headerName: 'Referral Time', width: 200 }
     ];
