@@ -52,9 +52,6 @@ export default function PatientRegistration() {
         return
     }
     
-
-    
-
     let createEncounter = async (patientId, encounterType = 1) => {
         try {
             let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
@@ -129,7 +126,7 @@ export default function PatientRegistration() {
                 setOpen(true)
             }
             //Create Encounter
-            // let patientId = id
+            let patientId = id
             // let encounter = await createEncounter(patientId)
             // if (!encounter) {
             //     setOpen(false)
@@ -140,7 +137,7 @@ export default function PatientRegistration() {
 
             //Create and Post Observations
                 let res = await (await fetch(`${apiHost}/crud/observations`, {
-                    body: JSON.stringify({patientId, encounterId: encounter, observations:observations})
+                    body: JSON.stringify({patientId, encounterId: "23f37bc9-8a2e-4f2a-812b-1acaea0f6dcd", observations:observations})
                 })).json()
                 console.log(res)
 
