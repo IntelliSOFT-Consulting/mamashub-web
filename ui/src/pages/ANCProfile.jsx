@@ -31,6 +31,10 @@ export default function ANCProfile() {
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
+    let [birthPlan, setBirthPlan] = useState({})
+    let [medicalHistory, setMedicalHistory] = useState({})
+    let [patientInformation, setPatientInformation] = useState({})
+
 
     const [value, setValue] = useState('1');
 
@@ -47,9 +51,52 @@ export default function ANCProfile() {
         return
     }
 
+    let savePatientInformation = async () => {
+
+        //get patient
+
+
+        //create encounter
+
+
+
+        //save observations
+
+
+        setMessage("PatientInformation saved successfully")
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 2000)
+        return
+    }
+
+
+    let saveMedicalHistory = async () => {
+
+        setMessage("MedicalHistory updated successfully")
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 2000)
+        return
+    }
+
+
+    let saveBirthPlan = async () => {
+
+        setMessage("BirthPlan updated successfully")
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 2000)
+        return
+
+    }
+
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
-        if(!visit){return}
+        if (!visit) { return }
         setVisit(JSON.parse(visit))
         return
     }, [])
@@ -68,14 +115,14 @@ export default function ANCProfile() {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Layout>
                     <Container sx={{ border: '1px white dashed' }}>
-                    <Snackbar
+                        <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                             open={open}
                             onClose={""}
                             message={message}
                             key={"loginAlert"}
                         />
-                        {visit && <CurrentPatient data={visit}/>}
+                        {visit && <CurrentPatient data={visit} />}
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList
@@ -95,12 +142,62 @@ export default function ANCProfile() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
+                                            // aria-labelledby="demo-row-radio-buttons-group-label"
+                                            // name="row-radio-buttons-group"
+                                            defaultChecked={true}
+                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Surgical Operation: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                     <Grid item xs={12} md={12} lg={6}>
+                                        {(patientInformation.surgicalOperation) && <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Specify"
+                                            placeholder="Specify"
+                                            size="small"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
+                                        />}
+                                    </Grid>
+
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            onChange={e => { setPatientInformation({ ...patientInformation, diabetes: e.target.value }) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Diabetes: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, hypertension: e.target.value }) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Hypertension: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
                                         >
 
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Surgical Operation: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Any drug allergies: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -113,59 +210,7 @@ export default function ANCProfile() {
                                             label="Specify"
                                             placeholder="Specify"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                        >
-
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Diabetes: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                        >
-
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Hypertension: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
-
-                                            <FormControlLabel value={0}  sx={{width:"50%"}} control={<FormLabel />} label="Any drug allergies: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Specify"
-                                            placeholder="Specify"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -187,7 +232,7 @@ export default function ANCProfile() {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Twins: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Twins: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -201,7 +246,7 @@ export default function ANCProfile() {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0}  sx={{width:"50%"}} control={<FormLabel />} label="Tuberculosis: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Tuberculosis: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -214,7 +259,7 @@ export default function ANCProfile() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { savePatientInformation() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -229,7 +274,7 @@ export default function ANCProfile() {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="HB: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="HB: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -295,7 +340,7 @@ export default function ANCProfile() {
                                             onChange={e => { console.log(e) }}
                                         >
 
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="Urinalysis: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Urinalysis: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -322,7 +367,7 @@ export default function ANCProfile() {
 
                                         >
 
-                                            <FormControlLabel value={0} sx={{width:"50%"}} control={<FormLabel />} label="TB Screening: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="TB Screening: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
@@ -357,7 +402,7 @@ export default function ANCProfile() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveMedicalHistory() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
@@ -452,7 +497,7 @@ export default function ANCProfile() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveBirthPlan() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 

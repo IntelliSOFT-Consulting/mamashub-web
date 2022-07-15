@@ -48,9 +48,12 @@ export default function PatientList() {
                 let data = await FhirApi({ url: `/fhir/Patient/${i}?_cascade=delete`, method: 'DELETE' })
                 console.log(data)
             }
+            await getPatients()
+            return
 
         }
-        getPatients()
+        await getPatients()
+        return
     }
 
     useEffect(() => {
@@ -71,8 +74,8 @@ export default function PatientList() {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 150 },
-        { field: 'lastName', headerName: 'Last Name', width: 200, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 200, editable: true },
+        { field: 'lastName', headerName: 'Last Name', width: 250, editable: true },
+        { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
         { field: 'age', headerName: 'Age', width: 200 },
         // { field: 'role', headerName: 'Date of admission', width: 150 }
     ];
@@ -96,19 +99,19 @@ export default function PatientList() {
                         {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '30%' : '70%' }}></Typography>}
                         {(selected.length > 0) &&
                             <>
-                                <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ color: "#632165", backgroundColor:"white" }}> 🗑️Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
+                                <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ color: "#632165", backgroundColor: "white" }}> 🗑️Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
                         }
                         {(selected.length === 1) &&
                             <>
                                 <Button variant="contained" onClick={e => { startPatientVisit() }} disableElevation sx={{ backgroundColor: "#632165" }}>Start Visit</Button>
-                                <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ color: "#632165", backgroundColor:"white" }}>View Patient</Button>
+                                <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ color: "#632165", backgroundColor: "white" }}>View Patient</Button>
                             </>
                         }
                         <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { navigate('/patient-registration') }}>Create New Patient</Button>
                     </Stack>
                     <br />
                     <DataGrid
-                        loading={(patients && (patients.length > 0))  ? false : (patients.length === 0) ? false : true}
+                        loading={(patients && (patients.length > 0)) ? false : (patients.length === 0) ? false : true}
                         rows={patients ? patients : []}
                         columns={columns}
                         pageSize={30}
