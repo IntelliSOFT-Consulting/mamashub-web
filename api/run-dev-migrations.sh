@@ -1,1 +1,1 @@
-docker-compose exec nndak-api yarn migrate
+docker-compose exec nndak-api yarn prisma:deploy
