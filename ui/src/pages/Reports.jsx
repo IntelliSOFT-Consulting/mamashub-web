@@ -1,4 +1,4 @@
-import { Box, Grid, Modal, Button, Container, useMediaQuery, Snackbar, CircularProgress, Typography } from '@mui/material'
+import { Box, Grid, Modal, Button, Container, useMediaQuery, Snackbar, Checkbox, FormControlLabel, CircularProgress, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { apiHost } from '../lib/api';
 
@@ -7,13 +7,11 @@ import Layout from '../components/Layout';
 
 
 export default function GeneralPatientLevel() {
-    let [open, setOpen] = useState(false)
-    let [message, setMessage] = useState(false)
-    let [results, setResults] = useState([])
-    let [data, setData] = useState({})
-    let [selected, setSelected] = useState({})
-    let [indicators, setIndicators] = useState([])
-
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState(false)
+    const [results, setResults] = useState([])
+    const [data, setData] = useState({})
+    const [selected, setSelected] = useState({})
     const [selectionModel, setSelectionModel] = useState([]);
 
     let getReport = async () => {
@@ -35,11 +33,15 @@ export default function GeneralPatientLevel() {
         return
     }
 
-    let handleClose = async () => {
+    const handleClose = async () => {
         setOpenModal(false)
         setData(null)
         setSelected(null)
         return
+    }
+
+    const exportReport = async () => {
+
     }
 
     useEffect(() => {
@@ -49,11 +51,11 @@ export default function GeneralPatientLevel() {
         { field: 'ancNumber', headerName: 'ANC No.', width: 100, editable: true },
         { field: 'fullNames', headerName: "Full Names", width: 140, editable: true },
         { field: 'dob', headerName: 'DOB', width: 150, editable: true },
-        { field: 'subCounty', headerName: 'SubCounty', width: 100 },
-        { field: 'county', headerName: 'County', width: 100 },
-        { field: 'village', headerName: 'Village', width: 100 },
-        { field: 'estate', headerName: 'Estate', width: 100 },
-        { field: 'tel', headerName: 'Tel', width: 100 },
+        { field: 'subCounty', headerName: 'Sub County', width: 150 },
+        { field: 'county', headerName: 'County', width: 150 },
+        { field: 'village', headerName: 'Village', width: 150 },
+        { field: 'estate', headerName: 'Estate', width: 150 },
+        { field: 'tel', headerName: 'Tel', width: 120 },
         { field: 'maritalStatus', headerName: 'Marital Status', width: 130 },
         { field: 'parity', headerName: 'Parity', width: 100 },
         { field: 'gravidae', headerName: 'Gravidae', width: 100 },
@@ -94,6 +96,13 @@ export default function GeneralPatientLevel() {
         { field: 'reasonsForReferral', headerName: 'Reasons for referral', width: 200 },
         { field: 'remarks', headerName: 'Remarks', width: 100 },
     ];
+    const [indicators, setIndicators] = useState(columns)
+
+    useEffect(() => {
+
+
+    }, [indicators])
+
     const modalStyle = {
         position: 'absolute',
         top: '50%',
@@ -124,6 +133,11 @@ export default function GeneralPatientLevel() {
                 <br />
                 <Container maxWidth="lg">
                     <br />
+
+                    {results.length > 0 && <Button variant="contained"
+                        disableElevation
+                        onClick={e => { setOpenModal(true) }}
+                        sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>}
                     <Button variant="contained"
                         disableElevation
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
@@ -157,9 +171,17 @@ export default function GeneralPatientLevel() {
                                 justifyContent="center"
                                 alignItems="center"
                             >
-                                <Grid item xs={12} lg={12} md={12}></Grid>
+                                {columns.slice(3).map((column) => {
+                                    return <Grid item xs={3} lg={3} md={2}>
+                                        <FormControlLabel control={<Checkbox defaultChecked  />} label={column.headerName} />
+                                    </Grid>
+                                })}
                             </Grid>
+                            <Button variant='contained'>Generate Report</Button>
+
+
                         </Box>
+
                     </Modal>
 
                 </Container>
