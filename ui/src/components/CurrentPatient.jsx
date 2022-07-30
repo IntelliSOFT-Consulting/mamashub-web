@@ -1,3 +1,4 @@
+import { PregnantWoman } from '@mui/icons-material'
 import {
     Card, CardContent, Button,
     CardMedia, Avatar, Grid, Typography, Stack
@@ -10,21 +11,25 @@ export default function CurrentPatient({ data }) {
 
     return (
         <>
-            <Card sx={{ backgroundColor: "white", color: "purple" }}>
+            <Card sx={{ backgroundColor: "white", color: "purple", border: "1px black solid" }}>
                 <CardContent>
                     <Grid container>
-                        <Grid item xl={3} lg={3} sm={3} md={3}>
-                            <Typography variant="p">Patient Names: <b>{data.name}</b></Typography>
+                        <Grid item xl={3} lg={1} sm={3} md={3}>
+                            <Avatar >
+                                <PregnantWoman sx={{color:"purple",backgroundColor:"yellow"}}/>
+                            </Avatar>
                         </Grid>
-                        <Grid item xl={3} lg={3} sm={3} md={3}>
+                        <Grid item xl={3} lg={9} sm={3} md={3}>
+                            <Typography variant="p">Patient Names: <b>{data.name}</b></Typography><br />
                             <Typography>Age: {data.age + " "}</Typography>
                         </Grid>
-                        <Grid item xl={3} lg={3} sm={3} md={3}>
-                            <Button variant="contained" onClick={e => { navigate(`/patients/${data.id}`) }}>Profile</Button>
+                        <Grid item xl={3} lg={2} sm={3} md={3}>
+                            <Button variant="contained" sx={{ backgroundColor: "#632165" }} onClick={e => { navigate(`/patients/${data.id}`) }}>View Profile</Button>
                         </Grid>
                     </Grid>
                 </CardContent>
             </Card>
+            <p></p>
         </>
     )
 }

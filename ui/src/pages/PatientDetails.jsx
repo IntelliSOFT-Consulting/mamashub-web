@@ -162,7 +162,7 @@ export default function PatientDetails() {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 600,
+                        width: "80%",
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
@@ -176,14 +176,17 @@ export default function PatientDetails() {
                             <Typography variant="h6">Loading</Typography>
 
                         </>}
-                        {observations && observations.map((observation) => {
+                       <Grid container columnSpacing={1}>
+                       {observations && observations.map((observation) => {
                             return <>
+                            <Grid item lg={3} xl={3} md={3} sm={12}>
                                 <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
-                                    <Typography variant="h6">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                    <Typography sx={{fontWeight:"bold"}} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br/>
                                     {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
                                     {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
                                         return <>
-                                            <Typography variant="p">{entry.code}</Typography>
+                                            <Typography variant="p">{entry.display}</Typography>
+                                            <Typography variant="p">{observation.resource.code.text}</Typography>
                                             <br />
                                         </>
 
@@ -192,8 +195,11 @@ export default function PatientDetails() {
 
                                 </Box>
                                 <p></p>
+                                </Grid>
                             </>
                         })}
+
+                       </Grid>
 
                     </Box>
                 </Modal>
