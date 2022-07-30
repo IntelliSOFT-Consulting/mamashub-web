@@ -41,15 +41,15 @@ export default function Login() {
                 return
             }
             else {
-                setCookie("token", data.token, 0.25)
+                setCookie("token", data.token, 1)
                 if (window.localStorage.getItem("next_page")) {
-                    // window.localStorage.setItem("activeTab", "dashboard")
+                    window.localStorage.setItem("activeTab", "dashboard")
                     navigate(window.localStorage.getItem("next_page"))
                     window.localStorage.removeItem("next_page")
                     return
                 }
-                navigate('/')
                 window.localStorage.setItem("activeTab", "dashboard")
+                navigate('/')
                 return
             }
         } catch (error) {
@@ -83,7 +83,7 @@ export default function Login() {
                 <img src="/landing_page.png" style={{ marginLeft: "42%", textAlign: "center" }} height="100px" alt="logo" />
                 <br />
                 <Typography variant="h5" sx={{ textAlign: "center", fontWeight: 'bold' }}>Login</Typography>
-                
+
                 <Container sx={{
                     padding: '3.5em', alignContent: 'center',
                     justifyContent: 'center', alignItems: 'center',

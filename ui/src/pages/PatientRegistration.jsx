@@ -55,7 +55,7 @@ export default function PatientRegistration() {
     let createEncounter = async (patientId, encounterType = 1) => {
         try {
             let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
-                method: 'PUT',
+                method: 'POST',
                 body: JSON.stringify({
                     encounterType: encounterType,
                     patientId: patientId
@@ -137,6 +137,7 @@ export default function PatientRegistration() {
 
             //Create and Post Observations
                 let res = await (await fetch(`${apiHost}/crud/observations`, {
+                    method:"POST",
                     body: JSON.stringify({patientId, encounterId: encounter, observations:observations})
                 })).json()
                 console.log(res)

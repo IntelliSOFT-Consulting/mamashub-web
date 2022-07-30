@@ -133,7 +133,6 @@ export default function GeneralPatientLevel() {
                 <br />
                 <Container maxWidth="lg">
                     <br />
-
                     {results.length > 0 && <Button variant="contained"
                         disableElevation
                         onClick={e => { setOpenModal(true) }}

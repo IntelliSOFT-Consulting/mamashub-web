@@ -34,7 +34,7 @@ export let generateGeneralReport = async (patientId: string) => {
 
     let report = {
         ancNumber: patient.id,
-        id:patient.id,
+        id: patient.id,
         noOfAncVisits: await getNoOfAncVisits(patientId),
         fullNames: (patient.name[0].family),
         dob: new Date(patient.birthDate).toDateString(),
@@ -42,7 +42,7 @@ export let generateGeneralReport = async (patientId: string) => {
         county: "",
         village: "",
         estate: "",
-        tel: patient.telecom[0].value,
+        tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
         maritalStatus: "",
         parity: "",
         gravidae: "",

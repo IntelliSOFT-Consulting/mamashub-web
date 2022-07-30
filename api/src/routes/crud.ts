@@ -24,7 +24,7 @@ router.post('/observations', async (req: Request, res: Response) => {
             console.log(observation)
             let observationId = uuidv4()
             if (Object.keys(codes).indexOf(obs) > -1) {
-                
+
                 let metaData = codes[obs]
                 let coding = {
                     system: metaData.split(":")[0], display: metaData.split(":")[2], code: metaData.split(":")[1]
@@ -40,7 +40,7 @@ router.post('/observations', async (req: Request, res: Response) => {
                 console.log(o)
                 builtObservations.push(response)
             }
-            else{
+            else {
                 res.json({ error: "invalid observation key provided", status: "error" })
                 return
             }
@@ -97,14 +97,11 @@ router.post('/encounters', [], async (req: Request, res: Response) => {
 
 router.get('/encounters', [], async (req: Request, res: Response) => {
     try {
-        let { patientId } = req.query
-        let response;
-        if (patientId) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patientId}`)).json()
-        } else {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter`)).json()
-        }
-        res.json({ encounters: response.entry, status: "success" })
+        let { patient } = req.query
+        console.log(patient)
+        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}`)).json()
+        console.log(response)
+        res.json({ encounters: response.entry || [], status: "success" })
         return
     } catch (error) {
         res.json({ error, status: "error" })
