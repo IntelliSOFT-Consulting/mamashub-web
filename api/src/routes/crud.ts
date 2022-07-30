@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.use(express.json())
 
-let codes: { [index: string]: string } = observationCodes
+let codes: { [index: string]: string } = observationCodes.codes
 
 router.post('/observations', async (req: Request, res: Response) => {
     try {

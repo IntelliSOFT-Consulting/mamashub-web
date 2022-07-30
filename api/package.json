@@ -12,7 +12,6 @@
     "jwt-simple": "^0.5.6",
     "node-mailjet": "^3.3.13",
     "nodemailer": "^6.7.3",
-    "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0",
     "uuidv4": "^6.2.13"
   },
@@ -35,7 +34,7 @@
     "typescript": "^4.1.3"
   },
   "scripts": {
-    "dev": "nodemon --delay 500ms ./src/index.ts -w ./src --signal SIGTERM",
+    "dev": "sudo kill -9 $(lsof -i tcp:8080 -t); nodemon ./src/index.ts -w ./src",
     "start": "node ./build/index.js",
     "build": "yarn tsc --project tsconfig.json",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",

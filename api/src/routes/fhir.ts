@@ -1,10 +1,6 @@
 import express, { NextFunction, Response, Request } from "express";
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
-import { requireJWTMiddleware as requireJWT } from "../lib/jwt";
-import { v4 as uuidv4 } from 'uuid';
-import { createEncounter, createObservation, createObservationValue } from "../lib/fhir/utils";
-import fetch from 'cross-fetch'
-import { type } from "os";
+
 
 const router = express.Router()
 
