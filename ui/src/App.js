@@ -19,6 +19,7 @@ import CommunityReferrals from './pages/CommunityReferrals'
 import Observations from './pages/Observations' 
 import ViewMOH100 from './pages/ViewMOH100' 
 import Treatment from './pages/Treatment' 
+import Reports from './pages/Reports'
 
 function App() {
     return ( 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/community-referrals" element={<CommunityReferrals/>} />
           <Route path="/counselling-treatment" element={<Treatment/>} />
           <Route path="/moh-100" element={<MOH100/>} />
+          <Route path="/moh-reports" element={<Reports/>} />
           <Route path="/observations" element={<Observations/>} />
           <Route path="/referral/:id" element={<ViewMOH100/>} />
 
