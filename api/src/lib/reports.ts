@@ -26,7 +26,6 @@ export let generateGeneralReport = async (patientId: string) => {
     let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
     for (let observation of observations) {
         for (let code of Object.keys(codes)) {
-            console.log(observation.resource.code.coding[0].code)
             if (observation.resource.code.coding[0].code === String(codes[code]).split(":")[1]) {
                 results[code] = observation.resource.valueQuantity.value ?? observation.resource.valueString ?? observation.resource.valueDateTime ?? "-"
             }
@@ -38,7 +37,7 @@ export let generateGeneralReport = async (patientId: string) => {
         ancNumber: patient.id,
         id:patient.id,
         noOfAncVisits: await getNoOfAncVisits(patientId),
-        fullNames: (patient.name[0].family + " " + patient.name || ''),
+        fullNames: (patient.name[0].family),
         dob: new Date(patient.birthDate).toDateString(),
         subCounty: "",
         county: "",
