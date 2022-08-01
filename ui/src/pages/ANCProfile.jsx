@@ -96,7 +96,14 @@ export default function ANCProfile() {
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
-        if (!visit) { return }
+        if (!visit) {
+            setMessage("Patient visit not initiated. To start visit, Select patient in the patients list")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 1500)
+            return
+        }
         setVisit(JSON.parse(visit))
         return
     }, [])
@@ -153,7 +160,7 @@ export default function ANCProfile() {
                                         </RadioGroup>
 
                                     </Grid>
-                                     <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={6}>
                                         {(patientInformation.surgicalOperation) && <TextField
                                             fullWidth="100%"
                                             type="text"

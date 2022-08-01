@@ -1,7 +1,7 @@
 import { Box, Grid, Modal, Button, Container, useMediaQuery, Snackbar, Checkbox, FormControlLabel, CircularProgress, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { apiHost } from '../lib/api';
-
+import { exportToCsv } from '../lib/exportCSV';
 import { DataGrid } from '@mui/x-data-grid';
 import Layout from '../components/Layout';
 
@@ -33,6 +33,28 @@ export default function GeneralPatientLevel() {
         return
     }
 
+
+    const exportReport = async () => {
+
+        console.log(results)
+        let header = []
+        let data = []
+        if (results.length > 0) {
+            header = Object.keys(results[0]).map((x) => {
+                return x
+            })
+            data = results.map((result)=> {
+                return Object.keys(result).map((r) => {
+                    return result[r]
+                })
+            })
+        }
+        console.log(data)
+        let rows = [header].concat(data)
+        exportToCsv(`MOH-100-${new Date().toISOString()}.csv`, rows)
+        // console.log(rows)
+    }
+
     const handleClose = async () => {
         setOpenModal(false)
         setData(null)
@@ -40,9 +62,7 @@ export default function GeneralPatientLevel() {
         return
     }
 
-    const exportReport = async () => {
 
-    }
 
     useEffect(() => {
         getReport()
@@ -133,12 +153,13 @@ export default function GeneralPatientLevel() {
                 <br />
                 <Container maxWidth="lg">
                     <br />
-                    {results.length > 0 && <Button variant="contained"
+                    {/* {results.length > 0 && <Button variant="contained"
                         disableElevation
                         onClick={e => { setOpenModal(true) }}
-                        sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>}
+                        sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>} */}
                     <Button variant="contained"
                         disableElevation
+                        onClick={e => { exportReport() }}
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
 
                     <br />
@@ -172,7 +193,7 @@ export default function GeneralPatientLevel() {
                             >
                                 {columns.slice(3).map((column) => {
                                     return <Grid item xs={3} lg={3} md={2}>
-                                        <FormControlLabel control={<Checkbox defaultChecked  />} label={column.headerName} />
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label={column.headerName} />
                                     </Grid>
                                 })}
                             </Grid>
