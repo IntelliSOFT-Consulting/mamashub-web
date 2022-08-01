@@ -140,7 +140,6 @@ export default function GeneralPatientLevel() {
     return (
         <>
 
-            <br />
             <Layout>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -150,7 +149,6 @@ export default function GeneralPatientLevel() {
                     key={"loginAlert"}
                 />
 
-                <br />
                 <Container maxWidth="lg">
                     <br />
                     {/* {results.length > 0 && <Button variant="contained"
@@ -159,6 +157,7 @@ export default function GeneralPatientLevel() {
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>} */}
                     <Button variant="contained"
                         disableElevation
+                        disabled={results.length < 1}
                         onClick={e => { exportReport() }}
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
 
