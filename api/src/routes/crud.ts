@@ -1,4 +1,4 @@
-import express, { NextFunction, Response, Request } from "express";
+import express, { Response, Request } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { createEncounter, createObservation, createObservationValue } from "../lib/fhir/utils";
 import fetch from 'cross-fetch'
