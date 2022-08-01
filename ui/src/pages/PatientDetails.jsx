@@ -105,9 +105,8 @@ export default function PatientDetails() {
                                         <Typography variant="h5">{patient.name[0].family || ''} </Typography>
                                         <Typography>Patient ID: {id}</Typography>
                                         <Typography>Age: {timeSince(new Date(patient.birthDate))}</Typography>
-                                        <Typography>Phone: {patient.telecom[0].value || "Not Provided"}</Typography>
+                                        <Typography>Phone: {patient.telecom ? patient.telecom[0].value: " - " || "Not Provided"}</Typography>
                                     </> : <Typography>Loading</Typography>}
-
                                     <Divider />
                                     {
                                         encounters &&
@@ -126,23 +125,13 @@ export default function PatientDetails() {
                                                         <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}
                                                         >Visit Information</Button>
-
                                                     </Box>
                                                     <p></p>
                                                 </>
                                             })}
-
                                         </>
                                     }
                                     <Divider />
-                                    {/* {
-                                        observations &&
-                                        <>
-                                            <Typography>Facility Visits</Typography>
-                                            <Typography>{JSON.stringify(observations)}</Typography>
-
-                                        </>
-                                    } */}
                                 </CardContent>
                             </Card>
 
