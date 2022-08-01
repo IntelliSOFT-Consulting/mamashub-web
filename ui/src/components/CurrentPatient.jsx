@@ -1,11 +1,11 @@
 import { PregnantWoman } from '@mui/icons-material'
 import {
     Card, CardContent, Button,
-    CardMedia, Avatar, Grid, Typography, Stack, Snackbar
+    CardMedia, Avatar, Grid, Typography, Stack, Snackbar,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { MedicalInformation, Close } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CurrentPatient({ data }) {
 
@@ -20,6 +20,7 @@ export default function CurrentPatient({ data }) {
 
     useEffect(() => {
         if (!window.localStorage.getItem("currentPatient")) {
+            setMessage("")
 
         }
     }, [window.localStorage.getItem("currentPatient")])
