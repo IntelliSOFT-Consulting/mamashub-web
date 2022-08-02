@@ -42,6 +42,19 @@ export default function PresentPregnancyTable() {
         }, 2000)
         return
     }
+    useEffect(() => {
+        let visit = window.localStorage.getItem("currentPatient")
+        if (!visit) {
+            setMessage("No patient visit not been initiated. To start a visit, Select a patient in the Patients list")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 4000)
+            return
+        }
+        setVisit(JSON.parse(visit))
+        return
+    }, [])
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
