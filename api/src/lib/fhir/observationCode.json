@@ -14,8 +14,11 @@
         "contactPhoneNumber": "loinc:89060-8:Contact Phone Number:",
         "physicalAddress": "loinc:56799-0:Address:",
         "gestation": "loinc:77386006:Gestation:",
-        "muac":"loinc:MUAC:Muac Codes",
-        "tb":"loinc:56717001:TB"
+        "muac":"loinc:MUAC:Muac Codes:",
+        "tb":"loinc:56717001:TB:",
+        "deworming":"loinc:101657003:Deworming",
+        "ttDose":"loinc:127786006:Tetanus"
+
 
     }
 }
