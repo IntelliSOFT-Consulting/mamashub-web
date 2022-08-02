@@ -26,11 +26,13 @@ export let generateGeneralReport = async (patientId: string) => {
     let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
     for (let observation of observations) {
         for (let code of Object.keys(codes)) {
+            // console.log(observation.resource.code.coding[0].code, String(codes[code]).split(":")[1])
             if (observation.resource.code.coding[0].code === String(codes[code]).split(":")[1]) {
-                results[String(codes[code]).split(":")[0]] = observation.resource.valueQuantity.value ?? observation.resource.valueString ?? observation.resource.valueDateTime ?? "-"
+                results[String(codes[code]).split(":")[0]] = observation.resource.valueQuantity ?? observation.resource.valueString ?? observation.resource.valueDateTime ?? "-"
             }
         }
     }
+    console.log(results)
 
     let report = {
         ancNumber: patient.id,
@@ -38,10 +40,10 @@ export let generateGeneralReport = async (patientId: string) => {
         noOfAncVisits: await getNoOfAncVisits(patientId),
         fullNames: (patient.name[0].family),
         dob: new Date(patient.birthDate).toDateString(),
-        subCounty: "",
-        county: "",
-        village: "",
-        estate: "",
+        subCounty: (patient.address? patient.address[0].district : " - ") || " - ",
+        county: (patient.address? patient.address[0].state : " - ") || " - ",
+        village: (patient.address? patient.address[0].city : " - ") || " - ",
+        estate: (patient.address? patient.address[0].text : " - ") || " - ",
         tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
         maritalStatus: "",
         parity: "",
