@@ -20,7 +20,7 @@ router.get('/general', async (req: Request, res: Response) => {
         res.statusCode = 200
         let report = []
         let patientIds: any = []
-        let patients = await (await FhirApi({ url: '/Patient?_limit=100' })).data
+        let patients = await (await FhirApi({ url: '/Patient?_limit=99999' })).data
         patients = patients?.entry || []
         patients.map((patient: any) => {
             patientIds.push(patient.resource.id)
