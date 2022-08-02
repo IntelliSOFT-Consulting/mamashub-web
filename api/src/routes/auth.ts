@@ -68,9 +68,15 @@ router.post("/login", async (req: Request, res: Response) => {
                 ...(username) && {username}
             }
         })
+
+        if(!user){
+            res.statusCode = 401
+            res.json({status:"error", message: "Incorrect username/password or password provided."})
+            return
+        }
         
         if(user?.verified !== true){
-            console.log(user)
+            // console.log(user)
             res.statusCode = 401
             res.json({status:"error", message: "Kindly complete password reset or verify your account to proceed. Check reset instructions in your email."})
             return
