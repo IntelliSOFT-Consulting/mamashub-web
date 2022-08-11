@@ -75,7 +75,6 @@ router.get('/', [requireJWT], async (req: Request, res: Response) => {
 })
 
 router.get('/:id', [requireJWT], async (req: Request, res: Response) => {
-
     try {
         let { id } = req.params
         let referral = await db.referral.findUnique({
@@ -91,19 +90,15 @@ router.get('/:id', [requireJWT], async (req: Request, res: Response) => {
         res.json({ error, status: "error" })
         return
     }
-
-
-
-    return
 })
 
-router.put('/:id', [requireJWT], async (req: Request, res: Response) => {
+// router.put('/:id', [requireJWT], async (req: Request, res: Response) => {
 
-    let { id } = req.params
+//     let { id } = req.params
 
 
-    return
-})
+//     return
+// })
 
 
 export default router

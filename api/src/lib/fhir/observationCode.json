@@ -19,7 +19,7 @@
         "deworming": "loinc:14369007:Deworming",
         "ttDose": "loinc:73152006-R:Tetanus",
         "muacCodes": "loinc:284473002:MUAC",
-        "hivResults": "loinc:31676001-R:Hiv Results",
+        "hivResults": "loinc:31676001-R:HIV Results",
         "ipt": "loinc:388435640:IPT",
         "fgm": "loinc:95041000119101:FGM",
         "urynalysis": "loinc:45295008:Urynalysis",
