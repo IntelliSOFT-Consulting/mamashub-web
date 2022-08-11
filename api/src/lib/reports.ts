@@ -21,7 +21,7 @@ export let generateGeneralReport = async (patientId: string) => {
 
     let results: { [index: string]: any } = {}
 
-    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&_limit=99999` })).data
+    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&_count=99999` })).data
     observations = observations?.entry ?? []
     let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
     for (let observation of observations) {
