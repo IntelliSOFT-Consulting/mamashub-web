@@ -337,7 +337,6 @@ export default function ANCProfile() {
                                             name="row-radio-buttons-group"
                                             onChange={e => { console.log(e) }}
                                         >
-
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Urinalysis: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
