@@ -299,42 +299,33 @@ export default function ANCProfile() {
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Blood Group</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={patient.bloodGroup ? patient.bloodGroup : null}
-                                                label="Blood Group"
-                                                onChange={e => { setPatient({ ...patient, bloodGroup: e.target.value }) }}
-                                                size="small"
-                                                defaultValue={"A"}
-                                            >
-                                                <MenuItem value={"A"}>A</MenuItem>
-                                                <MenuItem value={"B"}>B</MenuItem>
-                                                <MenuItem value={"AB"}>AB</MenuItem>
-                                                <MenuItem value={"Positive"}>Positive</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                    <Grid item xs={12} md={12} lg={8}>
+                                    <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
+
+                                            <FormControlLabel value={0} sx={{ width: "37.4%" }} control={<FormLabel />} label="Blood Group: " />
+                                            <FormControlLabel value={"A"} control={<Radio />} label="A" />
+                                            <FormControlLabel value={"B"} control={<Radio />} label="B" />
+                                            <FormControlLabel value={"AB"} control={<Radio />} label="AB" />
+                                            <FormControlLabel value={"O"} control={<Radio />} label="O" />
+                                        </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Rhesus</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={patient.rhesus ? patient.rhesus : null}
-                                                label="Rhesus"
-                                                onChange={e => { setPatient({ ...patient, rhesus: e.target.value }) }}
-                                                size="small"
-                                                defaultValue={"Negative"}
-                                            >
+                                    <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
 
-                                                <MenuItem value={"Negative"}>Negative</MenuItem>
-                                                <MenuItem value={"Positive"}>Positive</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Rhesus: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Positive" />
+                                            <FormControlLabel value={false} control={<Radio />} label="Negative" />
+                                        </RadioGroup>
                                     </Grid>
                                 </Grid>
 
