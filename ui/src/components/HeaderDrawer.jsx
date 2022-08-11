@@ -185,6 +185,12 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary='Patient Registration' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
+            <ListItem button onClick={e => { activateTab("patients"); navigate('/patients') }} sx={{ backgroundColor: isActiveTab("patients") ? "white" : '#632165', color: isActiveTab("patients") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
+              <ListItemIcon>
+                <ListAlt sx={{ color: isActiveTab("patients") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
             <ListItem button onClick={e => { activateTab("patient-profile"); navigate('/patient-profile') }} sx={{ backgroundColor: isActiveTab("patient-profile") ? "white" : '#632165', color: isActiveTab("patient-profile") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <LibraryBooks sx={{ color: isActiveTab("patient-profile") ? "#632165" : 'white' }} />
@@ -210,13 +216,7 @@ export default function HeaderDrawer({ children }) {
               <ListItemText primary="Present Pregnancy Table" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
             <Divider />
-            <ListItem button onClick={e => { activateTab("patients"); navigate('/patients') }} sx={{ backgroundColor: isActiveTab("patients") ? "white" : '#632165', color: isActiveTab("patients") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <ListAlt sx={{ color: isActiveTab("patients") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
-            <Divider />
+            
             <ListItem button onClick={e => { activateTab("moh-reports"); navigate('/moh-reports') }} sx={{ backgroundColor: isActiveTab("moh-reports") ? "white" : '#632165', color: isActiveTab("moh-reports") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <PivotTableChart sx={{ color: isActiveTab("moh-reports") ? "#632165" : 'white' }} />

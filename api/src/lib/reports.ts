@@ -28,7 +28,7 @@ export let generateGeneralReport = async (patientId: string) => {
         for (let code of Object.keys(codes)) {
             console.log(observation.resource.code.coding[0].code, String(codes[code]).split(":")[1])
             if (observation.resource.code.coding[0].code === String(codes[code]).split(":")[1]) {
-                results[code] = observation.resource.valueQuantity ?? observation.resource.valueString ?? observation.resource.valueDateTime ?? "-"
+                results[code] = observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")
             }
         }
     }

@@ -1,23 +1,33 @@
 {
-    "codes":{
-        "bodyHeight": "loinc:50373000:Body height:cm",
-        "bodyWeight": "loinc:27113001:Body weight:kgs",
-        "lmp": "loinc:8665-2:LMP:weeks",
-        "edd": "loinc:11778-8:EDD:weeks",
-        "bp": "loinc:75367002:Blood Pressure:",
+    "codes": {
+        "bodyHeight": "loinc:1153637007:Body height:cm",
+        "bodyWeight": "loinc:726527001:Body weight:kgs",
+        "lmp": "loinc:21840007:LMP:weeks",
+        "edd": "loinc:161714006:EDD:weeks",
+        "bp": "loinc:271649006:Blood Pressure:",
         "pulse": "loinc:78564009:Pulse:",
-        "gravida": "loinc:11996-6:Gravida:",
-        "parity": "loinc:11977-6:Parity:",
+        "gravida": "loinc:161732006:Gravida:",
+        "parity": "loinc:364325004:Parity:",
         "educationLevel": "loinc:82589-3:Highest level of education:",
         "age": "loinc:63900-5:Current age or age at death:years",
         "patientPhoneNumber": "loinc:42077-8:Patient phone number:",
         "contactPhoneNumber": "loinc:89060-8:Contact Phone Number:",
         "physicalAddress": "loinc:56799-0:Address:",
         "gestation": "loinc:77386006:Gestation:",
-        "muac":"loinc:MUAC:Muac Codes:",
-        "tb":"loinc:56717001:TB:",
-        "deworming":"loinc:101657003:Deworming",
-        "ttDose":"loinc:127786006:Tetanus"
+        "muac": "loinc:MUAC:Muac Codes:",
+        "tb": "loinc:56717001:TB:",
+        "deworming": "loinc:14369007:Deworming",
+        "ttDose": "loinc:73152006-R:Tetanus",
+        "muacCodes": "loinc:284473002:MUAC",
+        "hivResults": "loinc:31676001-R:Hiv Results",
+        "ipt": "loinc:388435640:IPT",
+        "fgm": "loinc:95041000119101:FGM",
+        "urynalysis": "loinc:45295008:Urynalysis",
+        "receivedLLITN": "loinc:412894909:Received LLITN",
+        "artEligibility": "loinc:860046068:ART Eligibility",
+        "breastExam":"loinc:185712006:Breast Exam",
+        "bloodGroup":"loinc:365636006:Blood Group",
+        "rhesus":"loinc:169676009:Rhesus"
 
 
     }
