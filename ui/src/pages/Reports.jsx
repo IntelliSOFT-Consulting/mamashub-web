@@ -43,7 +43,7 @@ export default function GeneralPatientLevel() {
             header = Object.keys(results[0]).map((x) => {
                 return x
             })
-            data = results.map((result)=> {
+            data = results.map((result) => {
                 return Object.keys(result).map((r) => {
                     return result[r]
                 })
@@ -52,7 +52,7 @@ export default function GeneralPatientLevel() {
         console.log(data)
         let rows = [header].concat(data)
         exportToCsv(`MOH 405 ANC - ${new Date().toISOString()}.csv`, rows)
-        // console.log(rows)
+        return
     }
 
     const handleClose = async () => {
@@ -80,16 +80,17 @@ export default function GeneralPatientLevel() {
         { field: 'maritalStatus', headerName: 'Marital Status', width: 130 },
         { field: 'parity', headerName: 'Parity', width: 100 },
         { field: 'gravidae', headerName: 'Gravidae', width: 100 },
-        { field: 'lmp', headerName: 'LMP', width: 80 },
-        { field: 'edd', headerName: 'EDD', width: 80 },
+        { field: 'lmp', headerName: 'LMP', width: 120 },
+        { field: 'edd', headerName: 'EDD', width: 120 },
         { field: 'gestation', headerName: 'Gestation', width: 100 },
         { field: 'muacCodes', headerName: 'MUAC', width: 100 },
-        { field: 'height', headerName: 'Height', width: 100 },
+        { field: 'bodyHeight', headerName: 'Height', width: 100 },
         { field: 'breastExam', headerName: 'Breast Exam', width: 130 },
         { field: 'fgm', headerName: 'FGM', width: 80 },
         { field: 'haemoglobin', headerName: 'Haemoglobon', width: 120 },
         { field: 'bloodSugar', headerName: 'Blood Sugar', width: 100 },
-        { field: 'bloodGroupAndRhesus', headerName: 'Blood Group and Rhesus', width: 180 },
+        { field: 'bloodGroup', headerName: 'Blood Group', width: 180 },
+        { field: 'rhesus', headerName: 'Rhesus', width: 180 },
         { field: 'urynalysis', headerName: 'Urynalysis', width: 100 },
         { field: 'dualTesting', headerName: 'Dual Testing', width: 120 },
         { field: 'testResults', headerName: 'Test Results', width: 120 },
@@ -119,10 +120,6 @@ export default function GeneralPatientLevel() {
     ];
     const [indicators, setIndicators] = useState(columns)
 
-    useEffect(() => {
-
-
-    }, [indicators])
 
     const modalStyle = {
         position: 'absolute',

@@ -6,7 +6,7 @@ import { FhirApi } from '../lib/api'
 import Layout from '../components/Layout'
 import { timeSince } from '../lib/timeSince'
 
-export default function PatientDetails() {
+export default function ViewMOH100() {
 
     let [patient, setPatient] = useState()
     let { id } = useParams();
