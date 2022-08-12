@@ -6,7 +6,7 @@
         "edd": "loinc:161714006:EDD:weeks",
         "bp": "loinc:271649006:Blood Pressure:",
         "pulse": "loinc:78564009:Pulse:",
-        "gravida": "loinc:161732006:Gravida:",
+        "gravidae": "loinc:161732006:Gravidae:",
         "parity": "loinc:364325004:Parity:",
         "educationLevel": "loinc:82589-3:Highest level of education:",
         "age": "loinc:63900-5:Current age or age at death:years",
