@@ -178,7 +178,7 @@ export default function PatientDetails() {
                                             {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
                                                 return <>
                                                     <Typography variant="h6">{entry.display}</Typography>
-                                                    <Typography variant="p">{observation.resource.code.text}</Typography>
+                                                    <Typography variant="p">{observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")}</Typography>
                                                     {/* <br /> */}
                                                 </>
 
