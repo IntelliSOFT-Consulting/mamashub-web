@@ -16,6 +16,8 @@
         "gestation": "loinc:77386006:Gestation:",
         "muac": "loinc:MUAC:Muac Codes:",
         "tb": "loinc:56717001:TB:",
+        "partnerHIVResults":"loinc:31676001-R:Partner HIV Results:",
+        "partnerHIVTesting":"loinc:31676001:Partner HIV Testing:",
         "deworming": "loinc:14369007:Deworming",
         "ttDose": "loinc:73152006-R:Tetanus",
         "muacCodes": "loinc:284473002:MUAC",
