@@ -30,8 +30,8 @@
         "artEligibility": "loinc:860046068:ART Eligibility",
         "breastExam":"loinc:185712006:Breast Exam",
         "bloodGroup":"loinc:365636006:Blood Group",
-        "rhesus":"loinc:169676009:Rhesus"
-
-
+        "rhesus":"loinc:169676009:Rhesus",
+        "maternalHaartBeforeANC":"loinc:416234007:Maternal HAART before ANC",
+        "maternalHaartCTX":"loinc:5111197:Maternal HAART CTX"
     }
 }

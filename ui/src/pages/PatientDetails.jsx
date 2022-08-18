@@ -120,7 +120,7 @@ export default function PatientDetails() {
                                                 return <>
                                                     <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
                                                         <Typography variant="h6">Time: {new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
-                                                        <Typography variant="p">Encounter Code: {encounter.resource.reasonCode[0].text}</Typography>
+                                                        <Typography variant="p">{encounter.resource.reasonCode[0].text}</Typography>
                                                         <br />
                                                         <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}
