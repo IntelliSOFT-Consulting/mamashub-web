@@ -119,12 +119,14 @@ export default function PatientDetails() {
                                             {encounters.map((encounter) => {
                                                 return <>
                                                     <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
-                                                        <Typography variant="h6">Time: {new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
                                                         <Typography variant="p">{encounter.resource.reasonCode[0].text}</Typography>
                                                         <br />
+                                                        <Typography variant="p"  fontSize={"16px"} sx={{fontWeight:"bold"}}>{new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                                        <p></p>
                                                         <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}
-                                                        >Visit Information</Button>
+                                                        >PREVIEW</Button>
+                                                        <br/>
                                                     </Box>
                                                     <p></p>
                                                 </>
@@ -158,22 +160,19 @@ export default function PatientDetails() {
                         boxShadow: 24,
                         p: 4,
                     }}>
-                        <br /><br /><br />
-                        <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                            Encounter Information
-                        </Typography>
+                        <br />
+                        
                         {((observations && observations.length < 1) || (!observations)) && <>
                             <CircularProgress />
                             <Typography variant="h6">Loading</Typography>
 
                         </>}
                         <Grid container columnSpacing={1}>
-
                             {observations && observations.map((observation) => {
                                 return <>
-                                    <Grid item lg={6} xl={6} md={6} sm={12}>
+                                    <Grid item lg={4} xl={6} md={6} sm={12}>
                                         <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
-                                            <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br />
+                                            {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
                                             {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
                                             {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
                                                 return <>

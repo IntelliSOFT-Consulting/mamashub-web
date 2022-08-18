@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { v4 as uuidv4 } from 'uuid'
-import { FhirApi } from '../lib/api'
+import { createEncounter, FhirApi } from '../lib/api'
 import { Patient } from '../lib/fhir/resources'
 import CurrentPatient from '../components/CurrentPatient'
 
@@ -54,44 +54,72 @@ export default function ANCProfile() {
     let savePatientInformation = async () => {
 
         //get patient
-
+        let patient = visit.id
 
         //create encounter
-
-
+        let encounter = await createEncounter(patient, "Patient-Information")
+        console.log(encounter)
 
         //save observations
+        let observationsList = [
+        ]
+        //Create and Post Observations
+        let res = await (await fetch(`${apiHost}/crud/observations`, {
+            method: "POST",
+            body: JSON.stringify({ patientId:patient, encounterId: encounter, observations: observations })
+        })).json()
+        console.log(res)
 
-
-        setMessage("PatientInformation saved successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
+        if (res.status === "success") {
+            setMessage("Patient Information saved successfully")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 2000)
+            return
+        }
     }
 
 
     let saveMedicalHistory = async () => {
 
-        setMessage("MedicalHistory updated successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
+        //get patient
+        let patient = visit.id
+
+        //create encounter
+        let encounter = await createEncounter(patient, "Patient-Information")
+        console.log(encounter)
+
+        //save observations
+        let observationsList = [
+        ]
+        //Create and Post Observations
+        let res = await (await fetch(`${apiHost}/crud/observations`, {
+            method: "POST",
+            body: JSON.stringify({ patientId:patient, encounterId: encounter, observations: observations })
+        })).json()
+        console.log(res)
+
+        if (res.status === "success") {
+            setMessage("Medical History saved successfully")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 2000)
+            return
+        }
     }
+
 
 
     let saveBirthPlan = async () => {
 
-        setMessage("BirthPlan updated successfully")
+        setMessage("Birth Plan updated successfully")
         setOpen(true)
         setTimeout(() => {
             setOpen(false)
         }, 2000)
         return
-
     }
 
     useEffect(() => {
@@ -300,7 +328,7 @@ export default function ANCProfile() {
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={8}>
-                                    <RadioGroup
+                                        <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name="row-radio-buttons-group"
@@ -315,7 +343,7 @@ export default function ANCProfile() {
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                    <RadioGroup
+                                        <RadioGroup
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name="row-radio-buttons-group"

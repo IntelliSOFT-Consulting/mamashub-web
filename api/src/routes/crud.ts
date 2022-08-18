@@ -1,8 +1,10 @@
 import express, { Response, Request } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { createEncounter, createObservation, createObservationValue } from "../lib/fhir/utils";
-import fetch from 'cross-fetch'
-import observationCodes from '../lib/fhir/observationCode.json'
+import fetch from 'cross-fetch';
+import observationCodes from '../lib/fhir/observationCode.json';
+import { requireJWTMiddleware } from "../lib/jwt";
+
 const router = express.Router()
 
 router.use(express.json())
@@ -76,11 +78,11 @@ router.get('/observations', [], async (req: Request, res: Response) => {
     }
 })
 
-router.post('/encounters', [], async (req: Request, res: Response) => {
+router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Response) => {
     try {
-        let { encounterType, patientId } = req.body;
+        let { encounterCode, patientId, encounterType } = req.body;
         let encounterId = uuidv4();
-        let encounter = createEncounter(patientId, encounterId, encounterType);
+        let encounter = createEncounter(patientId, encounterId, encounterType ?? 2, encounterCode);
         let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter/${encounterId}`, {
             body: JSON.stringify(encounter),
             method: 'PUT',
@@ -108,7 +110,5 @@ router.get('/encounters', [], async (req: Request, res: Response) => {
         return
     }
 })
-
-
 
 export default router

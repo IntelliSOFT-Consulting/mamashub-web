@@ -4,6 +4,26 @@ import {getCookie} from './cookie';
 
 export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? "http://127.0.0.1:8080" : 'https://devmhis.netlify.app/api';
 
+export let createEncounter = async (patientId, encounterCode) => {
+    try {
+        let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
+            method: 'POST',
+            body: JSON.stringify({
+                encounterType: encounterType,
+                patientId: patientId
+            }),
+            headers: { "Content-Type": "application/json" }
+        })).json()
+        console.log(encounter)
+        displayAlert(`Encounter created successfully`)
+
+        return encounter.id
+    } catch (error) {
+        displayAlert("Failed to create encounter")
+        return null
+    }
+}
+
 export let FhirApi = async (params) => {
     let _defaultHeaders = {
         "Content-Type": 'application/json',

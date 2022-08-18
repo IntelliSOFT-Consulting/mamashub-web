@@ -210,7 +210,7 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
         console.log(resetUrl)
         let response = await sendPasswordResetEmail(user, resetUrl)
-        console.log(response)
+        // console.log(response)
         res.json({ message: `Password reset instructions have been sent to your email, ${user?.email}` , status:"success",});
         return
         
@@ -254,12 +254,12 @@ router.post("/new-password",[requireJWT], async (req: Request, res: Response) =>
                 password: _password, salt:salt, resetToken: null, resetTokenExpiresAt: null, verified: true
             }
         })
-        console.log(response)
+        // console.log(response)
         res.statusCode = 200
         res.json({ message: "Password Reset Successfully" , status:"success"});
         return
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.statusCode = 401
         res.json({ error: error , status:"error"});
         return

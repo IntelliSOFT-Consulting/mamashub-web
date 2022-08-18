@@ -20,8 +20,4 @@ router.use('/', [createProxyMiddleware(
         onProxyReq: fixRequestBody
     })]);
 
-
-
-
-
 export default router
