@@ -1,5 +1,5 @@
 import db from './prisma'
-import { FhirApi, generateReport } from './fhir/utils'
+import { FhirApi } from './fhir/utils'
 import * as observationCodes from './fhir/observationCode.json'
 
 const codes: any = observationCodes.codes
@@ -66,7 +66,7 @@ export let generateGeneralReport = async (patientId: string) => {
         'hivTesting1': "",
         'hivTesting2': "",
         'hivResults': "",
-        'artEligibility': "",
+        'artEligibility': "-",
         'maternalHaartBeforeANC': "",
         'maternalHaartCTX': "",
         'infantProphylaxis': "",
@@ -84,9 +84,7 @@ export let generateGeneralReport = async (patientId: string) => {
         'reasonsForReferral': "",
         'remarks': ""
     }
-
     return { ...report, ...results }
-
 }
 
 // let d = generateGeneralReport("fee27216-cdef-4a80-93c4-80a04d2adaef").then(res=>{

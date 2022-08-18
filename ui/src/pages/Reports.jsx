@@ -68,7 +68,7 @@ export default function GeneralPatientLevel() {
         getReport()
     }, [])
     const columns = [
-        { field: 'ancNumber', headerName: 'ANC No.', width: 100, editable: true },
+        { field: 'ancNumber', headerName: 'ANC No.', width: 150, editable: true },
         { field: 'fullNames', headerName: "Full Names", width: 140, editable: true },
         { field: 'dob', headerName: 'DOB', width: 150, editable: true },
         { field: 'noOfAncVisits', headerName: 'No of ANC Visits', width: 150, editable: true },
