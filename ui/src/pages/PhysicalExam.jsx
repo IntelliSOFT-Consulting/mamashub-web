@@ -1,4 +1,4 @@
-import { Container, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material'
+import { Container, TextField, Stack, Button, Grid, Snackbar, FormGroup, Checkbox, Typography, Divider, useMediaQuery, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
@@ -13,7 +13,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient'
-
+import { apiHost, createEncounter } from './../lib/api'
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -26,9 +26,10 @@ export default function PhysicalExam() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState('')
-    
-    
+    let [weightMonitoringChart, setWeightMonitoring] = useState([])
+
     let [visit, setVisit] = useState()
+    let [physicalExam, setPhysicalExam] = useState({})
     let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
     let [contact, setContact] = useState(null)
@@ -43,8 +44,54 @@ export default function PhysicalExam() {
         return
     }
     let saveSerologyResults = async () => {
+        //get patient
+        let patient = visit.id
+        //create encounter
+        let encounter = await createEncounter(patient, "Maternal-Serology")
+        console.log(encounter)
+        //save observations
+        let observationsList = [
+        ]
+        //Create and Post Observations
+        let res = await (await fetch(`${apiHost}/crud/observations`, {
+            method: "POST",
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: physicalExam })
+        })).json()
+        console.log(res)
+        if (res.status === "success") {
+            setMessage("Patient Information saved successfully")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 2000)
+            return
+        }
+        return
+    }
 
-
+    let savePhysicalExam = async () => {
+        //get patient
+        let patient = visit.id
+        //create encounter
+        let encounter = await createEncounter(patient, "PHYSICAL_EXAMINATION")
+        console.log(encounter)
+        //save observations
+        let observationsList = [
+        ]
+        //Create and Post Observations
+        let res = await (await fetch(`${apiHost}/crud/observations`, {
+            method: "POST",
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: physicalExam })
+        })).json()
+        console.log(res)
+        if (res.status === "success") {
+            setMessage("Patient Information saved successfully")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 2000)
+            return
+        }
         return
     }
 
@@ -158,9 +205,6 @@ export default function PhysicalExam() {
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Weight Monitoring Chart" value="2" />
                                     <Tab label="Clinical Notes" value="3" />
-                                    
-
-
 
                                 </TabList>
                             </Box>
@@ -170,6 +214,38 @@ export default function PhysicalExam() {
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
+                                    {[1, 2, 3].map((x) => {
+                                        return <Grid item xs={12} md={12} lg={3}>
+                                            <Button variant='contained' sx={{ backgroundColor: "#632165", width: "80%" }}>ANC Visit {`${x}`}</Button>
+                                        </Grid>
+                                    })}
+                                </Grid>
+                                <p></p>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Surgical Operation: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Normal" />
+                                            <FormControlLabel value={false} control={<Radio />} label="Abnormal" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If abnormal, specify"
+                                            placeholder="If abnormal, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
                                         <TextField
                                             fullWidth="80%"
@@ -207,7 +283,7 @@ export default function PhysicalExam() {
                                             label="BMI (auto-generated)"
                                             placeholder="BMI (auto-generated)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, bmi: e.target.value }) }}
                                         />
                                     </Grid>
 
@@ -220,7 +296,7 @@ export default function PhysicalExam() {
                                             label="Systolic Blood Pressure"
                                             placeholder="Systolic Blood Pressure"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, bp: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -230,7 +306,7 @@ export default function PhysicalExam() {
                                             label="Diastolic Blood Pressure"
                                             placeholder="Diastolic Blood Pressure"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, bp: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -240,54 +316,338 @@ export default function PhysicalExam() {
                                             label="Pulse Rate"
                                             placeholder="Pulse Rate"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, pulseRate: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
-                                            label="CVS"
-                                            placeholder="CVS"
+                                            label="Temperature"
+                                            placeholder="Temperature"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, inpatientNumber: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, temperature: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, cvs: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="CVs: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Normal" />
+                                            <FormControlLabel value={false} control={<Radio />} label="Abnormal" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If abnormal, specify"
+                                            placeholder="If abnormal, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Respiration: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Normal" />
+                                            <FormControlLabel value={false} control={<Radio />} label="Abnormal" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If abnormal, specify"
+                                            placeholder="If abnormal, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            // aria-labelledby="demo-row-radio-buttons-group-label"
+                                            // name="row-radio-buttons-group"
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Breast Exam: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Normal" />
+                                            <FormControlLabel value={false} control={<Radio />} label="Abnormal" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If normal, record findings"
+                                            placeholder="If normal, record findings"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If abnormal, specify"
+                                            placeholder="If abnormal, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+
+                                <Divider />
+                                <p></p>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Weight Monitoring</Typography>
+                                <Grid container spacing={1} padding=".5em" >
+
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="number"
+                                            label="Mother's weight (kg)"
+                                            placeholder="Mother's weight (kg)"
+                                            size="small"
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, temperature: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="number"
+                                            label="Gestation in weeks"
+                                            placeholder="Gestation in weeks"
+                                            size="small"
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, temperature: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
 
                                 <Divider />
                                 <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Respiration</Typography>
-                                <Grid container spacing={1} padding=".5em" >
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Abdmonial Examinations</Typography>
+                                <Divider />
 
+                                <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Respiration Exam Results</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={data.admittedFrom ? data.admittedFrom : "No"}
-                                                label="Respiration Exam Results"
-                                                onChange={handleChange}
-                                                size="small"
-                                                defaultValue={"Other"}
-                                            >
-                                                <MenuItem value={"Respiratory exam not done"}>Respiratory exam not done</MenuItem>
-                                                <MenuItem value={"Yes"}>Normal Respiratory Exam Result</MenuItem>
-                                                <MenuItem value={"No"}>Dyspnoea</MenuItem>
-                                                <MenuItem value={"Yes"}>Cough</MenuItem>
-                                                <MenuItem value={"Yes"}>Rapid breathing</MenuItem>
-                                                <MenuItem value={"Yes"}>Slow breathing</MenuItem>
-                                                <MenuItem value={"Yes"}>Wheezing</MenuItem>
-                                                <MenuItem value={"Yes"}>Rales</MenuItem>
-                                                <MenuItem value={"Other"}>Other</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Inspection Done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Palpation Done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Auscalation Done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
                                     </Grid>
                                 </Grid>
+
                                 <Divider />
                                 <p></p>
-                                <p></p>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>External Genitalia Examination</Typography>
+                                <Divider />
+
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Inspection Done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Palpation Done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Discharge Present: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="Genital ulcer present: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="80%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, firstName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            defaultChecked={true}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "40%" }} control={<FormLabel />} label="FGM done: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                                            <FormLabel component="legend">Assign responsibility</FormLabel>
+                                            <FormGroup>
+                                                <FormControlLabel label="Scarring"
+                                                    control={
+                                                        <Checkbox checked={"jason"} onChange={handleChange} name="jason" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Dyspaneuria"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Keloids"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="UTI"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                            </FormGroup>
+                                        </FormControl>
+                                    </Grid>
+
+
+
+                                </Grid>
 
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}

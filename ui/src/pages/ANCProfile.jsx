@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { v4 as uuidv4 } from 'uuid'
-import { createEncounter, FhirApi } from '../lib/api'
+import { createEncounter, FhirApi, apiHost } from '../lib/api'
 import { Patient } from '../lib/fhir/resources'
 import CurrentPatient from '../components/CurrentPatient'
 
@@ -66,7 +66,7 @@ export default function ANCProfile() {
         //Create and Post Observations
         let res = await (await fetch(`${apiHost}/crud/observations`, {
             method: "POST",
-            body: JSON.stringify({ patientId:patient, encounterId: encounter, observations: observations })
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: patientInformation })
         })).json()
         console.log(res)
 
@@ -82,12 +82,10 @@ export default function ANCProfile() {
 
 
     let saveMedicalHistory = async () => {
-
         //get patient
         let patient = visit.id
-
         //create encounter
-        let encounter = await createEncounter(patient, "Patient-Information")
+        let encounter = await createEncounter(patient, "Medical-History")
         console.log(encounter)
 
         //save observations
@@ -96,7 +94,7 @@ export default function ANCProfile() {
         //Create and Post Observations
         let res = await (await fetch(`${apiHost}/crud/observations`, {
             method: "POST",
-            body: JSON.stringify({ patientId:patient, encounterId: encounter, observations: observations })
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
         })).json()
         console.log(res)
 
@@ -114,12 +112,30 @@ export default function ANCProfile() {
 
     let saveBirthPlan = async () => {
 
-        setMessage("Birth Plan updated successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
+        //get patient
+        let patient = visit.id
+        //create encounter
+        let encounter = await createEncounter(patient, "Medical-History")
+        console.log(encounter)
+
+        //save observations
+        let observationsList = [
+        ]
+        //Create and Post Observations
+        let res = await (await fetch(`${apiHost}/crud/observations`, {
+            method: "POST",
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
+        })).json()
+        console.log(res)
+
+        if (res.status === "success") {
+            setMessage("Birth Plan saved successfully")
+            setOpen(true)
+            setTimeout(() => {
+                setOpen(false)
+            }, 2000)
+            return
+        }
     }
 
     useEffect(() => {
@@ -166,7 +182,7 @@ export default function ANCProfile() {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Patient Information" value="1" />
+                                    <Tab label="Medical and Surgical History" value="1" />
                                     <Tab label="Medical History" value="2" />
                                     <Tab label="Birth Plan" value="3" />
                                 </TabList>
