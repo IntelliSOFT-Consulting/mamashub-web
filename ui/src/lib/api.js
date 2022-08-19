@@ -1,8 +1,26 @@
 
 
-import {getCookie} from './cookie';
+import { getCookie } from './cookie';
 
 export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? "http://127.0.0.1:8080" : 'https://devmhis.netlify.app/api';
+
+export let createEncounter = async (patientId, encounterCode) => {
+    try {
+        let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
+            method: 'POST',
+            body: JSON.stringify({
+                encounterCode,
+                patientId: patientId
+            }),
+            headers: { "Content-Type": "application/json" }
+        })).json()
+        console.log(encounter)
+
+        return encounter.id
+    } catch (error) {
+        return null
+    }
+}
 
 export let FhirApi = async (params) => {
     let _defaultHeaders = {
@@ -18,9 +36,9 @@ export let FhirApi = async (params) => {
         })
         let responseJSON = await response.json()
         let res = {
-                status: "success",
-                statusText: response.statusText,
-                data: responseJSON
+            status: "success",
+            statusText: response.statusText,
+            data: responseJSON
         }
         return res
     } catch (error) {

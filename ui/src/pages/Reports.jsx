@@ -62,11 +62,10 @@ export default function GeneralPatientLevel() {
         return
     }
 
-
-
     useEffect(() => {
         getReport()
     }, [])
+
     const columns = [
         { field: 'ancNumber', headerName: 'ANC No.', width: 150, editable: true },
         { field: 'fullNames', headerName: "Full Names", width: 140, editable: true },
@@ -138,7 +137,6 @@ export default function GeneralPatientLevel() {
 
     return (
         <>
-
             <Layout>
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -175,9 +173,6 @@ export default function GeneralPatientLevel() {
                         <CircularProgress />
                         <Typography variant='h5'>Loading Report..</Typography>
                     </>}
-
-
-
                     <Modal keepMounted
                         open={openModal}
                         onClose={handleClose}
@@ -196,8 +191,6 @@ export default function GeneralPatientLevel() {
                                 })}
                             </Grid>
                             <Button variant='contained'>Generate Report</Button>
-
-
                         </Box>
 
                     </Modal>

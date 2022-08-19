@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
-import {reports} from './allReports.json'
+import { reports } from './allReports.json'
 
 export let createObservationValue = (value: number | string, unit: any, code: any) => {
 
@@ -52,7 +52,7 @@ export let createObservation = (patientId: string, observationValue: any, id: st
 }
 
 
-export let createEncounter = (patientId: string, encounterId: string, encounterType: number) => {
+export let createEncounter = (patientId: string, encounterId: string, encounterType: number = 2, encounterCode: string | null = null) => {
     if (encounterType > 3 || encounterType < 1) {
         console.error("Encounter type is either 1, 2 or 3")
         return
@@ -95,17 +95,17 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
                 "coding": [
                     (encounterType === 1) ? {
                         "system": "http://fhir.org/guides/who/anc-cds/CodeSystem/anc-custom-codes",
-                        "code": "ANC.B5.DE2",
+                        "code": encounterCode,
                         "display": "First antenatal care contact"
                     } : (encounterType === 2) ?
                         {
                             "system": "http://fhir.org/guides/who/anc-cds/CodeSystem/anc-custom-codes",
-                            "code": "ANC.B5.DE3",
+                            "code": encounterCode,
                             "display": "Scheduled antenatal care contact"
                         } :
                         {
                             "system": "http://fhir.org/guides/who/anc-cds/CodeSystem/anc-custom-codes",
-                            "code": "ANC.B5.DE4",
+                            "code": encounterCode,
                             "display": "Specific complaint related to antenatal care"
                         }
                 ]
