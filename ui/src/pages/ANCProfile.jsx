@@ -1,4 +1,4 @@
-import { Container, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
+import { Container, FormGroup, Checkbox, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
 import { useEffect, useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
@@ -40,6 +40,11 @@ export default function ANCProfile() {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        return
+    };
+    const handleChanges = (event, newValue) => {
+        // setValue(newValue);
+        return
     };
 
     let saveSuccessfully = async () => {
@@ -183,18 +188,18 @@ export default function ANCProfile() {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Medical and Surgical History" value="1" />
-                                    <Tab label="Medical History" value="2" />
-                                    <Tab label="Birth Plan" value="3" />
+
+                                    <Tab label="Birth Plan" value="2" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
+                                <Typography variant="h5">Surgical History</Typography>
+                                <Divider />
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            // aria-labelledby="demo-row-radio-buttons-group-label"
-                                            // name="row-radio-buttons-group"
                                             defaultChecked={true}
                                             onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperation: e.target.value }); console.log(e.target.value) }}
                                         >
@@ -213,6 +218,68 @@ export default function ANCProfile() {
                                             size="small"
                                             onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
                                         />}
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={12}>
+                                        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                                            <FormLabel component="legend">Surgical Operation (Select all that apply)</FormLabel>
+                                            <FormGroup>
+                                                <FormControlLabel label="No known past surgeries"
+                                                    control={
+                                                        <Checkbox checked={"jason"} onChange={handleChanges} name="jason" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Dilation and curettage"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Myomectomy"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Removal of ovarian cysts"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Oophorectomy"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Salpingectomy"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Cervical Cone"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                    }
+                                                />
+                                            </FormGroup>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Other gynaecological procedures (specify)"
+                                            placeholder="Other gynaecological procedures (specify)"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Other surgeries (specify)"
+                                            placeholder="Other surgeries (specify)"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                        />
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
@@ -243,38 +310,36 @@ export default function ANCProfile() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
                                             onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
                                         >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Any drug allergies: " />
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other conditions: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
-
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Specify"
-                                            placeholder="Specify"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
-                                        />
+                                        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                                            <FormLabel component="legend">If yes, select all that apply</FormLabel>
+                                            <FormGroup>
+
+                                                <FormControlLabel label="Epilepsy"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Malaria in pregnancy"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                                <FormControlLabel label="Others"
+                                                    control={
+                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                    }
+                                                />
+                                            </FormGroup>
+                                        </FormControl>
                                     </Grid>
-                                </Grid>
-
-
-
-                                <Divider />
-                                <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Family History</Typography>
-                                <Divider />
-                                <p></p>
-                                <Grid container spacing={1} padding=".5em" >
-
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
@@ -283,12 +348,118 @@ export default function ANCProfile() {
                                             onChange={e => { console.log(e) }}
                                         >
 
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Blood Transfusion: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
+
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="If yes, was there a reaction? " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={7}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="If yes, what was the reaction"
+                                            placeholder="If yes, what was the reaction"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Tuberculosis: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                </Grid>
+                                <Divider />
+                                <p></p>
+
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Drug Allergies</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Drug allergies: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other non-drug allergies: " />
+                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="If yes, specify"
+                                            placeholder="If yes, specify"
+                                            size="small"
+                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Family History</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name="row-radio-buttons-group"
+                                            onChange={e => { console.log(e) }}
+                                        >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Twins: " />
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
 
                                     </Grid>
+
+
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
@@ -301,143 +472,13 @@ export default function ANCProfile() {
                                             <FormControlLabel value={true} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={false} control={<Radio />} label="No" />
                                         </RadioGroup>
-
                                     </Grid>
                                 </Grid>
                                 <Divider />
                                 <p></p>
 
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { savePatientInformation() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
 
-                            </TabPanel>
-                            <TabPanel value='2'>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
 
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="HB: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Specify"
-                                            placeholder="Specify"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={8}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
-
-                                            <FormControlLabel value={0} sx={{ width: "37.4%" }} control={<FormLabel />} label="Blood Group: " />
-                                            <FormControlLabel value={"A"} control={<Radio />} label="A" />
-                                            <FormControlLabel value={"B"} control={<Radio />} label="B" />
-                                            <FormControlLabel value={"AB"} control={<Radio />} label="AB" />
-                                            <FormControlLabel value={"O"} control={<Radio />} label="O" />
-                                        </RadioGroup>
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Rhesus: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Positive" />
-                                            <FormControlLabel value={false} control={<Radio />} label="Negative" />
-                                        </RadioGroup>
-                                    </Grid>
-                                </Grid>
-
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
-                                        >
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Urinalysis: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Specify"
-                                            placeholder="Specify"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatient({ ...patient, tbScreening: e.target.value }) }}
-
-                                        >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="TB Screening: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
-                                        </RadioGroup>
-
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Results</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={patient.tbResults ? patient.tbResults : null}
-                                                label="Results"
-                                                onChange={e => { setPatient({ ...patient, tbResults: e.target.value }) }}
-                                                size="small"
-                                                defaultValue={""}
-                                            >
-
-                                                <MenuItem value={"Positive"}>Positive</MenuItem>
-                                                <MenuItem value={"Negative"}>Negative</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-
-                                <Grid container spacing={1} padding=".5em" >
-
-                                </Grid>
-                                <p></p>
                                 <Divider />
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
@@ -446,8 +487,10 @@ export default function ANCProfile() {
                                     <Button variant="contained" onClick={e => { saveMedicalHistory() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
+
                             </TabPanel>
-                            <TabPanel value='3'>
+
+                            <TabPanel value='2'>
 
                                 <Grid container spacing={1} padding=".5em" >
 
