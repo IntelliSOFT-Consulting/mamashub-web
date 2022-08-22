@@ -72,7 +72,7 @@ export default function PhysicalExam() {
 
     }
     const handleChanges = (event, newValue) => {
-        // setValue(newValue);
+        setValue(event);
         return
     };
 

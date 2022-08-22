@@ -11,10 +11,8 @@ generator client {
 }
 
 model User {
-
   id                  String    @id @default(uuid())
   names               String
-  username            String    @unique
   role                ROLE
   email               String    @unique
   password            String
@@ -25,17 +23,25 @@ model User {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   verified            Boolean   @default(false)
-
 }
 
 model Patient {
-  id        String   @id @default(uuid())
-  phone     String
-  patientId String?  @unique
-  idNumber  String   @unique
-  data      Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  String    @id @default(uuid())
+  phone               String?
+  patientId           String?   @unique
+  idNumber            String    @unique
+  data                Json      @default("{ \"newUser\": true }")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  names               String
+  username            String    @unique
+  email               String    @unique
+  password            String
+  salt                String
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+
+  verified Boolean @default(false)
 }
 
 model Referral {
