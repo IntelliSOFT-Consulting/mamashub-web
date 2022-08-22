@@ -45,7 +45,7 @@ export let generateGeneralReport = async (patientId: string) => {
         village: (patient.address ? patient.address[0].city : " - ") || " - ",
         estate: (patient.address ? patient.address[0].text : " - ") || " - ",
         tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
-        maritalStatus: patient.maritalStatus.text ?? "-",
+        maritalStatus: patient.maritalStatus ? patient.maritalStatus.text : "-",
         parity: "",
         gravidae: "",
         lmp: "",
