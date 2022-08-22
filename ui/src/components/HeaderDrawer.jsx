@@ -203,6 +203,12 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary="Physical Exam" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
+            <ListItem button onClick={e => { activateTab("previous-pregnancy"); navigate('/previous-pregnancy') }} sx={{ backgroundColor: isActiveTab("previous-pregnancy") ? "white" : '#632165', color: isActiveTab("previous-pregnancy") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
+              <ListItemIcon>
+                <CancelPresentationRounded sx={{ color: isActiveTab("previous-pregnancy") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary="Previous Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
             <ListItem button onClick={e => { activateTab("counselling-treatment"); navigate('/counselling-treatment') }} sx={{ backgroundColor: isActiveTab("counselling-treatment") ? "white" : '#632165', color: isActiveTab("counselling-treatment") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <MedicationRounded sx={{ color: isActiveTab("counselling-treatment") ? "#632165" : 'white' }} />
