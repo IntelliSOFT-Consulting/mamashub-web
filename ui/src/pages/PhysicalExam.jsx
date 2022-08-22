@@ -15,6 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient'
 import { apiHost, createEncounter } from './../lib/api'
 import { timeSince } from '../lib/timeSince'
+import { gridFilterActiveItemsLookupSelector } from '@mui/x-data-grid'
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -70,6 +71,11 @@ export default function PhysicalExam() {
 
 
     }
+    const handleChanges = (event, newValue) => {
+        // setValue(newValue);
+        return
+    };
+
 
     let saveClinicalNotes = async () => {
         setNotesDisplay(notesDisplay + "\n" + notes)
@@ -658,22 +664,22 @@ export default function PhysicalExam() {
                                             <FormGroup>
                                                 <FormControlLabel label="Scarring"
                                                     control={
-                                                        <Checkbox checked={"jason"} onChange={handleChange} name="jason" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="jason" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Dyspaneuria"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Keloids"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="UTI"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                             </FormGroup>

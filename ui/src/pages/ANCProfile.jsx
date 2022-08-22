@@ -225,37 +225,37 @@ export default function ANCProfile() {
                                             <FormGroup>
                                                 <FormControlLabel label="No known past surgeries"
                                                     control={
-                                                        <Checkbox checked={"jason"} onChange={handleChanges} name="jason" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="jason" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Dilation and curettage"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Myomectomy"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Removal of ovarian cysts"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Oophorectomy"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Salpingectomy"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Cervical Cone"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                             </FormGroup>
@@ -324,17 +324,17 @@ export default function ANCProfile() {
 
                                                 <FormControlLabel label="Epilepsy"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Malaria in pregnancy"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Others"
                                                     control={
-                                                        <Checkbox checked={"antoine"} onChange={handleChange} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
                                                     }
                                                 />
                                             </FormGroup>
