@@ -21,6 +21,8 @@ export default function PatientList() {
     let startPatientVisit = async () => {
         if (selected.length === 1) {
             startVisit(selected[0])
+            
+            navigate("/patient-profile")
         }
         return
     }
