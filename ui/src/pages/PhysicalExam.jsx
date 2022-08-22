@@ -253,8 +253,7 @@ export default function PhysicalExam() {
                                         </Grid>
                                     })}
                                     {physicalExamEncounters.length < 1 && <><CircularProgress />
-                                        <br />
-                                        <Typography variant="h6">Loading Encounters</Typography></>}
+                                    </>}
                                 </Grid>
                                 <p></p>
                                 <Divider />
@@ -655,7 +654,7 @@ export default function PhysicalExam() {
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-                                            <FormLabel component="legend">Assign responsibility</FormLabel>
+                                            <FormLabel component="legend">If done, any complications?</FormLabel>
                                             <FormGroup>
                                                 <FormControlLabel label="Scarring"
                                                     control={
