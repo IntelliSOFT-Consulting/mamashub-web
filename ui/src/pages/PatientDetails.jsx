@@ -35,7 +35,7 @@ export default function PatientDetails() {
     }
 
     let getPatientObservations = async (patientId) => {
-        let observations = await (await fetch(`${apiHost}/crud/observations?patientId=${patientId}`))
+        let observations =  (await fetch(`${apiHost}/crud/observations?patientId=${patientId}`))
         setObservations(observations.observations)
         return
 

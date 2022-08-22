@@ -99,11 +99,11 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
 
 router.get('/encounters', [], async (req: Request, res: Response) => {
     try {
-        let { patient } = req.query
+        let { patient, encounterCode } = req.query
         console.log(patient)
-        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}`)).json()
+        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}`)).json()
         console.log(response)
-        res.json({ encounters: response.entry || [], status: "success" })
+        res.json({ encounters: response.entry ?? [], status: "success" })
         return
     } catch (error) {
         res.json({ error, status: "error" })

@@ -1,4 +1,4 @@
-import { Container, TextField, Stack, Button, Grid, Snackbar, FormGroup, Checkbox, Typography, Divider, useMediaQuery, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material'
+import { Container, TextField, Modal, Stack, Button, Grid, Snackbar, FormGroup, Checkbox, Typography, Divider, useMediaQuery, Radio, RadioGroup, FormControlLabel, FormLabel, CircularProgress } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
@@ -7,13 +7,14 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, FormControl, InputLabel, Select, MenuItem, Card, CardContent } from '@mui/material'
+import { Box, FormControl, InputLabel, Select, MenuItem, Card, CardContent, LinearProgress } from '@mui/material'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient'
 import { apiHost, createEncounter } from './../lib/api'
+import { timeSince } from '../lib/timeSince'
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -30,13 +31,45 @@ export default function PhysicalExam() {
 
     let [visit, setVisit] = useState()
     let [physicalExam, setPhysicalExam] = useState({})
+    let [physicalExamEncounters, setPhysicalExamEncounters] = useState([])
     let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
     let [contact, setContact] = useState(null)
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
+    let [observations, setObservations] = useState([])
+    let [openModal, setOpenModal] = useState(false)
+    const handleClose = () => setOpenModal(false);
+    const handleOpen = () => setOpenModal(true);
 
     const [value, setValue] = useState('1');
+
+    let getPhysicalExamEncounters = async (patientId) => {
+        let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PHYSICAL_EXAMINATION"}`)).json()
+        console.log(encounters)
+        setPhysicalExamEncounters(encounters.encounters)
+        return
+    }
+
+    useEffect(() => {
+        let visit = window.localStorage.getItem("currentPatient") ?? null
+        visit = JSON.parse(visit) ?? null
+        if (visit) {
+            getPhysicalExamEncounters(visit.id)
+        }
+        console.log(visit)
+    }, [])
+
+    let getEncounterObservations = async (encounter) => {
+        setObservations([])
+        handleOpen()
+        let observations = await (await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)).json()
+        console.log(observations)
+        setObservations(observations.observations)
+        return
+
+
+    }
 
     let saveClinicalNotes = async () => {
         setNotesDisplay(notesDisplay + "\n" + notes)
@@ -214,11 +247,14 @@ export default function PhysicalExam() {
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    {[1, 2, 3].map((x) => {
+                                    {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x) => {
                                         return <Grid item xs={12} md={12} lg={3}>
-                                            <Button variant='contained' sx={{ backgroundColor: "#632165", width: "80%" }}>ANC Visit {`${x}`}</Button>
+                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "90%" }}>ANC Visit - {`${timeSince(x.resource.meta.lastUpdated)} ago`}</Button>
                                         </Grid>
                                     })}
+                                    {physicalExamEncounters.length < 1 && <><CircularProgress />
+                                        <br />
+                                        <Typography variant="h6">Loading Encounters</Typography></>}
                                 </Grid>
                                 <p></p>
                                 <Divider />
@@ -701,6 +737,59 @@ export default function PhysicalExam() {
                             </TabPanel>
 
                         </TabContext>
+                        <Modal
+                            keepMounted
+                            open={openModal}
+                            sx={{ overflow: "scroll" }}
+                            onClose={handleClose}
+                            aria-labelledby="keep-mounted-modal-title"
+                            aria-describedby="keep-mounted-modal-description"
+                        >
+                            <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: "80%",
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                p: 4,
+                            }}>
+                                <br />
+
+                                {((observations && observations.length < 1) || (!observations)) && <>
+                                    <CircularProgress />
+                                    <Typography variant="h6">Loading</Typography>
+
+                                </>}
+                                <Grid container columnSpacing={1}>
+                                    {observations && observations.map((observation) => {
+                                        return <>
+                                            <Grid item lg={4} xl={6} md={6} sm={12}>
+                                                <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
+                                                    {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
+                                                    {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
+                                                    {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
+                                                        return <>
+                                                            <Typography variant="h6">{entry.display}</Typography>
+                                                            <Typography variant="p">{observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")}</Typography>
+                                                            {/* <br /> */}
+                                                        </>
+
+                                                    })}
+                                                    <br />
+
+                                                </Box>
+                                                <p></p>
+                                            </Grid>
+                                        </>
+                                    })}
+
+                                </Grid>
+
+                            </Box>
+                        </Modal>
                     </Container>
                 </Layout>
             </LocalizationProvider>
