@@ -46,44 +46,6 @@ router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
 });
 
 
-// Create Patient.
-router.post("/", [requireJWT], async (req: Request, res: Response) => {
-    try {
-        let { patientId, idNumber, phone } = req.body;
-        delete req.body.patientId
-        delete req.body.idNumber
-        delete req.body.phone
-        let token = req.headers.authorization || '';
-        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
-        if (decodedSession.type == 'valid') {
-            let role = decodedSession.session.role
-            if (role !== 'ADMINISTRATOR') {
-                res.statusCode = 401
-                res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
-                return
-            }
-        }
-        let patient = await db.patient.create({
-            data:{
-                idNumber, phone, patientId,
-                data:(req.body || {})
-            }
-        })
-        res.statusCode = 201
-        res.json({ data: patient, status: "success" })
-        return
-    } catch (error: any) {
-        res.statusCode = 400
-        console.error(error)
-        if (error.code === 'P2002') {
-            res.json({ status: "error", message: `User with the ${error.meta.target} provided already exists` });
-            return
-        }
-        res.json(error)
-        return
-    }
-});
-
 // Modify Patient Details
 router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
