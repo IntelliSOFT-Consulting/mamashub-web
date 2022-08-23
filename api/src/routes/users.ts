@@ -21,7 +21,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
             let users = await db.user.findMany({
                 select: {
                     id: true, names: true, email: true,
-                    createdAt: true, updatedAt: true, username: true,
+                    createdAt: true, updatedAt: true,
                     role: true
                 }
             })
@@ -38,7 +38,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
 });
 
 // Modify User Details
-router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
+router.get("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
         let { id } = req.params
         let token = req.headers.authorization || '';

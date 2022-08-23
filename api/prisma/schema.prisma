@@ -34,7 +34,6 @@ model Patient {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   names               String
-  username            String    @unique
   email               String    @unique
   password            String
   salt                String
