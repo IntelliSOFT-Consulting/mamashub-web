@@ -64,14 +64,15 @@ export default function ANCProfile() {
     let saveMedicalHistory = async () => {
         //get birthPlan
         if (!visit) {
-            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
         }
         let birthPlan = visit.id
-        //create encounter
         try {
+            //create Encounter
             let encounter = await createEncounter(birthPlan, "MEDICAL_HISTORY")
             console.log(encounter)
+
             //Create and Post Observations
             let res = await (await fetch(`${apiHost}/crud/observations`, {
                 method: "POST",
@@ -101,9 +102,9 @@ export default function ANCProfile() {
     let saveBirthPlan = async () => {
 
         //get birthPlan
-        let birthPlan = visit.id
-        if (!birthPlan) {
-            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
+        let patient = visit.id
+        if (!patient) {
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
         }
 
@@ -134,9 +135,9 @@ export default function ANCProfile() {
     }
 
     useEffect(() => {
-        let visit = window.localStorage.getItem("currentbirthPlan")
+        let visit = window.localStorage.getItem("currentPatient")
         if (!visit) {
-            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
         }
         setVisit(JSON.parse(visit))
@@ -147,7 +148,7 @@ export default function ANCProfile() {
         if (getCookie("token")) {
             return
         } else {
-            window.localStorage.setItem("next_page", "/birthPlan-profile")
+            window.localStorage.setItem("next_page", "/patient-profile")
             navigate('/login')
             return
         }
@@ -180,7 +181,7 @@ export default function ANCProfile() {
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant="h5">Surgical History</Typography>
+                                <Typography variant="h6">Surgical History</Typography>
                                 <Divider />
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
@@ -211,37 +212,37 @@ export default function ANCProfile() {
                                             <FormGroup>
                                                 <FormControlLabel label="No known past surgeries"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="jason" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="No known past surgeries" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Dilation and curettage"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Dilation and curettage" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Myomectomy"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Myomectomy" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Removal of ovarian cysts"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Removal of ovarian cysts" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Oophorectomy"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Oophorectomy" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Salpingectomy"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Salpingectomy" />
                                                     }
                                                 />
                                                 <FormControlLabel label="Cervical Cone"
                                                     control={
-                                                        <Checkbox checked={false} onChange={handleChanges} name="antoine" />
+                                                        <Checkbox checked={false} onChange={handleChanges} name="Cervical Cone" />
                                                     }
                                                 />
                                             </FormGroup>
@@ -482,7 +483,6 @@ export default function ANCProfile() {
                             </TabPanel>
 
                             <TabPanel value='2'>
-
                                 <Typography variant="h6">Birth Plan</Typography>
                                 <Divider />
                                 <p></p>
@@ -723,10 +723,9 @@ export default function ANCProfile() {
                                             onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
                                         />
                                     </Grid>
-
                                 </Grid>
                                 <Typography variant="h6">Financial Plan</Typography>
-                                <Divider/>
+                                <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={3}>
@@ -741,11 +740,6 @@ export default function ANCProfile() {
                                     </Grid>
 
                                 </Grid>
-
-
-
-
-
                                 <p></p>
                                 <Divider />
 
@@ -755,12 +749,7 @@ export default function ANCProfile() {
                                     <Button variant="contained" onClick={e => { saveBirthPlan() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
-
                             </TabPanel>
-
-
-
-
                         </TabContext>
                     </Container>
                 </Layout>

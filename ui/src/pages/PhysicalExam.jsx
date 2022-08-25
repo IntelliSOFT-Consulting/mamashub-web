@@ -255,7 +255,7 @@ export default function PhysicalExam() {
                                 <Grid container spacing={1} padding=".5em" >
                                     {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x) => {
                                         return <Grid item xs={12} md={12} lg={3}>
-                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "90%" }}>ANC Visit - {`${timeSince(x.resource.meta.lastUpdated)} ago`}</Button>
+                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>ANC Visit - {`${timeSince(x.resource.meta.lastUpdated)} ago`}</Button>
                                         </Grid>
                                     })}
                                     {physicalExamEncounters.length < 1 && <><CircularProgress />
