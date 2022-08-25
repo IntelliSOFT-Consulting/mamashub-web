@@ -223,7 +223,7 @@ export default function PreviousPregnancy() {
                                     onChange={handleChange}
                                     variant="scrollable"
                                     scrollButtons="auto"
-                                    aria-label="scrollable auto tabs example">
+                                >
                                     <Tab label="Previous Pregnancy" value="1" />
                                 </TabList>
                             </Box>
@@ -246,6 +246,16 @@ export default function PreviousPregnancy() {
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
 
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Pregnancy Order"
+                                            placeholder="Pregnancy Order"
+                                            size="small"
+                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
                                             fullWidth="100%"
