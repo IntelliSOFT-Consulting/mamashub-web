@@ -18,13 +18,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { v4 as uuidv4 } from 'uuid'
 import { createEncounter, FhirApi, apiHost } from '../lib/api'
-import { Patient } from '../lib/fhir/resources'
 import CurrentPatient from '../components/CurrentPatient'
 
 
 export default function ANCProfile() {
 
-    let [patient, setPatient] = useState({})
     let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
@@ -33,94 +31,84 @@ export default function ANCProfile() {
     let isMobile = useMediaQuery('(max-width:600px)');
     let [birthPlan, setBirthPlan] = useState({})
     let [medicalHistory, setMedicalHistory] = useState({})
-    let [patientInformation, setPatientInformation] = useState({})
 
 
     const [value, setValue] = useState('1');
+
+    function prompt(text) {
+        setMessage(text)
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 4000)
+        return
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
         return
     };
-    const handleChanges = (event, newValue) => {
-        // setValue(newValue);
+    const handleChanges = (event) => {
+        console.log(event);
         return
     };
 
-    let saveSuccessfully = async () => {
-        setMessage("Data saved successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
-    }
 
-    let savePatientInformation = async () => {
+    // let getObservations = async (encounter) => {
 
-        //get patient
-        let patient = visit.id
+    //     let await
 
-        //create encounter
-        let encounter = await createEncounter(patient, "Patient-Information")
-        console.log(encounter)
-
-        //save observations
-        let observationsList = [
-        ]
-        //Create and Post Observations
-        let res = await (await fetch(`${apiHost}/crud/observations`, {
-            method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: patientInformation })
-        })).json()
-        console.log(res)
-
-        if (res.status === "success") {
-            setMessage("Patient Information saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
-            return
-        }
-    }
+    // }
 
 
     let saveMedicalHistory = async () => {
-        //get patient
-        let patient = visit.id
+        //get birthPlan
+        if (!visit) {
+            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
+            return
+        }
+        let birthPlan = visit.id
         //create encounter
-        let encounter = await createEncounter(patient, "Medical-History")
-        console.log(encounter)
+        try {
+            let encounter = await createEncounter(birthPlan, "MEDICAL_HISTORY")
+            console.log(encounter)
+            //Create and Post Observations
+            let res = await (await fetch(`${apiHost}/crud/observations`, {
+                method: "POST",
+                body: JSON.stringify({ birthPlanId: birthPlan, encounterId: encounter, observations: medicalHistory }),
+                headers: { "Content-Type": "application/json" }
+            })).json()
+            console.log(res)
 
-        //save observations
-        let observationsList = [
-        ]
-        //Create and Post Observations
-        let res = await (await fetch(`${apiHost}/crud/observations`, {
-            method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
-        })).json()
-        console.log(res)
-
-        if (res.status === "success") {
-            setMessage("Medical History saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
+            if (res.status === "success") {
+                prompt("Medical History saved successfully")
+                setValue('2')
+                return
+            } else {
+                prompt(res.error)
+                return
+            }
+        } catch (error) {
+            console.log(error)
+            prompt(JSON.stringify(error))
             return
         }
     }
+
 
 
 
     let saveBirthPlan = async () => {
 
-        //get patient
-        let patient = visit.id
+        //get birthPlan
+        let birthPlan = visit.id
+        if (!birthPlan) {
+            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
+            return
+        }
+
         //create encounter
-        let encounter = await createEncounter(patient, "Medical-History")
+        let encounter = await createEncounter(birthPlan, "BIRTH-PLAN")
         console.log(encounter)
 
         //save observations
@@ -129,28 +117,26 @@ export default function ANCProfile() {
         //Create and Post Observations
         let res = await (await fetch(`${apiHost}/crud/observations`, {
             method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
+            body: JSON.stringify({ birthPlanId: birthPlan, encounterId: encounter, observations: birthPlan }),
+            headers: {
+                "Content-Type": "application/json"
+            }
         })).json()
         console.log(res)
 
         if (res.status === "success") {
-            setMessage("Birth Plan saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
+            prompt("Birth Plan saved successfully")
+            return
+        } else {
+            prompt(res.error)
             return
         }
     }
 
     useEffect(() => {
-        let visit = window.localStorage.getItem("currentPatient")
+        let visit = window.localStorage.getItem("currentbirthPlan")
         if (!visit) {
-            setMessage("No patient visit not been initiated. To start a visit, Select a patient in the Patients list")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 4000)
+            prompt("No birthPlan visit not been initiated. To start a visit, Select a birthPlan in the birthPlans list")
             return
         }
         setVisit(JSON.parse(visit))
@@ -161,7 +147,7 @@ export default function ANCProfile() {
         if (getCookie("token")) {
             return
         } else {
-            window.localStorage.setItem("next_page", "/patient-profile")
+            window.localStorage.setItem("next_page", "/birthPlan-profile")
             navigate('/login')
             return
         }
@@ -201,22 +187,22 @@ export default function ANCProfile() {
                                         <RadioGroup
                                             row
                                             defaultChecked={true}
-                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperation: e.target.value }); console.log(e.target.value) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, surgicalOperation: e.target.value }); console.log(e.target.value) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Surgical Operation: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
 
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        {(patientInformation.surgicalOperation) && <TextField
+                                        {(medicalHistory.surgicalOperation) && <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Specify"
                                             placeholder="Specify"
                                             size="small"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, surgicalOperationReason: e.target.value }) }}
                                         />}
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={12}>
@@ -268,7 +254,7 @@ export default function ANCProfile() {
                                             label="Other gynaecological procedures (specify)"
                                             placeholder="Other gynaecological procedures (specify)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, otherGynaecologicalProcedures: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -278,43 +264,34 @@ export default function ANCProfile() {
                                             label="Other surgeries (specify)"
                                             placeholder="Other surgeries (specify)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, otherSurgeries: e.target.value }) }}
                                         />
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, diabetes: e.target.value }) }}
-                                        >
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, diabetes: e.target.value }) }}>
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Diabetes: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, hypertension: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, hypertension: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Hypertension: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
-                                        >
+                                        <RadioGroup row onChange={e => { setMedicalHistory({ ...medicalHistory, otherConditions: e.target.value }) }}>
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other conditions: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -343,27 +320,21 @@ export default function ANCProfile() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, bloodTransfusion: e.target.value }) }}
                                         >
 
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Blood Transfusion: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, bloodTransfusionReaction: e.target.value }) }}
                                         >
-
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="If yes, was there a reaction? " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={7}>
@@ -373,19 +344,16 @@ export default function ANCProfile() {
                                             label="If yes, what was the reaction"
                                             placeholder="If yes, what was the reaction"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, bloodTransfusionReactionResult: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, bloodTransfusionReactionResult: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Tuberculosis: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                 </Grid>
@@ -401,11 +369,11 @@ export default function ANCProfile() {
                                             row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, drugAllergies: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Drug allergies: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -415,19 +383,16 @@ export default function ANCProfile() {
                                             label="If yes, specify"
                                             placeholder="If yes, specify"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, specificDrugAllergies: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, nonDrugAllergies: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other non-drug allergies: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
@@ -437,7 +402,7 @@ export default function ANCProfile() {
                                             label="If yes, specify"
                                             placeholder="If yes, specify"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, specificNonDrugAllergies: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -448,36 +413,62 @@ export default function ANCProfile() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, specificNonDrugAllergies: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Twins: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
-
                                     </Grid>
-
-
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, familyHistoryTB: e.target.value }) }}
                                         >
-
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Tuberculosis: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="If yes, who is the relative who contacted TB"
+                                            placeholder="If yes, who is the relative who contacted TB"
+                                            size="small"
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, familyHistoryTBName: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="Relationship"
+                                            placeholder="Relationship"
+                                            size="small"
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, familyHistoryTBRelationship: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <RadioGroup
+                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, familyLivingInSameHousehold: e.target.value }) }}
+                                        >
+                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Were they living in the same household: " />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
+                                        </RadioGroup>
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        <TextField
+                                            fullWidth="90%"
+                                            type="text"
+                                            label="If yes, refer for TB screening"
+                                            placeholder="If yes, refer for TB screening"
+                                            size="small"
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, referForTBScreening: e.target.value }) }}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Divider />
-                                <p></p>
-
-
 
                                 <Divider />
                                 <p></p>
@@ -492,6 +483,10 @@ export default function ANCProfile() {
 
                             <TabPanel value='2'>
 
+                                <Typography variant="h6">Birth Plan</Typography>
+                                <Divider />
+                                <p></p>
+
                                 <Grid container spacing={1} padding=".5em" >
 
 
@@ -499,80 +494,256 @@ export default function ANCProfile() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="EDD"
                                             inputFormat="MM/dd/yyyy"
-                                            value={patient.edd}
-                                            onChange={e => { console.log(e); setPatient({ ...patient, edd: e }) }}
+                                            value={birthPlan.edd}
+                                            onChange={e => { console.log(e); setBirthPlan({ ...birthPlan, edd: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="EDD"
                                                 inputFormat="mm/dd/yyyy"
-                                                value={patient.edd}
-                                                onChange={e => { console.log(e); setPatient({ ...patient, edd: e }) }}
+                                                value={birthPlan.edd}
+                                                onChange={e => { console.log(e); setBirthPlan({ ...birthPlan, edd: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>
 
-                                    <Grid item xs={12} md={12} lg={8}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
-                                            label="Birth Attendant"
-                                            placeholder="Birth Attendant"
+                                            label="Health Facility Name"
+                                            placeholder="Health Facility Name"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
-                                            label="Support Person / Birth Companion"
-                                            placeholder="Support Person / Birth Companion"
+                                            label="Health Facility Number"
+                                            placeholder="Health Facility Number"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Health Facility Contact"
-                                            placeholder="Health Facility Contact"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Transport"
-                                            placeholder="Transport"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Blood Donor"
-                                            placeholder="Blood Donor"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Financial Plan for childbirth"
-                                            placeholder="Financial Plan for childbirth"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
+                                <Typography variant="h6">Birth Attendant</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Name"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Telephone Number"
+                                            placeholder="Telephone Number"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Designation"
+                                            placeholder="Designation"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Typography variant="h6">Alternative Birth Attendant</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Name"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Telephone Number"
+                                            placeholder="Telephone Number"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={4}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Designation"
+                                            placeholder="Designation"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Typography variant="h6">Birth Companion</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Name"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Telephone Number"
+                                            placeholder="Telephone Number"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Typography></Typography>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Relationship"
+                                            placeholder="Relationship"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Transport means"
+                                            placeholder="Transport means"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Typography variant="h6">Alternative Birth Companion</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Name"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Telephone Number"
+                                            placeholder="Telephone Number"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Relationship"
+                                            placeholder="Relationship"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Transport Means"
+                                            placeholder="Transport Means"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Typography variant="h6">Birth Donor</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Name"
+                                            placeholder="Name"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Telephone Number"
+                                            placeholder="Telephone Number"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Blood group"
+                                            placeholder="Blood group"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+                                <Typography variant="h6">Financial Plan</Typography>
+                                <Divider/>
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    <Grid item xs={12} md={12} lg={3}>
+                                        <TextField
+                                            fullWidth="100%"
+                                            type="text"
+                                            label="Financial plan for child birth"
+                                            placeholder="Financial plan for child birth"
+                                            size="small"
+                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                        />
+                                    </Grid>
+
+                                </Grid>
+
+
+
 
 
                                 <p></p>

@@ -44,6 +44,27 @@
         "bloodGroupTest": "loinc:365636006:Blood Group Test",
         "rhesusTest": "loinc:169676009:Rhesus Test",
         "bloodRBSTest": "loinc:33747003:Blood RBS Test",
-        "generalExamination":""
+        "surgicalHistory": "loinc:33747003:Blood RBS Test",
+        "otherGynaecologicalProcedures": "loinc:33747003:Blood RBS Test",
+        "otherSurgeries": "loinc:33747003:Blood RBS Test",
+        "diabetes": "loinc:33747003:Blood RBS Test",
+        "hypertension": "loinc:33747003:Blood RBS Test",
+        "otherConditions": "loinc:33747003:Blood RBS Test",
+        "otherConditionsSpecify": "loinc:33747003:Blood RBS Test",
+        "bloodTransfusion": "loinc:33747003:Blood RBS Test",
+        "bloodTransfusionReaction": "loinc:33747003:Blood RBS Test",
+        "bloodTransfusionReactionResult": "loinc:33747003:Blood RBS Test",
+        "tuberculosis": "loinc:33747003:Blood RBS Test",
+        "drugAllergies": "loinc:33747003:Blood RBS Test",
+        "specificDrugAllergies": "loinc:33747003:Blood RBS Test",
+        "nonDrugAllergies": "loinc:33747003:Blood RBS Test",
+        "specificNonDrugAllergies": "loinc:33747003:Blood RBS Test",
+        "twinsBothLiveBorn": "loinc:33747003:Blood RBS Test",
+        "twinsSpecification": "loinc:33747003:Blood RBS Test",
+        "familyHistoryTB": "loinc:33747003:Blood RBS Test",
+        "familyHistoryTBName": "loinc:33747003:Blood RBS Test",
+        "familyHistoryTBRelationship": "loinc:33747003:Blood RBS Test",
+        "familyLivingInSameHousehold": "loinc:33747003:Blood RBS Test",
+        "referForTBScreening": "loinc:33747003:Blood RBS Test"
     }
 }

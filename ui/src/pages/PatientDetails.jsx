@@ -35,7 +35,7 @@ export default function PatientDetails() {
     }
 
     let getPatientObservations = async (patientId) => {
-        let observations =  (await fetch(`${apiHost}/crud/observations?patientId=${patientId}`))
+        let observations = (await fetch(`${apiHost}/crud/observations?patientId=${patientId}`))
         setObservations(observations.observations)
         return
 
@@ -119,14 +119,14 @@ export default function PatientDetails() {
                                             {encounters.map((encounter) => {
                                                 return <>
                                                     <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
-                                                        <Typography variant="p">{encounter.resource.reasonCode[0].text}</Typography>
+                                                        <Typography variant="p">{encounter.resource.reasonCode[0].coding[0].code}</Typography>
                                                         <br />
-                                                        <Typography variant="p"  fontSize={"16px"} sx={{fontWeight:"bold"}}>{new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                                        <Typography variant="p" fontSize={"16px"} sx={{ fontWeight: "bold" }}>{new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
                                                         <p></p>
                                                         <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}
                                                         >PREVIEW</Button>
-                                                        <br/>
+                                                        <br />
                                                     </Box>
                                                     <p></p>
                                                 </>
@@ -161,7 +161,7 @@ export default function PatientDetails() {
                         p: 4,
                     }}>
                         <br />
-                        
+
                         {((observations && observations.length < 1) || (!observations)) && <>
                             <CircularProgress />
                             <Typography variant="h6">Loading</Typography>

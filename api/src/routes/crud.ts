@@ -14,6 +14,8 @@ let codes: { [index: string]: string } = observationCodes.codes
 router.post('/observations', async (req: Request, res: Response) => {
     try {
         let { observations, patientId, encounterId } = req.body
+        console.log(req)
+        console.log(observations, patientId, encounterId)
         if (!observations || !patientId || !encounterId) {
             res.json({ error: "observations, patientId and encounterId are required", status: "error" })
             return
@@ -88,8 +90,8 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
             method: 'PUT',
             headers: { "Content-Type": "application/json" }
         })).json()
-        console.log(response)
-        res.json({ "status": "success", "id": encounterId, encounter: encounter })
+        // console.log(response)
+        res.json({ status: "success", id: response.id, encounter: encounter })
         return
     } catch (error) {
         res.json({ error, status: "error" })
