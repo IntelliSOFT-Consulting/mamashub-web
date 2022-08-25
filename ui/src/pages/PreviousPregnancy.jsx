@@ -1,4 +1,4 @@
-import { Container, FormGroup, Checkbox, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
+import { Container, FormGroup, Modal, TextField, Stack, Button, CircularProgress, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
 import { useEffect, useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
@@ -20,11 +20,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { createEncounter, FhirApi, apiHost } from '../lib/api'
 import { Patient } from '../lib/fhir/resources'
 import CurrentPatient from '../components/CurrentPatient'
+import { timeSince } from '../lib/timeSince'
+
 
 
 export default function PreviousPregnancy() {
 
     let [patient, setPatient] = useState({})
+
     let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
@@ -34,9 +37,43 @@ export default function PreviousPregnancy() {
     let [birthPlan, setBirthPlan] = useState({})
     let [medicalHistory, setMedicalHistory] = useState({})
     let [patientInformation, setPatientInformation] = useState({})
+    let [physicalExam, setPhysicalExam] = useState({})
+    let [observations, setObservations] = useState([])
+    let [openModal, setOpenModal] = useState(false)
+
+
+    let [physicalExamEncounters, setPhysicalExamEncounters] = useState([])
+    const handleClose = () => setOpenModal(false);
+    const handleOpen = () => setOpenModal(true);
 
 
     const [value, setValue] = useState('1');
+    let getPhysicalExamEncounters = async (patientId) => {
+        let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PREVIOUS_PREGNANCY"}`)).json()
+        console.log(encounters)
+        setPhysicalExamEncounters(encounters.encounters)
+        return
+    }
+
+    useEffect(() => {
+        let visit = window.localStorage.getItem("currentPatient") ?? null
+        visit = JSON.parse(visit) ?? null
+        if (visit) {
+            getPhysicalExamEncounters(visit.id)
+        }
+        console.log(visit)
+    }, [])
+
+    let getEncounterObservations = async (encounter) => {
+        setObservations([])
+        handleOpen()
+        let observations = await (await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)).json()
+        console.log(observations)
+        setObservations(observations.observations)
+        return
+
+
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -192,6 +229,21 @@ export default function PreviousPregnancy() {
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
+                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>General Examination</Typography>
+                                <Divider />
+                                <p></p>
+                                <Grid container spacing={1} padding=".5em" >
+                                    {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x, index) => {
+                                        return <Grid item xs={12} md={12} lg={3}>
+                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>Pregnancy - {`${index + 1}`}</Button>
+                                        </Grid>
+                                    })}
+                                    {physicalExamEncounters.length < 1 && <><CircularProgress />
+                                    </>}
+                                </Grid>
+                                <p></p>
+                                <Divider />
+                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
 
                                     <Grid item xs={12} md={12} lg={6}>
@@ -329,8 +381,6 @@ export default function PreviousPregnancy() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
                                             onChange={e => { console.log(e) }}
                                         >
 
@@ -342,8 +392,6 @@ export default function PreviousPregnancy() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
                                             onChange={e => { console.log(e) }}
                                         >
 
@@ -375,6 +423,59 @@ export default function PreviousPregnancy() {
 
                             </TabPanel>
                         </TabContext>
+                        <Modal
+                            keepMounted
+                            open={openModal}
+                            sx={{ overflow: "scroll" }}
+                            onClose={handleClose}
+                            aria-labelledby="keep-mounted-modal-title"
+                            aria-describedby="keep-mounted-modal-description"
+                        >
+                            <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: "80%",
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                p: 4,
+                            }}>
+                                <br />
+
+                                {((observations && observations.length < 1) || (!observations)) && <>
+                                    <CircularProgress />
+                                    <Typography variant="h6">Loading</Typography>
+
+                                </>}
+                                <Grid container columnSpacing={1}>
+                                    {observations && observations.map((observation) => {
+                                        return <>
+                                            <Grid item lg={4} xl={6} md={6} sm={12}>
+                                                <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
+                                                    {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
+                                                    {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
+                                                    {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
+                                                        return <>
+                                                            <Typography variant="h6">{entry.display}</Typography>
+                                                            <Typography variant="p">{observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")}</Typography>
+                                                            {/* <br /> */}
+                                                        </>
+
+                                                    })}
+                                                    <br />
+
+                                                </Box>
+                                                <p></p>
+                                            </Grid>
+                                        </>
+                                    })}
+
+                                </Grid>
+
+                            </Box>
+                        </Modal>
                     </Container>
                 </Layout>
             </LocalizationProvider>
