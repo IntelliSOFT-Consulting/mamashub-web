@@ -131,10 +131,10 @@ export default function PatientList() {
                 </Stack>
                 <br />
                 <Stack direction="row" spacing={2} alignContent="right" >
-                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '30%' : '70%' }}></Typography>}
+                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '35%' : '70%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ backgroundColor: "#632165" }}> 🗑️Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
+                            <Button variant="contained" onClick={e => { deletePatients() }} disableElevation sx={{ backgroundColor: "#632165" }}>Delete Patient{(selected.length > 1) && `s`}</Button>                        </>
                     }
                     {(selected.length === 1) &&
                         <>
@@ -142,7 +142,7 @@ export default function PatientList() {
                             <Button variant="contained" onClick={e => { viewPatient() }} disableElevation sx={{ backgroundColor: "#632165" }}>View Patient</Button>
                         </>
                     }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { navigate('/patient-registration') }}>New Patient Registration</Button>
+                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { navigate('/patient-registration') }}>Register Patient</Button>
                 </Stack>
                 <br />
                 <Container maxWidth="lg">

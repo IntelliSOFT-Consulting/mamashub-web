@@ -72,10 +72,6 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
                 "http://fhir.org/guides/who/core/StructureDefinition/who-encounter"
             ]
         },
-        "text": {
-            "status": "generated",
-            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource \"anc-encounter-example\" </p><p style=\"margin-bottom: 0px\">Profiles: <a href=\"StructureDefinition-anc-encounter.html\">ANC Encounter</a>, <a href=\"StructureDefinition-anc-base-encounter.html\">ANC Base Encounter</a>, <a href=\"StructureDefinition-who-encounter.html\">WHO Encounter</a></p></div><p><b>identifier</b>: id: anc-encounter-example (OFFICIAL)</p><p><b>subject</b>: <a href=\"Patient-anc-patient-example.html\">Patient/anc-patient-example</a> \" UJM2JA8IGHP1A\"</p><p><b>period</b>: 2020-12-07 06:24:03-0700 --&gt; 2021-09-07 02:24:12-0600</p><p><b>reasonCode</b>: Specific complaint related to antenatal care <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"CodeSystem-anc-custom-codes.html\">Extended Codes CodeSystem</a>#ANC.B5.DE4; <a href=\"https://browser.ihtsdotools.org/\">SNOMED CT</a>#118189007 \"Prenatal finding (finding)\"; <a href=\"https://loinc.org/\">LOINC</a>#52454-6 \"Reason for assessment??Note: There are multiple codes in LOINC with same name ?57200-8 Reason for assessment [CMS Assessment] ?46502-1 Reason for assessment [OASIS]\")</span></p><h3>Locations</h3><table class=\"grid\"><tr><td>-</td><td><b>Location</b></td></tr><tr><td>*</td><td><a href=\"Location-anc-location-example.html\">Location/anc-location-example</a> \"123\"</td></tr></table></div>"
-        },
         "identifier": [
             {
                 "use": "official",
@@ -87,8 +83,8 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
             "reference": `Patient/${patientId}`
         },
         "period": {
-            "start": new Date().toUTCString(),
-            "end": new Date().toUTCString()
+            "start": new Date().toISOString(),
+            "end": new Date().toISOString()
         },
         "reasonCode": [
             {
@@ -110,14 +106,7 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
                         }
                 ]
             }
-        ],
-        // "location": [
-        //     {
-        //         "location": {
-        //             "reference": "Location/anc-location-example"
-        //         }
-        //     }
-        // ]
+        ]
     }
 }
 
@@ -142,7 +131,7 @@ export let FhirApi = async (params: any) => {
         let response = await fetch(String(`${apiHost}${params.url}`), {
             headers: _defaultHeaders,
             method: params.method ? String(params.method) : 'GET',
-            ...(params.method !== 'GET') && { body: String(params.data) }
+            ...(params.method !== 'GET' && params.method !== 'DELETE') && { body: String(params.data) }
         })
         let responseJSON = await response.json()
         let res = {
@@ -179,3 +168,32 @@ export let generateReport = async (name: any) => {
     }
     return parseFloat("0.0")
 }
+
+
+
+export let clearEncounters = async (patient: string | null, code: string | null = null) => {
+
+    let _encounters = (await FhirApi({ url: `/Encounter?${(patient && code) ? `patient=${patient}&reason-code=${code}` : code ? `reason-code=${code}` : patient ? `patient=${patient}` : ''}` })).data
+    let encounters: any = _encounters.entry ?? []
+    console.log(_encounters)
+    for (let encounter of encounters) {
+        console.log(encounter.resource.id)
+        let res = await (await FhirApi({ url: `/Encounter/${encounter.resource.id} `, method: "DELETE" })).data
+        console.log(res)
+
+    }
+}
+
+
+export let clearObservations = async (patient: string | null, code: string | null = null) => {
+
+    let _observations = (await FhirApi({ url: `/Observation?${(patient && code) ? `patient=${patient}&code=${code}` : code ? `code=${code}` : patient ? `patient=${patient}` : ''} ` })).data
+    let observations: any = _observations.entry ?? []
+    console.log(_observations)
+    for (let observation of observations) {
+        console.log(observation)
+        let res = await FhirApi({ url: `/Observation/${observation.resource.id}`, method: "DELETE" })
+    }
+}
+
+// clearobservations("MEDICAL_HISTORY")

@@ -12,7 +12,10 @@ export let createEncounter = async (patientId, encounterCode) => {
                 encounterCode,
                 patientId: patientId
             }),
-            headers: { "Content-Type": "application/json" }
+            headers: {
+                "Content-Type": 'application/json',
+                "Authorization": `Bearer ${getCookie("token")}`,
+            }
         })).json()
         console.log(encounter)
 
