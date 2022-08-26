@@ -121,7 +121,7 @@ export default function PatientDetails() {
                                                     <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
                                                         <Typography variant="p">{encounter.resource.reasonCode[0].coding[0].code}</Typography>
                                                         <br />
-                                                        <Typography variant="p" fontSize={"16px"} sx={{ fontWeight: "bold" }}>{new Date(encounter.resource.meta.lastUpdated).toUTCString()}</Typography>
+                                                        <Typography variant="p" sx={{ fontWeight: "" }}>Created: <b>{`${timeSince(new Date(encounter.resource.meta.lastUpdated).toUTCString())} ago`}</b></Typography>
                                                         <p></p>
                                                         <Button sx={{ backgroundColor: "#632165" }} variant="contained"
                                                             onClick={e => { getEncounterObservations(encounter.resource.id) }}

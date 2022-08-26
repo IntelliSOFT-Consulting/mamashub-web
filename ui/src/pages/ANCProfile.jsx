@@ -67,31 +67,31 @@ export default function ANCProfile() {
             prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
         }
-        let birthPlan = visit.id
+        let patient = visit.id
         try {
             //create Encounter
-            let encounter = await createEncounter(birthPlan, "MEDICAL_HISTORY")
+            let encounter = await createEncounter(patient, "MEDICAL_HISTORY")
             console.log(encounter)
 
             //Create and Post Observations
             let res = await (await fetch(`${apiHost}/crud/observations`, {
                 method: "POST",
-                body: JSON.stringify({ birthPlanId: birthPlan, encounterId: encounter, observations: medicalHistory }),
+                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory }),
                 headers: { "Content-Type": "application/json" }
             })).json()
             console.log(res)
 
             if (res.status === "success") {
                 prompt("Medical History saved successfully")
-                setValue('2')
+                // setValue('2')
                 return
             } else {
                 prompt(res.error)
                 return
             }
         } catch (error) {
-            console.log(error)
-            prompt(JSON.stringify(error))
+            console.error(error)
+            // prompt(JSON.stringify(error))
             return
         }
     }
