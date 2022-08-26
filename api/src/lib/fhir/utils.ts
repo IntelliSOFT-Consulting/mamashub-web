@@ -2,21 +2,15 @@ import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import { reports } from './allReports.json'
 
-export let createObservationValue = (value: number | string, unit: any, code: any) => {
-
+export let createObservationValue = (value: number, unit: any) => {
     return {
-        data: {
-            value,
-            unit,
-            system: "http://unitsofmeasure.org"
-        },
-        code
+        value,
+        unit,
+        system: "http://unitsofmeasure.org"
     }
 }
 
-export let createObservation = (patientId: string, observationValue: any, id: string, encounterId: string) => {
-    let value = observationValue.data
-    let coding = observationValue.code
+export let createObservation = (patientId: string, observationValue: any, coding: any, id: string, encounterId: string) => {
 
     return {
         "resourceType": "Observation",
@@ -38,7 +32,7 @@ export let createObservation = (patientId: string, observationValue: any, id: st
         encounter: {
             reference: `Encounter/${encounterId}`
         },
-        valueQuantity: value,
+        ...observationValue,
         effectiveDateTime: new Date().toISOString(),
         issued: new Date().toISOString(),
         meta: {

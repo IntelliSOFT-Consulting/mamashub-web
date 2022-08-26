@@ -14,7 +14,6 @@ let codes: { [index: string]: string } = observationCodes.codes
 router.post('/observations', async (req: Request, res: Response) => {
     try {
         let { observations, patientId, encounterId } = req.body
-        console.log(req)
         console.log(observations, patientId, encounterId)
         if (!observations || !patientId || !encounterId) {
             res.json({ error: "observations, patientId and encounterId are required", status: "error" })
@@ -23,9 +22,11 @@ router.post('/observations', async (req: Request, res: Response) => {
         let builtObservations: any[] = []
         for (let obs of Object.keys(observations)) {
             console.log(obs)
-            let observation = observations[obs]
+            let _observation = observations[obs]
             //create observations
-            console.log(observation)
+            console.log(_observation)
+            console.log("Observation", _observation)
+
             let observationId = uuidv4()
             if (Object.keys(codes).indexOf(obs) > -1) {
 
@@ -33,8 +34,11 @@ router.post('/observations', async (req: Request, res: Response) => {
                 let coding = {
                     system: metaData.split(":")[0], display: metaData.split(":")[2], code: metaData.split(":")[1]
                 }
-                let ov = createObservationValue(observation, metaData.split(":")[3] || "", coding)
-                let o = createObservation(patientId, ov, observationId, encounterId)
+
+                let ov = parseFloat(_observation) ? { valueQuantity: createObservationValue(_observation, metaData.split(":")[3] || "") } : { valueString: _observation }
+                console.log(ov)
+                let o = createObservation(patientId, ov, coding, observationId, encounterId)
+                console.log(":observation", o)
                 let response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation/${observationId}`, {
                     body: JSON.stringify(o),
                     method: 'PUT',
@@ -44,32 +48,32 @@ router.post('/observations', async (req: Request, res: Response) => {
                 console.log(o)
                 builtObservations.push(response)
             }
-            else {
-                res.json({ error: "invalid observation key provided", status: "error" })
-                return
-            }
+            // else {
+            //     res.json({ error: "invalid observation key provided", status: "error" })
+            //     return
+            // }
         }
         res.json({ observations: builtObservations, status: "success" })
         return
     } catch (error) {
         console.log(error)
-        res.json({ error, status: "error" })
+        res.json({ error: JSON.stringify(error), status: "error" })
         return
     }
 })
 
 router.get('/observations', [], async (req: Request, res: Response) => {
     try {
-        let { patientId, encounter } = req.query;
+        let { patientId, encounter, count } = req.query;
         let response;
         if (encounter) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?encounter=${encounter}`)).json()
+            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?encounter=${encounter}&_count=${count ?? 50}`)).json()
         }
         if (patientId) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?patient=${patientId}`)).json()
+            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?patient=${patientId}&_count=${count ?? 50}`)).json()
         }
         if (!patientId && !encounter) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation`)).json()
+            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?_count=${count ?? 50}`)).json()
         }
         res.json({ observations: response.entry || [], status: "success" })
         return
@@ -101,9 +105,9 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
 
 router.get('/encounters', [], async (req: Request, res: Response) => {
     try {
-        let { patient, encounterCode } = req.query
+        let { patient, encounterCode, count } = req.query
         console.log(patient)
-        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}`)).json()
+        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=-date`)).json()
         console.log(response)
         res.json({ encounters: response.entry ?? [], status: "success" })
         return
