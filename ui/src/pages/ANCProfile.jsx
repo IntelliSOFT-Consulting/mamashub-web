@@ -109,7 +109,7 @@ export default function ANCProfile() {
         }
 
         //create encounter
-        let encounter = await createEncounter(birthPlan, "BIRTH-PLAN")
+        let encounter = await createEncounter(patient, "BIRTH-PLAN")
         console.log(encounter)
 
         //save observations
@@ -118,10 +118,8 @@ export default function ANCProfile() {
         //Create and Post Observations
         let res = await (await fetch(`${apiHost}/crud/observations`, {
             method: "POST",
-            body: JSON.stringify({ birthPlanId: birthPlan, encounterId: encounter, observations: birthPlan }),
-            headers: {
-                "Content-Type": "application/json"
-            }
+            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: birthPlan }),
+            headers: { "Content-Type": "application/json" }
         })).json()
         console.log(res)
 
@@ -514,7 +512,7 @@ export default function ANCProfile() {
                                             label="Health Facility Name"
                                             placeholder="Health Facility Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, facilityName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -524,7 +522,7 @@ export default function ANCProfile() {
                                             label="Health Facility Number"
                                             placeholder="Health Facility Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, facilityNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -539,7 +537,7 @@ export default function ANCProfile() {
                                             label="Name"
                                             placeholder="Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthAttendantName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -549,7 +547,7 @@ export default function ANCProfile() {
                                             label="Telephone Number"
                                             placeholder="Telephone Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthAttendantNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -559,7 +557,7 @@ export default function ANCProfile() {
                                             label="Designation"
                                             placeholder="Designation"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthAttendantDesignation: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -574,7 +572,7 @@ export default function ANCProfile() {
                                             label="Name"
                                             placeholder="Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthAttendantName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -584,7 +582,7 @@ export default function ANCProfile() {
                                             label="Telephone Number"
                                             placeholder="Telephone Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthAttendantNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
@@ -594,7 +592,7 @@ export default function ANCProfile() {
                                             label="Designation"
                                             placeholder="Designation"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthAttendantDesignation: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -609,7 +607,7 @@ export default function ANCProfile() {
                                             label="Name"
                                             placeholder="Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthCompanionName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -619,7 +617,7 @@ export default function ANCProfile() {
                                             label="Telephone Number"
                                             placeholder="Telephone Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthCompanionNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Typography></Typography>
@@ -630,7 +628,7 @@ export default function ANCProfile() {
                                             label="Relationship"
                                             placeholder="Relationship"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthCompanionRelationship: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -640,7 +638,7 @@ export default function ANCProfile() {
                                             label="Transport means"
                                             placeholder="Transport means"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, birthCompanionTransportMeans: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -655,7 +653,7 @@ export default function ANCProfile() {
                                             label="Name"
                                             placeholder="Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthCompanionName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -665,7 +663,7 @@ export default function ANCProfile() {
                                             label="Telephone Number"
                                             placeholder="Telephone Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthCompanionNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -675,7 +673,7 @@ export default function ANCProfile() {
                                             label="Relationship"
                                             placeholder="Relationship"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthCompanionRelationship: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -685,7 +683,7 @@ export default function ANCProfile() {
                                             label="Transport Means"
                                             placeholder="Transport Means"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, alternativeBirthCompanionTransportMeans: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -700,7 +698,7 @@ export default function ANCProfile() {
                                             label="Name"
                                             placeholder="Name"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, bloodDonorName: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -710,7 +708,7 @@ export default function ANCProfile() {
                                             label="Telephone Number"
                                             placeholder="Telephone Number"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, bloodDonorNumber: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -720,7 +718,7 @@ export default function ANCProfile() {
                                             label="Blood group"
                                             placeholder="Blood group"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, bloodDonorBloodGroup: e.target.value }) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -735,7 +733,7 @@ export default function ANCProfile() {
                                             label="Financial plan for child birth"
                                             placeholder="Financial plan for child birth"
                                             size="small"
-                                            onChange={e => { setBirthPlan({ ...birthPlan, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setBirthPlan({ ...birthPlan, financialPlan: e.target.value }) }}
                                         />
                                     </Grid>
 
