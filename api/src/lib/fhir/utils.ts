@@ -190,4 +190,4 @@ export let clearObservations = async (patient: string | null, code: string | nul
     }
 }
 
-// clearobservations("MEDICAL_HISTORY")
+// clearEncounters("6192d5eb-8a18-426e-b08b-ea1fa4ec1a41", "MEDICAL_HISTORY")
