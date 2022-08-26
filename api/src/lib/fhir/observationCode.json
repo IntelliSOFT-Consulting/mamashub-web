@@ -65,6 +65,26 @@
         "familyHistoryTBName": "loinc:33747003:Family History TB Name",
         "familyHistoryTBRelationship": "loinc:33747003:Family History TB Relationship",
         "familyLivingInSameHousehold": "loinc:33747003:Family with TB History living in same household",
-        "referForTBScreening": "loinc:33747003:Refer for TB Screening"
+        "referForTBScreening": "loinc:33747003:Refer for TB Screening",
+        "facilityName": "loinc:257622000:Facility Name",
+        "facilityNumber": "loinc:257622000-N:Facility Number",
+        "birthAttendantName": "loinc:308210000:Birth Attendant Name",
+        "birthAttendantNumber": "loinc:308210000-N:Birth Attendant Number",
+        "birthAttendantDesignation": "loinc:308210000-D:Birth Attendant Designation",
+        "alternativeBirthAttendantName": "loinc:308210000-A:AlternativeBirthAttendantName",
+        "alternativeBirthAttendantNumber": "loinc:308210000-AN:AlternativeBirthAttendantNumber",
+        "alternativeBirthAttendantDesignation": "loinc:308210000-AD:Alternative Birth Attendant Designation",
+        "birthCompanionName": "loinc:62071000:Birth Companion Name",
+        "birthCompanionNumber": "loinc:359993007:Birth Companion Number",
+        "birthCompanionRelationship": "loinc:263498003:Birth Companion Relationship",
+        "birthCompanionTransportMeans": "loinc:360300001:Birth Companion Transport Means",
+        "alternativeBirthCompanionName": "loinc:62071000-AC:Alternative Birth Companion Name",
+        "alternativeBirthCompanionNumber": "loinc:359993007-ACN:Alternative Birth Companion Number",
+        "alternativeBirthCompanionRelationship": "loinc:263498003-ACR:Alternative Birth Companion Relationship",
+        "alternativeBirthCompanionTransportMeans": "loinc:360300001-ACT:Alternative Birth Companion Transport Means",
+        "bloodDonorName": "loinc:308210000:Blood Donor Name",
+        "bloodDonorNumber": "loinc:359993007:Blood Donor Number",
+        "bloodDonorBloodGroup": "loinc:365636006:Blood Donor Blood Group",
+        "financialPlan": "loinc:224164009:Financial Plan"
     }
 }
