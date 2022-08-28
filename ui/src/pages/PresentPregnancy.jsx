@@ -25,7 +25,6 @@ export default function PresentPregnancyTable() {
     let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
-    let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -58,7 +57,7 @@ export default function PresentPregnancyTable() {
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
-        if(!visit){return}
+        if (!visit) { return }
         setVisit(JSON.parse(visit))
         return
     }, [])
@@ -100,14 +99,14 @@ export default function PresentPregnancyTable() {
                 <Layout>
 
                     <Container sx={{ border: '1px white dashed' }}>
-                    <Snackbar
+                        <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                             open={open}
                             onClose={""}
                             message={message}
                             key={"loginAlert"}
                         />
-                    {visit && <CurrentPatient data={visit}/>}
+                        {visit && <CurrentPatient data={visit} />}
 
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -117,7 +116,7 @@ export default function PresentPregnancyTable() {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Pregnancy Table" value="1" />
+                                    <Tab label="Present Pregnancy" value="1" />
                                     <Tab label="Close ANC Record" value="2" />
                                 </TabList>
                             </Box>
@@ -277,7 +276,7 @@ export default function PresentPregnancyTable() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveSuccessfully() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -319,11 +318,11 @@ export default function PresentPregnancyTable() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e=>{saveSuccessfully()}} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveSuccessfully() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
-                            
+
                         </TabContext>
                     </Container>
                 </Layout>

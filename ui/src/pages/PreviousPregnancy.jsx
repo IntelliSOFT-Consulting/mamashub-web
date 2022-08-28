@@ -38,6 +38,9 @@ export default function PreviousPregnancy() {
     let [previousPregnancy, setPreviousPregnancy] = useState({})
     let [observations, setObservations] = useState([])
     let [openModal, setOpenModal] = useState(false)
+    let [previousPregnancyEncounters, setPreviousPregnancyEncounters] = useState([])
+    const handleClose = () => setOpenModal(false);
+    const handleOpen = () => setOpenModal(true);
 
     function prompt(text) {
         setMessage(text)
@@ -47,7 +50,6 @@ export default function PreviousPregnancy() {
         }, 4000)
         return
     }
-
 
     let savePreviousPregnancy = async () => {
         //get current patient
@@ -70,8 +72,9 @@ export default function PreviousPregnancy() {
             console.log(res)
 
             if (res.status === "success") {
-                prompt("Previous Pregnancy History saved successfully")
+                prompt("Previous Pregnancy saved successfully")
                 // setValue('2')
+                await getPreviousPregnancyEncounters(patient)
                 return
             } else {
                 prompt(res.error)
@@ -83,20 +86,12 @@ export default function PreviousPregnancy() {
             return
         }
     }
-
-
-    let [physicalExamEncounters, setPhysicalExamEncounters] = useState([])
-    const handleClose = () => setOpenModal(false);
-    const handleOpen = () => setOpenModal(true);
-
-
-
-
-    let getPhysicalExamEncounters = async (patientId) => {
+    
+    let getPreviousPregnancyEncounters = async (patientId) => {
         setLoading(true)
         let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PREVIOUS_PREGNANCY"}`)).json()
         console.log(encounters)
-        setPhysicalExamEncounters(encounters.encounters)
+        setPreviousPregnancyEncounters(encounters.encounters)
         setLoading(false)
         return
     }
@@ -105,7 +100,7 @@ export default function PreviousPregnancy() {
         let visit = window.localStorage.getItem("currentPatient") ?? null
         visit = JSON.parse(visit) ?? null
         if (visit) {
-            getPhysicalExamEncounters(visit.id)
+            getPreviousPregnancyEncounters(visit.id)
         }
     }, [])
 
@@ -136,6 +131,7 @@ export default function PreviousPregnancy() {
 
     useEffect(() => {
         if (getCookie("token")) {
+            window.localStorage.setItem("activeTab", "previous-pregnancy")
             return
         } else {
             window.localStorage.setItem("next_page", "/previous-pregnancy")
@@ -151,7 +147,7 @@ export default function PreviousPregnancy() {
                         <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                             open={open}
-                            onClose={""}
+                            // onClose={""}
                             message={message}
                             key={"loginAlert"}
                         />
@@ -168,23 +164,17 @@ export default function PreviousPregnancy() {
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
-                                {/* <p></p> */}
-
-                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-                                    {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x, index) => {
+                                    {(previousPregnancyEncounters.length > 0) && previousPregnancyEncounters.map((x, index) => {
                                         return <Grid item xs={12} md={12} lg={3}>
                                             <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>Pregnancy - {`${index + 1}`}</Button>
                                         </Grid>
                                     })}
-                                    {physicalExamEncounters.length < 1 && loading && <><CircularProgress />
-                                    </>}
+                                    {previousPregnancyEncounters.length < 1 && loading && <><CircularProgress /></>}
                                 </Grid>
-                                <p></p>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-
                                     <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
@@ -296,8 +286,8 @@ export default function PreviousPregnancy() {
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
-                                            label="Baby weight(g)"
-                                            placeholder="Baby weight(g)"
+                                            label="Baby weight (g)"
+                                            placeholder="Baby weight (g)"
                                             size="small"
                                             onChange={e => { setPreviousPregnancy({ ...previousPregnancy, babyWeight: e.target.value }) }}
                                         />

@@ -93,6 +93,7 @@ export default function PatientList() {
 
     useEffect(() => {
         if (getCookie("token")) {
+            window.localStorage.setItem("activeTab", "patients")
             return
         } else {
             navigate('/login')

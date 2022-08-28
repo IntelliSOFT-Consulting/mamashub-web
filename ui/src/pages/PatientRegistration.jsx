@@ -41,7 +41,7 @@ export default function PatientRegistration() {
     let isMobile = useMediaQuery('(max-width:600px)');
     const [value, setValue] = useState('1');
 
-    
+
 
     let displayAlert = async (message) => {
         setMessage(message);
@@ -51,7 +51,7 @@ export default function PatientRegistration() {
         }, 1500);
         return
     }
-    
+
     let createEncounter = async (patientId, encounterType = 1) => {
         try {
             let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
@@ -102,6 +102,7 @@ export default function PatientRegistration() {
 
     useEffect(() => {
         if (getCookie("token")) {
+            window.localStorage.setItem("activeTab", "patient-registration")
             return
         } else {
             navigate('/login')
@@ -136,13 +137,13 @@ export default function PatientRegistration() {
             }
 
             //Create and Post Observations
-                let res = await (await fetch(`${apiHost}/crud/observations`, {
-                    method:"POST",
-                    body: JSON.stringify({patientId, encounterId: encounter, observations:observations})
-                })).json()
-                console.log(res)
+            let res = await (await fetch(`${apiHost}/crud/observations`, {
+                method: "POST",
+                body: JSON.stringify({ patientId, encounterId: encounter, observations: observations })
+            })).json()
+            console.log(res)
 
-        
+
             if (res.status === "success") {
                 setOpen(false)
                 setMessage("Patient created successfully")
@@ -195,7 +196,7 @@ export default function PatientRegistration() {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Maternal Profile" value="1" />
-                                    
+
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
@@ -509,7 +510,7 @@ export default function PatientRegistration() {
                                 <p></p>
 
                             </TabPanel>
-                           
+
                         </TabContext>
                     </Container>
                 </Layout>
