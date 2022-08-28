@@ -7,7 +7,7 @@ import {getCookie} from '../lib/cookie'
 //location details http://build.fhir.org/ig/WorldHealthOrganization/smart-anc/Location-anc-location-example.json.html
 
 
-export default function PatientDetails({id}) {
+export default function Setup({id}) {
 
     let [patient, setPatient] = useState({})
     let navigate = useNavigate()
