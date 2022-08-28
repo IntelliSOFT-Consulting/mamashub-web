@@ -39,7 +39,7 @@
     "build": "yarn tsc --project tsconfig.json",
     "prisma:migrate": "yarn prisma migrate dev --preview-feature",
     "prisma:deploy": "yarn prisma migrate deploy",
-    "studio": "yarn prisma studio",
+    "prisma:studio": "yarn prisma studio",
     "prisma:generate": "yarn prisma generate"
   }
 }

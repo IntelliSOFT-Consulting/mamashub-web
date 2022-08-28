@@ -1,4 +1,4 @@
-import { Container, FormGroup, Checkbox, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
+import { Container, Modal, CircularProgress, FormGroup, Checkbox, TextField, Stack, Button, Grid, Snackbar, Typography, Divider, useMediaQuery } from '@mui/material'
 import { useEffect, useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
@@ -28,9 +28,13 @@ export default function AntenatalProfile() {
     let [open, setOpen] = useState(false)
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
+    let [observations, setObservations] = useState([])
     let isMobile = useMediaQuery('(max-width:600px)');
     let [birthPlan, setBirthPlan] = useState({})
     let [medicalHistory, setMedicalHistory] = useState({})
+    const handleClose = () => setOpenModal(false);
+    const handleOpen = () => setOpenModal(true);
+    let [openModal, setOpenModal] = useState(false)
 
 
     const [value, setValue] = useState('1');
@@ -726,6 +730,54 @@ export default function AntenatalProfile() {
                                 <p></p>
                             </TabPanel>
                         </TabContext>
+                        <Modal
+                            keepMounted
+                            open={openModal}
+                            sx={{ overflow: "scroll" }}
+                            onClose={handleClose}
+                        >
+                            <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: "80%",
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                p: 4,
+                            }}>
+                                <br />
+                                {((observations && observations.length < 1) || (!observations)) && <>
+                                    <CircularProgress />
+                                    <Typography variant="h6">Loading</Typography>
+
+                                </>}
+                                <Grid container columnSpacing={1}>
+                                    {observations && observations.map((observation) => {
+                                        return <>
+                                            <Grid item lg={4} xl={6} md={6} sm={12}>
+                                                <Box sx={{ padding: "1em", border: "1px grey solid", borderRadius: "10px" }}>
+                                                    {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
+                                                    {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
+                                                    {observation.resource.code.coding && observation.resource.code.coding.map((entry) => {
+                                                        return <>
+                                                            <Typography variant="h6">{entry.display}</Typography>
+                                                            <Typography variant="p">{observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")}</Typography>
+                                                            {/* <br /> */}
+                                                        </>
+
+                                                    })}
+                                                    <br />
+
+                                                </Box>
+                                                <p></p>
+                                            </Grid>
+                                        </>
+                                    })}
+                                </Grid>
+                            </Box>
+                        </Modal>
                     </Container>
                 </Layout>
             </LocalizationProvider>

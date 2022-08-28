@@ -22,13 +22,15 @@ import Treatment from './pages/Treatment'
 import Reports from './pages/Reports'
 import BirthPlan from './pages/BirthPlan'
 import PreviousPregnancy from './pages/PreviousPregnancy'
-import TetanusDiptheria from './pages/TetanusDIptheria'
+import TetanusDiptheria from './pages/TetanusDiptheria'
 import IFAS from './pages/IFAS'
 import MalariaProphylaxis from './pages/MalariaProphylaxis'
 import MaternalSerology from './pages/MaternalSerology'
 import Deworming from './pages/Deworming'
 import Counselling from './pages/Counselling'
 import PMTCTInterventions from './pages/PMTCTInterventions'
+import MedicalAndSurgicalHistory from './pages/MedicalAndSurgicalHistory'
+
 
 function App() {
     return (
@@ -66,8 +68,7 @@ function App() {
                     <Route path="/deworming" element={<Deworming />} />
                     <Route path="/counselling" element={<Counselling />} />
                     <Route path="/pmtct-interventions" element={<PMTCTInterventions />} />
-
-
+                    <Route path="/medical-surgical-history" element={<MedicalAndSurgicalHistory />} />
 
                 </Routes>
             </Router>
