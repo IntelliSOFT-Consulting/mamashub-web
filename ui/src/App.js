@@ -9,7 +9,7 @@ import Account from './pages/Account'
 import Users from './pages/Users'
 import PatientDetails from './pages/PatientDetails'
 import PatientList from './pages/PatientList'
-import PresentPregnancyTable from './pages/PresentPregnancyTable'
+import PresentPregnancy from './pages/PresentPregnancy'
 import PatientRegistration from './pages/PatientRegistration'
 import ConfirmPregnancy from './pages/ConfirmPregnancy'
 import PhysicalExam from './pages/PhysicalExam'
@@ -39,7 +39,7 @@ function App() {
                     <Route path="/patients" element={<PatientList />} />
                     <Route path="/patients/:id" element={<PatientDetails />} />
                     <Route path="/settings" element={<PatientDetails />} />
-                    <Route path="/present-pregnancy-table" element={<PresentPregnancyTable />} />
+                    <Route path="/present-pregnancy" element={<PresentPregnancy />} />
                     <Route path="/physical-exam" element={<PhysicalExam />} />
                     <Route path="/patient-registration" element={<PatientRegistration />} />
                     <Route path="/patient-profile" element={<ANCProfile />} />

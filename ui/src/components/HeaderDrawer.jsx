@@ -215,11 +215,11 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary="Counselling & Treatment" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
-            <ListItem button onClick={e => { activateTab("present-pregnancy-table"); navigate('/present-pregnancy-table') }} sx={{ backgroundColor: isActiveTab("present-pregnancy-table") ? "white" : '#632165', color: isActiveTab("present-pregnancy-table") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
+            <ListItem button onClick={e => { activateTab("present-pregnancy"); navigate('/present-pregnancy') }} sx={{ backgroundColor: isActiveTab("present-pregnancy") ? "white" : '#632165', color: isActiveTab("present-pregnancy") ? '#632165' : "white","&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
-                <CancelPresentationRounded sx={{ color: isActiveTab("present-pregnancy-table") ? "#632165" : 'white' }} />
+                <CancelPresentationRounded sx={{ color: isActiveTab("present-pregnancy") ? "#632165" : 'white' }} />
               </ListItemIcon>
-              <ListItemText primary="Present Pregnancy Table" primaryTypographyProps={{ fontSize: "13px" }} />
+              <ListItemText primary="Present Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
             <Divider />
             

@@ -86,7 +86,7 @@ export default function PreviousPregnancy() {
             return
         }
     }
-    
+
     let getPreviousPregnancyEncounters = async (patientId) => {
         setLoading(true)
         let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PREVIOUS_PREGNANCY"}`)).json()
@@ -110,8 +110,6 @@ export default function PreviousPregnancy() {
         let observations = await (await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)).json()
         setObservations(observations.observations)
         return
-
-
     }
 
     const handleChange = (event, newValue) => {
