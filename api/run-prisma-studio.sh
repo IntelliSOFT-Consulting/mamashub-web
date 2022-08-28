@@ -1,1 +1,1 @@
-docker-compose exec nndak-api yarn studio
+docker-compose exec nndak-api yarn prisma:studio

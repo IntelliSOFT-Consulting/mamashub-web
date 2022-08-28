@@ -166,7 +166,6 @@ export default function PresentPregnancy() {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Present Pregnancy" value="1" />
-                                    <Tab label="Close ANC Record" value="2" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>

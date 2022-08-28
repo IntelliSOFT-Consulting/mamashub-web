@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration, MedicationRounded, Vaccines, PestControlRounded, AccessTimeRounded, Bloodtype }
+import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration, MedicationRounded, Vaccines, PestControlRounded, AccessTimeRounded, Bloodtype, MedicationLiquidRounded }
   from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -198,6 +198,13 @@ export default function HeaderDrawer({ children }) {
               <ListItemText primary="Antenatal Profile" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
 
+            <ListItem button onClick={e => { activateTab("medical-surgical-history"); navigate('/medical-surgical-history') }} sx={{ backgroundColor: isActiveTab("medical-surgical-history") ? "white" : '#632165', color: isActiveTab("medical-surgical-history") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+              <ListItemIcon>
+                <BiotechRounded sx={{ color: isActiveTab("medical-surgical-history") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary="Medical & Surgical History" primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
+
             <ListItem button onClick={e => { activateTab("physical-exam"); navigate('/physical-exam') }} sx={{ backgroundColor: isActiveTab("physical-exam") ? "white" : '#632165', color: isActiveTab("physical-exam") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <BiotechRounded sx={{ color: isActiveTab("physical-exam") ? "#632165" : 'white' }} />
@@ -256,7 +263,7 @@ export default function HeaderDrawer({ children }) {
 
             <ListItem button onClick={e => { activateTab("ifas"); navigate('/ifas') }} sx={{ backgroundColor: isActiveTab("ifas") ? "white" : '#632165', color: isActiveTab("ifas") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
-                <MedicationRounded sx={{ color: isActiveTab("ifas") ? "#632165" : 'white' }} />
+                <MedicationLiquidRounded sx={{ color: isActiveTab("ifas") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary="IFAS" primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>

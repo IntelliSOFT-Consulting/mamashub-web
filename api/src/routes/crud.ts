@@ -107,7 +107,7 @@ router.get('/encounters', [], async (req: Request, res: Response) => {
     try {
         let { patient, encounterCode, count } = req.query
         console.log(patient)
-        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=-date`)).json()
+        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=date`)).json()
         console.log(response)
         res.json({ encounters: response.entry ?? [], status: "success" })
         return

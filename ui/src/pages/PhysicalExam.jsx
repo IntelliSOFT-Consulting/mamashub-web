@@ -111,7 +111,9 @@ export default function PhysicalExam() {
             if (res.status === "success") {
                 prompt("Physical Examination saved successfully")
                 // setValue('2')
-                await getPhysicalExamEncounters(patient)
+                setTimeout(() => {
+                    getPhysicalExamEncounters(patient)
+                }, 100)
                 return
             } else {
                 prompt(res.error)
@@ -123,7 +125,7 @@ export default function PhysicalExam() {
             return
         }
     }
-    
+
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
