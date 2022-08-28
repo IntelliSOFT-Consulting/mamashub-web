@@ -13,14 +13,22 @@ import PresentPregnancy from './pages/PresentPregnancy'
 import PatientRegistration from './pages/PatientRegistration'
 import ConfirmPregnancy from './pages/ConfirmPregnancy'
 import PhysicalExam from './pages/PhysicalExam'
-import ANCProfile from './pages/ANCProfile'
+import AntenatalProfile from './pages/AntenatalProfile'
 import MOH100 from './pages/MOH100'
 import CommunityReferrals from './pages/CommunityReferrals'
 import Observations from './pages/Observations'
 import ViewMOH100 from './pages/ViewMOH100'
 import Treatment from './pages/Treatment'
 import Reports from './pages/Reports'
+import BirthPlan from './pages/BirthPlan'
 import PreviousPregnancy from './pages/PreviousPregnancy'
+import TetanusDiptheria from './pages/TetanusDIptheria'
+import IFAS from './pages/IFAS'
+import MalariaProphylaxis from './pages/MalariaProphylaxis'
+import MaternalSerology from './pages/MaternalSerology'
+import Deworming from './pages/Deworming'
+import Counselling from './pages/Counselling'
+import PMTCTInterventions from './pages/PMTCTInterventions'
 
 function App() {
     return (
@@ -42,14 +50,24 @@ function App() {
                     <Route path="/present-pregnancy" element={<PresentPregnancy />} />
                     <Route path="/physical-exam" element={<PhysicalExam />} />
                     <Route path="/patient-registration" element={<PatientRegistration />} />
-                    <Route path="/patient-profile" element={<ANCProfile />} />
+                    <Route path="/antenatal-profile" element={<AntenatalProfile />} />
                     <Route path="/confirm-pregnancy" element={<ConfirmPregnancy />} />
                     <Route path="/community-referrals" element={<CommunityReferrals />} />
                     <Route path="/counselling-treatment" element={<Treatment />} />
                     <Route path="/moh-100" element={<MOH100 />} />
+                    <Route path="/birth-plan" element={<BirthPlan />} />
                     <Route path="/moh-reports" element={<Reports />} />
                     <Route path="/observations" element={<Observations />} />
                     <Route path="/referral/:id" element={<ViewMOH100 />} />
+                    <Route path="/tetanus-diptheria" element={<TetanusDiptheria />} />
+                    <Route path="/ifas" element={<IFAS />} />
+                    <Route path="/malaria-prophylaxis" element={<MalariaProphylaxis />} />
+                    <Route path="/maternal-serology" element={<MaternalSerology />} />
+                    <Route path="/deworming" element={<Deworming />} />
+                    <Route path="/counselling" element={<Counselling />} />
+                    <Route path="/pmtct-interventions" element={<PMTCTInterventions />} />
+
+
 
                 </Routes>
             </Router>

@@ -20,7 +20,7 @@ import CurrentPatient from '../components/CurrentPatient'
 import { apiHost, createEncounter } from '../lib/api'
 
 
-export default function PresentPregnancy() {
+export default function TetanusDiptheria() {
 
     let [patient, setPatient] = useState({})
     let [visit, setVisit] = useState()
@@ -115,7 +115,7 @@ export default function PresentPregnancy() {
         let patient = visit.id
         try {
             //create Encounter
-            let encounter = await createEncounter(patient, "PRESENT_PREGNANCY")
+            let encounter = await createEncounter(patient, "PREVIOUS_PREGNANCY")
             // console.log(encounter)
 
             //Create and Post Observations
@@ -165,20 +165,18 @@ export default function PresentPregnancy() {
                                     variant="scrollable"
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
-                                    <Tab label="Present Pregnancy" value="1" />
-                                    <Tab label="Close ANC Record" value="2" />
+                                    <Tab label="Tetanus & Diptheria" value="1" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
 
-                                <Grid container spacing={1} padding=".5em" >
-                                    {(presentPregnancyEncounters.length > 0) && presentPregnancyEncounters.map((x, index) => {
-                                        return <Grid item xs={12} md={12} lg={3}>
-                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>Contact - {`${index + 1}`}</Button>
-                                        </Grid>
-                                    })}
-                                </Grid>
+                                <p></p>
+                                {(presentPregnancyEncounters.length > 0) && presentPregnancyEncounters.map((x, index) => {
+                                    return <Grid item xs={12} md={12} lg={3}>
+                                        <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>Pregnancy - {`${index + 1}`}</Button>
+                                    </Grid>
+                                })}
                                 {presentPregnancyEncounters.length < 1 && loading && <><CircularProgress /></>}
                                 <Divider />
 
