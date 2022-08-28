@@ -135,7 +135,7 @@
         "iFASOtherSuppliments": "snomed:26462991:IFAS Other Suppliments",
         "iFASAncContact": "snomed:46645665:IFAS ANC Cotact",
         "iFASContactTiming": "snomed:39667636:IFAS Contact Timing",
-        "iFASNo.OfTablets": "snomed:76449731:IFAS No.of Tablets",
+        "iFASNoOfTablets": "snomed:76449731:IFAS No.of Tablets",
         "dosageAmount": "snomed:14420047:Dosage Amount",
         "dosageFrequency": "snomed:20726931:Dosage Frequency",
         "dosageDateGiven": "snomed:39234792:Dosage Date Given",

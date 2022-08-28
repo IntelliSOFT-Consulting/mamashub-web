@@ -31,15 +31,58 @@ export default function PreviousPregnancy() {
     let [visit, setVisit] = useState()
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
-    let [data, setData] = useState({})
+    const [value, setValue] = useState('1');
+    let [loading, setLoading] = useState(false)
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
-    let [birthPlan, setBirthPlan] = useState({})
-    let [medicalHistory, setMedicalHistory] = useState({})
-    let [patientInformation, setPatientInformation] = useState({})
-    let [physicalExam, setPhysicalExam] = useState({})
+    let [previousPregnancy, setPreviousPregnancy] = useState({})
     let [observations, setObservations] = useState([])
     let [openModal, setOpenModal] = useState(false)
+
+    function prompt(text) {
+        setMessage(text)
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 4000)
+        return
+    }
+
+
+    let savePreviousPregnancy = async () => {
+        //get current patient
+        if (!visit) {
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
+            return
+        }
+        let patient = visit.id
+        try {
+            //create Encounter
+            let encounter = await createEncounter(patient, "PREVIOUS_PREGNANCY")
+            // console.log(encounter)
+
+            //Create and Post Observations
+            let res = await (await fetch(`${apiHost}/crud/observations`, {
+                method: "POST",
+                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: previousPregnancy }),
+                headers: { "Content-Type": "application/json" }
+            })).json()
+            console.log(res)
+
+            if (res.status === "success") {
+                prompt("Previous Pregnancy History saved successfully")
+                // setValue('2')
+                return
+            } else {
+                prompt(res.error)
+                return
+            }
+        } catch (error) {
+            console.error(error)
+            prompt(JSON.stringify(error))
+            return
+        }
+    }
 
 
     let [physicalExamEncounters, setPhysicalExamEncounters] = useState([])
@@ -47,11 +90,14 @@ export default function PreviousPregnancy() {
     const handleOpen = () => setOpenModal(true);
 
 
-    const [value, setValue] = useState('1');
+
+
     let getPhysicalExamEncounters = async (patientId) => {
+        setLoading(true)
         let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PREVIOUS_PREGNANCY"}`)).json()
         console.log(encounters)
         setPhysicalExamEncounters(encounters.encounters)
+        setLoading(false)
         return
     }
 
@@ -61,14 +107,12 @@ export default function PreviousPregnancy() {
         if (visit) {
             getPhysicalExamEncounters(visit.id)
         }
-        console.log(visit)
     }, [])
 
     let getEncounterObservations = async (encounter) => {
         setObservations([])
         handleOpen()
         let observations = await (await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)).json()
-        console.log(observations)
         setObservations(observations.observations)
         return
 
@@ -79,115 +123,11 @@ export default function PreviousPregnancy() {
         setValue(newValue);
         return
     };
-    const handleChanges = (event, newValue) => {
-        // setValue(newValue);
-        return
-    };
-
-    let saveSuccessfully = async () => {
-        setMessage("Data saved successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
-    }
-
-    let savePatientInformation = async () => {
-
-        //get patient
-        let patient = visit.id
-
-        //create encounter
-        let encounter = await createEncounter(patient, "Patient-Information")
-        console.log(encounter)
-
-        //save observations
-        let observationsList = [
-        ]
-        //Create and Post Observations
-        let res = await (await fetch(`${apiHost}/crud/observations`, {
-            method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: patientInformation })
-        })).json()
-        console.log(res)
-
-        if (res.status === "success") {
-            setMessage("Patient Information saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
-            return
-        }
-    }
-
-
-    let saveMedicalHistory = async () => {
-        //get patient
-        let patient = visit.id
-        //create encounter
-        let encounter = await createEncounter(patient, "Medical-History")
-        console.log(encounter)
-
-        //save observations
-        let observationsList = [
-        ]
-        //Create and Post Observations
-        let res = await (await fetch(`${apiHost}/crud/observations`, {
-            method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
-        })).json()
-        console.log(res)
-
-        if (res.status === "success") {
-            setMessage("Medical History saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
-            return
-        }
-    }
-
-
-
-    let saveBirthPlan = async () => {
-
-        //get patient
-        let patient = visit.id
-        //create encounter
-        let encounter = await createEncounter(patient, "Medical-History")
-        console.log(encounter)
-
-        //save observations
-        let observationsList = [
-        ]
-        //Create and Post Observations
-        let res = await (await fetch(`${apiHost}/crud/observations`, {
-            method: "POST",
-            body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: medicalHistory })
-        })).json()
-        console.log(res)
-
-        if (res.status === "success") {
-            setMessage("Birth Plan saved successfully")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 2000)
-            return
-        }
-    }
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
         if (!visit) {
-            setMessage("No patient visit not been initiated. To start a visit, Select a patient in the Patients list")
-            setOpen(true)
-            setTimeout(() => {
-                setOpen(false)
-            }, 4000)
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patients list")
             return
         }
         setVisit(JSON.parse(visit))
@@ -198,7 +138,7 @@ export default function PreviousPregnancy() {
         if (getCookie("token")) {
             return
         } else {
-            window.localStorage.setItem("next_page", "/patient-profile")
+            window.localStorage.setItem("next_page", "/previous-pregnancy")
             navigate('/login')
             return
         }
@@ -229,8 +169,7 @@ export default function PreviousPregnancy() {
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>General Examination</Typography>
-                                <Divider />
+
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x, index) => {
@@ -238,7 +177,7 @@ export default function PreviousPregnancy() {
                                             <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>Pregnancy - {`${index + 1}`}</Button>
                                         </Grid>
                                     })}
-                                    {physicalExamEncounters.length < 1 && <><CircularProgress />
+                                    {physicalExamEncounters.length < 1 && loading && <><CircularProgress />
                                     </>}
                                 </Grid>
                                 <p></p>
@@ -246,116 +185,105 @@ export default function PreviousPregnancy() {
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
 
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Pregnancy Order"
                                             placeholder="Pregnancy Order"
                                             size="small"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, pregnancyOrder: e.target.value }) }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Year"
                                             placeholder="Year"
                                             size="small"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, year: e.target.value }) }}
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="No of times ANC attended for every pregnancy"
                                             placeholder="No of times ANC attended for every pregnancy"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, specifyDrugAllergies: e.target.value }) }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Place of child birth"
                                             placeholder="Place of child birth"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, placeOfBirth: e.target.value }) }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Gestation (weeks)"
                                             placeholder="Gestation (weeks)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, gestation: e.target.value }) }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Duration of labor"
                                             placeholder="Duration of labor"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, durationOfLabor: e.target.value }) }}
                                         />
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={12}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, diabetes: e.target.value }) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, modeOfDelivery: e.target.value }) }}
                                         >
-                                            <FormControlLabel value={0} sx={{ width: "25%" }} control={<FormLabel />} label="Mode of delivery: " />
-                                            <FormControlLabel value={"true"} control={<Radio />} label="Varginal Delivery" />
-                                            <FormControlLabel value={"true"} control={<Radio />} label="Assisted Vaginal Delivery" />
-                                            <FormControlLabel value={"false"} control={<Radio />} label="Caeserean Section" />
+                                            <FormControlLabel sx={{ width: "25%" }} control={<FormLabel />} label="Mode of delivery: " />
+                                            <FormControlLabel value={"Vaginal Delivery"} control={<Radio />} label="Vaginal Delivery" />
+                                            <FormControlLabel value={"Assisted Vaginal Delivery"} control={<Radio />} label="Assisted Vaginal Delivery" />
+                                            <FormControlLabel value={"Caeserean Section"} control={<Radio />} label="Caeserean Section" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setPatientInformation({ ...patientInformation, hypertension: e.target.value }) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, hypertension: e.target.value }) }}
                                         >
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Hypertension: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Hypertension: " />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            onChange={e => { setPatientInformation({ ...patientInformation, drugAllergies: e.target.value }) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, otherConditions: e.target.value }) }}
                                         >
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other conditions: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Other conditions: " />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, bloodTransfusion: e.target.value }) }}
                                         >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Blood Transfusion: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Blood Transfusion: " />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                 </Grid>
@@ -364,7 +292,6 @@ export default function PreviousPregnancy() {
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
-
                                     <Grid item xs={12} md={12} lg={6}>
                                         <TextField
                                             fullWidth="100%"
@@ -372,42 +299,34 @@ export default function PreviousPregnancy() {
                                             label="Baby weight(g)"
                                             placeholder="Baby weight(g)"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, babyWeight: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={8}>
                                         <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, babyWeight: e.target.value }) }}
                                         >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Baby sex" />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Baby sex" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { setPreviousPregnancy({ ...previousPregnancy, babyWeight: e.target.value }) }}
                                         >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Outcome" />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Outcome" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
-                                            row
-                                            onChange={e => { console.log(e) }}
+                                            row onChange={e => { console.log(e) }}
                                         >
-
-                                            <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Purperium" />
-                                            <FormControlLabel value={true} control={<Radio />} label="Yes" />
-                                            <FormControlLabel value={false} control={<Radio />} label="No" />
+                                            <FormControlLabel sx={{ width: "50%" }} control={<FormLabel />} label="Purperium" />
+                                            <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
+                                            <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={7}>
@@ -417,7 +336,7 @@ export default function PreviousPregnancy() {
                                             label="If abnormal, specify"
                                             placeholder="If abnormal, specify"
                                             size="small"
-                                            onChange={e => { setPatient({ ...patient, surgicalOperationReason: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, surgicalOperationReason: e.target.value }) }}
                                         />
                                     </Grid>
 
@@ -427,7 +346,7 @@ export default function PreviousPregnancy() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveMedicalHistory() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { savePreviousPregnancy() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
@@ -438,8 +357,6 @@ export default function PreviousPregnancy() {
                             open={openModal}
                             sx={{ overflow: "scroll" }}
                             onClose={handleClose}
-                            aria-labelledby="keep-mounted-modal-title"
-                            aria-describedby="keep-mounted-modal-description"
                         >
                             <Box sx={{
                                 position: 'absolute',
@@ -453,7 +370,6 @@ export default function PreviousPregnancy() {
                                 p: 4,
                             }}>
                                 <br />
-
                                 {((observations && observations.length < 1) || (!observations)) && <>
                                     <CircularProgress />
                                     <Typography variant="h6">Loading</Typography>
@@ -481,9 +397,7 @@ export default function PreviousPregnancy() {
                                             </Grid>
                                         </>
                                     })}
-
                                 </Grid>
-
                             </Box>
                         </Modal>
                     </Container>
