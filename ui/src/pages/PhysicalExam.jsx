@@ -26,7 +26,6 @@ export default function PhysicalExam() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState({})
-    let [clinicalNotes, setClinicalNotes] = useState([])
     let [loading, setLoading] = useState(false)
     let [weightMonitoringChart, setWeightMonitoring] = useState([])
 
@@ -60,21 +59,14 @@ export default function PhysicalExam() {
         setLoading(false)
         return
     }
-    let getClinicalNotes = async (patientId) => {
-        setLoading(true)
-        let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"CLINICAL_NOTES"}`)).json()
-        console.log(encounters)
-        setClinicalNotes(encounters.encounters)
-        setLoading(false)
-        return
-    }
+
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient") ?? null
         visit = JSON.parse(visit) ?? null
         if (visit) {
             getPhysicalExamEncounters(visit.id)
-            getClinicalNotes(visit.id)
+            return
         }
         console.log(visit)
     }, [])
@@ -131,41 +123,7 @@ export default function PhysicalExam() {
             return
         }
     }
-    let saveNotes = async () => {
-        //get current patient
-        if (!visit) {
-            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
-            return
-        }
-        let patient = visit.id
-        try {
-            //create Encounter
-            let encounter = await createEncounter(patient, "CLINICAL_NOTES")
-            console.log(encounter)
-
-            //Create and Post Observations
-            let res = await (await fetch(`${apiHost}/crud/observations`, {
-                method: "POST",
-                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: physicalExam }),
-                headers: { "Content-Type": "application/json" }
-            })).json()
-            console.log(res)
-
-            if (res.status === "success") {
-                prompt("Clinical Notes saved successfully")
-                // setValue('2')
-                await getClinicalNotes(patient)
-                return
-            } else {
-                prompt(res.error)
-                return
-            }
-        } catch (error) {
-            console.error(error)
-            // prompt(JSON.stringify(error))
-            return
-        }
-    }
+    
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
@@ -262,7 +220,6 @@ export default function PhysicalExam() {
                                 <TabList value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto">
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Weight Monitoring Chart" value="2" />
-                                    <Tab label="Clinical Notes" value="3" />
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
@@ -696,57 +653,10 @@ export default function PhysicalExam() {
                             <TabPanel value='2'>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Weight Monitoring</Typography>
                                 <Divider />
-
                                 <p></p>
                                 <div id="container" style={{ width: "100%", height: "400px" }}></div>
                                 <p></p>
-
                             </TabPanel>
-                            <TabPanel value='3'>
-                                <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Clinical Notes</Typography>
-                                <Divider />
-                                <Grid container spacing={1} padding=".5em" >
-                                    {(clinicalNotes.length > 0) && clinicalNotes.map((x) => {
-                                        return <Grid item xs={12} md={12} lg={3}>
-                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>{`${timeSince(x.resource.meta.lastUpdated)} ago`}</Button>
-                                        </Grid>
-                                    })}
-                                    {clinicalNotes.length < 1 && loading && <><CircularProgress /></>}
-                                </Grid>
-                                <Divider />
-                                <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={8}>
-                                        <TextField fullWidth="80%" type="text" multiline minRows={3} label="Clinical Notes" placeholder="Clinical Notes" size="small" onChange={e => { setNotes({ ...notes, clinicalNotes: e.target.value }) }} />
-                                    </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
-                                        {!isMobile ? <DesktopDatePicker
-                                            label="Next Visit"
-                                            inputFormat="dd/MM/yyyy"
-                                            value={notes.nextVisit || null}
-                                            onChange={e => { setNotes({ ...notes, nextVisit: e }) }}
-                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                        /> :
-                                            <MobileDatePicker
-                                                label="Next Visit"
-                                                inputFormat="dd/MM/yyyy"
-                                                value={notes.nextVisit || null}
-                                                onChange={e => { setNotes({ ...notes, nextVisit: e }) }}
-                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
-                                            />}
-                                    </Grid>
-
-                                </Grid>
-                                <p></p>
-                                <Divider />
-                                <p></p>
-                                <Stack direction="row" spacing={2} alignContent="right" >
-                                    {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveNotes() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
-                                </Stack>
-                                <p></p>
-                            </TabPanel>
-
                         </TabContext>
                         <Modal
                             keepMounted
