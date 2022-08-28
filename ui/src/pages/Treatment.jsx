@@ -21,8 +21,6 @@ export default function Treatment() {
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [notes, setNotes] = useState('')
-    let [viralLoad, setViralLoad] = useState({})
-    let [artForLife, setArtForLife] = useState({})
     let preventiveServicesList = {
         "1st injection": "First visit",
         "2nd injection": "4 weeks after 1st dose but 2 weeks before childbirth",
@@ -69,12 +67,7 @@ export default function Treatment() {
     let isMobile = useMediaQuery('(max-width:600px)');
 
     const [value, setValue] = useState('1');
-
-    let saveClinicalNotes = async () => {
-        setNotesDisplay(notesDisplay + "\n" + notes)
-        setNotes('')
-        return
-    }
+ 
     let saveSerologyResults = async () => {
 
 

@@ -15,7 +15,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient'
 import { apiHost, createEncounter } from './../lib/api'
 import { timeSince } from '../lib/timeSince'
-import { gridFilterActiveItemsLookupSelector } from '@mui/x-data-grid'
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -26,14 +25,14 @@ export default function PhysicalExam() {
 
     let navigate = useNavigate()
     let [open, setOpen] = useState(false)
-    let [notes, setNotes] = useState('')
+    let [notes, setNotes] = useState({})
+    let [clinicalNotes, setClinicalNotes] = useState([])
     let [loading, setLoading] = useState(false)
     let [weightMonitoringChart, setWeightMonitoring] = useState([])
 
     let [visit, setVisit] = useState()
     let [physicalExam, setPhysicalExam] = useState({})
     let [physicalExamEncounters, setPhysicalExamEncounters] = useState([])
-    let [notesDisplay, setNotesDisplay] = useState('')
     let [data, setData] = useState({})
     let [message, setMessage] = useState(false)
     let isMobile = useMediaQuery('(max-width:600px)');
@@ -41,6 +40,7 @@ export default function PhysicalExam() {
     let [openModal, setOpenModal] = useState(false)
     const handleClose = () => setOpenModal(false);
     const handleOpen = () => setOpenModal(true);
+
 
     const [value, setValue] = useState('1');
     function prompt(text) {
@@ -60,12 +60,21 @@ export default function PhysicalExam() {
         setLoading(false)
         return
     }
+    let getClinicalNotes = async (patientId) => {
+        setLoading(true)
+        let encounters = await (await fetch(`${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"CLINICAL_NOTES"}`)).json()
+        console.log(encounters)
+        setClinicalNotes(encounters.encounters)
+        setLoading(false)
+        return
+    }
 
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient") ?? null
         visit = JSON.parse(visit) ?? null
         if (visit) {
             getPhysicalExamEncounters(visit.id)
+            getClinicalNotes(visit.id)
         }
         console.log(visit)
     }, [])
@@ -86,11 +95,6 @@ export default function PhysicalExam() {
         return
     };
 
-    let saveClinicalNotes = async () => {
-        setNotesDisplay(notesDisplay + "\n" + notes)
-        setNotes('')
-        return
-    }
 
     let savePhysicalExam = async () => {
         //get current patient
@@ -116,6 +120,41 @@ export default function PhysicalExam() {
                 prompt("Physical Examination saved successfully")
                 // setValue('2')
                 await getPhysicalExamEncounters(patient)
+                return
+            } else {
+                prompt(res.error)
+                return
+            }
+        } catch (error) {
+            console.error(error)
+            // prompt(JSON.stringify(error))
+            return
+        }
+    }
+    let saveNotes = async () => {
+        //get current patient
+        if (!visit) {
+            prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
+            return
+        }
+        let patient = visit.id
+        try {
+            //create Encounter
+            let encounter = await createEncounter(patient, "CLINICAL_NOTES")
+            console.log(encounter)
+
+            //Create and Post Observations
+            let res = await (await fetch(`${apiHost}/crud/observations`, {
+                method: "POST",
+                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: physicalExam }),
+                headers: { "Content-Type": "application/json" }
+            })).json()
+            console.log(res)
+
+            if (res.status === "success") {
+                prompt("Clinical Notes saved successfully")
+                // setValue('2')
+                await getClinicalNotes(patient)
                 return
             } else {
                 prompt(res.error)
@@ -220,23 +259,16 @@ export default function PhysicalExam() {
 
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                <TabList
-                                    value={value}
-                                    onChange={handleChange}
-                                    variant="scrollable"
-                                    scrollButtons="auto"
-                                    aria-label="scrollable auto tabs example">
+                                <TabList value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto">
                                     <Tab label="Physical Examination" value="1" />
                                     <Tab label="Weight Monitoring Chart" value="2" />
                                     <Tab label="Clinical Notes" value="3" />
-
                                 </TabList>
                             </Box>
                             <TabPanel value='1'>
                                 {/* <p></p> */}
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>General Examination</Typography>
                                 <Divider />
-                                <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     {(physicalExamEncounters.length > 0) && physicalExamEncounters.map((x) => {
                                         return <Grid item xs={12} md={12} lg={4}>
@@ -245,7 +277,6 @@ export default function PhysicalExam() {
                                     })}
                                     {physicalExamEncounters.length < 1 && loading && <><CircularProgress /></>}
                                 </Grid>
-                                <p></p>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
@@ -359,8 +390,8 @@ export default function PhysicalExam() {
                                             onChange={e => { setPhysicalExam({ ...physicalExam, cvs: e.target.value }) }}
                                         >
                                             <FormControlLabel sx={{ width: "40%" }} control={<FormLabel />} label="CVs: " />
-                                            <FormControlLabel value={true} control={<Radio />} label="Normal" />
-                                            <FormControlLabel value={false} control={<Radio />} label="Abnormal" />
+                                            <FormControlLabel value={"Normal"} control={<Radio />} label="Normal" />
+                                            <FormControlLabel value={"Abnormal"} control={<Radio />} label="Abnormal" />
                                         </RadioGroup>
 
                                     </Grid>
@@ -674,22 +705,34 @@ export default function PhysicalExam() {
                             <TabPanel value='3'>
                                 <Typography variant='p' sx={{ fontSize: 'large', fontWeight: 'bold' }}>Clinical Notes</Typography>
                                 <Divider />
-                                <p></p>
-                                <Typography variant='p' sx={{ fontSize: 'small', fontWeight: 'bold' }}>{notesDisplay}</Typography>
-
+                                <Grid container spacing={1} padding=".5em" >
+                                    {(clinicalNotes.length > 0) && clinicalNotes.map((x) => {
+                                        return <Grid item xs={12} md={12} lg={3}>
+                                            <Button variant='contained' onClick={e => { getEncounterObservations(x.resource.id) }} sx={{ backgroundColor: "#632165", width: "99%" }}>{`${timeSince(x.resource.meta.lastUpdated)} ago`}</Button>
+                                        </Grid>
+                                    })}
+                                    {clinicalNotes.length < 1 && loading && <><CircularProgress /></>}
+                                </Grid>
+                                <Divider />
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={8}>
-                                        <TextField
-                                            fullWidth="80%"
-                                            type="text"
-                                            multiline
-                                            minRows={3}
-                                            label="Clinical Notes"
-                                            placeholder="Clinical Notes"
-                                            size="small"
-                                            onChange={e => { setNotes(e.target.value) }}
-
-                                        />
+                                        <TextField fullWidth="80%" type="text" multiline minRows={3} label="Clinical Notes" placeholder="Clinical Notes" size="small" onChange={e => { setNotes({ ...notes, clinicalNotes: e.target.value }) }} />
+                                    </Grid>
+                                    <Grid item xs={12} md={12} lg={6}>
+                                        {!isMobile ? <DesktopDatePicker
+                                            label="Next Visit"
+                                            inputFormat="dd/MM/yyyy"
+                                            value={notes.nextVisit || null}
+                                            onChange={e => { setNotes({ ...notes, nextVisit: e }) }}
+                                            renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                        /> :
+                                            <MobileDatePicker
+                                                label="Next Visit"
+                                                inputFormat="dd/MM/yyyy"
+                                                value={notes.nextVisit || null}
+                                                onChange={e => { setNotes({ ...notes, nextVisit: e }) }}
+                                                renderInput={(params) => <TextField {...params} size="small" fullWidth />}
+                                            />}
                                     </Grid>
 
                                 </Grid>
@@ -699,7 +742,7 @@ export default function PhysicalExam() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveClinicalNotes() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveNotes() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
                             </TabPanel>
