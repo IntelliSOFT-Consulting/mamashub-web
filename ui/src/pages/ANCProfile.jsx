@@ -54,7 +54,7 @@ export default function ANCProfile() {
     };
 
     let saveMedicalHistory = async () => {
-        //get birthPlan
+        //get current patient
         if (!visit) {
             prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
@@ -90,7 +90,7 @@ export default function ANCProfile() {
 
 
     let saveBirthPlan = async () => {
-        //get birthPlan
+        //get current patient
         let patient = visit.id
         if (!patient) {
             prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
