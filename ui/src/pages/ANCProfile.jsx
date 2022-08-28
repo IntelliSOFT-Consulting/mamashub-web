@@ -53,14 +53,6 @@ export default function ANCProfile() {
         return
     };
 
-
-    // let getObservations = async (encounter) => {
-
-    //     let await
-
-    // }
-
-
     let saveMedicalHistory = async () => {
         //get birthPlan
         if (!visit) {
@@ -97,10 +89,7 @@ export default function ANCProfile() {
     }
 
 
-
-
     let saveBirthPlan = async () => {
-
         //get birthPlan
         let patient = visit.id
         if (!patient) {
@@ -173,7 +162,6 @@ export default function ANCProfile() {
                                     scrollButtons="auto"
                                     aria-label="scrollable auto tabs example">
                                     <Tab label="Medical and Surgical History" value="1" />
-
                                     <Tab label="Birth Plan" value="2" />
                                 </TabList>
                             </Box>
@@ -195,7 +183,7 @@ export default function ANCProfile() {
 
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        {(medicalHistory.surgicalOperation) && <TextField
+                                        {(medicalHistory.surgicalOperation && medicalHistory.surgicalOperation === "Yes") && <TextField
                                             fullWidth="100%"
                                             type="text"
                                             label="Specify"
@@ -268,17 +256,14 @@ export default function ANCProfile() {
                                     </Grid>
 
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, diabetes: e.target.value }) }}>
+                                        <RadioGroup row onChange={e => { setMedicalHistory({ ...medicalHistory, diabetes: e.target.value }) }}>
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Diabetes: " />
                                             <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            onChange={e => { setMedicalHistory({ ...medicalHistory, hypertension: e.target.value }) }}
+                                        <RadioGroup row onChange={e => { setMedicalHistory({ ...medicalHistory, hypertension: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Hypertension: " />
                                             <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
@@ -293,7 +278,7 @@ export default function ANCProfile() {
                                             <FormControlLabel value={"No"} control={<Radio />} label="No" />
                                         </RadioGroup>
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    {(medicalHistory.otherConditions && medicalHistory.otherConditions === "Yes") && <Grid item xs={12} md={12} lg={6}>
                                         <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
                                             <FormLabel component="legend">If yes, select all that apply</FormLabel>
                                             <FormGroup>
@@ -315,7 +300,7 @@ export default function ANCProfile() {
                                                 />
                                             </FormGroup>
                                         </FormControl>
-                                    </Grid>
+                                    </Grid>}
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
@@ -364,12 +349,7 @@ export default function ANCProfile() {
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row
-                                            aria-labelledby="demo-row-radio-buttons-group-label"
-                                            name="row-radio-buttons-group"
-                                            onChange={e => { setMedicalHistory({ ...medicalHistory, drugAllergies: e.target.value }) }}
-                                        >
+                                        <RadioGroup row onChange={e => { setMedicalHistory({ ...medicalHistory, drugAllergies: e.target.value }) }}>
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Drug allergies: " />
                                             <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={"No"} control={<Radio />} label="No" />
@@ -386,9 +366,7 @@ export default function ANCProfile() {
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={6}>
-                                        <RadioGroup
-                                            row onChange={e => { setMedicalHistory({ ...medicalHistory, nonDrugAllergies: e.target.value }) }}
-                                        >
+                                        <RadioGroup row onChange={e => { setMedicalHistory({ ...medicalHistory, nonDrugAllergies: e.target.value }) }}>
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Other non-drug allergies: " />
                                             <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
                                             <FormControlLabel value={"No"} control={<Radio />} label="No" />
@@ -473,7 +451,7 @@ export default function ANCProfile() {
                                 <p></p>
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
+                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }} onClick={e => { setMedicalHistory({}) }}>Cancel</Button>
                                     <Button variant="contained" onClick={e => { saveMedicalHistory() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
@@ -736,14 +714,13 @@ export default function ANCProfile() {
                                             onChange={e => { setBirthPlan({ ...birthPlan, financialPlan: e.target.value }) }}
                                         />
                                     </Grid>
-
                                 </Grid>
                                 <p></p>
                                 <Divider />
 
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
-                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }}>Cancel</Button>
+                                    <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }} onClick={e => { setBirthPlan({}) }}>Cancel</Button>
                                     <Button variant="contained" onClick={e => { saveBirthPlan() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
