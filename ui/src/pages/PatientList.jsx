@@ -22,7 +22,7 @@ export default function PatientList() {
         if (selected.length === 1) {
             await startVisit(selected[0])
 
-            navigate("/patient-profile")
+            navigate("/antenatal-profile")
         }
         return
     }
