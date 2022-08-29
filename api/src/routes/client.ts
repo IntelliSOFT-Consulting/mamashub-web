@@ -44,28 +44,23 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
 // Login
 router.post("/login", async (req: Request, res: Response) => {
     try {
-        let newpatient = false
-        let { email, patientname, password } = req.body;
-        if (!validateEmail(email)) {
+        let newUser = false
+        let { idNumber, password } = req.body;
+
+        if (!idNumber && !password) {
             res.statusCode = 400
-            res.json({ status: "error", message: "invalid email value provided" })
-            return
-        }
-        if (!email && !password && !email) {
-            res.statusCode = 400
-            res.json({ status: "error", message: "email or patientname  and password are required to login" })
+            res.json({ status: "error", message: "ID Number and password are required to login" })
             return
         }
         let patient = await db.patient.findFirst({
             where: {
-                ...(email) && { email },
-                ...(patientname) && { patientname }
+                ...(idNumber) && { idNumber },
             }
         })
 
         if (!patient) {
             res.statusCode = 401
-            res.json({ status: "error", message: "Incorrect patientname/password or password provided." })
+            res.json({ status: "error", message: "Incorrect ID Number or password provided." })
             return
         }
 
@@ -83,22 +78,21 @@ router.post("/login", async (req: Request, res: Response) => {
             })
             let patientData: any = patient?.data
             if (patientData.newpatient === true) {
-                newpatient = true
+                newUser = true
                 await db.patient.update({
                     where: {
-                        ...(email) && { email },
-                        ...(patientname) && { patientname }
+                        idNumber: idNumber
                     },
                     data: {
-                        data: { ...patientData, newpatient: false }
+                        data: { ...patientData, newUser: false }
                     }
                 })
             }
-            res.json({ status: "success", token: session.token, issued: session.issued, expires: session.expires, newpatient })
+            res.json({ status: "success", token: session.token, issued: session.issued, expires: session.expires, newUser })
             return
         } else {
             res.statusCode = 401
-            res.json({ status: "error", message: "Incorrect patientname/password or password provided" })
+            res.json({ status: "error", message: "Incorrect ID Number or password provided" })
             return
         }
     } catch (error) {
@@ -122,7 +116,7 @@ router.post("/register", async (req: Request, res: Response) => {
         if (!password) {
             password = (Math.random()).toString()
         }
-        
+
         let salt = await bcrypt.genSalt(10)
         let _password = await bcrypt.hash(password, salt)
         let patient = await db.patient.create({
@@ -178,7 +172,6 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         let patient = await db.patient.findFirst({
             where: {
                 ...(email) && { email },
-                ...(patientname) && { patientname },
                 ...(id) && { id }
             }
         })
