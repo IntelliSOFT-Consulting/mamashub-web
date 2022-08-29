@@ -3,11 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { reports } from './allReports.json'
 
 export let createObservationValue = (value: number, unit: any) => {
-    return {
-        value,
-        unit,
-        system: "http://unitsofmeasure.org"
-    }
+    return { value, unit, system: "http://unitsofmeasure.org" }
 }
 
 export let createObservation = (patientId: string, observationValue: any, coding: any, id: string, encounterId: string) => {
@@ -190,4 +186,4 @@ export let clearObservations = async (patient: string | null, code: string | nul
     }
 }
 
-clearEncounters("75c31174-ea3b-4752-9979-af5f95d47ab3", "PHYSICAL_EXAMINATION")
+// clearEncounters("75c31174-ea3b-4752-9979-af5f95d47ab3", "PHYSICAL_EXAMINATION")
