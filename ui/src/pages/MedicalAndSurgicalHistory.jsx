@@ -159,7 +159,7 @@ export default function ANCProfile() {
                                             onChange={e => { setMedicalHistory({ ...medicalHistory, surgicalOperationReason: e.target.value }) }}
                                         />}
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={12}>
+                                    <Grid item xs={12} md={12} lg={12} sx={{ display: "none" }}>
                                         <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
                                             <FormLabel component="legend">Surgical Operation (Select all that apply)</FormLabel>
                                             <FormGroup>
@@ -201,7 +201,7 @@ export default function ANCProfile() {
                                             </FormGroup>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} md={12} lg={6}>
+                                    <Grid item xs={12} md={12} lg={6} sx={{ display: "none" }}>
                                         <TextField
                                             fullWidth="100%"
                                             type="text"
