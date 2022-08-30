@@ -16,4 +16,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd /opt/human-milk-bank-web/ && git pull origin master && docker-compose up -d --build && ./api/run-dev-migrations.sh
+        script: cd /opt/kabarak-mhis-web-app/ && ./deploy.sh
