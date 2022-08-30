@@ -40,7 +40,7 @@
         "hepatitisBTesting": "snomed:128241005:Hepatitis B Testing",
         "hepatitisResults": "snomed:128241005-R:Hepatitis Results",
         "hepatitisMotherStatus": "snomed:10759151000119101:Hepatitis Mother Status",
-        "hbTest": "snomed:302763003:HB Test",
+        "haemoglobinTest": "snomed:302763003:HB Test",
         "bloodGroupTest": "snomed:365636006:Blood Group Test",
         "rhesusTest": "snomed:169676009:Rhesus Test",
         "bloodRBSTest": "snomed:33747003:Blood RBS Test",
