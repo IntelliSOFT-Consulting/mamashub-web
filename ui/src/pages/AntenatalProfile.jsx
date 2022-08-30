@@ -34,8 +34,6 @@ export default function AntenatalProfile() {
     const handleClose = () => setOpenModal(false);
     const handleOpen = () => setOpenModal(true);
     let [openModal, setOpenModal] = useState(false)
-
-
     const [value, setValue] = useState('1');
 
     function prompt(text) {

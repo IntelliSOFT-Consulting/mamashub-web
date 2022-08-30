@@ -1,6 +1,6 @@
-import db from './prisma'
-import { FhirApi } from './fhir/utils'
-import * as observationCodes from './fhir/observationCode.json'
+import db from "./prisma"
+import { FhirApi } from "./fhir/utils"
+import * as observationCodes from "./fhir/observationCode.json"
 
 const codes: any = observationCodes.codes
 
@@ -47,42 +47,40 @@ export let generateGeneralReport = async (patientId: string) => {
         tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
         maritalStatus: patient.maritalStatus ? patient.maritalStatus.text : "-",
         parity: "",
-        gravidae: "",
-        lmp: "",
-        edd: "",
+        gravidae: "-",
+        lmp: "-",
+        edd: "-",
         gestation: "",
         muacCodes: "",
         height: " - ",
         fgm: " - ",
         haemoglobin: " - ",
         bloodSugar: " - ",
-        'bloodGroupAndRhesus': " - ",
-        'urynalysis': " - ",
-        'dualTesting': " - ",
-        'testResults': " - ",
-        'treated': " - ",
-        'hivStatusBeforeANC': " - ",
-        'hivTesting': " - ",
-        'hivTesting1': " - ",
-        'hivTesting2': " - ",
-        'hivResults': " - ",
-        'artEligibility': "-",
-        'maternalHaartBeforeANC': "",
-        'maternalHaartCTX': "",
-        'infantProphylaxis': " - ",
-        'partnerHIVTesting': " - ",
-        'partnerHIVResults': " - ",
-        'ppfpCounselling': " - ",
-        'otherConditions': "",
-        'deworming': "",
-        'ipt': "",
-        'ttDose': "",
-        'supplimentation': " - ",
-        'receivedLLITN': " - ",
-        'referralsFrom': " - ",
-        'referralsTo': "",
-        'reasonsForReferral': " - ",
-        'remarks': "N/A"
+        bloodGroupAndRhesus: " - ",
+        urynalysis: " - ",
+        dualTesting: " - ",
+        testResults: " - ",
+        treated: " - ",
+        hivStatusBeforeANC: " - ",
+        hivTesting: " - ",
+        hivResults: " - ",
+        artEligibility: "-",
+        maternalHaartBeforeANC: " - ",
+        maternalHaartCTX: "",
+        infantProphylaxis: " - ",
+        partnerHIVTesting: " - ",
+        partnerHIVResults: " - ",
+        ppfpCounselling: " - ",
+        otherConditions: "",
+        deworming: "",
+        ipt: "",
+        ttDose: "",
+        supplimentation: " - ",
+        receivedLLITN: " - ",
+        referralsFrom: " - ",
+        referralsTo: "",
+        reasonsForReferral: " - ",
+        remarks: "N/A"
     }
     return { ...report, ...results }
 }
