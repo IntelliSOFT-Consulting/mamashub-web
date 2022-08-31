@@ -1,4 +1,4 @@
-import { Divider, Container, TextField, Button, Stack, Typography, Snackbar, Paper, useMediaQuery, Box } from '@mui/material'
+import { Divider, Container, TextField, Button, Typography, Snackbar, useMediaQuery, Box } from '@mui/material'
 import { useState, } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiHost } from '../lib/api'
@@ -42,6 +42,7 @@ export default function Login() {
             }
             else {
                 setCookie("token", data.token, 1)
+                setCookie("role", data.token, 1)
                 if (window.localStorage.getItem("next_page")) {
                     window.localStorage.setItem("activeTab", "dashboard")
                     navigate(window.localStorage.getItem("next_page"))
@@ -76,10 +77,7 @@ export default function Login() {
                 minWidth: (isMobile) ? '100%' : '50%',
                 maxWidth: (isMobile) ? '100%' : '50%'
             }}>
-                <br />
-                <br />
-                <br />
-                <br />
+                <br /><br /><br /><br />
                 <img src="/landing_page.png" style={{ marginLeft: "42%", textAlign: "center" }} height="100px" alt="logo" />
                 <br />
                 <Typography variant="h5" sx={{ textAlign: "center", fontWeight: 'bold' }}>Login</Typography>

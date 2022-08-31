@@ -7,7 +7,6 @@ export let createObservationValue = (value: number, unit: any) => {
 }
 
 export let createObservation = (patientId: string, observationValue: any, coding: any, id: string, encounterId: string) => {
-
     return {
         "resourceType": "Observation",
         ...(id) && { "id": id },
@@ -22,12 +21,8 @@ export let createObservation = (patientId: string, observationValue: any, coding
                 }
             ]
         },
-        subject: {
-            reference: `Patient/${patientId}`
-        },
-        encounter: {
-            reference: `Encounter/${encounterId}`
-        },
+        subject: { reference: `Patient/${patientId}` },
+        encounter: { reference: `Encounter/${encounterId}` },
         ...observationValue,
         effectiveDateTime: new Date().toISOString(),
         issued: new Date().toISOString(),
@@ -47,8 +42,6 @@ export let createEncounter = (patientId: string, encounterId: string, encounterT
         console.error("Encounter type is either 1, 2 or 3")
         return
     }
-
-
     return {
         resourceType: "Encounter",
         id: encounterId,
@@ -187,3 +180,27 @@ export let clearObservations = async (patient: string | null, code: string | nul
 }
 
 // clearEncounters("75c31174-ea3b-4752-9979-af5f95d47ab3", "PHYSICAL_EXAMINATION")
+
+
+let generateANCNumber = async () => {
+
+
+    let today = new Date()
+    let beginningOfMonth = new Date(new Date().setDate(1)).toISOString()
+    let patients = [];
+    let allPatients = await (await FhirApi({ url: `/Patient?_lastUpdated=gte${beginningOfMonth}` })).data
+    allPatients = allPatients?.entry || []
+    for (let patient of allPatients) {
+        let identifiers = patient.resource.identifier
+        for (let i of identifiers) {
+            if (!i.value) {
+                let khmfl = i.issuer
+                //No ANC Number
+            }
+        }
+    }
+
+    let lastAncNumber = ""
+    let anc = `${today.getFullYear()}-${today.getMonth() + 1}-${lastAncNumber}`
+
+}
