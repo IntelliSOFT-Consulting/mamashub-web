@@ -13,7 +13,7 @@ export default function Users() {
 
     let [users, setUsers] = useState(null)
     let [open, setOpen] = useState(false);
-    let [data, setData] = useState({ role: 'STAFF' })
+    let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     let [selected, setSelected] = useState([])
@@ -103,9 +103,10 @@ export default function Users() {
     }, [])
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 255 },
-        { field: 'names', headerName: 'Names', width: 150 },
-        { field: 'email', headerName: 'Email', width: 200 },
+        { field: 'id', headerName: 'KHMFL Code', width: 255 },
+        { field: 'names', headerName: 'Facility Name', width: 150 },
+        { field: 'username', headerName: 'County', width: 150 },
+        { field: 'email', headerName: 'Sub-county', width: 200 },
         { field: 'role', headerName: 'Role', width: 150 }
     ];
     const style = {

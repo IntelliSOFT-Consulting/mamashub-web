@@ -67,10 +67,10 @@ export default function GeneralPatientLevel() {
     }, [])
 
     const columns = [
-        { field: 'ancNumber', headerName: 'ANC No.', width: 150, editable: true },
-        { field: 'fullNames', headerName: "Full Names", width: 140, editable: true },
-        { field: 'dob', headerName: 'DOB', width: 150, editable: true },
-        { field: 'noOfAncVisits', headerName: 'No of ANC Visits', width: 150, editable: true },
+        { field: 'ancNumber', headerName: 'ANC No.', width: 150 },
+        { field: 'fullNames', headerName: "Full Names", width: 140 },
+        { field: 'dob', headerName: 'DOB', width: 150 },
+        { field: 'noOfAncVisits', headerName: 'No of ANC Visits', width: 150 },
         { field: 'subCounty', headerName: 'Sub County', width: 150 },
         { field: 'county', headerName: 'County', width: 150 },
         { field: 'village', headerName: 'Village', width: 150 },
@@ -116,7 +116,7 @@ export default function GeneralPatientLevel() {
         { field: 'reasonsForReferral', headerName: 'Reasons for referral', width: 200 },
         { field: 'remarks', headerName: 'Remarks', width: 100 },
     ];
-    const [indicators, setIndicators] = useState(columns)
+    // const [indicators, setIndicators] = useState(columns)
 
 
     const modalStyle = {
