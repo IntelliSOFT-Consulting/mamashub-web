@@ -103,10 +103,10 @@ export default function Users() {
     }, [])
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 255 },
-        { field: 'names', headerName: 'Names', width: 150, editable: true },
-        { field: 'username', headerName: 'Username', width: 150, editable: true },
-        { field: 'email', headerName: 'Email', width: 200 },
+        { field: 'id', headerName: 'KHMFL Code', width: 255 },
+        { field: 'names', headerName: 'Facility Name', width: 150 },
+        { field: 'username', headerName: 'County', width: 150 },
+        { field: 'email', headerName: 'Sub-county', width: 200 },
         { field: 'role', headerName: 'Role', width: 150 }
     ];
     const style = {

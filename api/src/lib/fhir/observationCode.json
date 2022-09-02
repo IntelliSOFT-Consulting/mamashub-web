@@ -22,7 +22,7 @@
         "deworming": "snomed:14369007:Deworming",
         "ttDose": "snomed:73152006-R:Tetanus",
         "muacCodes": "snomed:284473002:MUAC",
-        "hivResults": "snomed:31676001-R:HIV Results",
+        "hivResults": "snomed:278977008:HIV Results",
         "ipt": "snomed:388435640:IPT",
         "fgm": "snomed:95041000119101:FGM",
         "urynalysis": "snomed:45295008:Urynalysis:",
@@ -181,6 +181,8 @@
         "referralBackToCommunityCommunityHealthUnit": "snomed:6827000:Referral Back To Community Community Health Unit",
         "referralBackToCommunityCallMadeByTheReferringOfficer": "snomed:420942008:Referral Back To Community Call Made By The Reffering Officer",
         "referralBackToCommunityDescribingTheServicesThatCHV": "snomed:224930009:Referral Back To Community Describing The Services That CHV",
-        "referralBackToCommunitySignature": "snomed:700856009:Referral Back To Community Signature"
+        "referralBackToCommunitySignature": "snomed:700856009:Referral Back To Community Signature",
+        "hivStatusBeforeANC":"snomed:120841000:ART Before ANC",
+        "hivTesting":"snomed:120841000:ART Before ANC"   
     }
 }
