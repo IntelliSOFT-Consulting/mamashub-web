@@ -70,7 +70,7 @@ hapi:
     #    narrative_enabled: true
     #    mdm_enabled: true
     local_base_urls:
-      - https://devnndak.intellisoftkenya.com/fhir
+      - https://devhmis.intellisoftkenya.com/fhir
 
     # mdm_enabled: true
     #    partitioning:
