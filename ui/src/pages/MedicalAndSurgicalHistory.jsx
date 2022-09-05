@@ -357,7 +357,7 @@ export default function ANCProfile() {
                                     <Grid item xs={12} md={12} lg={6}>
                                         <RadioGroup
                                             row
-                                            onChange={e => { setMedicalHistory({ ...medicalHistory, specificNonDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setMedicalHistory({ ...medicalHistory, twinsBothLiveBorn: e.target.value }) }}
                                         >
                                             <FormControlLabel value={0} sx={{ width: "50%" }} control={<FormLabel />} label="Twins: " />
                                             <FormControlLabel value={"Yes"} control={<Radio />} label="Yes" />
