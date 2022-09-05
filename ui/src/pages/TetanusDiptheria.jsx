@@ -23,6 +23,7 @@ import { apiHost, createEncounter } from '../lib/api'
 export default function TetanusDiptheria() {
 
     let [visit, setVisit] = useState()
+    let navigate = useNavigate()
     let [open, setOpen] = useState(false)
     let [loading, setLoading] = useState(false)
     let [message, setMessage] = useState(false)
@@ -48,7 +49,7 @@ export default function TetanusDiptheria() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    
+
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
         if (!visit) {

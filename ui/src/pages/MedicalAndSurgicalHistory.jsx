@@ -73,7 +73,7 @@ export default function ANCProfile() {
             console.log(res)
 
             if (res.status === "success") {
-                prompt("Medical History saved successfully")
+                prompt("Medical and Surgical History saved successfully")
                 navigate(`/patients/${patient}`)
                 return
             } else {
