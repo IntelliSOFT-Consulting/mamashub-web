@@ -190,7 +190,7 @@ export default function PreviousPregnancy() {
                                             label="Year"
                                             placeholder="Year"
                                             size="small"
-                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, year: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, ppYear: e.target.value }) }}
                                         />
                                     </Grid>
 
@@ -201,7 +201,7 @@ export default function PreviousPregnancy() {
                                             label="No of times ANC attended for every pregnancy"
                                             placeholder="No of times ANC attended for every pregnancy"
                                             size="small"
-                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, specifyDrugAllergies: e.target.value }) }}
+                                            onChange={e => { setPreviousPregnancy({ ...previousPregnancy, ancVisits: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={4}>
