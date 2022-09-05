@@ -74,7 +74,7 @@ export default function ANCProfile() {
 
             if (res.status === "success") {
                 prompt("Medical History saved successfully")
-                // setValue('2')
+                navigate(`/patients/${patient}`)
                 return
             } else {
                 prompt(res.error)
