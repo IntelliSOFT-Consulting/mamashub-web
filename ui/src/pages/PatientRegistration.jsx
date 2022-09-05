@@ -25,6 +25,8 @@ import wardMap from '../data/code_to_wards_map.json'
 import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import { startVisit } from '../lib/startVisit'
+import { createEncounter } from '../lib/api'
+
 
 export default function PatientRegistration() {
 
@@ -35,11 +37,19 @@ export default function PatientRegistration() {
     let [selectedCounty, setCounty] = useState('');
     let [selectedConsituency, setConstituency] = useState('');
     let [patients, setPatients] = useState({});
-    let [selectionModel, setSelectionModel] = useState([]);
     let navigate = useNavigate();
     let [observations, setObservations] = useState({})
     let isMobile = useMediaQuery('(max-width:600px)');
     const [value, setValue] = useState('1');
+
+    function prompt(text) {
+        setMessage(text)
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 4000)
+        return
+    }
 
 
 
@@ -52,40 +62,8 @@ export default function PatientRegistration() {
         return
     }
 
-    let createEncounter = async (patientId, encounterType = 1) => {
-        try {
-            let encounter = await (await fetch(`${apiHost}/crud/encounters`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    encounterType: encounterType,
-                    patientId: patientId
-                }),
-                headers: { "Content-Type": "application/json" }
-            })).json()
-            console.log(encounter)
-            displayAlert(`Encounter created successfully`)
 
-            return encounter.id
-        } catch (error) {
-            displayAlert("Failed to create encounter")
-            return null
-        }
-    }
-    let createObservations = async (observations) => {
-        try {
-            let o = await (await fetch(`${apiHost}/crud/observations`, {
-                method: 'PUT',
-                body: JSON.stringify(observations),
-                headers: { "Content-Type": "application/json" }
-            })).json()
-            console.log(o)
-            displayAlert(`Observations created successfully`)
-            return o.id
-        } catch (error) {
-            displayAlert("Failed to create encounter")
-            return null
-        }
-    }
+
 
     useEffect(() => {
 
@@ -128,29 +106,30 @@ export default function PatientRegistration() {
             }
             //Create Encounter
             let patientId = id
-            let encounter = await createEncounter(patientId)
-            if (!encounter) {
-                setOpen(false)
-                setMessage("Failed to create Maternal Profile encounter")
-                setOpen(true)
-                return
-            }
+            //create encounter
+            let encounter = await createEncounter(patient, "MATERNAL_PROFILE")
+            console.log(encounter)
 
+            //save observations
+            let observationsList = [
+            ]
             //Create and Post Observations
             let res = await (await fetch(`${apiHost}/crud/observations`, {
                 method: "POST",
-                body: JSON.stringify({ patientId, encounterId: encounter, observations: observations })
+                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: observations }),
+                headers: { "Content-Type": "application/json" }
             })).json()
             console.log(res)
 
-
             if (res.status === "success") {
-                setOpen(false)
-                setMessage("Patient created successfully")
-                setOpen(true)
+                prompt("Patient created successfully")
+                navigate(`/patients/${id}`)
+                return
+            } else {
+                prompt(res.error)
+                return
             }
-            navigate(`/patients/${id}`)
-            return
+
         } catch (error) {
             setOpen(true)
             console.log(error)
@@ -262,7 +241,7 @@ export default function PatientRegistration() {
                                             label="Gravida"
                                             placeholder="Gravida"
                                             size="small"
-                                            onChange={e => { setObservations({ ...observations, gravida: e.target.value }) }}
+                                            onChange={e => { setObservations({ ...observations, gravidae: e.target.value }) }}
                                         // onChange={e=>{console.log(e)}}
                                         />
                                     </Grid>
@@ -359,7 +338,7 @@ export default function PatientRegistration() {
                                                 id="demo-simple-select"
                                                 value={patient.educationLevel ? patient.educationLevel : null}
                                                 label="Education Level"
-                                                onChange={e => { setPatient({ ...patient, educationLevel: e.target.value }) }}
+                                                onChange={e => { setObservations({ ...observations, educationLevel: e.target.value }) }}
                                                 size="small"
                                                 defaultValue={"Primary School"}
                                             >

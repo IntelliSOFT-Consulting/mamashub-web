@@ -310,7 +310,7 @@ export default function PhysicalExam() {
                                             label="Systolic Blood Pressure"
                                             placeholder="Systolic Blood Pressure"
                                             size="small"
-                                            onChange={e => { setPhysicalExam({ ...physicalExam, bp: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, bpSystolic: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -320,7 +320,7 @@ export default function PhysicalExam() {
                                             label="Diastolic Blood Pressure"
                                             placeholder="Diastolic Blood Pressure"
                                             size="small"
-                                            onChange={e => { setPhysicalExam({ ...physicalExam, bp: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, bpDiastolic: e.target.value }) }}
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={12} lg={3}>
@@ -488,7 +488,7 @@ export default function PhysicalExam() {
                                             label="If yes, specify"
                                             placeholder="If yes, specify"
                                             size="small"
-                                            onChange={e => { setPhysicalExam({ ...physicalExam, firstName: e.target.value }) }}
+                                            onChange={e => { setPhysicalExam({ ...physicalExam, palpationDoneSpecify: e.target.value }) }}
                                         />
                                     </Grid>}
                                     <Grid item xs={12} md={12} lg={6}>
