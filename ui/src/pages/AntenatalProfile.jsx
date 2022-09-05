@@ -54,16 +54,17 @@ export default function AntenatalProfile() {
         return
     };
 
-    let saveantenatalProfile = async () => {
+    let saveAntenatalProfile = async () => {
         //get current patient
         if (!visit) {
             prompt("No patient visit not been initiated. To start a visit, Select a patient in the Patient's list")
             return
         }
-        let patient = visit.id
+        
         try {
             //create Encounter
-            let encounter = await createEncounter(patient, "MEDICAL_HISTORY")
+            let patient = visit.id
+            let encounter = await createEncounter(patient, "ANTENATAL_PROFILE")
             console.log(encounter)
 
             //Create and Post Observations
@@ -429,7 +430,7 @@ export default function AntenatalProfile() {
                                 <Stack direction="row" spacing={2} alignContent="right" >
                                     {(!isMobile) && <Typography sx={{ minWidth: '80%' }}></Typography>}
                                     <Button variant='contained' disableElevation sx={{ backgroundColor: 'gray' }} onClick={e => { setAntenatalProfile({}) }}>Cancel</Button>
-                                    <Button variant="contained" onClick={e => { saveantenatalProfile() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
+                                    <Button variant="contained" onClick={e => { saveAntenatalProfile() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button>
                                 </Stack>
                                 <p></p>
 
