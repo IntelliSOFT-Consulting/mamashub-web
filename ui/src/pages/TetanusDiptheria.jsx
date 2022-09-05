@@ -48,14 +48,7 @@ export default function TetanusDiptheria() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    let saveSuccessfully = async () => {
-        setMessage("Data saved successfully")
-        setOpen(true)
-        setTimeout(() => {
-            setOpen(false)
-        }, 2000)
-        return
-    }
+    
     useEffect(() => {
         let visit = window.localStorage.getItem("currentPatient")
         if (!visit) {
@@ -128,6 +121,7 @@ export default function TetanusDiptheria() {
             if (res.status === "success") {
                 prompt("Tetanus Diptheria saved successfully")
                 // setValue('2')
+                navigate(`/patients/${patient}`)
                 await getTetanusDiptheriaEncounters(patient)
                 return
             } else {
@@ -197,15 +191,15 @@ export default function TetanusDiptheria() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="If yes, when was it provided"
                                             inputFormat="yyyy-MM-dd"
-                                            value={tetanusDiptheria.dateGiven ? tetanusDiptheria.dateGiven : null}
-                                            onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, dateGiven: e }) }}
+                                            value={tetanusDiptheria.tetanusDiptheriaDateGiven ? tetanusDiptheria.tetanusDiptheriaDateGiven : null}
+                                            onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, tetanusDiptheriaDateGiven: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="If yes, when was it provided"
                                                 inputFormat="yyyy-MM-dd"
-                                                value={tetanusDiptheria.dateGiven ? tetanusDiptheria.dateGiven : null}
-                                                onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, dateGiven: e }) }}
+                                                value={tetanusDiptheria.tetanusDiptheriaDateGiven ? tetanusDiptheria.tetanusDiptheriaDateGiven : null}
+                                                onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, tetanusDiptheriaDateGiven: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>}
@@ -213,15 +207,15 @@ export default function TetanusDiptheria() {
                                         {!isMobile ? <DesktopDatePicker
                                             label="Next visit"
                                             inputFormat="yyyy-MM-dd"
-                                            value={tetanusDiptheria.dateGiven ? tetanusDiptheria.dateGiven : null}
-                                            onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, dateGiven: e }) }}
+                                            value={tetanusDiptheria.tetanusDiptheriaNextVisit ? tetanusDiptheria.tetanusDiptheriaNextVisit : null}
+                                            onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, tetanusDiptheriaNextVisit: e }) }}
                                             renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                         /> :
                                             <MobileDatePicker
                                                 label="Next visit"
                                                 inputFormat="yyyy-MM-dd"
-                                                value={tetanusDiptheria.dateGiven ? tetanusDiptheria.dateGiven : null}
-                                                onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, dateGiven: e }) }}
+                                                value={tetanusDiptheria.tetanusDiptheriaNextVisit ? tetanusDiptheria.tetanusDiptheriaNextVisit : null}
+                                                onChange={e => { setTetanusDiptheria({ ...tetanusDiptheria, tetanusDiptheriaNextVisit: e }) }}
                                                 renderInput={(params) => <TextField {...params} size="small" fullWidth />}
                                             />}
                                     </Grid>

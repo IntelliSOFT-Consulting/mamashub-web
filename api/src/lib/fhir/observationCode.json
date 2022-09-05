@@ -209,6 +209,10 @@
         "ancVisits": "snomed:267037003-A:ANC Visits",
         "placeOfBirth": "snomed:267037003-A:Place of Birth",
         "durationOfLabor": "snomed:267037003-A:Duration of labor",
-        "modeOfDelivery": "snomed:267037003-A:Mode of Delivery"
+        "modeOfDelivery": "snomed:267037003-A:Mode of Delivery",
+        "tetanusDiptheriaInjectionTTProvided":"snomed:267037003-A:Tetanus Diptheria Provided",
+        "tetanusDiptheriaDateGiven":"snomed:267037003-A:Tetanus Diptheria Date Given",
+        "tetanusDiptheriaNextVisit":"snomed:267037003-A:Tetanus Diptheria Next Visit"
     }
+
 }

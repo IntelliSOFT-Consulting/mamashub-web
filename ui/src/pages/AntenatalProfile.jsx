@@ -76,8 +76,8 @@ export default function AntenatalProfile() {
             console.log(res)
 
             if (res.status === "success") {
-                prompt("Medical History saved successfully")
-                // setValue('2')
+                prompt("Antenatal Profile saved successfully")
+                navigate(`/patient/${patient}`)
                 return
             } else {
                 prompt(res.error)
