@@ -107,16 +107,13 @@ export default function PatientRegistration() {
             //Create Encounter
             let patientId = id
             //create encounter
-            let encounter = await createEncounter(patient, "MATERNAL_PROFILE")
+            let encounter = await createEncounter(patientId, "MATERNAL_PROFILE")
             console.log(encounter)
 
-            //save observations
-            let observationsList = [
-            ]
             //Create and Post Observations
             let res = await (await fetch(`${apiHost}/crud/observations`, {
                 method: "POST",
-                body: JSON.stringify({ patientId: patient, encounterId: encounter, observations: observations }),
+                body: JSON.stringify({ patientId: patientId, encounterId: encounter, observations: observations }),
                 headers: { "Content-Type": "application/json" }
             })).json()
             console.log(res)
@@ -310,16 +307,7 @@ export default function PatientRegistration() {
                                     </Grid>}
                                 </Grid>
                                 <Grid container spacing={1} padding=".5em" >
-                                    <Grid item xs={12} md={12} lg={4}>
-                                        <TextField
-                                            fullWidth="100%"
-                                            type="text"
-                                            label="Address"
-                                            placeholder="Address"
-                                            size="small"
-                                            onChange={e => { setPatient({ ...patient, address: e.target.value }) }}
-                                        />
-                                    </Grid>
+
                                     <Grid item xs={12} md={12} lg={4}>
                                         <TextField
                                             fullWidth="100%"
@@ -336,7 +324,7 @@ export default function PatientRegistration() {
                                             <Select
                                                 labelId="demo-simple-select-label"
                                                 id="demo-simple-select"
-                                                value={patient.educationLevel ? patient.educationLevel : null}
+                                                value={patient.educationLevel}
                                                 label="Education Level"
                                                 onChange={e => { setObservations({ ...observations, educationLevel: e.target.value }) }}
                                                 size="small"
