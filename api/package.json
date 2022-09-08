@@ -4,6 +4,8 @@
   "dependencies": {
     "@js-fhir/client": "^0.2.4",
     "@prisma/client": "^3.12.0",
+    "@types/joi": "^17.2.3",
+    "africastalking-ts": "^0.0.3",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",

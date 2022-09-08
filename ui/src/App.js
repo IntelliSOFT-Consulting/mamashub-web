@@ -30,7 +30,7 @@ import Deworming from './pages/Deworming'
 import Counselling from './pages/Counselling'
 import PMTCTInterventions from './pages/PMTCTInterventions'
 import MedicalAndSurgicalHistory from './pages/MedicalAndSurgicalHistory'
-
+import Facilites from './pages/Facilities'
 
 function App() {
     return (
