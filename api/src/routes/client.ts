@@ -3,6 +3,8 @@ import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { sendPasswordResetEmail, validateEmail, sendWelcomeEmail } from "../lib/email";
+import { getPatientByIdentifier } from "../lib/fhir/utils";
+import { generateOTP, parsePhoneNumber, verifyOTP } from "../lib/sms";
 
 const router = express.Router()
 router.use(express.json())
@@ -14,20 +16,16 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || null;
         if (!token) {
-            res.statusCode = 401
+            res.statusCode = 401;
             res.json({ error: "Invalid access token", status: "error" });
-            return
+            return;
         }
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         // console.log(decodedSession)
         if (decodedSession.type == 'valid') {
             let patientId = decodedSession.session.userId
-            let patient = await db.patient.findFirst({
-                where: {
-                    id: patientId
-                }
-            })
-            let responseData = { id: patient?.id, createdAt: patient?.createdAt, updatedAt: patient?.updatedAt, names: patient?.names, email: patient?.email }
+            let patient = await db.patient.findFirst({ where: { id: patientId } })
+            let responseData = { id: patient?.id, createdAt: patient?.createdAt, updatedAt: patient?.updatedAt, names: patient?.names, idNumber: patient?.idNumber, fhirPatientId: patient?.patientId }
             res.statusCode = 200
             res.json({ data: responseData, status: "success" })
             return
@@ -47,20 +45,17 @@ router.post("/login", async (req: Request, res: Response) => {
         let newUser = false
         let { idNumber, password } = req.body;
 
-        if (!idNumber && !password) {
-            res.statusCode = 400
-            res.json({ status: "error", message: "ID Number and password are required to login" })
+        if (!idNumber || !password) {
+            res.statusCode = 401;
+            res.json({ status: "error", error: "ID Number and password are required to login" })
             return
         }
-        let patient = await db.patient.findFirst({
-            where: {
-                ...(idNumber) && { idNumber },
-            }
-        })
+
+        let patient = await db.patient.findUnique({ where: { idNumber } })
 
         if (!patient) {
-            res.statusCode = 401
-            res.json({ status: "error", message: "Incorrect ID Number or password provided." })
+            res.statusCode = 400
+            res.json({ status: "error", error: "Invalid ID Number or password provided." })
             return
         }
 
@@ -77,15 +72,11 @@ router.post("/login", async (req: Request, res: Response) => {
                 userId: patient?.id as string,
             })
             let patientData: any = patient?.data
-            if (patientData.newpatient === true) {
+            if (patientData.newUser === true) {
                 newUser = true
                 await db.patient.update({
-                    where: {
-                        idNumber: idNumber
-                    },
-                    data: {
-                        data: { ...patientData, newUser: false }
-                    }
+                    where: { idNumber: idNumber },
+                    data: { data: { ...patientData, newUser: false } }
                 })
             }
             res.json({ status: "success", token: session.token, issued: session.issued, expires: session.expires, newUser })
@@ -107,53 +98,47 @@ router.post("/login", async (req: Request, res: Response) => {
 // Register patient
 router.post("/register", async (req: Request, res: Response) => {
     try {
-        let { email, idNumber, names, password } = req.body;
-        if (!validateEmail(email)) {
+        let { idNumber, phone } = req.body;
+
+        if (!parsePhoneNumber(phone)) {
             res.statusCode = 400
-            res.json({ status: "error", message: "invalid email value provided" })
+            res.json({ error: "Invalid phone number provided", status: "error" });
             return
         }
-        if (!password) {
-            password = (Math.random()).toString()
+        // check if client is registered
+        let patient = await db.patient.findFirst({ where: { idNumber, phone } })
+        console.log(patient)
+        if (patient) {
+            res.json({ status: "error", error: `Client already registered` });
+            return
         }
 
-        let salt = await bcrypt.genSalt(10)
-        let _password = await bcrypt.hash(password, salt)
-        let patient = await db.patient.create({
-            data: {
-                email, names, salt: salt, password: _password, idNumber,
-            }
-        })
-        let patientId = patient.id
-        let session = encodeSession(process.env['SECRET_KEY'] as string, {
-            createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
-            userId: patient?.id as string,
-            role: "RESET_TOKEN"
-        })
-        patient = await db.patient.update({
-            where: {
-                id: patientId
-            },
-            data: {
-                resetToken: session.token,
-                resetTokenExpiresAt: new Date(session.expires)
-            }
-        })
-        let resetUrl = `${process.env['WEB_URL']}/new-password?id=${patient?.id}&token=${patient?.resetToken}`
-        let response = await sendWelcomeEmail(patient, resetUrl)
-        console.log("Email API Response: ", response)
-        let responseData = { id: patient.id, createdAt: patient.createdAt, updatedAt: patient.updatedAt, names: patient.names, email: patient.email }
-        res.statusCode = 201
-        res.json({ patient: responseData, status: "success", message: `Password reset instructions have been sent to your email, ${patient?.email}` })
-        return
-    } catch (error: any) {
-        res.statusCode = 400
-        console.error(error)
-        if (error.code === 'P2002') {
-            res.json({ status: "error", error: `patient with the ${error.meta.target} provided already exists` });
+        // proceed with registration
+        let fhirPatient = await getPatientByIdentifier(null, idNumber);
+        if (!fhirPatient) {
+            res.json({ status: "error", error: `Invalid credentials. Ensure client is registered on Mama's Hub` });
             return
         }
-        res.json(error)
+
+        let phoneNumber = fhirPatient.telecom[0].value || ''
+        if (phoneNumber !== phone) {
+            res.json({ status: "error", error: `Invalid credentials. Ensure client is registered on Mama's Hub` });
+            return
+        }
+
+        let p = await db.patient.create({ data: { names: fhirPatient.name[0].family, idNumber, phone: parsePhoneNumber(phone) || '', patientId: fhirPatient.id } })
+        let responseData = { id: p.id }
+        res.statusCode = 201
+        res.json({ patient: responseData, status: "success", message: `Account created successfully` })
+        return
+    } catch (error: any) {
+        res.statusCode = 400;
+        console.error(error)
+        if (error.code === 'P2002') {
+            res.json({ status: "error", error: `Client with the ${error.meta.target} provided already exists` });
+            return
+        }
+        res.json(error);
         return
     }
 });
@@ -162,48 +147,27 @@ router.post("/register", async (req: Request, res: Response) => {
 // Register
 router.post("/reset-password", async (req: Request, res: Response) => {
     try {
-        let { patientname, email, id } = req.body;
-        if (email && !validateEmail(email)) {
+        let { phone, idNumber } = req.body;
+        // Initiate password reset.
+        if (!parsePhoneNumber(phone)) {
             res.statusCode = 400
-            res.json({ status: "error", message: "invalid email value provided" })
+            res.json({ error: "Invalid phone number provided", status: "error" });
             return
         }
-        // Initiate password reset.
-        let patient = await db.patient.findFirst({
-            where: {
-                ...(email) && { email },
-                ...(id) && { id }
-            }
-        })
-
-        let session = encodeSession(process.env['SECRET_KEY'] as string, {
-            createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
-            userId: patient?.id as string,
-            role: "RESET_TOKEN"
-        })
-        patient = await db.patient.update({
-            where: {
-                ...(email) && { email },
-                ...(patientname) && { patientname },
-                ...(id) && { id }
-            },
-            data: {
-                resetToken: session.token,
-                verified: false,
-                resetTokenExpiresAt: new Date(session.expires)
-            }
-        })
+        let otpResponse = await generateOTP(parsePhoneNumber(phone) || phone, idNumber)
+        console.log(otpResponse)
+        if (otpResponse.status === "error") {
+            res.statusCode = 400
+            res.json(otpResponse);
+            return
+        }
         res.statusCode = 200
-        let resetUrl = `${process.env['WEB_URL']}/new-password?id=${patient?.id}&token=${patient?.resetToken}`
-        console.log(resetUrl)
-        let response = await sendPasswordResetEmail(patient, resetUrl)
-        console.log(response)
-        res.json({ message: `Password reset instructions have been sent to your email, ${patient?.email}`, status: "success", });
+        res.json({ message: `OTP was successfully sent to ${phone}.`, status: "success", otp: otpResponse.otp });
         return
 
     } catch (error: any) {
         console.log(error)
-        res.statusCode = 401
+        res.statusCode = 401;
         if (error.code === 'P2025') {
             res.json({ error: `Password reset instructions have been sent to your email`, status: "error" });
             return
@@ -214,31 +178,32 @@ router.post("/reset-password", async (req: Request, res: Response) => {
 });
 
 // Set New Password
-router.post("/new-password", [requireJWT], async (req: Request, res: Response) => {
+router.post("/new-password", async (req: Request, res: Response) => {
     try {
-        let { password, id } = req.body;
+        let { password, idNumber, phone, otp } = req.body;
         let patient = await db.patient.findFirst({
             where: {
-                id: id as string
+                ...(idNumber) && { idNumber }, ...(phone) && { phone }, otp
             }
         })
-        let token = req.headers.authorization || '';
-        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(" ")[1] as string)
-        if ((decodedSession.type !== 'valid') || !(patient?.resetToken) || ((patient?.resetTokenExpiresAt as Date) < new Date())
-            || (decodedSession.session?.role !== 'RESET_TOKEN')
-        ) {
-            res.statusCode = 401
-            res.json({ error: `Invalid and/or expired password reset token. Code: ${decodedSession.type}`, status: "error" });
+        let otpValidation = await verifyOTP(phone, otp)
+        if (otpValidation.status !== "success") {
+            res.json(otpValidation)
+            return
+        }
+        if (!patient) {
+            res.statusCode = 401;
+            res.json({ error: `Invalid client credentials provided`, status: "error" })
             return
         }
         let salt = await bcrypt.genSalt(10)
         let _password = await bcrypt.hash(password, salt)
         let response = await db.patient.update({
             where: {
-                id: id as string
+                id: patient.id
             },
             data: {
-                password: _password, salt: salt, resetToken: null, resetTokenExpiresAt: null, verified: true
+                password: _password, verified: true
             }
         })
         console.log(response)
@@ -251,7 +216,6 @@ router.post("/new-password", [requireJWT], async (req: Request, res: Response) =
         res.json({ error: error, status: "error" });
         return
     }
-
 });
 
 

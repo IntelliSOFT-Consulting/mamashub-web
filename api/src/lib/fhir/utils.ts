@@ -104,9 +104,7 @@ export let registerFacility = async () => {
 export let apiHost = "http://localhost:8080/fhir"
 
 export let FhirApi = async (params: any) => {
-    let _defaultHeaders = {
-        "Content-Type": 'application/json'
-    }
+    let _defaultHeaders = { "Content-Type": 'application/json' }
     if (!params.method) {
         params.method = 'GET'
     }
@@ -203,4 +201,15 @@ let generateANCNumber = async () => {
     let lastAncNumber = ""
     let anc = `${today.getFullYear()}-${today.getMonth() + 1}-${lastAncNumber}`
 
+}
+
+
+export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
+    try {
+        let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data
+        return res.entry ? res.entry[0].resource : null
+    } catch (error) {
+        console.log(error)
+        return null
+    }
 }
