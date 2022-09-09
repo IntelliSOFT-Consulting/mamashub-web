@@ -62,7 +62,7 @@ router.post("/login", async (req: Request, res: Response) => {
         if (patient?.verified !== true) {
             // console.log(patient)
             res.statusCode = 401
-            res.json({ status: "error", message: "Kindly complete password reset or verify your account to proceed. Check reset instructions in your email." })
+            res.json({ status: "error", error: "Kindly complete password reset or verify your account to proceed. Check reset instructions in your email." })
             return
         }
         const validPassword = await bcrypt.compare(password, patient?.password as string);
@@ -83,7 +83,7 @@ router.post("/login", async (req: Request, res: Response) => {
             return
         } else {
             res.statusCode = 401
-            res.json({ status: "error", message: "Incorrect ID Number or password provided" })
+            res.json({ status: "error", error: "Incorrect ID Number or password provided" })
             return
         }
     } catch (error) {
