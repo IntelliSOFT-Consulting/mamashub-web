@@ -11,7 +11,7 @@ import { apiHost } from '../lib/api'
 
 export default function Users() {
 
-    let [users, setUsers] = useState(null)
+    let [facilities, setFacilities] = useState(null)
     let [open, setOpen] = useState(false);
     let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
@@ -23,10 +23,10 @@ export default function Users() {
     let [message, setMessage] = useState(false)
 
     // fetch users
-    let getUsers = async () => {
-        let data = (await (await fetch(`${apiHost}/users`,
+    let getFacilities = async () => {
+        let data = (await (await fetch(`${apiHost}/admin/facilities`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setUsers(data.users)
+        setFacilities(data.facilities)
         return
     }
 
@@ -34,7 +34,7 @@ export default function Users() {
     let deleteUsers = async () => {
         for (let i of selected) {
             setOpenSnackBar(false)
-            let response = (await (await fetch(`${apiHost}/auth/${i}`,
+            let response = (await (await fetch(`${apiHost}/admin/facilities/${i}`,
                 {
                     method: "DELETE", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
                 })).json())
@@ -43,7 +43,7 @@ export default function Users() {
                 setOpenSnackBar(true)
                 return
             }
-            getUsers()
+            getFacilities()
             setOpen(false)
         }
         return
@@ -63,7 +63,7 @@ export default function Users() {
                 setOpenSnackBar(true)
                 return
             }
-            getUsers()
+            getFacilities()
             setMessage(response.error || response.message)
             setOpenSnackBar(true)
             setTimeout(() => {
@@ -74,40 +74,39 @@ export default function Users() {
     }
 
     // create user
-    let createUser = async () => {
+    let createFacility = async () => {
         setOpenSnackBar(false)
-        let response = (await (await fetch(`${apiHost}/auth/register`,
+        let response = (await (await fetch(`${apiHost}/admin/facilities`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ username: data.username, email: data.email, "names": data.names, "role": data.role })
+                body: JSON.stringify({ kmhflCode: data.kmhflCode, county: data.county, "name": data.name, "subCounty": data.subCounty, ward: data.ward })
             })).json())
         if (response.status === "error") {
             setMessage(response.error || response.message)
             setOpenSnackBar(true)
             return
         }
-        getUsers()
+        getFacilities()
         setOpen(false)
         return
     }
 
     useEffect(() => {
         if (getCookie("token")) {
-            getUsers()
+            getFacilities()
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/users")
+            window.localStorage.setItem("next_page", "/facilities")
             return
         }
     }, [])
 
     const columns = [
-        { field: 'id', headerName: 'KHMFL Code', width: 255 },
-        { field: 'names', headerName: 'Facility Name', width: 150 },
-        { field: 'username', headerName: 'County', width: 150 },
-        { field: 'email', headerName: 'Sub-county', width: 200 },
-        { field: 'role', headerName: 'Role', width: 150 }
+        { field: 'kmhflCode', headerName: 'KMHFL Code', width: 200 },
+        { field: 'name', headerName: 'Facility Name', width: 200 },
+        { field: 'user', headerName: 'County', width: 200 },
+        { field: 'user', headerName: 'Sub-County', width: 200 },
     ];
     const style = {
         position: 'absolute',
@@ -132,21 +131,20 @@ export default function Users() {
                     key={"loginAlert"}
                 />
                 <Stack direction="row" spacing={2} alignContent="right" >
-                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '50%' : '80%' }}></Typography>}
+                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '65%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteUsers() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete User{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e => { deleteUsers() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Facility{(selected.length > 1) && `s`}</Button>
                         </>
                     }
-                    {(selected.length === 1) &&
-                        <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }} onClick={e => { resetPassword() }}>Reset Password</Button>
-                    }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={handleOpen}>Create New User</Button>
+                    
+                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={handleOpen}>Add New Facility</Button>
                 </Stack>
                 <p></p>
                 <DataGrid
-                    loading={users ? false : true}
-                    rows={users ? users : []}
+                    getRowId={(row) => row.kmhflCode}
+                    loading={facilities ? false : true}
+                    rows={facilities ? facilities : []}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -174,44 +172,45 @@ export default function Users() {
                             <TextField
                                 sx={{ width: "100%" }}
                                 type="text"
-                                label="Names"
-                                placeholder="Names"
+                                label="KMHFL Code"
+                                placeholder="KMHFL Code"
                                 size="small"
-                                onChange={e => { setData({ ...data, names: e.target.value }) }}
+                                onChange={e => { setData({ ...data, kmhflCode: e.target.value }) }}
                             />
                             <TextField
                                 sx={{ width: "100%" }}
                                 type="email"
-                                label="Email Address"
-                                placeholder="Email Address"
+                                label="Facility Name"
+                                placeholder="Facility Name"
                                 size="small"
-                                onChange={e => { setData({ ...data, email: e.target.value }) }}
+                                onChange={e => { setData({ ...data, name: e.target.value }) }}
                             />
                             <TextField
                                 sx={{ width: "100%" }}
                                 type="text"
-                                label="Username"
-                                placeholder="Username"
+                                label="County"
+                                placeholder="County"
                                 size="small"
-                                onChange={e => { setData({ ...data, username: e.target.value }) }}
+                                onChange={e => { setData({ ...data, county: e.target.value }) }}
                             />
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={data.role}
-                                    label="Role"
-                                    onChange={e => { setData({ ...data, role: e.target.value }) }}
-                                    size="small"
-                                >
-                                    <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
-                                    <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
-                                    <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
-                                    <MenuItem value={"CHW"}>CHW</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createUser() }}>Create User</Button>
+                            <TextField
+                                sx={{ width: "100%" }}
+                                type="text"
+                                label="Sub-County"
+                                placeholder="Sub-County"
+                                size="small"
+                                onChange={e => { setData({ ...data, subCounty: e.target.value }) }}
+                            />
+                            <TextField
+                                sx={{ width: "100%" }}
+                                type="text"
+                                label="Ward"
+                                placeholder="Ward"
+                                size="small"
+                                onChange={e => { setData({ ...data, ward: e.target.value }) }}
+                            />
+                            
+                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createFacility() }}>Create Facility</Button>
                             <br />
                         </Stack>
                     </Box>

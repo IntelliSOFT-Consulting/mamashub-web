@@ -122,7 +122,7 @@ router.post("/register", async (req: Request, res: Response) => {
             password = (Math.random()).toString()
         }
         let roles: string[];
-        roles = ["ADMINISTRATOR", "NURSE", "CLINICIAN", "CHW"]
+        roles = ["ADMINISTRATOR", "NURSE", "CLINICIAN", "CHW", "FACILITY_ADMINISTRATOR"]
         if (role && (roles.indexOf(role) < 0)) {
             res.json({ status: "error", message: `Invalid role name *${role}* provided` });
             return

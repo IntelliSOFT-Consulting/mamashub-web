@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration, MedicationRounded, Vaccines, PestControlRounded, AccessTimeRounded, Bloodtype, MedicationLiquidRounded }
+import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, AppRegistration, MedicationRounded, Vaccines, PestControlRounded, AccessTimeRounded, Bloodtype, MedicationLiquidRounded, Domain }
   from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -297,6 +297,12 @@ export default function HeaderDrawer({ children }) {
                 <People sx={{ color: isActiveTab("users") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='Users' primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
+            <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+              <ListItemIcon>
+                <Domain sx={{ color: isActiveTab("facilities") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary='Facilities' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
             <ListItem button onClick={e => { activateTab("account"); navigate('/account') }} sx={{ backgroundColor: isActiveTab("account") ? "white" : '#632165', color: isActiveTab("account") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
