@@ -27,7 +27,10 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
                     id: userId
                 }
             })
-            let responseData = { id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role }
+            let responseData = {
+                id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role,
+                kmhflCode: user?.facilityKmhflCode
+            }
             res.statusCode = 200
             res.json({ data: responseData, status: "success" })
             return
@@ -112,14 +115,14 @@ router.post("/login", async (req: Request, res: Response) => {
 // Register User
 router.post("/register", async (req: Request, res: Response) => {
     try {
-        let { email, names, role, password } = req.body;
+        let { email, names, role, password, kmhflCode } = req.body;
         if (!validateEmail(email)) {
             res.statusCode = 400
             res.json({ status: "error", message: "invalid email value provided" })
             return
         }
         if (!password) {
-            password = (Math.random()).toString()
+            password = (Math.random()).toString();
         }
         let roles: string[];
         roles = ["ADMINISTRATOR", "NURSE", "CLINICIAN", "CHW", "FACILITY_ADMINISTRATOR"]
@@ -127,11 +130,19 @@ router.post("/register", async (req: Request, res: Response) => {
             res.json({ status: "error", message: `Invalid role name *${role}* provided` });
             return
         }
+        if (!role) {
+            res.json({ status: "error", message: `Role name is required provided` });
+            return
+        }
         let salt = await bcrypt.genSalt(10)
         let _password = await bcrypt.hash(password, salt)
         let user = await db.user.create({
             data: {
-                email, names, role: (role ? role : 'STAFF'), salt: salt, password: _password
+                email, names, role: (role ? role : 'STAFF'), salt: salt, password: _password, facility: {
+                    connect: {
+                        kmhflCode
+                    }
+                }
             }
         })
         let userId = user.id
