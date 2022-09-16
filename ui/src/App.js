@@ -37,6 +37,7 @@ function App() {
         <div>
             <Router>
                 <Routes>
+                    <Route path="/facilities" element={<Facilites/>} />
                     <Route path="/account" element={<Account />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/previous-pregnancy" element={<PreviousPregnancy />} />

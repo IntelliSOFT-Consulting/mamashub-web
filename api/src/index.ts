@@ -14,6 +14,8 @@ import Referrals from './routes/referrals'
 import CRUD from './routes/crud'
 import Reports from './routes/reports'
 import Client from './routes/client'
+import Admin from './routes/admin'
+
 
 
 
@@ -31,6 +33,7 @@ app.use('/patients', Patients)
 app.use('/fhir', FHIR)
 app.use('/referrals', Referrals)
 app.use('/crud', CRUD)
+app.use('/admin', Admin)
 app.use('/reports', Reports)
 app.use('/client', Client)
 

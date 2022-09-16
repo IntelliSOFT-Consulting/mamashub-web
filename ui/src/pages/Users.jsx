@@ -79,7 +79,7 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ username: data.username, email: data.email, "names": data.names, "role": data.role })
+                body: JSON.stringify({email: data.email, names: data.names, "role": data.role })
             })).json())
         if (response.status === "error") {
             setMessage(response.error || response.message)
@@ -186,14 +186,7 @@ export default function Users() {
                                 size="small"
                                 onChange={e => { setData({ ...data, email: e.target.value }) }}
                             />
-                            <TextField
-                                sx={{ width: "100%" }}
-                                type="text"
-                                label="Username"
-                                placeholder="Username"
-                                size="small"
-                                onChange={e => { setData({ ...data, username: e.target.value }) }}
-                            />
+                            
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Role</InputLabel>
                                 <Select
@@ -205,6 +198,7 @@ export default function Users() {
                                     size="small"
                                 >
                                     <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
+                                    <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem>
                                     <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
                                     <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
                                     <MenuItem value={"CHW"}>CHW</MenuItem>
