@@ -29,7 +29,7 @@ export default function Account() {
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/")
+            window.localStorage.setItem("next_page", "/account")
             return
         }
     }, [])
@@ -41,26 +41,34 @@ export default function Account() {
         {profile && <Card>
             <CardContent> 
             <Typography>User ID:</Typography>
-            <Typography variant='h5'>{profile.id}</Typography>
+            <Typography variant='h6'>{profile.id}</Typography>
             <Divider/>
             <Typography>Names:</Typography>
             <Typography variant='h5'>{profile.names}</Typography>
             <Divider/>
             
             <Typography>Email Address:</Typography>
-            <Typography variant='h5'>{profile.email}</Typography>
+            <Typography variant='h6'>{profile.email}</Typography>
             <Divider/>
 
             <Typography>Role:</Typography>
-            <Typography variant='h5'>{profile.role}</Typography>
+            <Typography variant='h6'>{profile.role}</Typography>
+            <Divider/>
+
+            <Typography>Assigned Facility:</Typography>
+            <Typography variant='h5'>{profile.facilityName || ""}</Typography>
+            <Divider/>
+        
+            <Typography>Facility Code:</Typography>
+            <Typography variant='h5'>{profile.kmhflCode || ""}</Typography>
             <Divider/>
 
             <Typography>Created At:</Typography>
-            <Typography variant='h5'>{new Date(profile.createdAt).toLocaleString()}</Typography>
+            <Typography variant='h6'>{new Date(profile.createdAt).toLocaleString()}</Typography>
             <Divider/>
 
             <Typography>Last Updated At:</Typography>
-            <Typography variant='h5'>{new Date(profile.updatedAt).toLocaleString()}</Typography>
+            <Typography variant='h6'>{new Date(profile.updatedAt).toLocaleString()}</Typography>
             <Divider/>
 
 

@@ -33,7 +33,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             if (user?.role !== "ADMINISTRATOR") {
                 let facility = await db.facility.findFirst({
                     where: {
-                        kmhflCode: user?.facilityKmhflCode || ""
+                        ...(user?.facilityKmhflCode) && { kmhflCode: user.facilityKmhflCode }
                     }
                 })
                 res.statusCode = 200

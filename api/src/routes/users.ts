@@ -13,16 +13,25 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         if (decodedSession.type == 'valid') {
             let role = decodedSession.session.role
+            let userId = decodedSession.session.userId
             if (!(role === 'ADMINISTRATOR' || role === "FACILITY_ADMINISTRATOR")) {
                 res.statusCode = 401
                 res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
                 return
             }
+            let user = await db.user.findUnique({
+                where:{
+                    id: userId
+                }
+            })
             let users = await db.user.findMany({
                 select: {
                     id: true, names: true, email: true,
                     createdAt: true, updatedAt: true,
-                    role: true
+                    role: true, facility: true
+                },
+                where:{
+                    ...(user?.facilityKmhflCode) && {facilityKmhflCode: user.facilityKmhflCode}
                 }
             })
             res.statusCode = 200
