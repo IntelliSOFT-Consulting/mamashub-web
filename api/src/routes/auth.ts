@@ -8,7 +8,6 @@ const router = express.Router()
 router.use(express.json())
 
 
-
 // Get User Information.
 router.get("/me", [requireJWT], async (req: Request, res: Response) => {
     try {
