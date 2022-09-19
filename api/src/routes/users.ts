@@ -28,7 +28,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
                 select: {
                     id: true, names: true, email: true,
                     createdAt: true, updatedAt: true,
-                    role: true
+                    role: true, facility: true
                 },
                 where:{
                     ...(user?.facilityKmhflCode) && {facilityKmhflCode: user.facilityKmhflCode}

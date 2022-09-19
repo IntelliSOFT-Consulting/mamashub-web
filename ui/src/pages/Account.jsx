@@ -29,7 +29,7 @@ export default function Account() {
             return
         } else {
             navigate('/login')
-            window.localStorage.setItem("next_page", "/")
+            window.localStorage.setItem("next_page", "/account")
             return
         }
     }, [])
