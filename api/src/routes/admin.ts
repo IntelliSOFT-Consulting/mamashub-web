@@ -8,7 +8,7 @@ router.use(express.json())
 
 
 
-// Add Facility....
+// Add Facility
 router.post('/facilities', [requireJWT], async (req: Request, res: Response) => {
     try {
         let data = req.body;
@@ -77,30 +77,6 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
 
 // Edit Facility Details...
 
-// Delete User
-router.delete("/:id", async (req: Request, res: Response) => {
-    try {
-        let { id } = req.params;
-        let user = await db.user.delete({
-            where: {
-                id: id
-            }
-        })
-        let responseData = user
-        res.statusCode = 201;
-        res.json({ user: responseData, status: "success" })
-        return
-    } catch (error: any) {
-        res.statusCode = 400
-        console.error(error);
-        if (error.code === 'P2002') {
-            res.json({ status: "error", error: `User with the ${error.meta.target} provided already exists` });
-            return
-        }
-        res.json(error);
-        return
-    }
-});
 
 
 

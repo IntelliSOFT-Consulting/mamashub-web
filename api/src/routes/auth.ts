@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, response, Response } from "express";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
@@ -13,7 +13,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || null;
         if (!token) {
-            res.statusCode = 401
+            res.statusCode = 401;
             res.json({ error: "Invalid access token", status: "error" });
             return
         }
@@ -29,6 +29,16 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             let responseData = {
                 id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role,
                 kmhflCode: user?.facilityKmhflCode
+            }
+            if (user?.role !== "ADMINISTRATOR") {
+                let facility = await db.facility.findFirst({
+                    where: {
+                        kmhflCode: user?.facilityKmhflCode || ""
+                    }
+                })
+                res.statusCode = 200
+                res.json({ data: { ...responseData, facilityName: facility?.name }, status: "success" })
+                return
             }
             res.statusCode = 200
             res.json({ data: responseData, status: "success" })
