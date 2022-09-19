@@ -25,6 +25,7 @@ export default function HeaderDrawer({ children }) {
 
   let title = "Mama's Hub"
   let navigate = useNavigate()
+  let [role, setRole] = useState(null)
   const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
   let pages = settings
   let [activeTab, setActiveTab] = useState("dashboard")
@@ -39,6 +40,16 @@ export default function HeaderDrawer({ children }) {
     setAnchorElUser(event.currentTarget);
   };
 
+  let getProfile = async () => {
+    let data = (await (await fetch("/auth/me",
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
+      })).json())
+    console.log(data)
+    setRole(data.data.role)
+  }
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -48,11 +59,13 @@ export default function HeaderDrawer({ children }) {
   };
 
   useEffect(() => {
-    if (getCookie("token")) {
+    let token = getCookie("token")
+    if (token) {
+      getProfile();
       return
     } else {
       navigate('/login')
-      window.localStorage.setItem("next_page", "/")
+      // window.localStorage.setItem("next_page", "/")
       return
     }
   }, [])
@@ -70,8 +83,6 @@ export default function HeaderDrawer({ children }) {
     setActiveTab(window.localStorage.getItem("activeTab"))
 
   }, [window.localStorage.getItem("activeTab")])
-
-
 
 
   return (
@@ -292,18 +303,18 @@ export default function HeaderDrawer({ children }) {
           </List>
           <Divider />
           <List>
-            <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") && <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <People sx={{ color: isActiveTab("users") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='Users' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
-            <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            </ListItem>}
+            {(role === "ADMINISTRATOR") && <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Domain sx={{ color: isActiveTab("facilities") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='Facilities' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+            </ListItem>}
             <ListItem button onClick={e => { activateTab("account"); navigate('/account') }} sx={{ backgroundColor: isActiveTab("account") ? "white" : '#632165', color: isActiveTab("account") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Settings sx={{ color: isActiveTab("account") ? "#632165" : 'white' }} />
