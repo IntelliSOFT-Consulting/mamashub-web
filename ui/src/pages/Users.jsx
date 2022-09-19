@@ -103,10 +103,14 @@ export default function Users() {
     }, [])
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 255 },
-        { field: 'names', headerName: 'Names', width: 150 },
+        // { field: 'id', headerName: 'ID', width: 100 },
+        { field: 'names', headerName: 'Names', width: 200 },
         { field: 'email', headerName: 'Email', width: 200 },
-        { field: 'role', headerName: 'Role', width: 150 }
+        { field: 'role', headerName: 'Role', width: 200 },
+        { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
+        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 },
+
+        
     ];
     const style = {
         position: 'absolute',
@@ -160,8 +164,6 @@ export default function Users() {
                     keepMounted
                     open={open}
                     onClose={handleClose}
-                    aria-labelledby="keep-mounted-modal-title"
-                    aria-describedby="keep-mounted-modal-description"
                 >
                     <Box sx={style}>
                         <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
@@ -190,8 +192,6 @@ export default function Users() {
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Role</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
                                     value={data.role}
                                     label="Role"
                                     onChange={e => { setData({ ...data, role: e.target.value }) }}
