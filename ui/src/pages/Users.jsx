@@ -21,6 +21,35 @@ export default function Users() {
     let navigate = useNavigate()
     let [openSnackBar, setOpenSnackBar] = useState(false)
     let [message, setMessage] = useState(false)
+    let [role, setRole] = useState(null)
+
+    function prompt(text) {
+        setMessage(text)
+        setOpen(true)
+        setTimeout(() => {
+            setOpen(false)
+        }, 4000)
+        return
+    }
+
+
+    let getProfile = async () => {
+        let _data = (await (await fetch("/auth/me",
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
+            })).json())
+        // console.log(data)
+        if (!(_data.data.role == "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
+            prompt("You are not authorized to access this page")
+            navigate('/')
+            return
+        }
+        setData({ ...data, kmhflCode: _data.data.kmhflCode ?? "" })
+        setRole(_data.data.role)
+        return
+    }
+
 
     // fetch users
     let getUsers = async () => {
@@ -79,21 +108,22 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({email: data.email, names: data.names, "role": data.role })
-            })).json())
+                body: JSON.stringify({ email: data.email, names: data.names, "role": data.role })
+            })).json());
         if (response.status === "error") {
-            setMessage(response.error || response.message)
-            setOpenSnackBar(true)
+            setMessage(response.error || response.message);
+            setOpenSnackBar(true);
             return
         }
-        getUsers()
-        setOpen(false)
+        getUsers();
+        setOpen(false);
         return
     }
 
     useEffect(() => {
         if (getCookie("token")) {
-            getUsers()
+            getProfile();
+            getUsers();
             return
         } else {
             navigate('/login')
@@ -110,7 +140,7 @@ export default function Users() {
         { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
         { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 },
 
-        
+
     ];
     const style = {
         position: 'absolute',
@@ -188,7 +218,7 @@ export default function Users() {
                                 size="small"
                                 onChange={e => { setData({ ...data, email: e.target.value }) }}
                             />
-                            
+
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Role</InputLabel>
                                 <Select
@@ -197,8 +227,8 @@ export default function Users() {
                                     onChange={e => { setData({ ...data, role: e.target.value }) }}
                                     size="small"
                                 >
-                                    <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
-                                    <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem>
+                                    {role === "ADMINISTRATOR" && <><MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
+                                        <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem></>}
                                     <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
                                     <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
                                     <MenuItem value={"CHW"}>CHW</MenuItem>

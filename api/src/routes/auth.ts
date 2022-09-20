@@ -147,11 +147,7 @@ router.post("/register", async (req: Request, res: Response) => {
         let _password = await bcrypt.hash(password, salt)
         let user = await db.user.create({
             data: {
-                email, names, role: (role ? role : 'STAFF'), salt: salt, password: _password, facility: {
-                    connect: {
-                        kmhflCode
-                    }
-                }
+                email, names, role: (role ? role : 'STAFF'), salt: salt, password: _password, facilityKmhflCode: kmhflCode
             }
         })
         let userId = user.id
@@ -171,7 +167,7 @@ router.post("/register", async (req: Request, res: Response) => {
         })
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
         let response = await sendWelcomeEmail(user, resetUrl)
-        console.log("Email API Response: ", response)
+        // console.log("Email API Response: ", response)
         let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role }
         res.statusCode = 201
         res.json({ user: responseData, status: "success", message: `Password reset instructions have been sent to your email, ${user?.email}` })
