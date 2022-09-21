@@ -20,7 +20,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
                 return
             }
             let user = await db.user.findUnique({
-                where:{
+                where: {
                     id: userId
                 }
             })
@@ -30,11 +30,14 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
                     createdAt: true, updatedAt: true,
                     role: true, facility: true, facilityKmhflCode: true
                 },
-                where:{
-                    ...(user?.facilityKmhflCode) && {facilityKmhflCode: user.facilityKmhflCode}
+                where: {
+                    ...(user?.facilityKmhflCode) && { facilityKmhflCode: user.facilityKmhflCode }
                 }
             })
-            res.statusCode = 200
+            res.statusCode = 200;
+            users = users.map((user) => {
+                return { ...user, facilityName: user.facility?.name || "" };
+            })
             res.json({ status: "success", users })
             return
         }

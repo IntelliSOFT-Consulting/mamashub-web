@@ -153,7 +153,7 @@ export default function Users() {
         { field: 'names', headerName: 'Names', width: 200 },
         { field: 'email', headerName: 'Email', width: 200 },
         { field: 'role', headerName: 'Role', width: 200 },
-        { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
+        { field: 'facilityName', headerName: 'Assigned Facility', width: 200},
         { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
     ];
 
