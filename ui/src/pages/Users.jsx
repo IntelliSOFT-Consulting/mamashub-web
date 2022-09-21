@@ -45,7 +45,7 @@ export default function Users() {
 
 
     let getProfile = async () => {
-        let _data = (await (await fetch("/auth/me",
+        let _data = (await (await fetch(`${apiHost}/auth/me`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
