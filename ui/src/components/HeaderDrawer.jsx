@@ -202,7 +202,7 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
-            <ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(!(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR"))  && <><ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <LibraryBooks sx={{ color: isActiveTab("antenatal-profile") ? "#632165" : 'white' }} />
               </ListItemIcon>
@@ -291,7 +291,7 @@ export default function HeaderDrawer({ children }) {
                 <CancelPresentationRounded sx={{ color: isActiveTab("counselling") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary="Counselling" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+            </ListItem></>}
             <Divider />
 
             <ListItem button onClick={e => { activateTab("moh-reports"); navigate('/moh-reports') }} sx={{ backgroundColor: isActiveTab("moh-reports") ? "white" : '#632165', color: isActiveTab("moh-reports") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
