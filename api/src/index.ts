@@ -15,6 +15,7 @@ import CRUD from './routes/crud'
 import Reports from './routes/reports'
 import Client from './routes/client'
 import Admin from './routes/admin'
+import Statistics from './routes/statistics';
 
 
 
@@ -36,6 +37,7 @@ app.use('/crud', CRUD)
 app.use('/admin', Admin)
 app.use('/reports', Reports)
 app.use('/client', Client)
+app.use('/statistics', Statistics)
 
 
 

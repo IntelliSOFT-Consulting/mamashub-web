@@ -168,12 +168,12 @@ export default function HeaderDrawer({ children }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#632165', }} >
           <List >
-            <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") && <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+            </ListItem>}
             <Divider />
             <ListItem button onClick={e => { navigate('/moh-100'); activateTab("moh-100") }} sx={{ backgroundColor: isActiveTab("moh-100") ? "white" : '#632165', color: isActiveTab("moh-100") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }} >
               <ListItemIcon>

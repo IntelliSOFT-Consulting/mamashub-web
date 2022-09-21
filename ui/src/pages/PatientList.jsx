@@ -11,25 +11,24 @@ import { startVisit } from '../lib/startVisit';
 
 export default function PatientList() {
     let [patients, setPatients] = useState([])
-    let navigate = useNavigate()
-    let [open, setOpen] = useState(false)
-    let [message, setMessage] = useState(false)
-    let [loading, setLoading] = useState(false)
-    let [selected, setSelected] = useState([])
-    let [name, setName] = useState('')
+    let navigate = useNavigate();
+    let [open, setOpen] = useState(false);
+    let [message, setMessage] = useState(false);
+    let [loading, setLoading] = useState(false);
+    let [selected, setSelected] = useState([]);
+    let [name, setName] = useState('');
 
     let startPatientVisit = async () => {
         if (selected.length === 1) {
-            await startVisit(selected[0])
-
-            navigate("/antenatal-profile")
+            await startVisit(selected[0]);
+            navigate("/antenatal-profile");
         }
         return
     }
 
     let viewPatient = async () => {
         if (selected.length === 1) {
-            navigate(`/patients/${selected[0]}`)
+            navigate(`/patients/${selected[0]}`);
         }
         return
     }
@@ -37,8 +36,8 @@ export default function PatientList() {
     let deletePatients = async () => {
         if (selected.length > 0) {
             for (let i of selected) {
-                let data = await FhirApi({ url: `/fhir/Patient/${i}?_cascade=delete`, method: 'DELETE' })
-                console.log(data)
+                let data = await FhirApi({ url: `/fhir/Patient/${i}?_cascade=delete`, method: 'DELETE' });
+                console.log(data);
             }
         }
         getPatients()
@@ -105,8 +104,8 @@ export default function PatientList() {
 
     const columns = [
         { field: 'id', headerName: 'Patient ID', width: 150, editable: true },
-        { field: 'lastName', headerName: 'Last Name', width: 250, editable: true },
-        { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
+        { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
+        // { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
         { field: 'age', headerName: 'Age', width: 150 },
     ];
 
@@ -147,7 +146,8 @@ export default function PatientList() {
                 </Stack>
                 <br />
                 <Container maxWidth="lg">
-                    {(selectionModel.length < 1) && <Alert severity="error">Select a patient from the list to view or delete.</Alert>}
+                    {(selectionModel.length < 1) && <Alert severity="error">Select a patient from the list to Start visit, View Profile Information etc.</Alert>}
+                    <p></p>
                     <DataGrid
                         loading={loading}
                         rows={patients ? patients : []}
