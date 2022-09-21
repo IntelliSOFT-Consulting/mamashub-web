@@ -13,7 +13,7 @@ export default function Users() {
 
     let [users, setUsers] = useState(null)
     let [open, setOpen] = useState(false);
-    let [data, setData] = useState({ role: 'STAFF' })
+    let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     let [selected, setSelected] = useState([])
@@ -21,13 +21,45 @@ export default function Users() {
     let navigate = useNavigate()
     let [openSnackBar, setOpenSnackBar] = useState(false)
     let [message, setMessage] = useState(false)
+    let [role, setRole] = useState(null)
+    let [kmhflCode, setKmhflCode] = useState(null)
+
+
+    function prompt(text) {
+        setMessage(text)
+        setOpenSnackBar(true)
+        setTimeout(() => {
+            setOpenSnackBar(false)
+        }, 4000)
+        return
+    }
+
+
+    let getProfile = async () => {
+        let _data = (await (await fetch("/auth/me",
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
+            })).json())
+        console.log(_data)
+        if (!(_data.data.role == "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
+            prompt("You are not authorized to access this page")
+            navigate('/')
+            return
+        }
+        setKmhflCode(_data.data.kmhflCode)
+        // console.log(data)
+        setRole(_data.data.role)
+        return
+    }
+
 
     // fetch users
     let getUsers = async () => {
         let data = (await (await fetch(`${apiHost}/users`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setUsers(data.users)
-        return
+        setUsers(data.users);
+        return;
     }
 
     // delete users
@@ -79,21 +111,23 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({email: data.email, names: data.names, "role": data.role })
-            })).json())
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode })
+            })).json());
         if (response.status === "error") {
-            setMessage(response.error || response.message)
-            setOpenSnackBar(true)
+            setMessage(response.error || response.message);
+            setOpenSnackBar(true);
             return
         }
-        getUsers()
-        setOpen(false)
+        prompt(`Successfully created user`)
+        getUsers();
+        setOpen(false);
         return
     }
 
     useEffect(() => {
         if (getCookie("token")) {
-            getUsers()
+            getProfile();
+            getUsers();
             return
         } else {
             navigate('/login')
@@ -108,10 +142,9 @@ export default function Users() {
         { field: 'email', headerName: 'Email', width: 200 },
         { field: 'role', headerName: 'Role', width: 200 },
         { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
-        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 },
-
-        
+        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
     ];
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -188,17 +221,17 @@ export default function Users() {
                                 size="small"
                                 onChange={e => { setData({ ...data, email: e.target.value }) }}
                             />
-                            
+
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                                <InputLabel>Role</InputLabel>
                                 <Select
                                     value={data.role}
                                     label="Role"
                                     onChange={e => { setData({ ...data, role: e.target.value }) }}
                                     size="small"
                                 >
-                                    <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
-                                    <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem>
+                                    {role === "ADMINISTRATOR" && <><MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
+                                        <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem></>}
                                     <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
                                     <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
                                     <MenuItem value={"CHW"}>CHW</MenuItem>

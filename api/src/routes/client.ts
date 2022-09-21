@@ -1,3 +1,5 @@
+// This file contains code used to link the Provider Facing Application with Mama's Hub Client App
+
 import express, { Request, Response } from "express";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'

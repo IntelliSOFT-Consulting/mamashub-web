@@ -55,7 +55,7 @@ router.get("/:id", [requireJWT], async (req: Request, res: Response) => {
         if (decodedSession.type == 'valid') {
             let role = decodedSession.session.role
             let userId = decodedSession.session.userId
-            if (role !== 'ADMINISTRATOR' || id !== userId) {
+            if (!(role === 'ADMINISTRATOR' || role === "FACILITY_ADMINISTRATOR")) {
                 res.statusCode = 401
                 res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
                 return
