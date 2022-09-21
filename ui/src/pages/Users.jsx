@@ -11,35 +11,35 @@ import { apiHost } from '../lib/api'
 
 export default function Users() {
 
-    let [users, setUsers] = useState(null)
-    let [facilities, setFacilities] = useState([])
+    let [users, setUsers] = useState(null);
+    let [facilities, setFacilities] = useState([]);
     let [open, setOpen] = useState(false);
-    let [data, setData] = useState({})
+    let [data, setData] = useState({});
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    let [selected, setSelected] = useState([])
+    let [selected, setSelected] = useState([]);
     let isMobile = useMediaQuery('(max-width:600px)');
-    let navigate = useNavigate()
-    let [openSnackBar, setOpenSnackBar] = useState(false)
-    let [message, setMessage] = useState(false)
-    let [role, setRole] = useState(null)
-    let [kmhflCode, setKmhflCode] = useState(null)
+    let navigate = useNavigate();
+    let [openSnackBar, setOpenSnackBar] = useState(false);
+    let [message, setMessage] = useState(false);
+    let [role, setRole] = useState(null);
+    let [kmhflCode, setKmhflCode] = useState(null);
 
 
     function prompt(text) {
-        setMessage(text)
+        setMessage(text);
         setOpenSnackBar(true)
         setTimeout(() => {
-            setOpenSnackBar(false)
-        }, 4000)
-        return
+            setOpenSnackBar(false);
+        }, 4000);
+        return;
     }
 
     // fetch users
     let getFacilities = async () => {
         let data = (await (await fetch(`${apiHost}/admin/facilities`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setFacilities(data.facilities)
+        setFacilities(data.facilities);
         return
     }
 
@@ -49,16 +49,15 @@ export default function Users() {
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
-            })).json())
-        console.log(_data)
+            })).json());
+        console.log(_data);
         if (!(_data.data.role === "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
-            prompt("You are not authorized to access this page")
-            navigate('/')
+            prompt("You are not authorized to access this page");
+            navigate('/');
             return
         }
-        setKmhflCode(_data.data.kmhflCode)
-        // console.log(data)
-        setRole(_data.data.role)
+        setKmhflCode(_data.data.kmhflCode);
+        setRole(_data.data.role);
         if (_data.data.role === "ADMINISTRATOR") {
             getFacilities();
         }
@@ -87,8 +86,8 @@ export default function Users() {
                 setOpenSnackBar(true)
                 return
             }
-            getUsers()
-            setOpen(false)
+            getUsers();
+            setOpen(false);
         }
         return
     }
@@ -249,7 +248,6 @@ export default function Users() {
                                     <MenuItem value={"CHW"}>CHW</MenuItem>
                                 </Select>
                             </FormControl>
-
 
                             {(role && role === "ADMINISTRATOR") && <FormControl fullWidth>
                                 <InputLabel>Facility</InputLabel>
