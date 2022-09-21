@@ -11,7 +11,7 @@ import { apiHost } from '../lib/api'
 
 export default function Users() {
 
-    let [facilities, setFacilities] = useState(null)
+    let [facilities, setFacilities] = useState([])
     let [open, setOpen] = useState(false);
     let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
@@ -31,7 +31,7 @@ export default function Users() {
     }
 
     // delete users
-    let deleteUsers = async () => {
+    let deleteFacilities = async () => {
         for (let i of selected) {
             setOpenSnackBar(false)
             let response = (await (await fetch(`${apiHost}/admin/facilities/${i}`,
@@ -45,30 +45,6 @@ export default function Users() {
             }
             getFacilities()
             setOpen(false)
-        }
-        return
-    }
-
-    // reset Password
-    let resetPassword = async () => {
-        for (let i of selected) {
-            setOpenSnackBar(false)
-            let response = (await (await fetch(`${apiHost}/auth/reset-password`,
-                {
-                    method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                    body: JSON.stringify({ id: i })
-                })).json())
-            if (response.status === "error") {
-                setMessage(response.error || response.message)
-                setOpenSnackBar(true)
-                return
-            }
-            getFacilities()
-            setMessage(response.error || response.message)
-            setOpenSnackBar(true)
-            setTimeout(() => {
-                setOpenSnackBar(false)
-            }, 3000);
         }
         return
     }
@@ -104,9 +80,9 @@ export default function Users() {
 
     const columns = [
         { field: 'kmhflCode', headerName: 'KMHFL Code', width: 200 },
-        { field: 'name', headerName: 'Facility Name', width: 200 },
-        { field: 'user', headerName: 'County', width: 200 },
-        { field: 'user', headerName: 'Sub-County', width: 200 },
+        { field: 'name', headerName: 'Facility Name', width: 250 },
+        { field: 'data', headerName: 'County', width: 200, valueFormatter: ({ value }) => value.county },
+        // { field: 'data', headerName: 'Sub-County', width: 200, valueFormatter: ({ value }) => value.subCounty },
     ];
     const style = {
         position: 'absolute',
@@ -134,7 +110,7 @@ export default function Users() {
                     {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '65%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteUsers() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Facility{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Facility{(selected.length > 1) && `s`}</Button>
                         </>
                     }
                     

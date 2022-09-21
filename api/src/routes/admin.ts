@@ -12,8 +12,8 @@ router.use(express.json())
 router.post('/facilities', [requireJWT], async (req: Request, res: Response) => {
     try {
         let data = req.body;
-        console.log(data)
-        let fields = ['kmhflCode', 'name', 'county']
+        console.log(data);
+        let fields = ['kmhflCode', 'name', 'county'];
         for (let f of fields) {
             if (Object.keys(data).indexOf(f) < 0) {
                 res.statusCode = 400;
@@ -29,7 +29,7 @@ router.post('/facilities', [requireJWT], async (req: Request, res: Response) => 
                     county: data.county, subCounty: data.subCounty, ward: data.ward ?? "", street: data.street ?? ""
                 }
             }
-        })
+        });
         res.statusCode = 200;
         res.json({ message: "Facility created successfully", status: "success", id: facility.kmhflCode });
         return
@@ -40,19 +40,17 @@ router.post('/facilities', [requireJWT], async (req: Request, res: Response) => 
         res.json({ error, status: "error" });
         return
     }
-
-    return
 })
 
 // Get User Information.
 router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || '';
-        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1]);
         if (decodedSession.type == 'valid') {
             let role = decodedSession.session.role
             if (role !== 'ADMINISTRATOR') {
-                res.statusCode = 401
+                res.statusCode = 401;
                 res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
                 return
             }
@@ -61,17 +59,16 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
                     kmhflCode:true, name: true, data: true,
                     createdAt: true, updatedAt: true
                 },
-                
-            })
-            res.statusCode = 200
-            res.json({ status: "success", facilities })
-            return
+            });
+            res.statusCode = 200;
+            res.json({ status: "success", facilities });
+            return;
         }
     } catch (error) {
-        console.error(error)
-        res.statusCode = 400
-        res.json(error)
-        return
+        console.error(error);
+        res.statusCode = 400;
+        res.json(error);
+        return;
     }
 });
 

@@ -12,6 +12,7 @@ import { apiHost } from '../lib/api'
 export default function Users() {
 
     let [users, setUsers] = useState(null)
+    let [facilities, setFacilities] = useState([])
     let [open, setOpen] = useState(false);
     let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
@@ -34,6 +35,14 @@ export default function Users() {
         return
     }
 
+    // fetch users
+    let getFacilities = async () => {
+        let data = (await (await fetch(`${apiHost}/admin/facilities`,
+            { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
+        setFacilities(data.facilities)
+        return
+    }
+
 
     let getProfile = async () => {
         let _data = (await (await fetch("/auth/me",
@@ -42,7 +51,7 @@ export default function Users() {
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
             })).json())
         console.log(_data)
-        if (!(_data.data.role == "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
+        if (!(_data.data.role === "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
             prompt("You are not authorized to access this page")
             navigate('/')
             return
@@ -50,6 +59,9 @@ export default function Users() {
         setKmhflCode(_data.data.kmhflCode)
         // console.log(data)
         setRole(_data.data.role)
+        if (_data.data.role === "ADMINISTRATOR") {
+            getFacilities();
+        }
         return
     }
 
@@ -111,7 +123,7 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode })
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode })
             })).json());
         if (response.status === "error") {
             setMessage(response.error || response.message);
@@ -144,7 +156,7 @@ export default function Users() {
         { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
         { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
     ];
-    
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -230,13 +242,28 @@ export default function Users() {
                                     onChange={e => { setData({ ...data, role: e.target.value }) }}
                                     size="small"
                                 >
-                                    {role === "ADMINISTRATOR" && <><MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>
-                                        <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem></>}
+                                    {role === "ADMINISTRATOR" && <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>}
+                                    {role === "ADMINISTRATOR" && <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem>}
                                     <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
                                     <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
                                     <MenuItem value={"CHW"}>CHW</MenuItem>
                                 </Select>
                             </FormControl>
+
+
+                            {(role && role === "ADMINISTRATOR") && <FormControl fullWidth>
+                                <InputLabel>Facility</InputLabel>
+                                <Select
+                                    value={data.role}
+                                    label="Facility"
+                                    onChange={e => { setData({ ...data, kmhflCode: e.target.value }) }}
+                                    size="small"
+                                >
+                                    {facilities.map((facility) => {
+                                        return <MenuItem value={facility.kmhflCode}>{facility.name}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>}
                             <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createUser() }}>Create User</Button>
                             <br />
                         </Stack>
