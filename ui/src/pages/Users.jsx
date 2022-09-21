@@ -13,7 +13,7 @@ export default function Users() {
 
     let [users, setUsers] = useState(null)
     let [open, setOpen] = useState(false);
-    let [data, setData] = useState({ role: 'STAFF' })
+    let [data, setData] = useState({})
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     let [selected, setSelected] = useState([])
@@ -22,12 +22,14 @@ export default function Users() {
     let [openSnackBar, setOpenSnackBar] = useState(false)
     let [message, setMessage] = useState(false)
     let [role, setRole] = useState(null)
+    let [kmhflCode, setKmhflCode] = useState(null)
+
 
     function prompt(text) {
         setMessage(text)
-        setOpen(true)
+        setOpenSnackBar(true)
         setTimeout(() => {
-            setOpen(false)
+            setOpenSnackBar(false)
         }, 4000)
         return
     }
@@ -39,13 +41,14 @@ export default function Users() {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
             })).json())
-        // console.log(data)
+        console.log(_data)
         if (!(_data.data.role == "ADMINISTRATOR" || _data.data.role === "FACILITY_ADMINISTRATOR")) {
             prompt("You are not authorized to access this page")
             navigate('/')
             return
         }
-        setData({ ...data, kmhflCode: _data.data.kmhflCode ?? "" })
+        setKmhflCode(_data.data.kmhflCode)
+        // console.log(data)
         setRole(_data.data.role)
         return
     }
@@ -55,8 +58,8 @@ export default function Users() {
     let getUsers = async () => {
         let data = (await (await fetch(`${apiHost}/users`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setUsers(data.users)
-        return
+        setUsers(data.users);
+        return;
     }
 
     // delete users
@@ -108,13 +111,14 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ email: data.email, names: data.names, "role": data.role })
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode })
             })).json());
         if (response.status === "error") {
             setMessage(response.error || response.message);
             setOpenSnackBar(true);
             return
         }
+        prompt(`Successfully created user`)
         getUsers();
         setOpen(false);
         return
@@ -138,10 +142,9 @@ export default function Users() {
         { field: 'email', headerName: 'Email', width: 200 },
         { field: 'role', headerName: 'Role', width: 200 },
         { field: 'facility', headerName: 'Assigned Facility', width: 200, valueFormatter: ({ value }) => value.name },
-        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 },
-
-
+        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
     ];
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -220,7 +223,7 @@ export default function Users() {
                             />
 
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                                <InputLabel>Role</InputLabel>
                                 <Select
                                     value={data.role}
                                     label="Role"

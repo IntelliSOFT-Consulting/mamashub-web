@@ -130,6 +130,11 @@ router.post("/register", async (req: Request, res: Response) => {
             res.json({ status: "error", message: "invalid email value provided" })
             return
         }
+        if (!(role)) {
+            res.statusCode = 400
+            res.json({ status: "error", message: "invalid role provided" })
+            return
+        }
         if (!password) {
             password = (Math.random()).toString();
         }
@@ -147,9 +152,11 @@ router.post("/register", async (req: Request, res: Response) => {
         let _password = await bcrypt.hash(password, salt)
         let user = await db.user.create({
             data: {
-                email, names, role: (role ? role : 'STAFF'), salt: salt, password: _password, facilityKmhflCode: kmhflCode
+                email, names, role: (role), salt: salt, password: _password, facilityKmhflCode: kmhflCode || null,
+                
             }
         })
+        console.log(user)
         let userId = user.id
         let session = encodeSession(process.env['SECRET_KEY'] as string, {
             createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
