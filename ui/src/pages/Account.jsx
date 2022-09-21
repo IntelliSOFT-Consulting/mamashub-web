@@ -14,7 +14,7 @@ export default function Account() {
     let navigate = useNavigate()
     let [profile, setProfile] = useState(null)
     let getProfile = async () => {
-        let data = (await (await fetch("/auth/me",
+        let data = (await (await fetch(`${apiHost}/auth/me`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization":`Bearer ${getCookie("token")}` }
