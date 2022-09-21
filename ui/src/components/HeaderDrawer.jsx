@@ -304,7 +304,14 @@ export default function HeaderDrawer({ children }) {
               <ListItemIcon>
                 <PivotTableChart sx={{ color: isActiveTab("moh-reports") ? "#632165" : 'white' }} />
               </ListItemIcon>
-              <ListItemText primary='MOH Reports' primaryTypographyProps={{ fontSize: "13px" }} />
+              <ListItemText primary='MOH 405 Register' primaryTypographyProps={{ fontSize: "13px" }} />
+            </ListItem>
+            <Divider/>
+            <ListItem button onClick={e => { activateTab("moh-711"); navigate('/moh-711') }} sx={{ backgroundColor: isActiveTab("moh-711") ? "white" : '#632165', color: isActiveTab("moh-711") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+              <ListItemIcon>
+                <PivotTableChart sx={{ color: isActiveTab("moh-711") ? "#632165" : 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary='MOH 711 Report' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
           </List>
           <Divider />

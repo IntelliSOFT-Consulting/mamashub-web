@@ -40,7 +40,8 @@ export default function PatientList() {
                 console.log(data);
             }
         }
-        getPatients()
+        getPatients();
+        return;
     }
 
     let search = async (name) => {
