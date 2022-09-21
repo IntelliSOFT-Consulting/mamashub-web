@@ -31,6 +31,7 @@ import Counselling from './pages/Counselling'
 import PMTCTInterventions from './pages/PMTCTInterventions'
 import MedicalAndSurgicalHistory from './pages/MedicalAndSurgicalHistory'
 import Facilites from './pages/Facilities'
+import MOH711 from './pages/MOH711'
 
 function App() {
     return (
@@ -58,6 +59,7 @@ function App() {
                     <Route path="/community-referrals" element={<CommunityReferrals />} />
                     <Route path="/counselling-treatment" element={<Treatment />} />
                     <Route path="/moh-100" element={<MOH100 />} />
+                    <Route path="/moh-711" element={<MOH711 />} />
                     <Route path="/birth-plan" element={<BirthPlan />} />
                     <Route path="/moh-reports" element={<Reports />} />
                     <Route path="/observations" element={<Observations />} />
