@@ -1,7 +1,7 @@
 import express, { NextFunction, Response, Request } from "express";
 import { FhirApi } from "../lib/fhir/utils";
 import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
-import { generateGeneralReport } from "../lib/reports";
+import { generateGeneralReport, generateMOH711Report } from "../lib/reports";
 
 
 const router = express.Router()
@@ -36,9 +36,32 @@ router.get('/general', async (req: Request, res: Response) => {
         res.json({ error, status: "error" })
         return
     }
-
-
 })
+
+router.get('/moh-711', async (req: Request, res: Response) => {
+
+    try {
+        res.statusCode = 200
+        let report = []
+        let patientIds: any = []
+        let patients = await (await FhirApi({ url: '/Patient?_count=99999' })).data
+        patients = patients?.entry || []
+        patients.map((patient: any) => {
+            patientIds.push(patient.resource.id)
+        })
+        for (let id of patientIds) {
+            report.push(await generateMOH711Report(id))
+        }
+        res.json({ report, status: "success" })
+        return
+    } catch (error) {
+        console.error(error)
+        res.statusCode = 400
+        res.json({ error, status: "error" })
+        return
+    }
+})
+
 
 
 
