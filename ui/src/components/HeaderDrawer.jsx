@@ -14,7 +14,7 @@ import { CancelPresentationRounded, BiotechRounded, LibraryBooks, CheckRounded, 
   from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCookie } from '../lib/cookie';
+import { getCookie, setCookie } from '../lib/cookie';
 import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
 import { PivotTableChart, Dashboard, ListAlt, People, Settings, ScheduleSend, DocumentScanner } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
@@ -26,7 +26,7 @@ export default function HeaderDrawer({ children }) {
 
   let title = "Mama's Hub"
   let navigate = useNavigate()
-  let [role, setRole] = useState(null)
+  let [role, setRole] = useState(getCookie("role"))
   const settings = [{ 'My Account': '/account' }, { 'Logout': "/logout" },];
   let pages = settings
   let [activeTab, setActiveTab] = useState("dashboard")
@@ -49,6 +49,7 @@ export default function HeaderDrawer({ children }) {
       })).json())
     console.log(data)
     setRole(data.data.role)
+    setCookie("role", data.data.role, (1 / 60))
   }
 
   const handleCloseNavMenu = () => {
@@ -162,137 +163,141 @@ export default function HeaderDrawer({ children }) {
         variant="permanent"
         sx={{
           width: drawerWidth,
+          backgroundColor: '#632165',
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto', backgroundColor: '#632165', }} >
+        <Box sx={{ overflow: 'auto', backgroundColor: '#632165', minHeight: "630px", maxHeight: "630px" }} >
           <List >
-            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) && <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>}
-            <Divider />
-            <ListItem button onClick={e => { navigate('/moh-100'); activateTab("moh-100") }} sx={{ backgroundColor: isActiveTab("moh-100") ? "white" : '#632165', color: isActiveTab("moh-100") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }} >
+            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) &&
+              <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+            }
+            {(role && (role === "CHW")) && <>
+              {/* <ListItem button onClick={e => { navigate('/moh-100'); activateTab("moh-100") }} sx={{ backgroundColor: isActiveTab("moh-100") ? "white" : '#632165', color: isActiveTab("moh-100") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }} >
               <ListItemIcon>
                 <DocumentScanner sx={{ color: isActiveTab("moh-100") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='CHW Referral Form' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
-            <ListItem button onClick={e => { navigate('/community-referrals'); activateTab("community-referrals") }} sx={{ backgroundColor: isActiveTab("community-referrals") ? "white" : '#632165', color: isActiveTab("community-referrals") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <ScheduleSend sx={{ color: isActiveTab("community-referrals") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Community Referrals' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+            </ListItem> */}
+              <ListItem button onClick={e => { navigate('/community-referrals'); activateTab("community-referrals") }} sx={{ backgroundColor: isActiveTab("community-referrals") ? "white" : '#632165', color: isActiveTab("community-referrals") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <ScheduleSend sx={{ color: isActiveTab("community-referrals") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Community Referrals' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem></>}
           </List>
-          <Divider />
           <List>
-            <ListItem button onClick={e => { activateTab("patient-registration"); navigate('/patient-registration') }} sx={{ backgroundColor: isActiveTab("patient-registration") ? "white" : '#632165', color: isActiveTab("patient-registration") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <AppRegistration sx={{ color: isActiveTab("patient-registration") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Patient Registration' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
-            <ListItem button onClick={e => { activateTab("patients"); navigate('/patients') }} sx={{ backgroundColor: isActiveTab("patients") ? "white" : '#632165', color: isActiveTab("patients") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <ListAlt sx={{ color: isActiveTab("patients") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
-            {(role && !(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR"))  && <><ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <LibraryBooks sx={{ color: isActiveTab("antenatal-profile") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Antenatal Profile" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
 
-            <ListItem button onClick={e => { activateTab("medical-surgical-history"); navigate('/medical-surgical-history') }} sx={{ backgroundColor: isActiveTab("medical-surgical-history") ? "white" : '#632165', color: isActiveTab("medical-surgical-history") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <BiotechRounded sx={{ color: isActiveTab("medical-surgical-history") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Medical & Surgical History" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+            {(role && !(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR" || role === "CHW")) && <>
+              <ListItem button onClick={e => { activateTab("patient-registration"); navigate('/patient-registration') }} sx={{ backgroundColor: isActiveTab("patient-registration") ? "white" : '#632165', color: isActiveTab("patient-registration") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <AppRegistration sx={{ color: isActiveTab("patient-registration") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Patient Registration' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+              <ListItem button onClick={e => { activateTab("patients"); navigate('/patients') }} sx={{ backgroundColor: isActiveTab("patients") ? "white" : '#632165', color: isActiveTab("patients") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <ListAlt sx={{ color: isActiveTab("patients") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+              <ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <LibraryBooks sx={{ color: isActiveTab("antenatal-profile") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Antenatal Profile" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("physical-exam"); navigate('/physical-exam') }} sx={{ backgroundColor: isActiveTab("physical-exam") ? "white" : '#632165', color: isActiveTab("physical-exam") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <BiotechRounded sx={{ color: isActiveTab("physical-exam") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Physical Examination" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("medical-surgical-history"); navigate('/medical-surgical-history') }} sx={{ backgroundColor: isActiveTab("medical-surgical-history") ? "white" : '#632165', color: isActiveTab("medical-surgical-history") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <BiotechRounded sx={{ color: isActiveTab("medical-surgical-history") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Medical & Surgical History" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("birth-plan"); navigate('/birth-plan') }} sx={{ backgroundColor: isActiveTab("birth-plan") ? "white" : '#632165', color: isActiveTab("birth-plan") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <MedicationRounded sx={{ color: isActiveTab("birth-plan") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Birth Plan" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("physical-exam"); navigate('/physical-exam') }} sx={{ backgroundColor: isActiveTab("physical-exam") ? "white" : '#632165', color: isActiveTab("physical-exam") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <BiotechRounded sx={{ color: isActiveTab("physical-exam") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Physical Examination" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("previous-pregnancy"); navigate('/previous-pregnancy') }} sx={{ backgroundColor: isActiveTab("previous-pregnancy") ? "white" : '#632165', color: isActiveTab("previous-pregnancy") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <CancelPresentationRounded sx={{ color: isActiveTab("previous-pregnancy") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Previous Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("birth-plan"); navigate('/birth-plan') }} sx={{ backgroundColor: isActiveTab("birth-plan") ? "white" : '#632165', color: isActiveTab("birth-plan") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <MedicationRounded sx={{ color: isActiveTab("birth-plan") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Birth Plan" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("present-pregnancy"); navigate('/present-pregnancy') }} sx={{ backgroundColor: isActiveTab("present-pregnancy") ? "white" : '#632165', color: isActiveTab("present-pregnancy") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <AccessTimeRounded sx={{ color: isActiveTab("present-pregnancy") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Present Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("previous-pregnancy"); navigate('/previous-pregnancy') }} sx={{ backgroundColor: isActiveTab("previous-pregnancy") ? "white" : '#632165', color: isActiveTab("previous-pregnancy") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <CancelPresentationRounded sx={{ color: isActiveTab("previous-pregnancy") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Previous Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("tetanus-diptheria"); navigate('/tetanus-diptheria') }} sx={{ backgroundColor: isActiveTab("tetanus-diptheria") ? "white" : '#632165', color: isActiveTab("tetanus-diptheria") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <Vaccines sx={{ color: isActiveTab("tetanus-diptheria") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Tetanus & Diptheria" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("present-pregnancy"); navigate('/present-pregnancy') }} sx={{ backgroundColor: isActiveTab("present-pregnancy") ? "white" : '#632165', color: isActiveTab("present-pregnancy") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <AccessTimeRounded sx={{ color: isActiveTab("present-pregnancy") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Present Pregnancy" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("malaria-prophylaxis"); navigate('/malaria-prophylaxis') }} sx={{ backgroundColor: isActiveTab("malaria-prophylaxis") ? "white" : '#632165', color: isActiveTab("malaria-prophylaxis") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <PestControlRounded sx={{ color: isActiveTab("malaria-prophylaxis") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Malaria Prophylaxis" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("tetanus-diptheria"); navigate('/tetanus-diptheria') }} sx={{ backgroundColor: isActiveTab("tetanus-diptheria") ? "white" : '#632165', color: isActiveTab("tetanus-diptheria") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <Vaccines sx={{ color: isActiveTab("tetanus-diptheria") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Tetanus & Diptheria" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("maternal-serology"); navigate('/maternal-serology') }} sx={{ backgroundColor: isActiveTab("maternal-serology") ? "white" : '#632165', color: isActiveTab("maternal-serology") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <Bloodtype sx={{ color: isActiveTab("maternal-serology") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Maternal Serology" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("malaria-prophylaxis"); navigate('/malaria-prophylaxis') }} sx={{ backgroundColor: isActiveTab("malaria-prophylaxis") ? "white" : '#632165', color: isActiveTab("malaria-prophylaxis") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <PestControlRounded sx={{ color: isActiveTab("malaria-prophylaxis") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Malaria Prophylaxis" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("deworming"); navigate('/deworming') }} sx={{ backgroundColor: isActiveTab("deworming") ? "white" : '#632165', color: isActiveTab("deworming") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <MedicationRounded sx={{ color: isActiveTab("deworming") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Deworming" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("maternal-serology"); navigate('/maternal-serology') }} sx={{ backgroundColor: isActiveTab("maternal-serology") ? "white" : '#632165', color: isActiveTab("maternal-serology") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <Bloodtype sx={{ color: isActiveTab("maternal-serology") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Maternal Serology" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("ifas"); navigate('/ifas') }} sx={{ backgroundColor: isActiveTab("ifas") ? "white" : '#632165', color: isActiveTab("ifas") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <MedicationLiquidRounded sx={{ color: isActiveTab("ifas") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="IFAS" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("deworming"); navigate('/deworming') }} sx={{ backgroundColor: isActiveTab("deworming") ? "white" : '#632165', color: isActiveTab("deworming") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <MedicationRounded sx={{ color: isActiveTab("deworming") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Deworming" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("pmtct-interventions"); navigate('/pmtct-interventions') }} sx={{ backgroundColor: isActiveTab("pmtct-interventions") ? "white" : '#632165', color: isActiveTab("pmtct-interventions") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <CancelPresentationRounded sx={{ color: isActiveTab("pmtct-interventions") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="PMTCT Interventions" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>
+              <ListItem button onClick={e => { activateTab("ifas"); navigate('/ifas') }} sx={{ backgroundColor: isActiveTab("ifas") ? "white" : '#632165', color: isActiveTab("ifas") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <MedicationLiquidRounded sx={{ color: isActiveTab("ifas") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="IFAS" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
 
-            <ListItem button onClick={e => { activateTab("counselling"); navigate('/counselling') }} sx={{ backgroundColor: isActiveTab("counselling") ? "white" : '#632165', color: isActiveTab("counselling") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <CancelPresentationRounded sx={{ color: isActiveTab("counselling") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary="Counselling" primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem></>}
+              <ListItem button onClick={e => { activateTab("pmtct-interventions"); navigate('/pmtct-interventions') }} sx={{ backgroundColor: isActiveTab("pmtct-interventions") ? "white" : '#632165', color: isActiveTab("pmtct-interventions") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <CancelPresentationRounded sx={{ color: isActiveTab("pmtct-interventions") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="PMTCT Interventions" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+
+              <ListItem button onClick={e => { activateTab("counselling"); navigate('/counselling') }} sx={{ backgroundColor: isActiveTab("counselling") ? "white" : '#632165', color: isActiveTab("counselling") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <CancelPresentationRounded sx={{ color: isActiveTab("counselling") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Counselling" primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem></>}
             <Divider />
 
             <ListItem button onClick={e => { activateTab("moh-reports"); navigate('/moh-reports') }} sx={{ backgroundColor: isActiveTab("moh-reports") ? "white" : '#632165', color: isActiveTab("moh-reports") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
@@ -304,12 +309,17 @@ export default function HeaderDrawer({ children }) {
           </List>
           <Divider />
           <List>
-            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) && <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-              <ListItemIcon>
-                <People sx={{ color: isActiveTab("users") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='Users' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem>}
+            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) && <>
+
+              <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <People sx={{ color: isActiveTab("users") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Users' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+
+            </>
+            }
             {(role && (role === "ADMINISTRATOR")) && <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Domain sx={{ color: isActiveTab("facilities") ? "#632165" : 'white' }} />
