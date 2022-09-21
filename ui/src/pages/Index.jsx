@@ -65,9 +65,8 @@ export default function Index() {
             window.localStorage.setItem("next_page", "/");
             return;
         }
-    }, [])
+    }, []);
 
-    // console.log(args)
 
     return (
         <>
@@ -78,10 +77,11 @@ export default function Index() {
                         <Typography variant="h5">Welcome </Typography>
                         <Grid container spacing={1} padding=".5em" >
                             {Object.keys(data).length > 0 && Object.keys(data).map((entry) => {
-                                console.log(data)
-                                return <Grid item xs={12} md={12} lg={3} >
-                                    <StatCard title={(entry).toUpperCase()} number={data[entry]} bg="#D0ADFC" />
-                                </Grid>
+                                if (data[entry]) {
+                                    return <Grid item xs={12} md={12} lg={3} >
+                                        <StatCard title={(entry).toUpperCase()} number={data[entry]} bg="#D0ADFC" />
+                                    </Grid>
+                                }
                             })}
                         </Grid>
                     </> : <CircularProgress />}
