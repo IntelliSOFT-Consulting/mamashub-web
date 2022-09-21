@@ -7,6 +7,7 @@ import {
 } from '@mui/material'
 import { getCookie } from '../lib/cookie'
 import Layout from '../components/Layout'
+import { apiHost } from '../lib/api'
 
 
 export default function Account() {
