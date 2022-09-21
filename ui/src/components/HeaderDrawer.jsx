@@ -19,6 +19,7 @@ import { Tooltip, IconButton, Avatar, Button, Container } from '@mui/material';
 import { PivotTableChart, Dashboard, ListAlt, People, Settings, ScheduleSend, DocumentScanner } from '@mui/icons-material';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
+import { apiHost } from '../lib/api';
 const drawerWidth = 250;
 
 export default function HeaderDrawer({ children }) {
