@@ -29,6 +29,7 @@ router.get("/dashboard", [requireJWT], async (req: Request, res: Response) => {
                 }
             });
             let facilities = null;
+            console.log(role)
             if (role === 'ADMINISTRATOR') {
                 facilities = await db.facility.count();
             }
