@@ -169,7 +169,7 @@ export default function HeaderDrawer({ children }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#632165', }} >
           <List >
-            {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") && <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) && <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
               </ListItemIcon>
@@ -203,7 +203,7 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary='Patients List' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
-            {(!(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR"))  && <><ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role && !(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR"))  && <><ListItem button onClick={e => { activateTab("antenatal-profile"); navigate('/antenatal-profile') }} sx={{ backgroundColor: isActiveTab("antenatal-profile") ? "white" : '#632165', color: isActiveTab("antenatal-profile") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <LibraryBooks sx={{ color: isActiveTab("antenatal-profile") ? "#632165" : 'white' }} />
               </ListItemIcon>
@@ -304,13 +304,13 @@ export default function HeaderDrawer({ children }) {
           </List>
           <Divider />
           <List>
-            {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") && <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) && <ListItem button onClick={e => { activateTab("users"); navigate('/users') }} sx={{ backgroundColor: isActiveTab("users") ? "white" : '#632165', color: isActiveTab("users") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <People sx={{ color: isActiveTab("users") ? "#632165" : 'white' }} />
               </ListItemIcon>
               <ListItemText primary='Users' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>}
-            {(role === "ADMINISTRATOR") && <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+            {(role && (role === "ADMINISTRATOR")) && <ListItem button onClick={e => { activateTab("facilities"); navigate('/facilities') }} sx={{ backgroundColor: isActiveTab("facilities") ? "white" : '#632165', color: isActiveTab("facilities") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <Domain sx={{ color: isActiveTab("facilities") ? "#632165" : 'white' }} />
               </ListItemIcon>
