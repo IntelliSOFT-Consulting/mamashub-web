@@ -139,13 +139,13 @@ router.post("/register", async (req: Request, res: Response) => {
             password = (Math.random()).toString();
         }
         let roles: string[];
-        roles = ["ADMINISTRATOR", "NURSE", "CLINICIAN", "CHW", "FACILITY_ADMINISTRATOR"]
+        roles = ["ADMINISTRATOR", "NURSE", "CHW", "FACILITY_ADMINISTRATOR"]
         if (role && (roles.indexOf(role) < 0)) {
             res.json({ status: "error", message: `Invalid role name *${role}* provided` });
             return
         }
         if (!role) {
-            res.json({ status: "error", message: `Role name is required provided` });
+            res.json({ status: "error", message: `Role name is required.` });
             return
         }
         let salt = await bcrypt.genSalt(10)
