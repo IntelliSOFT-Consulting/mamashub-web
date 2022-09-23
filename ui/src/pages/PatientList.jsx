@@ -76,7 +76,6 @@ export default function PatientList() {
         let data = await FhirApi({ url: '/fhir/Patient?_count=100', method: 'GET' })
         let p = data.data.entry.map((i) => {
             let r = i.resource
-            // console.log(r.name)
 
             return {
                 id: r.id, lastName: r.name ? r.name[0].family : "",
