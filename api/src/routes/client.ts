@@ -100,10 +100,9 @@ router.post("/login", async (req: Request, res: Response) => {
 // Register patient
 router.post("/register", async (req: Request, res: Response) => {
     try {
-        let { idNumber, phone } = req.body;
-
+        const { idNumber, phone } = req.body;
         if (!parsePhoneNumber(phone)) {
-            res.statusCode = 400
+            res.statusCode = 400;
             res.json({ error: "Invalid phone number provided", status: "error" });
             return
         }
