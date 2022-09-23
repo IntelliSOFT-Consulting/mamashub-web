@@ -77,8 +77,9 @@ export default function PatientList() {
         let p = data.data.entry.map((i) => {
             let r = i.resource
             // console.log(r.name)
+
             return {
-                id: r.id, lastName: r.name[0].family,
+                id: r.id, lastName: r.name ? r.name[0].family : "",
                 age: `${(Math.floor((new Date() - new Date(r.birthDate).getTime()) / 3.15576e+10))} years`
             }
         })
