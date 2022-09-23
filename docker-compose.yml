@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 services:
   postgres:
     image: postgres:14-alpine
@@ -8,8 +8,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - "db:/var/lib/postgresql/data"
-    
+      - 'db:/var/lib/postgresql/data'
 
   nndak-api:
     build: ./api
@@ -40,11 +39,11 @@ services:
     container_name: hapi-fhir-jpa
     restart: on-failure
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       - hapi-fhir-mysql
     volumes:
-      - "./hapi:/hapi"
+      - './hapi:/hapi'
     environment:
       SPRING_CONFIG_LOCATION: /hapi/application.yaml
 
@@ -55,13 +54,21 @@ services:
     command: --lower_case_table_names=1
     restart: always
     environment:
-      MYSQL_DATABASE: "hapi"
-      MYSQL_USER: "admin"
-      MYSQL_PASSWORD: "admin"
-      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_DATABASE: 'hapi'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'admin'
     volumes:
       - hapi-fhir-mysql:/var/lib/mysql
-  
+  cloud-messaging:
+    build:
+      context: cloud-messaging
+      dockerfile: Dockerfile
+    container_name: cloud-messaging
+    restart: always
+    env_file: ./cloud-messaging/.env
+    ports:
+      - '8000:8000'
 volumes:
   db:
   hapi-fhir-mysql:
