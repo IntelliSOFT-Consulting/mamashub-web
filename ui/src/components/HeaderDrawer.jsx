@@ -184,7 +184,16 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
               </ListItem>
             }
-            {(role && (role === "CHW")) && <>
+            {(role && (role === "NURSE")) &&
+              <ListItem button onClick={e => { navigate('/nurse-dashboard'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
+                <ListItemIcon>
+                  <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
+              </ListItem>
+            }
+            
+            {role && <>
               {/* <ListItem button onClick={e => { navigate('/moh-100'); activateTab("moh-100") }} sx={{ backgroundColor: isActiveTab("moh-100") ? "white" : '#632165', color: isActiveTab("moh-100") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }} >
               <ListItemIcon>
                 <DocumentScanner sx={{ color: isActiveTab("moh-100") ? "#632165" : 'white' }} />
@@ -310,7 +319,7 @@ export default function HeaderDrawer({ children }) {
               </ListItemIcon>
               <ListItemText primary='MOH 405 Register' primaryTypographyProps={{ fontSize: "13px" }} />
             </ListItem>
-            <Divider/>
+            <Divider />
             <ListItem button onClick={e => { activateTab("moh-711"); navigate('/moh-711') }} sx={{ backgroundColor: isActiveTab("moh-711") ? "white" : '#632165', color: isActiveTab("moh-711") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
               <ListItemIcon>
                 <PivotTableChart sx={{ color: isActiveTab("moh-711") ? "#632165" : 'white' }} />

@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import { getCookie } from '../lib/cookie';
 import { apiHost } from './../lib/api';
 
-export default function Index() {
+export default function NurseDashboard() {
     let [patients, setPatients] = useState()
     let navigate = useNavigate();
     let [data, setData] = useState({});
@@ -14,19 +14,11 @@ export default function Index() {
     let [facilities, setFacilities] = useState([]);
 
 
-    // fetch users
-    let getFacilities = async () => {
-        let data = (await (await fetch(`${apiHost}/admin/facilities`,
-            { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setFacilities(data.facilities);
-        return;
-    }
-
     // fetch dashboard stats
     let getStatistics = async () => {
-        let data = (await (await fetch(`${apiHost}/statistics/dashboard`,
+        let data = (await (await fetch(`${apiHost}/reports/anc-summary`,
             { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setData(data.data);
+        setData(data.report);
         return;
     }
 
@@ -38,19 +30,8 @@ export default function Index() {
             })).json());
         // console.log(_data);
         setRole(_data.data.role);
-        if (_data.data.role === "NURSE") {
-            navigate("/nurse-dashboard");
-            return
-        }
-        if (_data.data.role === "ADMINISTRATOR") {
-            navigate('/users');
-            return;
-        }
-        // if (_data.data.role === "FACILITY_ADMINISTRATOR") {
-        //     getFacilities();
-        // }
-        if (_data.data.role === "NURSE") {
-            navigate("/nurse-dashboard");
+        if (!(_data.data.role === "NURSE")) {
+            navigate("/");
             return
         }
         return;
@@ -81,16 +62,14 @@ export default function Index() {
             <Layout>
                 <br />
                 <Container maxWidth="lg">
-                    {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") ? <>
+                    {(role === "NURSE") ? <>
                         <Typography variant="h5">Welcome </Typography>
                         <Grid container spacing={1} padding=".5em" >
-                            {Object.keys(data).length > 0 && Object.keys(data).map((entry) => {
-                                if (data[entry]) {
-                                    return <Grid item xs={12} md={12} lg={3} >
-                                        <StatCard title={(entry).toUpperCase()} number={data[entry]} bg="#D0ADFC" />
-                                    </Grid>
-                                }
-                            })}
+                            {Object.keys(data).length > 0 ? Object.keys(data).map((entry) => {
+                                return <Grid item xs={12} md={12} lg={3} >
+                                    <StatCard title={(entry).toLocaleUpperCase()} number={data[entry]} bg="#D0ADFC" />
+                                </Grid>
+                            }) : <CircularProgress />}
                         </Grid>
                     </> : <CircularProgress />}
                 </Container>
@@ -102,12 +81,11 @@ export default function Index() {
 
 
 let StatCard = ({ number, title, bg }) => {
-
     return <>
         <Card sx={{ backgroundColor: bg }}>
             <CardContent>
-                <Typography variant="h4">{number}</Typography>
-                <Typography variant="h6">{title}</Typography>
+                <Typography variant="h3">{number}</Typography>
+                <Typography variant="h6" sx={{ minHeight: "4.7em" }}>{title}</Typography>
             </CardContent>
         </Card>
     </>

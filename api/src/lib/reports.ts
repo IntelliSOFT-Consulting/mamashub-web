@@ -59,13 +59,13 @@ export let generateGeneralReport = async (patientId: string) => {
             }
         }
     }
-    console.log((patient.name[0].family), results)
+    // console.log((patient.name[0].family || ""), results)
 
     let report = {
         ancNumber: patient.identifier ? patient.identifier[0].value : " - ",
         id: patient.id,
         noOfAncVisits: await getNoOfAncVisits(patientId),
-        fullNames: (patient.name[0].family),
+        fullNames: (patient.name[0].family) || " ",
         dob: new Date(patient.birthDate).toDateString(),
         subCounty: (patient.address ? patient.address[0].district : " - ") || " - ",
         county: (patient.address ? patient.address[0].state : " - ") || " - ",
@@ -85,7 +85,7 @@ export let generateGeneralReport = async (patientId: string) => {
 
 let getPatientCountByCode = async (code: string) => {
     let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
-    return data.total || data.entry.length || 0;
+    return data.total || (data.entry ? data.entry.length : 0)
 }
 
 export let generateMOH711Report = async () => {
@@ -115,5 +115,18 @@ export let generateMOH711Report = async () => {
         "presumptiveTBCases": await getPatientCountByCode("74935093"),
         "alreadyOnTB": await getPatientCountByCode("74935093"),
         "totalNotScreened": await getPatientCountByCode("74935093")
+    }
+}
+
+
+export const generateANCSummary = async () => {
+    return {
+        "New Anc Clients": await getPatientCountByCode("74935093"),
+        "No. of ANC Revisits": await getPatientCountByCode("74935093"),
+        "Women with FGM Complications": await getPatientCountByCode("74935093"),
+        "Women tested positive for Syphyllis": await getPatientCountByCode("74935093"),
+        "Women who are HIV Positive": await getPatientCountByCode("74935093"),
+        "Women who have TB": await getPatientCountByCode("74935093"),
+        "Women who have received LLITN": await getPatientCountByCode("74935093")
     }
 }

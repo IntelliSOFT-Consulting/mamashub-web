@@ -53,8 +53,6 @@ export let FhirApi = async (params) => {
         }
         console.error(error)
         return res
-
     }
-
     //To-do: process response and response type
 }
