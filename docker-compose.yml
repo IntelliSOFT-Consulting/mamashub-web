@@ -67,8 +67,6 @@ services:
     container_name: cloud-messaging
     restart: always
     env_file: ./cloud-messaging/.env
-    ports:
-      - '8000:8000'
 volumes:
   db:
   hapi-fhir-mysql:
