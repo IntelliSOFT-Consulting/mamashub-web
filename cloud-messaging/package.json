@@ -1,0 +1,32 @@
+{
+  "name": "cloud-messaging",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "nodemon --watch src --exec babel-node src/server.js",
+    "build": "rm -rf dist && babel src -d dist --extensions \".js\" --copy-files",
+    "lint": "eslint .",
+    "clean": "rimraf build",
+    "heroku-postbuild": "npm run build && cd client && npm install && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.19.1",
+    "@babel/node": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "date-fns": "^2.29.3",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "firebase-admin": "^11.0.1",
+    "node-cron": "^3.0.2"
+  }
+}

@@ -117,3 +117,6 @@ dist
 
 # TypeScript build
 build
+
+dist
+**/fcmConfig.json
