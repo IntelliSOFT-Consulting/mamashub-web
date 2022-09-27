@@ -6,7 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Layout from '../components/Layout';
 
 
-export default function GeneralPatientLevel() {
+export default function MOH711Report() {
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState(false)
     const [results, setResults] = useState([])
@@ -21,8 +21,8 @@ export default function GeneralPatientLevel() {
             setOpen(true)
             setMessage("Successfully generated report generated")
             setTimeout(() => {
-                setOpen(false)
-            }, 1500)
+                setOpen(false);
+            }, 1500);
             return
         }
         setOpen(true)

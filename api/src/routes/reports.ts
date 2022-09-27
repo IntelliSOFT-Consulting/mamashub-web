@@ -1,7 +1,7 @@
 import express, { NextFunction, Response, Request } from "express";
 import { FhirApi } from "../lib/fhir/utils";
 import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
-import { generateGeneralReport, generateMOH711Report } from "../lib/reports";
+import { generateANCSummary, generateGeneralReport, generateMOH711Report } from "../lib/reports";
 
 
 const router = express.Router()
@@ -55,6 +55,20 @@ router.get('/moh-711', async (req: Request, res: Response) => {
 
 
 
+router.get('/anc-summary', async (req: Request, res: Response) => {
+
+    try {
+        res.statusCode = 200;
+        let report  = (await generateANCSummary());
+        res.json({ report, status: "success" });
+        return
+    } catch (error) {
+        console.error(error);
+        res.statusCode = 400;
+        res.json({ error, status: "error" });
+        return
+    }
+})
 
 
 export default router

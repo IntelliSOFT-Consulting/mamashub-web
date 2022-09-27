@@ -32,13 +32,14 @@ import PMTCTInterventions from './pages/PMTCTInterventions'
 import MedicalAndSurgicalHistory from './pages/MedicalAndSurgicalHistory'
 import Facilites from './pages/Facilities'
 import MOH711 from './pages/MOH711'
+import NurseDashboard from './pages/NurseDashboard'
 
 function App() {
     return (
         <div>
             <Router>
                 <Routes>
-                    <Route path="/facilities" element={<Facilites/>} />
+                    <Route path="/facilities" element={<Facilites />} />
                     <Route path="/account" element={<Account />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/previous-pregnancy" element={<PreviousPregnancy />} />
@@ -53,6 +54,7 @@ function App() {
                     <Route path="/settings" element={<PatientDetails />} />
                     <Route path="/present-pregnancy" element={<PresentPregnancy />} />
                     <Route path="/physical-exam" element={<PhysicalExam />} />
+                    <Route path="/nurse-dashboard" element={<NurseDashboard />} />
                     <Route path="/patient-registration" element={<PatientRegistration />} />
                     <Route path="/antenatal-profile" element={<AntenatalProfile />} />
                     <Route path="/confirm-pregnancy" element={<ConfirmPregnancy />} />
