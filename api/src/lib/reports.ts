@@ -1,5 +1,4 @@
-import db from "./prisma"
-import { FhirApi } from "./fhir/utils"
+import { FhirApi, generateReport } from "./fhir/utils"
 import * as observationCodes from "./fhir/observationCode.json"
 
 const codes: any = observationCodes.codes
@@ -83,70 +82,38 @@ export let generateGeneralReport = async (patientId: string) => {
 // })
 // console.log(d)
 
-export let generateMOH711Report = async (patientId: string) => {
 
-    let results: { [index: string]: any } = {}
+let getPatientCountByCode = async (code: string) => {
+    let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
+    return data.total || data.entry.length || 0;
+}
 
-    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&_count=99999` })).data
-    observations = observations?.entry ?? []
-    let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
-    for (let observation of observations) {
-        for (let code of Object.keys(codes)) {
-            console.log(observation.resource.code.coding[0].code, String(codes[code]).split(":")[1])
-            if (observation.resource.code.coding[0].code === String(codes[code]).split(":")[1]) {
-                results[code] = observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")
-            }
-        }
+export let generateMOH711Report = async () => {
+
+    return {
+        "newAncClients": await getPatientCountByCode("74935093"),
+        "revisitAncClients": await getPatientCountByCode("74935093"),
+        "iptDose1": await getPatientCountByCode("74935093"),
+        "iptDose2": await getPatientCountByCode("784030374-Y"),
+        "iptDose3": await getPatientCountByCode("784030374-Y"),
+        "hb": await getPatientCountByCode("128241005-R"),
+        "completed4ANCVisits": await getPatientCountByCode("74935093"),
+        "LLINSUnder1Year": await getPatientCountByCode("784030374-Y"),
+        "LLINSToAncClients": await getPatientCountByCode("784030374-Y"),
+        "testedForSyphylis": await getPatientCountByCode("74935093"),
+        "hivPositive": await getPatientCountByCode("74935093"),
+        "doneBreastExamination": await getPatientCountByCode("74935093"),
+        "10-14": await getPatientCountByCode("74935093"),
+        "15-19": await getPatientCountByCode("74935093"),
+        "20-24": await getPatientCountByCode("74935093"),
+        "pregnancyAtFirstAnc": await getPatientCountByCode("74935093"),
+        "issuedWithIron": await getPatientCountByCode("74935093"),
+        "issuedWithFolic": await getPatientCountByCode("74935093"),
+        "issuedWithCombinedFF": await getPatientCountByCode("74935093"),
+        "FGMAssociatedComplication": await getPatientCountByCode("74935093"),
+        "totalScreened": await getPatientCountByCode("74935093"),
+        "presumptiveTBCases": await getPatientCountByCode("74935093"),
+        "alreadyOnTB": await getPatientCountByCode("74935093"),
+        "totalNotScreened": await getPatientCountByCode("74935093")
     }
-    console.log(results)
-
-    let report = {
-        ancNumber: patient.identifier ? patient.identifier[0].value : " - ",
-        id: patient.id,
-        noOfAncVisits: await getNoOfAncVisits(patientId),
-        fullNames: (patient.name[0].family),
-        dob: new Date(patient.birthDate).toDateString(),
-        subCounty: (patient.address ? patient.address[0].district : " - ") || " - ",
-        county: (patient.address ? patient.address[0].state : " - ") || " - ",
-        village: (patient.address ? patient.address[0].city : " - ") || " - ",
-        estate: (patient.address ? patient.address[0].text : " - ") || " - ",
-        tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
-        maritalStatus: patient.maritalStatus ? patient.maritalStatus.text : "-",
-        parity: "",
-        gravidae: "-",
-        lmp: "-",
-        edd: "-",
-        gestation: "",
-        muacCodes: "",
-        height: " - ",
-        fgm: " - ",
-        haemoglobin: " - ",
-        bloodSugar: " - ",
-        bloodGroupAndRhesus: " - ",
-        urynalysis: " - ",
-        dualTesting: " - ",
-        testResults: " - ",
-        treated: " - ",
-        hivStatusBeforeANC: " - ",
-        hivTesting: " - ",
-        hivResults: " - ",
-        artEligibility: "-",
-        maternalHaartBeforeANC: " - ",
-        maternalHaartCTX: "",
-        infantProphylaxis: " - ",
-        partnerHIVTesting: " - ",
-        partnerHIVResults: " - ",
-        ppfpCounselling: " - ",
-        otherConditions: "",
-        deworming: "",
-        ipt: "",
-        ttDose: "",
-        supplimentation: " - ",
-        receivedLLITN: " - ",
-        referralsFrom: " - ",
-        referralsTo: "",
-        reasonsForReferral: " - ",
-        remarks: "N/A"
-    }
-    return { ...report, ...results }
 }

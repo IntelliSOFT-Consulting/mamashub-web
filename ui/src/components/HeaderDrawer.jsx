@@ -36,9 +36,11 @@ export default function HeaderDrawer({ children }) {
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
+    return
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+    return
   };
 
   let getProfile = async () => {
@@ -50,14 +52,17 @@ export default function HeaderDrawer({ children }) {
     console.log(data)
     setRole(data.data.role)
     setCookie("role", data.data.role, (1 / 60))
+    return
   }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    return
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+    return
   };
 
   useEffect(() => {
@@ -171,7 +176,7 @@ export default function HeaderDrawer({ children }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#632165', minHeight: "630px", maxHeight: "630px" }} >
           <List >
-            {(role && (role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR")) &&
+            {(role && (role === "FACILITY_ADMINISTRATOR")) &&
               <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
                 <ListItemIcon>
                   <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />

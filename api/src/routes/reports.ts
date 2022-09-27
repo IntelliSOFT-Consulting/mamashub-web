@@ -41,23 +41,14 @@ router.get('/general', async (req: Request, res: Response) => {
 router.get('/moh-711', async (req: Request, res: Response) => {
 
     try {
-        res.statusCode = 200
-        let report = []
-        let patientIds: any = []
-        let patients = await (await FhirApi({ url: '/Patient?_count=99999' })).data
-        patients = patients?.entry || []
-        patients.map((patient: any) => {
-            patientIds.push(patient.resource.id)
-        })
-        for (let id of patientIds) {
-            report.push(await generateMOH711Report(id))
-        }
-        res.json({ report, status: "success" })
+        res.statusCode = 200;
+        let report  = (await generateMOH711Report());
+        res.json({ report, status: "success" });
         return
     } catch (error) {
-        console.error(error)
-        res.statusCode = 400
-        res.json({ error, status: "error" })
+        console.error(error);
+        res.statusCode = 400;
+        res.json({ error, status: "error" });
         return
     }
 })
