@@ -30,6 +30,28 @@ import { startVisit } from '../lib/startVisit';
 const useStyles = makeStyles({
   patientSearch: {
     marginLeft: '5px',
+    borderBottom: 'none',
+    '& div': {
+      '&::before': {
+        borderBottom: 'none !important',
+      },
+      '&::after': {
+        borderBottom: 'none !important',
+      },
+      '&&:hover': {
+        borderBottom: 'none',
+        '&&:before': {
+          borderBottom: 'none',
+        },
+      },
+    },
+    '& .Mui-focused': {
+      color: 'black !important',
+      fontWeight: 'bold',
+    },
+    '& input': {
+      fontWeight: '300',
+    },
     '&&:before': {
       borderBottom: 'none',
     },
@@ -41,6 +63,13 @@ const useStyles = makeStyles({
       '&&:before': {
         borderBottom: 'none',
       },
+    },
+  },
+  filterList: {
+    display: 'flex !important',
+    alignItems: 'center !important',
+    '& span': {
+      marginLeft: '5px',
     },
   },
 });
@@ -204,30 +233,27 @@ export default function PatientList() {
           >
             <TextField
               sx={{ ml: 1, flex: 1 }}
-              placeholder='Patient Name'
-              className='patient-search'
+              placeholder='Type here'
+              className={classes.patientSearch}
               onChange={e => {
                 setName(e.target.value);
               }}
               variant='standard'
+              label='Search'
               autoComplete='off'
             />
             <IconButton
               onClick={e => {
                 search(name);
               }}
-              type='submit'
+              type='button'
               sx={{ p: '10px' }}
               aria-label='search'
             >
               <SearchIcon />
             </IconButton>
             <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
-            <IconButton
-              color='primary'
-              sx={{ p: '10px' }}
-              aria-label='directions'
-            >
+            <>
               <InputLabel id='demo-simple-select-label'>Filter By </InputLabel>
               <Select
                 onChange={e => search(e.target.value)}
@@ -245,15 +271,14 @@ export default function PatientList() {
                   <MenuItem
                     key={category}
                     value={category}
+                    className={classes.filterList}
                   >
-                    <span>
-                      <RadioButtonCheckedIcon />
-                    </span>
-                    {category}
+                    <RadioButtonCheckedIcon />
+                    <span>{category}</span>
                   </MenuItem>
                 ))}
               </Select>
-            </IconButton>
+            </>
           </Paper>
           <Button
             variant='contained'
