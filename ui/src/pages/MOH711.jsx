@@ -135,7 +135,7 @@ export default function GeneralPatientLevel() {
 
     return (
         <>
-            <Layout>
+            
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={open}
@@ -194,7 +194,7 @@ export default function GeneralPatientLevel() {
                     </Modal>
 
                 </Container>
-            </Layout>
+            
         </>
     )
 

@@ -27,6 +27,7 @@ import {
   LocalHospitalRounded,
   PeopleRounded,
   GroupsRounded,
+  DescriptionRounded,
 } from '@mui/icons-material';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -256,7 +257,7 @@ export default function HeaderDrawer({ children }) {
     },
     {
       name: 'Reports',
-      icon: <i class='fa-solid fa-chart-pie'></i>,
+      icon: <DescriptionRounded />,
       path: '/reports',
       roles: ['FACILITY_ADMINISTRATOR', 'NURSE'],
       children: [
@@ -453,7 +454,7 @@ export default function HeaderDrawer({ children }) {
                               : 'white',
                           }}
                         >
-                          <i class='fa-solid fa-pen-to-square'></i>
+                          {route.icon}
                         </ListItemIcon>
                         <ListItemText
                           primaryTypographyProps={{ fontSize: '13px' }}

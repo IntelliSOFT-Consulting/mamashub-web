@@ -139,7 +139,7 @@ export default function TetanusDiptheria() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
 
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
@@ -283,7 +283,7 @@ export default function TetanusDiptheria() {
                             </Box>
                         </Modal>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

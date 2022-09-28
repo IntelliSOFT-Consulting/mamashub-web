@@ -204,7 +204,7 @@ export default function PatientList() {
 
   return (
     <>
-      <Layout>
+      
         <br />
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -365,7 +365,7 @@ export default function PatientList() {
             }}
           />
         </Container>
-      </Layout>
+      
     </>
   );
 }

@@ -78,7 +78,7 @@ export default function PatientDetails() {
 
     return (
         <>
-            <Layout>
+            
                 <Container>
                     <Snackbar
                         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -194,7 +194,7 @@ export default function PatientDetails() {
 
                     </Box>
                 </Modal>
-            </Layout>
+            
         </>
     )
 }

@@ -153,7 +153,7 @@ export default function PatientRegistration() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
 
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
@@ -480,7 +480,7 @@ export default function PatientRegistration() {
 
                         </TabContext>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

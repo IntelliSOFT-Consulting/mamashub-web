@@ -206,7 +206,7 @@ export default function PhysicalExam() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -714,7 +714,7 @@ export default function PhysicalExam() {
                             </Box>
                         </Modal>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

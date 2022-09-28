@@ -83,7 +83,7 @@ export default function MOH100({ id }) {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -405,7 +405,7 @@ export default function MOH100({ id }) {
 
                         </TabContext>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

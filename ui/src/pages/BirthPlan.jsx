@@ -98,7 +98,7 @@ export default function BirthPlan() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -389,7 +389,7 @@ export default function BirthPlan() {
                             </TabPanel>
                         </TabContext>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

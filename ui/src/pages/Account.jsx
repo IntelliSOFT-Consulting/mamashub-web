@@ -36,7 +36,7 @@ export default function Account() {
     }, [])
 
     return (<>
-       <Layout>
+       
         <Typography>Account Information</Typography>
 
         {profile && <Card>
@@ -78,7 +78,7 @@ export default function Account() {
 
         </Card>}
 
-       </Layout>
+       
 
     </>)
 }

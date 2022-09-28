@@ -97,7 +97,7 @@ export default function PatientList() {
 
     return (
         <>
-            <Layout>
+            
                 <br />
                 <Container maxWidth="lg">
                     <br />
@@ -131,7 +131,7 @@ export default function PatientList() {
                     />
 
                 </Container>
-            </Layout>
+            
         </>
     )
 

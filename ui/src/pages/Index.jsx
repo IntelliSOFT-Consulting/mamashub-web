@@ -70,7 +70,7 @@ export default function Index() {
 
     return (
         <>
-            <Layout>
+            
                 <br />
                 <Container maxWidth="lg">
                     {(role === "ADMINISTRATOR" || role === "FACILITY_ADMINISTRATOR") ? <>
@@ -86,7 +86,7 @@ export default function Index() {
                         </Grid>
                     </> : <CircularProgress />}
                 </Container>
-            </Layout>
+            
         </>
     )
 
