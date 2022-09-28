@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import serviceAccount from '../config/fcmConfig.json';
 import getPushList from './nextVisit';
+import { format } from 'date-fns';
 
 const sendMsg = async msg => {
   try {
@@ -22,7 +23,7 @@ const sendMsgList = async () => {
       const topic = entry.resource?.patient?.reference?.split('/')[1];
     //   const data = entry.resource;
       const msg = {
-        body: 'You have an appointment tomorrow at 10:00 AM',
+        body: `You have an appointment tomorrow at ${format(new Date(entry.resource?.start), 'HH:mm')}`,
         title: 'Next Visit Reminder',
       };
       await sendMsg({ topic, data: msg });
