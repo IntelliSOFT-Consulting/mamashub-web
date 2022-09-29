@@ -18,7 +18,6 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             return
         }
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
-        // console.log(decodedSession)
         if (decodedSession.type == 'valid') {
             let userId = decodedSession.session.userId
             let user = await db.user.findFirst({
@@ -124,7 +123,7 @@ router.post("/login", async (req: Request, res: Response) => {
 // Register User
 router.post("/register", async (req: Request, res: Response) => {
     try {
-        let { email, names, role, password, kmhflCode } = req.body;
+        let { email, names, role, password, kmhflCode, phone } = req.body;
         if (!validateEmail(email)) {
             res.statusCode = 400;
             res.json({ status: "error", message: "invalid email value provided" });
@@ -152,8 +151,8 @@ router.post("/register", async (req: Request, res: Response) => {
         let _password = await bcrypt.hash(password, salt)
         let user = await db.user.create({
             data: {
-                email, names, role: (role), salt: salt, password: _password, facilityKmhflCode: kmhflCode || null,
-                
+                email, names, role: (role), salt: salt, password: _password, facilityKmhflCode: kmhflCode || null, phone
+
             }
         })
         console.log(user)
@@ -175,7 +174,7 @@ router.post("/register", async (req: Request, res: Response) => {
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
         let response = await sendWelcomeEmail(user, resetUrl)
         // console.log("Email API Response: ", response)
-        let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role }
+        let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role, phone: user.phone }
         res.statusCode = 201
         res.json({ user: responseData, status: "success", message: `Password reset instructions have been sent to your email, ${user?.email}` })
         return

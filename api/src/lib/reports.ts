@@ -76,6 +76,11 @@ let getPatientCountByCode = async (code: string) => {
     return data.total || (data.entry ? data.entry.length : 0)
 }
 
+let aggregateByCode = async (code: string) => {
+    let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
+    return data.total || (data.entry ? data.entry.length : 0)
+}
+
 export let generateMOH711Report = async () => {
 
     return {
@@ -111,10 +116,10 @@ export const generateANCSummary = async () => {
     return {
         "New Anc Clients": await getPatientCountByCode("74935093"),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
-        "Women with FGM Complications": await getPatientCountByCode("74935093"),
-        "Women positive for Syphyllis": await getPatientCountByCode("74935093"),
-        "Women who are HIV Positive": await getPatientCountByCode("74935093"),
-        "Women who have TB": await getPatientCountByCode("74935093"),
-        "Women who have received LLITN": await getPatientCountByCode("74935093")
+        "Women with FGM Complications": await getPatientCountByCode("95041000119101-C"),
+        "Women positive for Syphyllis": await getPatientCountByCode("76272004-Y"),
+        "Women who are HIV Positive": await getPatientCountByCode("31676001-Y"),
+        "Women who have TB": await getPatientCountByCode("371569005"),
+        "Women who have received LLITN": await getPatientCountByCode("784030374-Y")
     }
 }

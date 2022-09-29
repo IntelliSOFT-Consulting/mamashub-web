@@ -129,7 +129,7 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode })
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode, phone: data.phone })
             })).json());
         if (response.status === "error") {
             setMessage(response.error || response.message);
@@ -147,7 +147,7 @@ export default function Users() {
         let response = (await (await fetch(`${apiHost}/users/${selected[0]}`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode, status: data.status })
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode, status: data.status, phone: data.phone })
             })).json());
         if (response.status === "error") {
             setMessage(response.error || response.message);
@@ -173,12 +173,13 @@ export default function Users() {
     }, [])
 
     const columns = [
-        { field: 'names', headerName: 'Names', width: 180 },
-        { field: 'email', headerName: 'Email', width: 200 },
+        { field: 'names', headerName: 'Names', width: 150 },
+        { field: 'email', headerName: 'Email', width: 130 },
+        { field: 'phone', headerName: 'Phone Number', width: 130 },
         { field: 'role', headerName: 'Role', width: 150 },
         { field: 'facilityName', headerName: 'Assigned Facility', width: 150 },
         { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 130 },
-        { field: 'disabled', headerName: 'Disabled', width: 150 }
+        { field: 'disabled', headerName: 'Disabled', width: 120 }
 
     ];
 
@@ -260,6 +261,15 @@ export default function Users() {
                                 placeholder="Email Address"
                                 size="small"
                                 onChange={e => { setData({ ...data, email: e.target.value }) }}
+                            />
+
+                            <TextField
+                                sx={{ width: "100%" }}
+                                type="tel"
+                                label="Phone Number"
+                                placeholder="Phone Number"
+                                size="small"
+                                onChange={e => { setData({ ...data, phone: e.target.value }) }}
                             />
 
                             <FormControl fullWidth>
