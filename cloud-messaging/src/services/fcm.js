@@ -1,37 +1,43 @@
 import admin from 'firebase-admin';
 import serviceAccount from '../config/fcmConfig.json';
 import getPushList from './nextVisit';
+import { format } from 'date-fns';
 
 const sendMsg = async msg => {
-    try {
-        const response = await admin.messaging().sendToDevice(msg.token, msg.data);
-        console.log('Successfully sent message:', response);
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    // send to subscribers
+    const response = await admin.messaging().sendToTopic(msg.topic, msg.data);
+    console.log('Successfully sent message:', response);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const sendMsgList = async () => {
-    try {
-        const recipients = await getPushList();
+  try {
+    const recipients = await getPushList();
 
-        if (!recipients || recipients?.total === 0) return;
+    if (!recipients || recipients?.total === 0) return;
 
-        recipients.entry.forEach(async entry => {
-            const token = entry.resource.subject.reference;
-            const data = entry.resource;
-            await sendMsg({ token, data });
-        });
-    } catch (error) {
-        console.log(error);
-    }
+    recipients.entry.forEach(async entry => {
+      const topic = entry.resource?.patient?.reference?.split('/')[1];
+    //   const data = entry.resource;
+      const msg = {
+        body: `You have an appointment tomorrow at ${format(new Date(entry.resource?.start), 'HH:mm')}`,
+        title: 'Next Visit Reminder',
+      };
+      await sendMsg({ topic, data: msg });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const init = () => {
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: process.env.FCM_DB_URL,
-    });
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: process.env.FCM_DB_URL,
+  });
 };
 
 export { init, sendMsgList };

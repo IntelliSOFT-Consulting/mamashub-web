@@ -15,6 +15,7 @@ model User {
   names               String
   role                ROLE
   email               String    @unique
+  phone               String?   @unique
   password            String
   salt                String
   data                Json      @default("{ \"newUser\": true }")
@@ -25,6 +26,7 @@ model User {
   verified            Boolean   @default(false)
   facility            Facility? @relation(fields: [facilityKmhflCode], references: [kmhflCode])
   facilityKmhflCode   String?
+  disabled            Boolean   @default(false)
 }
 
 model Patient {
@@ -49,6 +51,7 @@ model Facility {
   data      Json     @default("{\"county\":\"\", \"subCounty\":\"\"}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  disabled Boolean @default(false)
 
   User User[]
 }
@@ -71,5 +74,4 @@ enum ROLE {
   FACILITY_ADMINISTRATOR
   NURSE
   CHW
-  CLINICIAN
 }

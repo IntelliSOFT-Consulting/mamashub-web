@@ -233,15 +233,5 @@
     "code": 47,
     "name": "Nairobi",
     "capital_city": "Nairobi (City)"
-  },
-  {
-    "code": 48,
-    "name": "Diaspora",
-    "capital_city": "Diaspora"
-  },
-  {
-    "code": 49,
-    "name": "Prisons",
-    "capital_city": "Prisons"
   }
 ]

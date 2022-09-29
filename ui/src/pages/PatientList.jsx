@@ -149,6 +149,7 @@ export default function PatientList() {
   useEffect(() => {
     if (filter) {
       onFilterChange();
+
     }
   }, [filter]);
 

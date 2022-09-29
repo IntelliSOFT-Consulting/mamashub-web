@@ -247,4 +247,5 @@ export default function GeneralPatientLevel() {
       </Container>
     </>
   );
+
 }

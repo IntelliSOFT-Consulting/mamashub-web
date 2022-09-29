@@ -36,6 +36,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FhirApi, apiHost } from './../lib/api';
 import * as qs from 'query-string';
 import { DataGrid } from '@mui/x-data-grid';
+
 import counties from '../data/counties.json';
 import countyMap from '../data/code_to_counties_map.json';
 import subCountyMap from '../data/code_to_constituencies_map.json';
@@ -106,6 +107,7 @@ export default function PatientRegistration({ userData }) {
         kmhflCode,
         ancCode: generatedAncCode,
       });
+
     }
   }, [userData]);
 

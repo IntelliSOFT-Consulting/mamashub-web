@@ -93,9 +93,11 @@ export default function HeaderDrawer({ children }) {
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
+    return
   };
   const handleOpenUserMenu = event => {
     setAnchorElUser(event.currentTarget);
+    return
   };
 
   let getProfile = async () => {
@@ -113,12 +115,15 @@ export default function HeaderDrawer({ children }) {
     setCookie('role', data.role, 1 / 60);
   };
 
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    return
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+    return
   };
 
   useEffect(() => {

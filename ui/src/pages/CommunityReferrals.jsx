@@ -38,7 +38,6 @@ function timeSince(date) {
 export default function PatientList() {
     let [referrals, setReferrals] = useState([])
     let navigate = useNavigate()
-
     let [selected, setSelected] = useState([])
 
     let getReferrals = async () => {
@@ -79,9 +78,7 @@ export default function PatientList() {
             window.localStorage.setItem("next_page", "/community-referrals")
             return
         }
-    }, [])
-
-
+    }, []);
 
     const columns = [
         { field: 'lastName', headerName: 'Last Name', width: 250, editable: true },
@@ -129,7 +126,6 @@ export default function PatientList() {
                         onSelectionModelChange={e => { setSelected(e) }}
                         onCellEditStop={e => { console.log(e) }}
                     />
-
                 </Container>
             
         </>

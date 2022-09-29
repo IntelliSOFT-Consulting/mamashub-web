@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../components/Header'
 import {
-    Card, Typography, LinearProgress, Divider,
-    CardContent,
+    Card, Typography, CircularProgress, Divider, Grid, CardContent,
 } from '@mui/material'
 import { getCookie } from '../lib/cookie'
 import Layout from '../components/Layout'
@@ -18,7 +16,7 @@ export default function Account() {
         let data = (await (await fetch(`${apiHost}/auth/me`,
             {
                 method: "GET",
-                headers: { "Content-Type": "application/json", "Authorization":`Bearer ${getCookie("token")}` }
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
             })).json())
         console.log(data)
         setProfile(data.data)
@@ -79,6 +77,7 @@ export default function Account() {
         </Card>}
 
        
+
 
     </>)
 }

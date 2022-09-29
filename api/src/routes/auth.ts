@@ -108,15 +108,15 @@ router.post("/login", async (req: Request, res: Response) => {
             res.json({ status: "success", token: session.token, issued: session.issued, expires: session.expires, newUser })
             return
         } else {
-            res.statusCode = 401
-            res.json({ status: "error", message: "Incorrect username/password or password provided" })
-            return
+            res.statusCode = 401;
+            res.json({ status: "error", message: "Incorrect username/password or password provided" });
+            return;
         }
     } catch (error) {
         console.log(error)
-        res.statusCode = 401
+        res.statusCode = 401;
         res.json({ error: "incorrect email or password" });
-        return
+        return;
     }
 });
 
@@ -126,26 +126,26 @@ router.post("/register", async (req: Request, res: Response) => {
     try {
         let { email, names, role, password, kmhflCode } = req.body;
         if (!validateEmail(email)) {
-            res.statusCode = 400
-            res.json({ status: "error", message: "invalid email value provided" })
-            return
+            res.statusCode = 400;
+            res.json({ status: "error", message: "invalid email value provided" });
+            return;
         }
         if (!(role)) {
-            res.statusCode = 400
-            res.json({ status: "error", message: "invalid role provided" })
-            return
+            res.statusCode = 400;
+            res.json({ status: "error", message: "invalid role provided" });
+            return;
         }
         if (!password) {
             password = (Math.random()).toString();
         }
         let roles: string[];
-        roles = ["ADMINISTRATOR", "NURSE", "CLINICIAN", "CHW", "FACILITY_ADMINISTRATOR"]
+        roles = ["ADMINISTRATOR", "NURSE", "CHW", "FACILITY_ADMINISTRATOR"]
         if (role && (roles.indexOf(role) < 0)) {
             res.json({ status: "error", message: `Invalid role name *${role}* provided` });
             return
         }
         if (!role) {
-            res.json({ status: "error", message: `Role name is required provided` });
+            res.json({ status: "error", message: `Role name is required.` });
             return
         }
         let salt = await bcrypt.genSalt(10)
