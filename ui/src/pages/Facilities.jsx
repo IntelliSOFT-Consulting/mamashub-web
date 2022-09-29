@@ -16,7 +16,7 @@ export default function Facilities() {
 
     let [facilities, setFacilities] = useState([]);
     let [open, setOpen] = useState(false);
-    let [editMode, setEdit] = useState(false)
+    let [editMode, setEditMode] = useState(false);
     let [data, setData] = useState({});
     let [loading, setLoading] = useState(true);
     const handleOpen = () => setOpen(true);
@@ -88,11 +88,12 @@ export default function Facilities() {
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
                 body: JSON.stringify({
-                    kmhflCode: data.kmhflCode, county: counties[data.county - 1].name, "name": data.name, "subCounty": countyToConstituency[data.county].map((sc) => {
+                    kmhflCode: data.kmhflCode, county: counties[data.county - 1].name, "name": data.name, subCounty: countyToConstituency[data.county].map((sc) => {
+                        console.log(sc)
                         if (sc.code === data.subCounty) {
                             return sc.name
                         }
-                    })[data.subCounty], ward: data.ward
+                    }), ward: data.ward, status: data.status
                 })
             })).json())
         if (response.status === "error") {
@@ -100,6 +101,33 @@ export default function Facilities() {
             setOpenSnackBar(true);
             return;
         }
+        getFacilities();
+        setOpen(false);
+        return;
+    }
+    // edit user
+    let editFacility = async () => {
+        setOpenSnackBar(false)
+        let _subCounty = countyToConstituency[data.county].map((sc) => {
+            // console.log(sc)
+            if (sc.code === data.subCounty) {
+                return sc.name
+            }
+        })
+        console.log(_subCounty)
+        let response = (await (await fetch(`${apiHost}/admin/facilities/${selected[0]}`,
+            {
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
+                body: JSON.stringify({
+                    status: data.status, county: counties[data.county - 1].name, "name": data.name, subCounty: _subCounty.filter(n => n)[0], ward: data.ward
+                })
+            })).json());
+        if (response.status === "error") {
+            setMessage(response.error || response.message);
+            setOpenSnackBar(true);
+            return
+        }
+        prompt(`Successfully created user`);
         getFacilities();
         setOpen(false);
         return;
@@ -119,9 +147,10 @@ export default function Facilities() {
     const columns = [
         { field: 'kmhflCode', headerName: 'KMHFL Code', width: 150 },
         { field: 'name', headerName: 'Facility Name', width: 200 },
-        { field: 'county', headerName: 'County', width: 200 },
-        { field: 'subCounty', headerName: 'Sub-County', width: 200 },
-        { field: 'ward', headerName: 'Ward', width: 200 },
+        { field: 'county', headerName: 'County', width: 150 },
+        { field: 'subCounty', headerName: 'Sub-County', width: 150 },
+        { field: 'ward', headerName: 'Ward', width: 150 },
+        { field: 'disabled', headerName: 'Disabled', width: 150 },
     ];
 
     const style = {
@@ -147,10 +176,17 @@ export default function Facilities() {
                     key={"loginAlert"}
                 />
                 <Stack direction="row" spacing={2} alignContent="right" >
-                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '65%' : '80%' }}></Typography>}
+                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 1) ? '60%' : (selected.length === 1) ? "43%" : '80%' }}></Typography>}
+
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: '#632165' }}>Delete {(selected.length > 1) ? `Facilities`: 'Facility'}</Button>
+                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: '#632165' }}>Delete {(selected.length > 1) ? `Facilities` : 'Facility'}</Button>
+                        </>
+                    }
+                    {(selected.length === 1) &&
+                        <>
+                            <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { setEditMode(true); handleOpen() }}>Edit Facility Details</Button>
+                            {/* <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { resetPassword() }}>Reset Password</Button> */}
                         </>
                     }
 
@@ -178,9 +214,9 @@ export default function Facilities() {
                 >
                     <Box sx={style}>
                         <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                            ADD NEW USER
+                            {editMode ? "Update Facility Information" : "Add New Facility"}
                         </Typography>
-                        <Typography variant="p">Provide user information below</Typography>
+                        <Typography variant="p">Provide facility information below</Typography>
                         <br /><br />
                         <Stack direction="column" spacing={2}>
                             <TextField
@@ -249,8 +285,22 @@ export default function Facilities() {
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            {editMode && <Grid item xs={12} md={12} lg={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                    <Select
+                                        value={data.status}
+                                        label="Ward"
+                                        onChange={e => { setData({ ...data, status: e.target.value }) }}
 
-                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createFacility() }}>Create Facility</Button>
+                                        size="small"
+                                    >
+                                        <MenuItem value={"disabled"}>DISABLED</MenuItem>
+                                        <MenuItem value={"enabled"}>ENABLED</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>}
+                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { editMode ? editFacility() : createFacility() }}>{editMode ? "Update" : "Create"} Facility</Button>
                             <br />
                         </Stack>
                     </Box>

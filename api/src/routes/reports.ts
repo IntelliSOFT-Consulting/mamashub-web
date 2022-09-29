@@ -63,12 +63,12 @@ router.get('/anc-summary', async (req: Request, res: Response) => {
         res.statusCode = 200;
         let report = (await generateANCSummary());
         res.json({ report, status: "success" });
-        return
+        return;
     } catch (error) {
         console.error(error);
         res.statusCode = 400;
         res.json({ error, status: "error" });
-        return
+        return;
     }
 })
 

@@ -1,11 +1,9 @@
 import express, { Request, Response } from "express";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
-import * as bcrypt from 'bcrypt'
 
 const router = express.Router();
 router.use(express.json());
-
 
 
 // Add Facility
@@ -18,7 +16,7 @@ router.post('/facilities', [requireJWT], async (req: Request, res: Response) => 
             if (Object.keys(data).indexOf(f) < 0) {
                 res.statusCode = 400;
                 res.json({ error: `${f} is a required field`, status: "error" });
-                return
+                return;
             }
         }
         let facility = await db.facility.create({
@@ -32,13 +30,13 @@ router.post('/facilities', [requireJWT], async (req: Request, res: Response) => 
         });
         res.statusCode = 200;
         res.json({ message: "Facility created successfully", status: "success", id: facility.kmhflCode });
-        return
+        return;
 
     } catch (error) {
         console.error(error);
         res.statusCode = 400;
         res.json({ error, status: "error" });
-        return
+        return;
     }
 })
 
@@ -47,17 +45,17 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || '';
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1]);
-        if (decodedSession.type == 'valid') {
-            let role = decodedSession.session.role
+        if (decodedSession.type === 'valid') {
+            let role = decodedSession.session.role;
             if (role !== 'ADMINISTRATOR') {
                 res.statusCode = 401;
                 res.send({ error: `Insufficient Permissions for ${role}`, status: "error" });
-                return
+                return;
             }
             let facilities = await db.facility.findMany({
                 select: {
                     kmhflCode: true, name: true, data: true,
-                    createdAt: true, updatedAt: true
+                    createdAt: true, updatedAt: true, disabled: true
                 },
             });
             res.statusCode = 200;
@@ -83,6 +81,17 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
 router.delete("/facilities/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
         let { id } = req.params
+        let token = req.headers.authorization || '';
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
+        if (decodedSession.type === 'valid') {
+            let currentRole = decodedSession.session.role;
+            let userId = decodedSession.session.userId;
+            if (currentRole !== 'ADMINISTRATOR') {
+                res.statusCode = 401;
+                res.send({ error: `Insufficient Permissions for ${currentRole}`, status: "error" });
+                return;
+            }
+        }
         let response = await db.facility.delete({
             where: {
                 kmhflCode: id
@@ -98,7 +107,55 @@ router.delete("/facilities/:id", [requireJWT], async (req: Request, res: Respons
         res.json(error);
         return;
     }
-})
+});
 
 // Edit Facility Details...
+router.post("/facilities/:id", [requireJWT], async (req: Request, res: Response) => {
+    try {
+        let { id } = req.params;
+        let { status, county, subCounty, ward } = req.body;
+        console.log(req.body)
+        console.log(status)
+        let token = req.headers.authorization || '';
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
+        if (decodedSession.type === 'valid') {
+            let currentRole = decodedSession.session.role;
+            let userId = decodedSession.session.userId;
+            if (currentRole !== 'ADMINISTRATOR') {
+                res.statusCode = 401;
+                res.send({ error: `Insufficient Permissions for ${currentRole}`, status: "error" });
+                return;
+            }
+        }
+        let facility = await db.facility.update({
+            where: { kmhflCode: id },
+            data: {
+                ...county && {
+                    data: {
+                        county, subCounty: subCounty || "", ward: ward || ""
+                    }
+                },
+                ...status && { disabled: (status === "disabled") }
+            }
+        })
+        // let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role }
+        res.statusCode = 201;
+        res.json({ facility: facility.kmhflCode, status: "success" });
+        return;
+    } catch (error: any) {
+        res.statusCode = 400
+        console.error(error)
+        if (error.code === 'P2002') {
+            res.json({ status: "error", message: `User with the ${error.meta.target} provided already exists` });
+            return
+        }
+        res.json(error);
+        return;
+    }
+});
+
+
+
+
+
 export default router

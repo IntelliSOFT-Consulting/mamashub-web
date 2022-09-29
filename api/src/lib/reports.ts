@@ -38,9 +38,9 @@ export let generateGeneralReport = async (patientId: string, from: string | null
         }
     })
     let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&code=${_codes.join()}&_count=99999&_updatedAt=ge${_fromDate}&_updatedAt=le${_toDate}` })).data
-    observations = observations?.entry ?? []
+    observations = observations?.entry ?? [];
     // console.log(observations)
-    let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
+    let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data;
 
     for (let observation of observations) {
         for (let code of Object.keys(codes)) {
