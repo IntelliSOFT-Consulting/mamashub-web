@@ -140,7 +140,7 @@ export default function PreviousPregnancy() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
                             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -389,7 +389,7 @@ export default function PreviousPregnancy() {
                             </Box>
                         </Modal>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

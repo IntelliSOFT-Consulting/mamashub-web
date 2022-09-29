@@ -130,7 +130,7 @@ export default function MOH711Report() {
 
     return (
         <>
-            <Layout>
+            
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={open}
@@ -199,7 +199,7 @@ export default function MOH711Report() {
                     </Modal>
 
                 </Container>
-            </Layout>
+            
         </>
     )
 

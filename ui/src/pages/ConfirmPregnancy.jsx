@@ -78,7 +78,7 @@ export default function MaternityUnit({ id }) {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
 
                     <Container sx={{ border: '1px white dashed' }}>
 
@@ -187,7 +187,7 @@ export default function MaternityUnit({ id }) {
 
                         </TabContext>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )

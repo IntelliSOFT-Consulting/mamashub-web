@@ -196,7 +196,7 @@ export default function Users() {
 
     return (
         <>
-            <Layout>
+            
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={openSnackBar}
@@ -309,7 +309,7 @@ export default function Users() {
                         </Stack>
                     </Box>
                 </Modal>
-            </Layout>
+            
         </>
     )
 }

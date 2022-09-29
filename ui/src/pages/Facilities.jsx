@@ -167,7 +167,7 @@ export default function Facilities() {
 
     return (
         <>
-            <Layout>
+            
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={openSnackBar}
@@ -305,7 +305,7 @@ export default function Facilities() {
                         </Stack>
                     </Box>
                 </Modal>
-            </Layout>
+            
         </>
     )
 }

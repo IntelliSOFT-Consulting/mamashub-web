@@ -145,7 +145,7 @@ export default function PresentPregnancy() {
     return (
         <>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Layout>
+                
 
                     <Container sx={{ border: '1px white dashed' }}>
                         <Snackbar
@@ -454,7 +454,7 @@ export default function PresentPregnancy() {
                             </Box>
                         </Modal>
                     </Container>
-                </Layout>
+                
             </LocalizationProvider>
         </>
     )
