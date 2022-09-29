@@ -15,7 +15,6 @@ let getNoOfAncVisits = async (patientId: string) => {
     return unique.length
 }
 
-
 export let generateGeneralReport = async (patientId: string, from: string | null, to: string | null) => {
 
     let fromDate = from ? new Date(from) : new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))
@@ -53,7 +52,6 @@ export let generateGeneralReport = async (patientId: string, from: string | null
             }
         }
     }
-    // console.log((patient.name[0].family || ""), results)
 
     let report = {
         ancNumber: patient.identifier ? patient.identifier[0].value : " - ",
@@ -71,10 +69,6 @@ export let generateGeneralReport = async (patientId: string, from: string | null
     return { ...report, ...results }
 }
 
-// let d = generateGeneralReport("fee27216-cdef-4a80-93c4-80a04d2adaef").then(res=>{
-//     console.log(res)
-// })
-// console.log(d)
 
 
 let getPatientCountByCode = async (code: string) => {
@@ -94,17 +88,17 @@ export let generateMOH711Report = async () => {
         "completed4ANCVisits": await getPatientCountByCode("74935093"),
         "LLINSUnder1Year": await getPatientCountByCode("784030374-Y"),
         "LLINSToAncClients": await getPatientCountByCode("784030374-Y"),
-        "testedForSyphylis": await getPatientCountByCode("74935093"),
-        "hivPositive": await getPatientCountByCode("74935093"),
-        "doneBreastExamination": await getPatientCountByCode("74935093"),
+        "testedForSyphylis": await getPatientCountByCode("76272004-Y"),
+        "hivPositive": await getPatientCountByCode("31676001-Y"),
+        "doneBreastExamination": await getPatientCountByCode("185712006"),
         "10-14": await getPatientCountByCode("74935093"),
         "15-19": await getPatientCountByCode("74935093"),
         "20-24": await getPatientCountByCode("74935093"),
         "pregnancyAtFirstAnc": await getPatientCountByCode("74935093"),
-        "issuedWithIron": await getPatientCountByCode("74935093"),
+        "issuedWithIron": await getPatientCountByCode("6709950"),
         "issuedWithFolic": await getPatientCountByCode("74935093"),
         "issuedWithCombinedFF": await getPatientCountByCode("74935093"),
-        "FGMAssociatedComplication": await getPatientCountByCode("74935093"),
+        "FGMAssociatedComplication": await getPatientCountByCode("95041000119101-C"),
         "totalScreened": await getPatientCountByCode("74935093"),
         "presumptiveTBCases": await getPatientCountByCode("74935093"),
         "alreadyOnTB": await getPatientCountByCode("74935093"),

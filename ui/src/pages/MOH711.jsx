@@ -97,21 +97,20 @@ export default function MOH711Report() {
         { field: 'completed4ANCVisits', title: 'Completed 4 ANC Visits', width: 130 },
         { field: 'LLINSUnder1Year', title: 'LLINS Under 1 year', width: 100 },
         { field: 'LLINSToAncClients', title: 'LLINS To ANC Clients', width: 100 },
-        { field: 'testedForSyphylis', title: 'Tested for syphillis', width: 120 },
+        { field: 'testedForSyphylis', title: 'Tested for Syphyllis', width: 120 },
         { field: 'hivPositive', title: 'HIV Positive', width: 120 },
         { field: 'doneBreastExamination', title: 'Done breast examination.', width: 100 },
-        { field: '10-14', title: '10-14' },
-        { field: '15-19', title: '15-19', width: 100 },
-        { field: '20-24', title: '20-24', width: 100 },
-        { field: 'pregnancyAtFirstAnc', title: 'Pregnancy At First Anc', width: 130 },
+        { field: '10-14', title: 'No. of adolescents (10 -14 years) presenting with pregnancy at first ANC Visit' },
+        { field: '15-19', title: 'No. of adolescents (15 -19 years) presenting with pregnancy at first ANC Visit', width: 100 },
+        { field: '20-24', title: 'No. of youths (20 -24 years) presenting with pregnancy at first ANC Visit', width: 100 },
+        { field: 'pregnancyAtFirstAnc', title: 'Pregnancy At First ANC', width: 130 },
         { field: 'issuedWithIron', title: 'Issued With Iron', width: 80 },
         { field: 'issuedWithFolic', title: 'Issued With Folic', width: 120 },
         { field: 'issuedWithCombinedFF', title: 'Issued With Combined FF', width: 120 },
         { field: 'FGMAssociatedComplication', title: 'FGM Associated Complication', width: 120 },
-        { field: 'totalScreened', title: 'TotalScreened', width: 120 },
-        { field: 'presumptiveTBCases', title: 'Urynalysis', width: 100 },
-        { field: 'alreadyOnTB', title: 'PresumptiveTBCases', width: 120 },
-        { field: 'totalNotScreened', title: 'TotalNotScreened', width: 120 },];
+        { field: 'totalScreened', title: 'Total No. of people Screened', width: 120 },
+        { field: 'alreadyOnTB', title: 'Total No. of presumptiveTBCases', width: 120 },
+        { field: 'totalNotScreened', title: 'Total Not Screened', width: 120 },];
     // const [indicators, setIndicators] = useState(columns)
 
 
@@ -144,7 +143,7 @@ export default function MOH711Report() {
                     <br />
                     <Button variant="contained"
                         disableElevation
-                        disabled={Object.keys(results).length< 1}
+                        disabled={Object.keys(results).length < 1}
                         onClick={e => { exportReport() }}
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
 

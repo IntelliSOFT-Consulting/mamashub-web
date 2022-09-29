@@ -38,23 +38,23 @@ export default function GeneralPatientLevel() {
 
     const exportReport = async () => {
 
-        console.log(results)
-        let header = []
-        let data = []
+        console.log(results);
+        let header = [];
+        let data = [];
         if (results.length > 0) {
             header = Object.keys(results[0]).map((x) => {
-                return x
+                return x;
             })
             data = results.map((result) => {
                 return Object.keys(result).map((r) => {
-                    return result[r]
+                    return result[r];
                 })
             })
         }
-        console.log(data)
-        let rows = [header].concat(data)
-        exportToCsv(`MOH 405 ANC - ${new Date().toISOString()}.csv`, rows)
-        return
+        console.log(data);
+        let rows = [header].concat(data);
+        exportToCsv(`MOH 405 ANC - ${new Date().toISOString()}.csv`, rows);
+        return;
     }
 
     const handleClose = async () => {
