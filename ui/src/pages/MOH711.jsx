@@ -4,6 +4,13 @@ import { apiHost } from '../lib/api';
 import { exportToCsv } from '../lib/exportCSV';
 import { DataGrid } from '@mui/x-data-grid';
 import Layout from '../components/Layout';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 export default function MOH711Report() {
@@ -63,6 +70,18 @@ export default function MOH711Report() {
         setSelected(null)
         return
     }
+
+    function createData(name, calories, fat, carbs, protein) {
+        return { name, calories, fat, carbs, protein };
+    }
+
+    const rows = [
+        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+        createData('Eclair', 262, 16.0, 24, 6.0),
+        createData('Cupcake', 305, 3.7, 67, 4.3),
+        createData('Gingerbread', 356, 16.0, 49, 3.9),
+    ];
 
     useEffect(() => {
         getReport()
@@ -135,16 +154,30 @@ export default function MOH711Report() {
 
                     <br />
                     <br />
-                    {(!loading) ? <DataGrid
-                        loading={loading}
-                        rows={results ? results : []}
-                        columns={columns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        autoHeight
-                        disableSelectionOnClick={true}
-                        onCellEditStop={e => { console.log(e) }}
-                    /> : <>
+                    {(!loading) ? <TableContainer component={Paper} sx={{ maxWidth: "50%" }}>
+                        <Table size="small" aria-label="a dense table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>(-)</TableCell>
+                                    <TableCell align="right">Value</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {columns.map((row) => (
+                                    <TableRow
+                                        key={row.field}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.field}
+                                        </TableCell>
+                                        <TableCell align="right">{row.calories || 0}</TableCell>
+                                        
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer> : <>
                         <CircularProgress />
                         <Typography variant='h5'>Loading Report..</Typography>
                     </>}

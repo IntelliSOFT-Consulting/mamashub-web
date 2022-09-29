@@ -86,7 +86,13 @@ export default function Facilities() {
         let response = (await (await fetch(`${apiHost}/admin/facilities`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ kmhflCode: data.kmhflCode, county: counties[data.county], "name": data.name, "subCounty": data.subCounty, ward: data.ward })
+                body: JSON.stringify({
+                    kmhflCode: data.kmhflCode, county: counties[data.county].name, "name": data.name, "subCounty": countyToConstituency[data.county].map((sc) => {
+                        if (sc.code === data.subCounty) {
+                            return sc.name
+                        }
+                    })[data.subCounty], ward: data.ward
+                })
             })).json())
         if (response.status === "error") {
             setMessage(response.error || response.message)

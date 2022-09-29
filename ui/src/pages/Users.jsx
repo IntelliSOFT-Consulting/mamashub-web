@@ -41,7 +41,7 @@ export default function Users() {
             let data = (await (await fetch(`${apiHost}/admin/facilities`,
                 { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
             setFacilities(data.facilities);
-            prompt("Facilites successfully fetched");
+            // prompt("Facilites successfully fetched");
             return;
         } catch (error) {
             prompt(JSON.stringify(error));
