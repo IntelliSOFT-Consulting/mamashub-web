@@ -271,7 +271,6 @@ export default function Users() {
                                     {role === "ADMINISTRATOR" && <MenuItem value={"ADMINISTRATOR"}>Administrator</MenuItem>}
                                     {role === "ADMINISTRATOR" && <MenuItem value={"FACILITY_ADMINISTRATOR"}>Facility Administrator</MenuItem>}
                                     <MenuItem value={"NURSE"}>Nurse/Clinical Officer</MenuItem>
-                                    <MenuItem value={"CLINICIAN"}>Clinician</MenuItem>
                                     <MenuItem value={"CHW"}>CHW</MenuItem>
                                 </Select>
                             </FormControl>
