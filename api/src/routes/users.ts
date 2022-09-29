@@ -28,7 +28,7 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
                 select: {
                     id: true, names: true, email: true,
                     createdAt: true, updatedAt: true,
-                    role: true, facility: true, facilityKmhflCode: true
+                    role: true, facility: true, facilityKmhflCode: true, disabled: true
                 },
                 where: {
                     ...(user?.facilityKmhflCode) && { facilityKmhflCode: user.facilityKmhflCode }
@@ -89,12 +89,14 @@ router.get("/:id", [requireJWT], async (req: Request, res: Response) => {
 router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
         let { status, role, kmhflCode, email, names, phone } = req.body;
+        console.log(req.body)
+        console.log(status)
         let { id } = req.params;
         let token = req.headers.authorization || '';
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         if (decodedSession.type == 'valid') {
-            let currentRole = decodedSession.session.role
-            let userId = decodedSession.session.userId
+            let currentRole = decodedSession.session.role;
+            let userId = decodedSession.session.userId;
             if (currentRole !== 'ADMINISTRATOR') {
                 res.statusCode = 401;
                 res.send({ error: `Insufficient Permissions for ${currentRole}`, status: "error" });
@@ -116,7 +118,7 @@ router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
                 ...email && { email },
                 ...names && { names },
                 ...phone && { phone },
-                ...(status) && { disabled: (status === "disabled") }
+                ...status && { disabled: (status === "disabled") }
             }
         })
         let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role }

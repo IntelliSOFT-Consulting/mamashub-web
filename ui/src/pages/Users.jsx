@@ -29,7 +29,7 @@ export default function Users() {
 
     function prompt(text) {
         setMessage(text);
-        setOpenSnackBar(true)
+        setOpenSnackBar(true);
         setTimeout(() => {
             setOpenSnackBar(false);
         }, 4000);
@@ -102,30 +102,30 @@ export default function Users() {
     // reset Password
     let resetPassword = async () => {
         for (let i of selected) {
-            setOpenSnackBar(false)
+            setOpenSnackBar(false);
             let response = (await (await fetch(`${apiHost}/auth/reset-password`,
                 {
                     method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
                     body: JSON.stringify({ id: i })
-                })).json())
+                })).json());
             if (response.status === "error") {
                 setMessage(response.error || response.message)
                 setOpenSnackBar(true)
                 return
             }
-            getUsers()
-            setMessage(response.error || response.message)
-            setOpenSnackBar(true)
+            getUsers();
+            setMessage(response.error || response.message);
+            setOpenSnackBar(true);
             setTimeout(() => {
                 setOpenSnackBar(false)
             }, 3000);
         }
-        return
+        return;
     }
 
     // create user
     let createUser = async () => {
-        setOpenSnackBar(false)
+        setOpenSnackBar(false);
         let response = (await (await fetch(`${apiHost}/auth/register`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
@@ -139,25 +139,25 @@ export default function Users() {
         prompt(`Successfully created user`)
         getUsers();
         setOpen(false);
-        return
+        return;
     }
-    // create user
+    // edit user
     let editUser = async () => {
         setOpenSnackBar(false)
         let response = (await (await fetch(`${apiHost}/users/${selected[0]}`,
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
-                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode })
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode, status: data.status })
             })).json());
         if (response.status === "error") {
             setMessage(response.error || response.message);
             setOpenSnackBar(true);
             return
         }
-        prompt(`Successfully created user`)
+        prompt(`Successfully created user`);
         getUsers();
         setOpen(false);
-        return
+        return;
     }
 
     useEffect(() => {
@@ -173,11 +173,13 @@ export default function Users() {
     }, [])
 
     const columns = [
-        { field: 'names', headerName: 'Names', width: 200 },
+        { field: 'names', headerName: 'Names', width: 180 },
         { field: 'email', headerName: 'Email', width: 200 },
-        { field: 'role', headerName: 'Role', width: 200 },
-        { field: 'facilityName', headerName: 'Assigned Facility', width: 200 },
-        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
+        { field: 'role', headerName: 'Role', width: 150 },
+        { field: 'facilityName', headerName: 'Assigned Facility', width: 150 },
+        { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 130 },
+        { field: 'disabled', headerName: 'Disabled', width: 150 }
+
     ];
 
     const style = {
@@ -288,7 +290,21 @@ export default function Users() {
                                     })}
                                 </Select>
                             </FormControl>}
-                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { editMode ? editUser() : createUser() }}>Create User</Button>
+                            {editMode && <Grid item xs={12} md={12} lg={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Account Status</InputLabel>
+                                    <Select
+                                        value={data.status}
+                                        label="Account Status"
+                                        onChange={e => { setData({ ...data, status: (e.target.value) }) }}
+                                        size="small"
+                                    >
+                                        <MenuItem value={"disabled"}>Disabled</MenuItem>
+                                        <MenuItem value={"enabled"}>Enabled</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>}
+                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { editMode ? editUser() : createUser() }}>{editMode ? "Update User Details" : "Create User"}</Button>
                             <br />
                         </Stack>
                     </Box>
