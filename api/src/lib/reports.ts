@@ -114,7 +114,7 @@ export let generateMOH711Report = async () => {
 
 export const generateANCSummary = async () => {
     return {
-        "New Anc Clients": await getPatientCountByCode("74935093"),
+        "No. of ANC Clients": await getPatientCountByCode("74935093"),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await getPatientCountByCode("95041000119101-C"),
         "Women positive for Syphyllis": await getPatientCountByCode("76272004-Y"),
