@@ -82,6 +82,7 @@ export default function PatientList() {
   let [loading, setLoading] = useState(false);
   let [selected, setSelected] = useState([]);
   let [name, setName] = useState('');
+  const [filter, setFilter] = useState('name');
   const classes = useStyles();
 
   let startPatientVisit = async () => {
@@ -113,11 +114,49 @@ export default function PatientList() {
     return;
   };
 
+  const onFilterChange = async () => {
+    try {
+      setLoading(true);
+      let data = await FhirApi({
+        url: `/fhir/Patient?${filter}`,
+        method: 'GET',
+      });
+      let p = data.data.entry.map(i => {
+        let r = i.resource;
+        return {
+          id: r.id,
+          lastName: r.name[0].family,
+          age: `${Math.floor(
+            (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
+          )} years`,
+        };
+      });
+      setPatients(p);
+      setLoading(false);
+      return;
+    } catch (error) {
+      setMessage(`Error fetching patients`);
+      setOpen(true);
+      setLoading(false);
+      setPatients([]);
+      setTimeout(() => {
+        setOpen(false);
+      }, 1500);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (filter) {
+      onFilterChange();
+    }
+  }, [filter]);
+
   let search = async name => {
     try {
       setLoading(true);
       let data = await FhirApi({
-        url: `/fhir/Patient?name=${name}`,
+        url: `/fhir/Patient?name=${name}${filter}`,
         method: 'GET',
       });
       let p = data.data.entry.map(i => {
@@ -168,6 +207,24 @@ export default function PatientList() {
     return;
   };
 
+  const chageFilter = e => {
+    const { value } = e.target;
+    switch (value) {
+      case 'All':
+        setFilter('');
+        break;
+      case 'Referred': 
+        setFilter('');
+        break;
+      case 'Not referred':
+        setFilter('');
+        break;
+      default:
+        setFilter('');
+        break;
+    }
+  };
+
   useEffect(() => {
     getPatients();
   }, []);
@@ -189,6 +246,13 @@ export default function PatientList() {
     { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
     // { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
     { field: 'age', headerName: 'Age', width: 150 },
+    {
+      field: 'id',
+      headerName: 'Action',
+      format: value => (
+        <Button onClick={() => navigate(`/patients/${value}`)}>Register</Button>
+      ),
+    },
   ];
 
   let isMobile = useMediaQuery('(max-width:600px)');
@@ -204,168 +268,164 @@ export default function PatientList() {
 
   return (
     <>
-      
-        <br />
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={open}
-          onClose={''}
-          message={message}
-          key={'loginAlert'}
-        />
-        <Stack
-          direction='row'
-          gap={1}
+      <br />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={open}
+        onClose={''}
+        message={message}
+        key={'loginAlert'}
+      />
+      <Stack
+        direction='row'
+        gap={1}
+        sx={{
+          paddingLeft: isMobile ? '1em' : '2em',
+          paddingRight: isMobile ? '1em' : '2em',
+        }}
+        justifyContent='space-between'
+      >
+        <Paper
+          component='form'
           sx={{
-            paddingLeft: isMobile ? '1em' : '2em',
-            paddingRight: isMobile ? '1em' : '2em',
+            p: '0px',
+            display: 'flex',
+            alignItems: 'center',
+            width: '60%',
           }}
-          justifyContent='space-between'
         >
-          <Paper
-            component='form'
-            sx={{
-              p: '0px',
-              display: 'flex',
-              alignItems: 'center',
-              width: '60%',
+          <TextField
+            sx={{ ml: 1, flex: 1 }}
+            placeholder='Type here'
+            className={classes.patientSearch}
+            onChange={e => {
+              setName(e.target.value);
             }}
-          >
-            <TextField
-              sx={{ ml: 1, flex: 1 }}
-              placeholder='Type here'
-              className={classes.patientSearch}
-              onChange={e => {
-                setName(e.target.value);
-              }}
-              variant='standard'
-              label='Search'
-              autoComplete='off'
-            />
-            <IconButton
-              onClick={e => {
-                search(name);
-              }}
-              type='button'
-              sx={{ p: '10px' }}
-              aria-label='search'
-            >
-              <SearchIcon />
-            </IconButton>
-            <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
-            <>
-              <InputLabel id='demo-simple-select-label'>Filter By </InputLabel>
-              <Select
-                onChange={e => search(e.target.value)}
-                input={<Input className={classes.patientSearch} />}
-                renderValue={selected => {
-                  if (!selected) {
-                    return <em>Filter By</em>;
-                  }
-
-                  return selected;
-                }}
-                inputProps={{ 'aria-label': 'Standard label' }}
-              >
-                {categories.map(category => (
-                  <MenuItem
-                    key={category}
-                    value={category}
-                    className={classes.filterList}
-                  >
-                    <RadioButtonCheckedIcon />
-                    <span>{category}</span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </>
-          </Paper>
-          <Button
-            variant='contained'
-            disableElevation
-            sx={{ backgroundColor: '#632165' }}
-            onClick={e => {
-              navigate('/patient-registration');
-            }}
-          >
-            Register Patient
-          </Button>
-          {/* <TextField type={"text"} size="small" sx={{ width: "80%" }} placeholder='Patient Name' onChange={e => { setName(e.target.value) }} />
-                    <Button variant="contained" size='small' sx={{ width: "20%", backgroundColor: "#632165" }} onClick={e => { search(name) }} disableElevation>Search</Button> */}
-        </Stack>
-        <br />
-        <Stack direction='row' spacing={2} alignContent='right'>
-          {!isMobile && (
-            <Typography
-              sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
-            ></Typography>
-          )}
-          {selected.length > 0 && (
-            <>
-              <Button
-                variant='contained'
-                onClick={e => {
-                  deletePatients();
-                }}
-                disableElevation
-                sx={{ backgroundColor: '#632165' }}
-              >
-                Delete Patient{selected.length > 1 && `s`}
-              </Button>{' '}
-            </>
-          )}
-          {selected.length === 1 && (
-            <>
-              <Button
-                variant='contained'
-                onClick={e => {
-                  startPatientVisit();
-                }}
-                disableElevation
-                sx={{ backgroundColor: '#632165' }}
-              >
-                Start Visit
-              </Button>
-              <Button
-                variant='contained'
-                onClick={e => {
-                  viewPatient();
-                }}
-                disableElevation
-                sx={{ backgroundColor: '#632165' }}
-              >
-                View Patient
-              </Button>
-            </>
-          )}
-        </Stack>
-        <br />
-        <Container maxWidth='lg'>
-          {selectionModel.length < 1 && (
-            <Alert severity='error'>
-              Select a patient from the list to Start visit, View Profile
-              Information etc.
-            </Alert>
-          )}
-          <p></p>
-          <DataGrid
-            loading={loading}
-            rows={patients ? patients : []}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            checkboxSelection
-            autoHeight
-            disableSelectionOnClick
-            onSelectionModelChange={e => {
-              setSelected(e);
-            }}
-            onCellEditStop={e => {
-              console.log(e);
-            }}
+            variant='standard'
+            label='Search'
+            autoComplete='off'
           />
-        </Container>
-      
+          <IconButton
+            onClick={e => {
+              search(name);
+            }}
+            type='button'
+            sx={{ p: '10px' }}
+            aria-label='search'
+          >
+            <SearchIcon />
+          </IconButton>
+          <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
+          <>
+            <InputLabel id='demo-simple-select-label'>Filter By </InputLabel>
+            <Select
+              onChange={chageFilter}
+              input={<Input className={classes.patientSearch} />}
+              renderValue={selected => {
+                if (!selected) {
+                  return <em>Filter By</em>;
+                }
+
+                return selected;
+              }}
+              inputProps={{ 'aria-label': 'Standard label' }}
+            >
+              {categories.map(category => (
+                <MenuItem
+                  key={category}
+                  value={category}
+                  className={classes.filterList}
+                >
+                  <RadioButtonCheckedIcon />
+                  <span>{category}</span>
+                </MenuItem>
+              ))}
+            </Select>
+          </>
+        </Paper>
+        <Button
+          variant='contained'
+          disableElevation
+          sx={{ backgroundColor: '#632165' }}
+          onClick={e => {
+            navigate('/patient-registration');
+          }}
+        >
+          Register Patient
+        </Button>
+      </Stack>
+      <br />
+      <Stack direction='row' spacing={2} alignContent='right'>
+        {!isMobile && (
+          <Typography
+            sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
+          ></Typography>
+        )}
+        {selected.length > 0 && (
+          <>
+            <Button
+              variant='contained'
+              onClick={e => {
+                deletePatients();
+              }}
+              disableElevation
+              sx={{ backgroundColor: '#632165' }}
+            >
+              Delete Patient{selected.length > 1 && `s`}
+            </Button>{' '}
+          </>
+        )}
+        {selected.length === 1 && (
+          <>
+            <Button
+              variant='contained'
+              onClick={e => {
+                startPatientVisit();
+              }}
+              disableElevation
+              sx={{ backgroundColor: '#632165' }}
+            >
+              Start Visit
+            </Button>
+            <Button
+              variant='contained'
+              onClick={e => {
+                viewPatient();
+              }}
+              disableElevation
+              sx={{ backgroundColor: '#632165' }}
+            >
+              View Patient
+            </Button>
+          </>
+        )}
+      </Stack>
+      <br />
+      <Container maxWidth='lg'>
+        {selectionModel.length < 1 && (
+          <Alert severity='error'>
+            Select a patient from the list to Start visit, View Profile
+            Information etc.
+          </Alert>
+        )}
+        <p></p>
+        <DataGrid
+          loading={loading}
+          rows={patients ? patients : []}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          checkboxSelection
+          autoHeight
+          disableSelectionOnClick
+          onSelectionModelChange={e => {
+            setSelected(e);
+          }}
+          onCellEditStop={e => {
+            console.log(e);
+          }}
+        />
+      </Container>
     </>
   );
 }
