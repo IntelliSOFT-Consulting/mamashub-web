@@ -16,6 +16,7 @@ export default function Facilities() {
 
     let [facilities, setFacilities] = useState([]);
     let [open, setOpen] = useState(false);
+    let [editMode, setEdit] = useState(false)
     let [data, setData] = useState({});
     let [loading, setLoading] = useState(true);
     const handleOpen = () => setOpen(true);
@@ -87,7 +88,7 @@ export default function Facilities() {
             {
                 method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
                 body: JSON.stringify({
-                    kmhflCode: data.kmhflCode, county: counties[data.county].name, "name": data.name, "subCounty": countyToConstituency[data.county].map((sc) => {
+                    kmhflCode: data.kmhflCode, county: counties[data.county - 1].name, "name": data.name, "subCounty": countyToConstituency[data.county].map((sc) => {
                         if (sc.code === data.subCounty) {
                             return sc.name
                         }
@@ -149,7 +150,7 @@ export default function Facilities() {
                     {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '65%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete Facility{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: '#632165' }}>Delete {(selected.length > 1) ? `Facilities`: 'Facility'}</Button>
                         </>
                     }
 

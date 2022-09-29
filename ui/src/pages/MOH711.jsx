@@ -58,9 +58,9 @@ export default function MOH711Report() {
                 })
             })
         }
-        console.log(data)
-        let rows = [header].concat(data)
-        exportToCsv(`MOH 711 ANC - ${new Date().toISOString()}.csv`, rows)
+        console.log(data);
+        let rows = [header].concat(data);
+        exportToCsv(`MOH 711 ANC - ${new Date().toISOString()}.csv`, rows);
         return
     }
 

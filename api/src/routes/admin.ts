@@ -42,7 +42,7 @@ router.post('/facilities', [requireJWT], async (req: Request, res: Response) => 
     }
 })
 
-// Get User Information.
+// Get Facility Information.
 router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || '';
@@ -79,6 +79,26 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
     }
 });
 
-// Edit Facility Details...
+// Get User Information.
+router.delete("/facilities/:id", [requireJWT], async (req: Request, res: Response) => {
+    try {
+        let { id } = req.params
+        let response = await db.facility.delete({
+            where: {
+                kmhflCode: id
+            }
+        })
+        res.statusCode = 200;
+        res.json({ status: "success", "id": id })
+        return;
 
+    } catch (error) {
+        console.error(error);
+        res.statusCode = 400;
+        res.json(error);
+        return;
+    }
+})
+
+// Edit Facility Details...
 export default router
