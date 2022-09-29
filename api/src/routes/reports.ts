@@ -3,11 +3,9 @@ import { FhirApi } from "../lib/fhir/utils";
 import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
 import { generateANCSummary, generateGeneralReport, generateMOH711Report } from "../lib/reports";
 
-
 const router = express.Router()
 
 router.use(express.json())
-
 
 router.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     console.error('Got an error!', err);
@@ -15,7 +13,6 @@ router.use(function (err: any, req: Request, res: Response, next: NextFunction) 
 });
 
 router.get('/general', async (req: Request, res: Response) => {
-
     try {
         res.statusCode = 200
         let report = []
@@ -41,7 +38,6 @@ router.get('/general', async (req: Request, res: Response) => {
 })
 
 router.get('/moh-711', async (req: Request, res: Response) => {
-
     try {
         res.statusCode = 200;
         let report = (await generateMOH711Report());
@@ -53,9 +49,7 @@ router.get('/moh-711', async (req: Request, res: Response) => {
         res.json({ error, status: "error" });
         return
     }
-})
-
-
+});
 
 router.get('/anc-summary', async (req: Request, res: Response) => {
 
