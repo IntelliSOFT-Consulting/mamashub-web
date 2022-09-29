@@ -11,11 +11,13 @@ export default function MOH711Report() {
     const [message, setMessage] = useState(false)
     const [results, setResults] = useState([])
     const [data, setData] = useState({})
+    const [loading, setLoading] = useState(true)
     const [selected, setSelected] = useState({})
     const [selectionModel, setSelectionModel] = useState([]);
 
     let getReport = async () => {
         let data = await (await fetch(`${apiHost}/reports/moh-711`)).json()
+        setLoading(false)
         if (data.status === 'success') {
             setResults(data.report)
             setOpen(true)
@@ -133,8 +135,8 @@ export default function MOH711Report() {
 
                     <br />
                     <br />
-                    {results.length > 0 ? <DataGrid
-                        loading={!results}
+                    {(!loading) ? <DataGrid
+                        loading={loading}
                         rows={results ? results : []}
                         columns={columns}
                         pageSize={10}

@@ -16,27 +16,21 @@ let getNoOfAncVisits = async (patientId: string) => {
 }
 
 
-export let generateGeneralReport = async (patientId: string) => {
+export let generateGeneralReport = async (patientId: string, from: string | null, to: string | null) => {
 
+    let fromDate = from ? new Date(from) : new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))
+    let toDate = to ? new Date(to) : new Date();
+    let _toDate = `${toDate.getFullYear()}-${toDate.getMonth()}-${toDate.getDate()}`
+    let _fromDate = `${fromDate.getFullYear()}-${fromDate.getMonth()}-${fromDate.getDate()}`
     let reportFields = [
-        'parity', 'gravidae',
-        'lmp', 'edd',
-        'gestation', 'muacCodes',
-        'height', 'fgm',
-        'haemoglobin', 'bloodSugar',
-        'bloodGroupAndRhesus', 'urynalysis',
-        'dualTesting', 'testResults',
-        'treated', 'hivStatusBeforeANC',
-        'hivTesting', 'hivResults',
-        'artEligibility', 'maternalHaartBeforeANC',
-        'maternalHaartCTX', 'infantProphylaxis',
-        'partnerHIVTesting', 'partnerHIVResults',
-        'ppfpCounselling', 'otherConditions',
-        'deworming', 'ipt',
-        'ttDose', 'supplimentation',
-        'receivedLLITN', 'referralsFrom',
-        'referralsTo', 'reasonsForReferral',
-        'remarks'
+        'parity', 'gravidae', 'lmp', 'edd',
+        'gestation', 'muacCodes', 'height', 'fgm', 'haemoglobin', 'bloodSugar',
+        'bloodGroupAndRhesus', 'urynalysis', 'dualTesting', 'testResults',
+        'treated', 'hivStatusBeforeANC', 'hivTesting', 'hivResults',
+        'artEligibility', 'maternalHaartBeforeANC', 'maternalHaartCTX', 'infantProphylaxis',
+        'partnerHIVTesting', 'partnerHIVResults', 'ppfpCounselling', 'otherConditions', 'deworming', 'ipt',
+        'ttDose', 'supplimentation', 'receivedLLITN', 'referralsFrom',
+        'referralsTo', 'reasonsForReferral', 'remarks'
     ]
     let results: { [index: string]: any } = {}
     let _codes = Object.keys(codes).map((code) => {
@@ -44,7 +38,7 @@ export let generateGeneralReport = async (patientId: string) => {
             return String(codes[code]).split(":")[1];
         }
     })
-    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&code=${_codes.join()}&_count=99999` })).data
+    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&code=${_codes.join()}&_count=99999&_updatedAt=ge${_fromDate}&_updatedAt=le${_toDate}` })).data
     observations = observations?.entry ?? []
     // console.log(observations)
     let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data
@@ -124,7 +118,7 @@ export const generateANCSummary = async () => {
         "New Anc Clients": await getPatientCountByCode("74935093"),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await getPatientCountByCode("74935093"),
-        "Women tested positive for Syphyllis": await getPatientCountByCode("74935093"),
+        "Women positive for Syphyllis": await getPatientCountByCode("74935093"),
         "Women who are HIV Positive": await getPatientCountByCode("74935093"),
         "Women who have TB": await getPatientCountByCode("74935093"),
         "Women who have received LLITN": await getPatientCountByCode("74935093")

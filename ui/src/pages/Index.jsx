@@ -42,17 +42,6 @@ export default function Index() {
             navigate("/nurse-dashboard");
             return
         }
-        if (_data.data.role === "ADMINISTRATOR") {
-            navigate('/users');
-            return;
-        }
-        // if (_data.data.role === "FACILITY_ADMINISTRATOR") {
-        //     getFacilities();
-        // }
-        if (_data.data.role === "NURSE") {
-            navigate("/nurse-dashboard");
-            return
-        }
         return;
     }
 
@@ -85,11 +74,9 @@ export default function Index() {
                         <Typography variant="h5">Welcome </Typography>
                         <Grid container spacing={1} padding=".5em" >
                             {Object.keys(data).length > 0 && Object.keys(data).map((entry) => {
-                                if (data[entry]) {
-                                    return <Grid item xs={12} md={12} lg={3} >
-                                        <StatCard title={(entry).toUpperCase()} number={data[entry]} bg="#D0ADFC" />
-                                    </Grid>
-                                }
+                                return <Grid item xs={12} md={12} lg={3} >
+                                    <StatCard title={(entry).toUpperCase()} number={data[entry]} bg="#D0ADFC" />
+                                </Grid>
                             })}
                         </Grid>
                     </> : <CircularProgress />}
