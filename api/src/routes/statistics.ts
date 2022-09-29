@@ -32,12 +32,13 @@ router.get("/dashboard", [requireJWT], async (req: Request, res: Response) => {
             console.log(role)
             if (role === 'ADMINISTRATOR') {
                 facilities = await db.facility.count();
+                console.log(facilities)
             }
             res.statusCode = 200;
-            res.json({ status: "success", data: { users, facilities }});
+            res.json({ status: "success", data: { users, ...(role === 'ADMINISTRATOR') && { facilities: facilities } } });
             return;
         }
-    } catch(error) {
+    } catch (error) {
         console.error(error);
         res.statusCode = 400;
         res.json(error);

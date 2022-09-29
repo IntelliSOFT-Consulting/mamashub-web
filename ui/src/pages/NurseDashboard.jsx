@@ -84,7 +84,7 @@ let StatCard = ({ number, title, bg }) => {
     return <>
         <Card sx={{ backgroundColor: bg }}>
             <CardContent>
-                <Typography variant="h3">{number}</Typography>
+                <Typography variant="h3" sx={{ textAlign: "center" }}>{number}</Typography>
                 <Typography variant="h6" sx={{ minHeight: "4.7em" }}>{title}</Typography>
             </CardContent>
         </Card>

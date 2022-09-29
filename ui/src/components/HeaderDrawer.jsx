@@ -176,7 +176,7 @@ export default function HeaderDrawer({ children }) {
         <Toolbar />
         <Box sx={{ overflow: 'auto', backgroundColor: '#632165', minHeight: "630px", maxHeight: "630px" }} >
           <List >
-            {(role && (role === "FACILITY_ADMINISTRATOR")) &&
+            {(role && (role === "FACILITY_ADMINISTRATOR" || role === "ADMINISTRATOR")) &&
               <ListItem button onClick={e => { navigate('/'); activateTab("dashboard") }} sx={{ backgroundColor: isActiveTab("dashboard") ? "white" : '#632165', color: isActiveTab("dashboard") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
                 <ListItemIcon>
                   <Dashboard sx={{ color: isActiveTab("dashboard") ? "#632165" : 'white' }} />
@@ -192,20 +192,7 @@ export default function HeaderDrawer({ children }) {
                 <ListItemText primary='Dashboard' primaryTypographyProps={{ fontSize: "13px" }} />
               </ListItem>
             }
-            
-            {role && <>
-              {/* <ListItem button onClick={e => { navigate('/moh-100'); activateTab("moh-100") }} sx={{ backgroundColor: isActiveTab("moh-100") ? "white" : '#632165', color: isActiveTab("moh-100") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }} >
-              <ListItemIcon>
-                <DocumentScanner sx={{ color: isActiveTab("moh-100") ? "#632165" : 'white' }} />
-              </ListItemIcon>
-              <ListItemText primary='CHW Referral Form' primaryTypographyProps={{ fontSize: "13px" }} />
-            </ListItem> */}
-              <ListItem button onClick={e => { navigate('/community-referrals'); activateTab("community-referrals") }} sx={{ backgroundColor: isActiveTab("community-referrals") ? "white" : '#632165', color: isActiveTab("community-referrals") ? '#632165' : "white", "&:hover": { backgroundColor: "gray" } }}>
-                <ListItemIcon>
-                  <ScheduleSend sx={{ color: isActiveTab("community-referrals") ? "#632165" : 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary='Community Referrals' primaryTypographyProps={{ fontSize: "13px" }} />
-              </ListItem></>}
+          
           </List>
           <List>
 

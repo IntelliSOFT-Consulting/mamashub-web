@@ -56,12 +56,19 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
             }
             let facilities = await db.facility.findMany({
                 select: {
-                    kmhflCode:true, name: true, data: true,
+                    kmhflCode: true, name: true, data: true,
                     createdAt: true, updatedAt: true
                 },
             });
             res.statusCode = 200;
-            res.json({ status: "success", facilities });
+            res.json({
+                status: "success", facilities: facilities.map((facility) => {
+                    let data: any = facility.data;
+                    return {
+                        ...facility, county: data.county || "", subCounty: data.subCounty || "", ward: data.ward || ""
+                    }
+                })
+            });
             return;
         }
     } catch (error) {
@@ -73,8 +80,5 @@ router.get("/facilities", [requireJWT], async (req: Request, res: Response) => {
 });
 
 // Edit Facility Details...
-
-
-
 
 export default router

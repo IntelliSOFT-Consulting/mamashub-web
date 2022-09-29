@@ -37,10 +37,16 @@ export default function Users() {
 
     // fetch users
     let getFacilities = async () => {
-        let data = (await (await fetch(`${apiHost}/admin/facilities`,
-            { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
-        setFacilities(data.facilities);
-        return
+        try {
+            let data = (await (await fetch(`${apiHost}/admin/facilities`,
+                { method: "GET", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` } })).json())
+            setFacilities(data.facilities);
+            prompt("Facilites successfully fetched");
+            return;
+        } catch (error) {
+            prompt(JSON.stringify(error));
+            return;
+        }
     }
 
 
@@ -148,11 +154,10 @@ export default function Users() {
     }, [])
 
     const columns = [
-        // { field: 'id', headerName: 'ID', width: 100 },
         { field: 'names', headerName: 'Names', width: 200 },
         { field: 'email', headerName: 'Email', width: 200 },
         { field: 'role', headerName: 'Role', width: 200 },
-        { field: 'facilityName', headerName: 'Assigned Facility', width: 200},
+        { field: 'facilityName', headerName: 'Assigned Facility', width: 200 },
         { field: 'facilityKmhflCode', headerName: 'KMHFL Code', width: 150 }
     ];
 
@@ -252,7 +257,7 @@ export default function Users() {
                             {(role && role === "ADMINISTRATOR") && <FormControl fullWidth>
                                 <InputLabel>Facility</InputLabel>
                                 <Select
-                                    value={data.role}
+                                    value={data.kmhflCode}
                                     label="Facility"
                                     onChange={e => { setData({ ...data, kmhflCode: e.target.value }) }}
                                     size="small"

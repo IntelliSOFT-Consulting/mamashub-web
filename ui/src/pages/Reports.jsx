@@ -10,19 +10,21 @@ export default function GeneralPatientLevel() {
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState(false)
     const [results, setResults] = useState([])
+    const [loading, setLoading] = useState(true)
     const [data, setData] = useState({})
-    const [selected, setSelected] = useState({})
+    const [selected, setSelected] = useState({});
     const [selectionModel, setSelectionModel] = useState([]);
 
     let getReport = async () => {
-        let data = await (await fetch(`${apiHost}/reports/general`)).json()
+        let data = await (await fetch(`${apiHost}/reports/general`)).json();
+        setLoading(false);
         if (data.status === 'success') {
-            setResults(data.report)
-            setOpen(true)
-            setMessage("Successfully generated report generated")
+            setResults(data.report);
+            setOpen(true);
+            setMessage("Successfully generated report generated");
             setTimeout(() => {
-                setOpen(false)
-            }, 1500)
+                setOpen(false);
+            }, 1500);
             return
         }
         setOpen(true)
@@ -63,7 +65,7 @@ export default function GeneralPatientLevel() {
     }
 
     useEffect(() => {
-        getReport()
+        getReport();
     }, [])
 
     const columns = [
@@ -158,9 +160,9 @@ export default function GeneralPatientLevel() {
 
                     <br />
                     <br />
-                    {results.length > 0 ? <DataGrid
-                        loading={!results}
-                        rows={results ? results : []}
+                    {(!loading) ? <DataGrid
+                        loading={loading}
+                        rows={results}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}

@@ -19,9 +19,6 @@ import { FhirApi, apiHost } from './../lib/api'
 import * as qs from 'query-string';
 import { DataGrid } from '@mui/x-data-grid';
 import counties from '../data/counties.json'
-import countyMap from '../data/code_to_counties_map.json'
-import subCountyMap from '../data/code_to_constituencies_map.json'
-import wardMap from '../data/code_to_wards_map.json'
 import countyToConstituency from '../data/county_to_consituencies.json'
 import consituencyToWard from '../data/consituencies_to_ward.json'
 import { startVisit } from '../lib/startVisit'
