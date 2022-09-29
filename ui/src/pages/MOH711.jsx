@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 export default function MOH711Report() {
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState(false)
-    const [results, setResults] = useState([])
+    const [results, setResults] = useState({})
     const [data, setData] = useState({})
     const [loading, setLoading] = useState(true)
     const [selected, setSelected] = useState({})
@@ -88,30 +88,30 @@ export default function MOH711Report() {
     }, [])
 
     const columns = [
-        { field: 'newAncClients', headerName: 'No of ANC Visits', width: 150 },
-        { field: 'revisitAncClients', headerName: 'Sub County', width: 150 },
-        { field: 'iptDose1', headerName: 'IPT Dose 1', width: 150 },
-        { field: 'iptDose2', headerName: 'Village', width: 150 },
-        { field: 'iptDose3', headerName: 'IPT Does 3', width: 150 },
-        { field: 'hb', headerName: 'HB', width: 120 },
-        { field: 'completed4ANCVisits', headerName: 'Completed 4 ANC Visits', width: 130 },
-        { field: 'LLINSUnder1Year', headerName: 'LLINS Under 1 year', width: 100 },
-        { field: 'LLINSToAncClients', headerName: 'LLINS To ANC Clients', width: 100 },
-        { field: 'testedForSyphylis', headerName: 'Tested for syphillis', width: 120 },
-        { field: 'hivPositive', headerName: 'HIV Positive', width: 120 },
-        { field: 'doneBreastExamination', headerName: 'Done breast examination.', width: 100 },
-        { field: '10-14', headerName: 'MUAC', width: 100 },
-        { field: '15-19', headerName: 'Height', width: 100 },
-        { field: '20-24', headerName: 'Weight', width: 100 },
-        { field: 'pregnancyAtFirstAnc', headerName: 'pregnancyAtFirstAnc', width: 130 },
-        { field: 'issuedWithIron', headerName: 'issuedWithIron', width: 80 },
-        { field: 'issuedWithFolic', headerName: 'issuedWithFolic', width: 120 },
-        { field: 'issuedWithCombinedFF', headerName: 'issuedWithCombinedFF', width: 120 },
-        { field: 'FGMAssociatedComplication', headerName: 'FGMAssociatedComplication', width: 120 },
-        { field: 'totalScreened', headerName: 'totalScreened', width: 120 },
-        { field: 'presumptiveTBCases', headerName: 'Urynalysis', width: 100 },
-        { field: 'alreadyOnTB', headerName: 'presumptiveTBCases', width: 120 },
-        { field: 'totalNotScreened', headerName: 'totalNotScreened', width: 120 },];
+        { field: 'newAncClients', title: 'New ANC Clients', width: 150 },
+        { field: 'revisitAncClients', title: 'Revisiting ANC Clients', width: 150 },
+        { field: 'iptDose1', title: 'IPT Dose 1', width: 150 },
+        { field: 'iptDose2', title: 'IPT Dose 2', width: 150 },
+        { field: 'iptDose3', title: 'IPT Does 3', width: 150 },
+        { field: 'hb', title: 'HB', width: 120 },
+        { field: 'completed4ANCVisits', title: 'Completed 4 ANC Visits', width: 130 },
+        { field: 'LLINSUnder1Year', title: 'LLINS Under 1 year', width: 100 },
+        { field: 'LLINSToAncClients', title: 'LLINS To ANC Clients', width: 100 },
+        { field: 'testedForSyphylis', title: 'Tested for syphillis', width: 120 },
+        { field: 'hivPositive', title: 'HIV Positive', width: 120 },
+        { field: 'doneBreastExamination', title: 'Done breast examination.', width: 100 },
+        { field: '10-14', title: '10-14' },
+        { field: '15-19', title: '15-19', width: 100 },
+        { field: '20-24', title: '20-24', width: 100 },
+        { field: 'pregnancyAtFirstAnc', title: 'Pregnancy At First Anc', width: 130 },
+        { field: 'issuedWithIron', title: 'Issued With Iron', width: 80 },
+        { field: 'issuedWithFolic', title: 'Issued With Folic', width: 120 },
+        { field: 'issuedWithCombinedFF', title: 'Issued With Combined FF', width: 120 },
+        { field: 'FGMAssociatedComplication', title: 'FGM Associated Complication', width: 120 },
+        { field: 'totalScreened', title: 'TotalScreened', width: 120 },
+        { field: 'presumptiveTBCases', title: 'Urynalysis', width: 100 },
+        { field: 'alreadyOnTB', title: 'PresumptiveTBCases', width: 120 },
+        { field: 'totalNotScreened', title: 'TotalNotScreened', width: 120 },];
     // const [indicators, setIndicators] = useState(columns)
 
 
@@ -142,19 +142,15 @@ export default function MOH711Report() {
 
                 <Container maxWidth="lg">
                     <br />
-                    {/* {results.length > 0 && <Button variant="contained"
-                        disableElevation
-                        onClick={e => { setOpenModal(true) }}
-                        sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>} */}
                     <Button variant="contained"
                         disableElevation
-                        disabled={results.length < 1}
+                        disabled={Object.keys(results).length< 1}
                         onClick={e => { exportReport() }}
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
 
                     <br />
                     <br />
-                    {(!loading) ? <TableContainer component={Paper} sx={{ maxWidth: "50%" }}>
+                    {(!loading && Object.keys(results).length > 0) ? <TableContainer component={Paper} sx={{ maxWidth: "65%" }}>
                         <Table size="small" aria-label="a dense table">
                             <TableHead>
                                 <TableRow>
@@ -165,14 +161,14 @@ export default function MOH711Report() {
                             <TableBody>
                                 {columns.map((row) => (
                                     <TableRow
-                                        key={row.field}
+                                        key={row.name}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
-                                            {row.field}
+                                            {row.title}
                                         </TableCell>
-                                        <TableCell align="right">{row.calories || 0}</TableCell>
-                                        
+                                        <TableCell align="right">{results[row.field]}</TableCell>
+
                                     </TableRow>
                                 ))}
                             </TableBody>
