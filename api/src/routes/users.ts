@@ -88,21 +88,21 @@ router.get("/:id", [requireJWT], async (req: Request, res: Response) => {
 // Modify User Details
 router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
-        let { status, role, facility, email, names, phone } = req.body;
+        let { status, role, kmhflCode, email, names, phone } = req.body;
         let { id } = req.params;
         let token = req.headers.authorization || '';
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         if (decodedSession.type == 'valid') {
             let currentRole = decodedSession.session.role
             let userId = decodedSession.session.userId
-            if (currentRole !== 'ADMINISTRATOR' || id !== userId) {
-                res.statusCode = 401
+            if (currentRole !== 'ADMINISTRATOR') {
+                res.statusCode = 401;
                 res.send({ error: `Insufficient Permissions for ${currentRole}`, status: "error" });
-                return
+                return;
             }
 
             // Only system admin can reassign roles and facilities.
-            if ((role || facility) && currentRole !== "ADMINISTRATOR") {
+            if ((role || kmhflCode) && currentRole !== "ADMINISTRATOR") {
                 res.statusCode = 401;
                 res.send({ error: `Insufficient Permissions for ${currentRole}`, status: "error" });
                 return;
@@ -112,7 +112,7 @@ router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
             where: { id: id },
             data: {
                 ...(role) && { role },
-                ...facility && { facilityKmhflCode: facility },
+                ...kmhflCode && { facilityKmhflCode: kmhflCode },
                 ...email && { email },
                 ...names && { names },
                 ...phone && { phone },

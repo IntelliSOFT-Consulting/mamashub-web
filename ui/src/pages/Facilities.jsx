@@ -150,7 +150,7 @@ export default function Facilities() {
                     {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '65%' : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: '#632165' }}>Delete Facility{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e => { deleteFacilities() }} disableElevation sx={{ backgroundColor: '#632165' }}>Delete {(selected.length > 1) ? `Facilities`: 'Facility'}</Button>
                         </>
                     }
 

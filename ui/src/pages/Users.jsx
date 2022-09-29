@@ -12,6 +12,7 @@ import { apiHost } from '../lib/api'
 export default function Users() {
 
     let [users, setUsers] = useState(null);
+    let [editMode, setEditMode] = useState(false);
     let [facilities, setFacilities] = useState([]);
     let [open, setOpen] = useState(false);
     let [data, setData] = useState({});
@@ -140,6 +141,24 @@ export default function Users() {
         setOpen(false);
         return
     }
+    // create user
+    let editUser = async () => {
+        setOpenSnackBar(false)
+        let response = (await (await fetch(`${apiHost}/users/${selected[0]}`,
+            {
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` },
+                body: JSON.stringify({ email: data.email, names: data.names, role: data.role, kmhflCode: data.kmhflCode || kmhflCode })
+            })).json());
+        if (response.status === "error") {
+            setMessage(response.error || response.message);
+            setOpenSnackBar(true);
+            return
+        }
+        prompt(`Successfully created user`)
+        getUsers();
+        setOpen(false);
+        return
+    }
 
     useEffect(() => {
         if (getCookie("token")) {
@@ -184,16 +203,19 @@ export default function Users() {
                     key={"loginAlert"}
                 />
                 <Stack direction="row" spacing={2} alignContent="right" >
-                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 0) ? '50%' : '80%' }}></Typography>}
+                    {(!isMobile) && <Typography sx={{ minWidth: (selected.length > 1) ? '60%' : (selected.length === 1) ? "30%" : '80%' }}></Typography>}
                     {(selected.length > 0) &&
                         <>
-                            <Button variant="contained" onClick={e => { deleteUsers() }} disableElevation sx={{ backgroundColor: 'red' }}>Delete User{(selected.length > 1) && `s`}</Button>
+                            <Button variant="contained" onClick={e => { deleteUsers() }} disableElevation sx={{ backgroundColor: "#632165" }}>Delete User{(selected.length > 1) && `s`}</Button>
                         </>
                     }
                     {(selected.length === 1) &&
-                        <Button variant="contained" disableElevation sx={{ backgroundColor: 'gray' }} onClick={e => { resetPassword() }}>Reset Password</Button>
+                        <>
+                            <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { setEditMode(true); handleOpen() }}>Edit User Details</Button>
+                            <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { resetPassword() }}>Reset Password</Button>
+                        </>
                     }
-                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={handleOpen}>Create New User</Button>
+                    <Button variant="contained" disableElevation sx={{ backgroundColor: "#632165" }} onClick={e => { setEditMode(false); handleOpen() }}>Create New User</Button>
                 </Stack>
                 <p></p>
                 <DataGrid
@@ -216,7 +238,7 @@ export default function Users() {
                 >
                     <Box sx={style}>
                         <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-                            ADD NEW USER
+                            {editMode ? "EDIT USER INFORMATION" : "ADD NEW USER"}
                         </Typography>
                         <Typography variant="p">Provide user information below</Typography>
                         <br /><br />
@@ -267,7 +289,7 @@ export default function Users() {
                                     })}
                                 </Select>
                             </FormControl>}
-                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { createUser() }}>Create User</Button>
+                            <Button variant='contained' sx={{ backgroundColor: "#632165" }} onClick={e => { editMode ? editUser() : createUser() }}>Create User</Button>
                             <br />
                         </Stack>
                     </Box>
