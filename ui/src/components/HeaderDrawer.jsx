@@ -75,6 +75,7 @@ const useStyles = makeStyles(theme =>
 export default function HeaderDrawer({ children }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(null);
+  const [userData, setUserData] = useState(null);
 
   function handleClick(item) {
     setOpen(open === item ? null : item);
@@ -98,7 +99,7 @@ export default function HeaderDrawer({ children }) {
   };
 
   let getProfile = async () => {
-    let data = await (
+    let { data } = await (
       await fetch(`${apiHost}/auth/me`, {
         method: 'GET',
         headers: {
@@ -107,9 +108,9 @@ export default function HeaderDrawer({ children }) {
         },
       })
     ).json();
-    console.log(data);
-    setRole(data.data.role);
-    setCookie('role', data.data.role, 1 / 60);
+    setUserData(data);
+    setRole(data.role);
+    setCookie('role', data.role, 1 / 60);
   };
 
   const handleCloseNavMenu = () => {
@@ -548,7 +549,10 @@ export default function HeaderDrawer({ children }) {
         <Container>
           <Routes>
             {appRoutes.map((route, index) => (
-              <Route {...route} />
+              <Route
+                path={route.path}
+                element={<route.element userData={userData} />}
+              />
             ))}
           </Routes>
         </Container>

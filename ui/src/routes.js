@@ -27,140 +27,122 @@ import Facilites from './pages/Facilities';
 import MOH711 from './pages/MOH711';
 import Index from './pages/Index';
 
-// these are the paths and elements that are used in the routes
-/*
-  <Route path="/" element={<Index />} />
-                    <Route path="/users" element={<Users />} />
-                    <Route path="/patients" element={<PatientList />} />
-                    <Route path="/patients/:id" element={<PatientDetails />} />
-                    <Route path="/settings" element={<PatientDetails />} />
-                    <Route path="/present-pregnancy" element={<PresentPregnancy />} />
-                    <Route path="/physical-exam" element={<PhysicalExam />} />
-                    <Route path="/patient-registration" element={<PatientRegistration />} />
-                    <Route path="/antenatal-profile" element={<AntenatalProfile />} />
-                    <Route path="/confirm-pregnancy" element={<ConfirmPregnancy />} />
-                    <Route path="/community-referrals" element={<CommunityReferrals />} />
-                    <Route path="/counselling-treatment" element={<Treatment />} />
-                    <Route path="/moh-100" element={<MOH100 />} />
-                    <Route path="/moh-711" element={<MOH711 />} />
-                    <Route path="/birth-plan" element={<BirthPlan />} />
-                    <Route path="/moh-reports" element={<Reports />} />
-                    <Route path="/observations" element={<Observations />} />
-                    <Route path="/referral/:id" element={<ViewMOH100 />} />
-                    <Route path="/tetanus-diptheria" element={<TetanusDiptheria />} />
-                    <Route path="/ifas" element={<IFAS />} />
-                    <Route path="/malaria-prophylaxis" element={<MalariaProphylaxis />} />
-                    <Route path="/maternal-serology" element={<MaternalSerology />} />
-                    <Route path="/deworming" element={<Deworming />} />
-                    <Route path="/counselling" element={<Counselling />} />
-                    <Route path="/pmtct-interventions" element={<PMTCTInterventions />} />
-                    <Route path="/medical-surgical-history" element={<MedicalAndSurgicalHistory />} />
-*/
-
 const appRoutes = [
   {
     path: '/',
-    element: <Index />,
+    element: Index ,
   },
   {
     path: '/users',
-    element: <Users />,
+    element: Users ,
   },
   {
     path: '/patients',
-    element: <PatientList />,
+    element: PatientList ,
   },
   {
     path: '/patients/:id',
-    element: <PatientDetails />,
+    element: PatientDetails ,
   },
   {
     path: '/settings',
-    element: <PatientDetails />,
+    element: PatientDetails ,
   },
   {
     path: '/present-pregnancy',
-    element: <PresentPregnancy />,
+    element: PresentPregnancy ,
   },
   {
     path: '/physical-exam',
-    element: <PhysicalExam />,
+    element: PhysicalExam ,
   },
   {
     path: '/patient-registration',
-    element: <PatientRegistration />,
+    element: PatientRegistration ,
   },
   {
     path: '/antenatal-profile',
-    element: <AntenatalProfile />,
+    element: AntenatalProfile ,
   },
   {
     path: '/confirm-pregnancy',
-    element: <ConfirmPregnancy />,
+    element: ConfirmPregnancy ,
   },
   {
     path: '/community-referrals',
-    element: <CommunityReferrals />,
+    element: CommunityReferrals ,
   },
   {
     path: '/counselling-treatment',
-    element: <Treatment />,
+    element: Treatment ,
   },
   {
     path: '/moh-100',
-    element: <MOH100 />,
+    element: MOH100 ,
   },
   {
     path: '/moh-711',
-    element: <MOH711 />,
+    element: MOH711 ,
   },
   {
     path: '/birth-plan',
-    element: <BirthPlan />,
+    element: BirthPlan ,
   },
   {
     path: '/moh-reports',
-    element: <Reports />,
+    element: Reports ,
   },
   {
     path: '/observations',
-    element: <Observations />,
+    element: Observations ,
   },
   {
     path: '/referral/:id',
-    element: <ViewMOH100 />,
+    element: ViewMOH100 ,
   },
   {
     path: '/tetanus-diptheria',
-    element: <TetanusDiptheria />,
+    element: TetanusDiptheria ,
   },
   {
     path: '/ifas',
-    element: <IFAS />,
+    element: IFAS ,
   },
   {
     path: '/malaria-prophylaxis',
-    element: <MalariaProphylaxis />,
+    element: MalariaProphylaxis ,
   },
   {
     path: '/maternal-serology',
-    element: <MaternalSerology />,
+    element: MaternalSerology ,
   },
   {
     path: '/deworming',
-    element: <Deworming />,
+    element: Deworming ,
   },
   {
     path: '/counselling',
-    element: <Counselling />,
+    element: Counselling ,
   },
   {
     path: '/pmtct-interventions',
-    element: <PMTCTInterventions />,
+    element: PMTCTInterventions ,
   },
   {
     path: '/medical-surgical-history',
-    element: <MedicalAndSurgicalHistory />,
+    element: MedicalAndSurgicalHistory ,
+  },
+  {
+    path: '/facilities',
+    element: Facilites ,
+  },
+  {
+    path: '/previous-pregnancy',
+    element: PreviousPregnancy ,
+  },
+  {
+    path: '/account',
+    element: Account ,
   },
 ];
 
