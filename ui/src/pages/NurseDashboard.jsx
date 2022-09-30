@@ -67,7 +67,7 @@ export default function NurseDashboard() {
                         <Grid container spacing={1} padding=".5em" >
                             {Object.keys(data).length > 0 ? Object.keys(data).map((entry) => {
                                 return <Grid item xs={12} md={12} lg={3} >
-                                    <StatCard title={(entry).toLocaleUpperCase()} number={data[entry]} bg="#D0ADFC" />
+                                    <StatCard title={(entry)} number={data[entry]} bg="#D0ADFC" />
                                 </Grid>
                             }) : <CircularProgress />}
                         </Grid>
