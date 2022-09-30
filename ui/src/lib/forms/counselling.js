@@ -60,7 +60,7 @@ const counsellingForm = {
     {
       name: 'drinkWater',
       label:
-        'Was mother advised to drink plenty of water at leas 8 glasses (21ts) a day?',
+        'Was mother advised to drink plenty of water at leas 8 glasses (2lts) a day?',
       type: 'radio',
       options: [
         { value: 'Yes', label: 'Yes' },
