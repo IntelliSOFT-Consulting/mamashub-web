@@ -736,6 +736,34 @@ export default function ANCProfile() {
                 </Grid>
                 <Grid item xs={12} md={12} lg={6} />
                 <Grid item xs={12} md={12} lg={6}>
+                  <FormControl component='fieldset' variant='standard'>
+                    <FormLabel component='legend'>If yes, specify</FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        label='Previous pregnancy'
+                        control={
+                          <Checkbox
+                            checked={false}
+                            onChange={handleChanges}
+                            name='antoine'
+                          />
+                        }
+                      />
+                      <FormControlLabel
+                        label="Mother's side"
+                        control={
+                          <Checkbox
+                            checked={false}
+                            onChange={handleChanges}
+                            name='antoine'
+                          />
+                        }
+                      />
+                    </FormGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={12} lg={6} />
+                <Grid item xs={12} md={12} lg={6}>
                   <RadioGroup
                     row
                     onChange={e => {
@@ -763,8 +791,7 @@ export default function ANCProfile() {
                     />
                   </RadioGroup>
                 </Grid>
-         
-             
+
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     fullWidth='90%'
@@ -780,8 +807,8 @@ export default function ANCProfile() {
                     }}
                   />
                 </Grid>
-                </Grid>
-                <Grid container spacing={1} padding='1em'>
+              </Grid>
+              <Grid container spacing={1} padding='1em'>
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     fullWidth='90%'
@@ -797,7 +824,7 @@ export default function ANCProfile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
+                <Grid item xs={12} md={12} lg={6} />
                 <Grid item xs={12} md={12} lg={6}>
                   <RadioGroup
                     row
@@ -826,7 +853,7 @@ export default function ANCProfile() {
                     />
                   </RadioGroup>
                 </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
+                <Grid item xs={12} md={12} lg={6} />
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     fullWidth='90%'
