@@ -70,9 +70,7 @@ export default function PatientRegistration({ userData }) {
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let hour = date.getHours();
-    ancCode = `${year}-${month}-${day}${hour}`;
+    ancCode = `${year}-${month}-`;
     return ancCode;
   };
 

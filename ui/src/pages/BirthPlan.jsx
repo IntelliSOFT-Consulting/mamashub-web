@@ -326,7 +326,7 @@ export default function BirthPlan() {
                                         />
                                     </Grid>
                                 </Grid>
-                                <Typography variant="h6">Birth Donor</Typography>
+                                <Typography variant="h6">Blood Donor</Typography>
                                 <Divider />
                                 <p></p>
                                 <Grid container spacing={1} padding=".5em" >

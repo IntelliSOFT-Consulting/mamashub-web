@@ -53,7 +53,7 @@ const appRoutes = [
     element: PresentPregnancy ,
   },
   {
-    path: '/physical-exam',
+    path: '/physical-examination',
     element: PhysicalExam ,
   },
   {
