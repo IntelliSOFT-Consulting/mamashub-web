@@ -48,18 +48,15 @@ export default function MOH711Report() {
         console.log(results)
         let header = []
         let data = []
-        if (results.length > 0) {
-            header = Object.keys(results[0]).map((x) => {
-                return x
-            })
-            data = results.map((result) => {
-                return Object.keys(result).map((r) => {
-                    return result[r]
-                })
+        if (Object.keys(results).length > 0) {
+            data = Object.keys(results).map((result) => {
+                // console.log(result, results[result])
+                console.log(Object.keys(results).indexOf(result))
+                return [columns[Object.keys(results).indexOf(result)]?.title || result, results[result]]
             })
         }
         console.log(data);
-        let rows = [header].concat(data);
+        let rows = (data);
         exportToCsv(`MOH 711 ANC - ${new Date().toISOString()}.csv`, rows);
         return
     }
@@ -99,7 +96,7 @@ export default function MOH711Report() {
         { field: 'FGMAssociatedComplication', title: 'FGM Associated Complication', width: 120 },
         { field: 'totalScreened', title: 'Total No. of people Screened', width: 120 },
         { field: 'alreadyOnTB', title: 'Total No. of presumptiveTBCases', width: 120 },
-        { field: 'totalNotScreened', title: 'Total Not Screened', width: 120 },];
+        { field: 'totalNotScreened', title: 'Total No. of Women not screened', width: 120 }];
     // const [indicators, setIndicators] = useState(columns)
 
 
@@ -119,76 +116,76 @@ export default function MOH711Report() {
 
     return (
         <>
-            
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={open}
-                    onClose={e => { console.log(e) }}
-                    message={message}
-                    key={"loginAlert"}
-                />
 
-                <Container maxWidth="lg">
-                    <br />
-                    <Button variant="contained"
-                        disableElevation
-                        disabled={Object.keys(results).length < 1}
-                        onClick={e => { exportReport() }}
-                        sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                open={open}
+                onClose={e => { console.log(e) }}
+                message={message}
+                key={"loginAlert"}
+            />
 
-                    <br />
-                    <br />
-                    {(!loading && Object.keys(results).length > 0) ? <TableContainer component={Paper} sx={{ maxWidth: "65%" }}>
-                        <Table size="small" aria-label="a dense table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>(-)</TableCell>
-                                    <TableCell align="right">Value</TableCell>
+            <Container maxWidth="lg">
+                <br />
+                <Button variant="contained"
+                    disableElevation
+                    disabled={Object.keys(results).length < 1}
+                    onClick={e => { exportReport() }}
+                    sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Export Report</Button>
+
+                <br />
+                <br />
+                {(!loading && Object.keys(results).length > 0) ? <TableContainer component={Paper} sx={{ maxWidth: "65%" }}>
+                    <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>(-)</TableCell>
+                                <TableCell align="right">Value</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {columns.map((row) => (
+                                <TableRow
+                                    key={row.name}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {row.title}
+                                    </TableCell>
+                                    <TableCell align="right">{results[row.field]}</TableCell>
+
                                 </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {columns.map((row) => (
-                                    <TableRow
-                                        key={row.name}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {row.title}
-                                        </TableCell>
-                                        <TableCell align="right">{results[row.field]}</TableCell>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer> : <>
+                    <CircularProgress />
+                    <Typography variant='h5'>Loading Report..</Typography>
+                </>}
+                <Modal keepMounted
+                    open={openModal}
+                    onClose={handleClose}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                >
+                    <Box sx={{ ...modalStyle, width: "80%", borderRadius: "10px" }}>
+                        <Grid container
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            {columns.slice(3).map((column) => {
+                                return <Grid item xs={3} lg={3} md={2}>
+                                    <FormControlLabel control={<Checkbox defaultChecked />} label={column.headerName} />
+                                </Grid>
+                            })}
+                        </Grid>
+                        <Button variant='contained'>Generate Report</Button>
+                    </Box>
 
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer> : <>
-                        <CircularProgress />
-                        <Typography variant='h5'>Loading Report..</Typography>
-                    </>}
-                    <Modal keepMounted
-                        open={openModal}
-                        onClose={handleClose}
-                        aria-labelledby="parent-modal-title"
-                        aria-describedby="parent-modal-description"
-                    >
-                        <Box sx={{ ...modalStyle, width: "80%", borderRadius: "10px" }}>
-                            <Grid container
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                {columns.slice(3).map((column) => {
-                                    return <Grid item xs={3} lg={3} md={2}>
-                                        <FormControlLabel control={<Checkbox defaultChecked />} label={column.headerName} />
-                                    </Grid>
-                                })}
-                            </Grid>
-                            <Button variant='contained'>Generate Report</Button>
-                        </Box>
+                </Modal>
 
-                    </Modal>
+            </Container>
 
-                </Container>
-            
         </>
     )
 
