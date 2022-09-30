@@ -57,7 +57,7 @@ export let generateGeneralReport = async (patientId: string, from: string | null
         ancNumber: patient.identifier ? patient.identifier[0].value : " - ",
         id: patient.id,
         noOfAncVisits: await getNoOfAncVisits(patientId),
-        fullNames: (patient.name[0].family) || " ",
+        fullNames: (patient.name ? patient.name[0].family : " ") || " ",
         dob: new Date(patient.birthDate).toDateString(),
         subCounty: (patient.address ? patient.address[0].district : " - ") || " - ",
         county: (patient.address ? patient.address[0].state : " - ") || " - ",
