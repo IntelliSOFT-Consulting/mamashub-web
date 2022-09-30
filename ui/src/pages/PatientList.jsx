@@ -131,7 +131,7 @@ export default function PatientList() {
           )} years`,
         };
       });
-      setPatients(p);
+      // setPatients(p);
       setLoading(false);
       return;
     } catch (error) {
@@ -157,13 +157,14 @@ export default function PatientList() {
     try {
       setLoading(true);
       let data = await FhirApi({
-        url: `/fhir/Patient?name=${name}${filter}`,
+        url: `/fhir/Patient?name=${name}`,
         method: 'GET',
       });
-      let p = data.data.entry.map(i => {
+      let p = data.data.entry.map((i, index) => {
         let r = i.resource;
         console.log(r.name);
         return {
+          index,
           id: r.id,
           lastName: r.name[0].family,
           age: `${Math.floor(
@@ -192,11 +193,12 @@ export default function PatientList() {
       url: '/fhir/Patient?_count=100',
       method: 'GET',
     });
-    let p = data.data.entry.map(i => {
+    let p = data.data.entry.map((i,index) => {
       let r = i.resource;
       // console.log(r.name)
       return {
         id: r.id,
+        index,
         lastName: r.name[0].family,
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
@@ -243,17 +245,16 @@ export default function PatientList() {
   const [selectionModel, setSelectionModel] = useState([]);
 
   const columns = [
-    { field: 'id', headerName: 'Patient ID', width: 150, editable: true },
+    { field: 'index', headerName: 'Patient ID', width: 100, renderCell: (params) =>params.row.index+1},
     { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
-    // { field: 'firstName', headerName: 'First Name', width: 250, editable: true },
     { field: 'age', headerName: 'Age', width: 150 },
     {
-      field: 'id',
-      headerName: 'Action',
-      format: value => (
-        <Button onClick={() => navigate(`/patients/${value}`)}>Register</Button>
-      ),
-    },
+      field: 'name',
+      headerName: 'Actions',
+      renderCell: (params) =>
+      <Button onClick={() => navigate(`/patients/${params.row.id}`)}>Register</Button>
+  },
+  
   ];
 
   let isMobile = useMediaQuery('(max-width:600px)');
@@ -422,9 +423,9 @@ export default function PatientList() {
           onSelectionModelChange={e => {
             setSelected(e);
           }}
-          onCellEditStop={e => {
-            console.log(e);
-          }}
+          // onCellEditStop={e => {
+          //   console.log(e);
+          // }}
         />
       </Container>
     </>
