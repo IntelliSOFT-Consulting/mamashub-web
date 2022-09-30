@@ -50,6 +50,10 @@ export default function Account() {
             <Typography variant='h6'>{profile.email}</Typography>
             <Divider/>
 
+            <Typography>Phone Number:</Typography>
+            <Typography variant='h6'>{profile.phone || ""}</Typography>
+            <Divider/>
+
             <Typography>Role:</Typography>
             <Typography variant='h6'>{profile.role}</Typography>
             <Divider/>

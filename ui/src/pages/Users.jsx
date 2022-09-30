@@ -318,8 +318,7 @@ export default function Users() {
                             <br />
                         </Stack>
                     </Box>
-                </Modal>
-            
+                </Modal>    
         </>
     )
 }

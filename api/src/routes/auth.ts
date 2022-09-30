@@ -27,7 +27,7 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             })
             let responseData = {
                 id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role,
-                kmhflCode: user?.facilityKmhflCode
+                kmhflCode: user?.facilityKmhflCode, phone: user?.phone
             }
             if (user?.role !== "ADMINISTRATOR") {
                 let facility = await db.facility.findFirst({
@@ -39,15 +39,15 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
                 res.json({ data: { ...responseData, facilityName: facility?.name }, status: "success" })
                 return
             }
-            res.statusCode = 200
-            res.json({ data: responseData, status: "success" })
+            res.statusCode = 200;
+            res.json({ data: responseData, status: "success" });;
             return
         }
     } catch (error) {
         // console.log(error)
-        res.statusCode = 400
-        res.json({ status: "error", error: error })
-        return
+        res.statusCode = 400;
+        res.json({ status: "error", error: error });
+        return;
     }
 });
 
@@ -63,9 +63,9 @@ router.post("/login", async (req: Request, res: Response) => {
             return
         }
         if (!email && !password && !email) {
-            res.statusCode = 400
-            res.json({ status: "error", message: "email and password are required to login" })
-            return
+            res.statusCode = 400;
+            res.json({ status: "error", message: "email and password are required to login" });
+            return;
         }
         let user = await db.user.findFirst({
             where: {
