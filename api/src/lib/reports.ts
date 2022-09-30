@@ -11,8 +11,8 @@ let getNoOfAncVisits = async (patientId: string) => {
     for (let encounter of encounters) {
         visits.push(new Date(encounter.resource.meta.lastUpdated).toDateString())
     }
-    let unique = [...new Set(visits)]
-    return unique.length
+    let unique = [...new Set(visits)];
+    return unique.length;
 }
 
 export let generateGeneralReport = async (patientId: string, from: string | null, to: string | null) => {
