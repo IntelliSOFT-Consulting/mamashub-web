@@ -26,6 +26,7 @@ import MedicalAndSurgicalHistory from './pages/MedicalAndSurgicalHistory';
 import Facilites from './pages/Facilities';
 import MOH711 from './pages/MOH711';
 import Index from './pages/Index';
+import NurseDashboard from './pages/NurseDashboard';
 
 const appRoutes = [
   {
@@ -144,6 +145,10 @@ const appRoutes = [
     path: '/account',
     element: Account ,
   },
+  {
+    path: '/nurse-dashboard',
+    element: NurseDashboard,
+  }
 ];
 
 export default appRoutes;
