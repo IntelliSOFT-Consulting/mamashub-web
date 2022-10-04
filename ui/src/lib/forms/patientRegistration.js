@@ -1,4 +1,5 @@
 import counties from '../../data/counties.json';
+import * as yup from 'yup';
 
 const formData = {
   'Facility Details': [
@@ -7,16 +8,19 @@ const formData = {
       label: 'Name of Facility',
       type: 'text',
       required: true,
+      disabled: true,
       width: {
         xs: 12,
         sm: 12,
         md: 12,
         lg: 6,
       },
+      // validate: yup.string(),
     },
     {
       name: 'kmhflCode',
       label: 'KMHFL Code',
+      disabled: true,
       type: 'text',
       required: true,
       width: {
@@ -25,6 +29,7 @@ const formData = {
         md: 12,
         lg: 6,
       },
+      // validate: yup.string(),
     },
   ],
   'Client Details': [
@@ -39,6 +44,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.string().required('ANC Code is required'),
     },
     {
       name: 'pncNumber',
@@ -51,6 +57,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.number().required('PNC Number is required'),
     },
     {
       name: 'clientName',
@@ -63,6 +70,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.string().required('Name of client is required'),
     },
     {
       name: 'dob',
@@ -75,11 +83,12 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.date().required('Date of birth is required'),
     },
     {
       name: 'phone',
       label: 'Phone Number',
-      type: 'tel',
+      type: 'text',
       required: true,
       width: {
         xs: 12,
@@ -87,6 +96,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.string().required('Phone number is required'),
     },
     {
       name: 'educationLevel',
@@ -100,13 +110,14 @@ const formData = {
         lg: 4,
       },
       options: [
-        'Primary School',
-        'High School',
-        'Undergraduate',
-        'Postgraduate',
-        'Tertiary',
-        'None',
+        { value: 'None', label: 'None' },
+        { value: 'Primary School', label: 'Primary School' },
+        { value: 'High School', label: 'High School' },
+        { value: 'Undergraduate', label: 'Undergraduate' },
+        { value: 'Postgraduate', label: 'Postgraduate' },
+        { value: 'Tertiary', label: 'Tertiary' },
       ],
+      validate: yup.string().required('Education level is required'),
     },
     {
       name: 'maritalStatus',
@@ -119,7 +130,13 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      options: ['Married', 'Single', 'Divorced', 'Widowed'],
+      options: [
+        { value: 'Single', label: 'Single' },
+        { value: 'Married', label: 'Married' },
+        { value: 'Divorced', label: 'Divorced' },
+        { value: 'Widowed', label: 'Widowed' },
+      ],
+      validate: yup.string().required('Marital status is required'),
     },
   ],
   Residence: [
@@ -134,7 +151,11 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      options: counties,
+      options: counties.map(county => ({
+        label: county.name,
+        value: county.name,
+      })),
+      validate: yup.string().required('County is required'),
     },
     {
       name: 'subCounty',
@@ -148,6 +169,7 @@ const formData = {
         lg: 4,
       },
       options: [],
+      validate: yup.string().required('Sub-County is required'),
     },
     {
       name: 'ward',
@@ -161,19 +183,19 @@ const formData = {
         lg: 4,
       },
       options: [],
+      validate: yup.string().required('Ward is required'),
     },
     {
       name: 'estate',
       label: 'Estate',
-      type: 'select',
-      required: true,
+      type: 'text',
       width: {
         xs: 12,
         sm: 12,
         md: 12,
         lg: 4,
       },
-      options: [],
+      validate: yup.string(),
     },
   ],
   'Next of Kin': [
@@ -188,6 +210,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.string().required('Next of kin name is required'),
     },
     {
       name: 'nextOfKinRelationship',
@@ -200,12 +223,20 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      options: ['Spouse', 'Parent', 'Sibling', 'Child', 'Other'],
+      options: [
+        { value: 'Spouse', label: 'Spouse' },
+        { value: 'Parent', label: 'Parent' },
+        { value: 'Sibling', label: 'Sibling' },
+        { value: 'Child', label: 'Child' },
+        { value: 'Friend', label: 'Friend' },
+        { value: 'Other', label: 'Other' },
+      ],
+      validate: yup.string().required('Relationship is required'),
     },
     {
       name: 'nextOfKinPhone',
       label: 'Phone Number',
-      type: 'tel',
+      type: 'text',
       required: true,
       width: {
         xs: 12,
@@ -213,6 +244,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.string().required('Phone number is required'),
     },
   ],
   'Clinical Information': [
@@ -227,6 +259,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.number().required('Gravida is required'),
     },
     {
       name: 'parity',
@@ -239,6 +272,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.number().required('Parity is required'),
     },
     {
       name: 'height',
@@ -251,6 +285,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.number().required('Height is required'),
     },
     {
       name: 'weight',
@@ -263,6 +298,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.number().required('Weight is required'),
     },
     {
       name: 'lmp',
@@ -275,6 +311,20 @@ const formData = {
         md: 12,
         lg: 4,
       },
+      validate: yup.date().required('LMP is required'),
+    },
+    {
+      name: 'edd',
+      label: 'EDD',
+      type: 'date',
+      required: true,
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 4,
+      },
+      // validate: yup.date().required('EDD is required'),
     },
   ],
 };
