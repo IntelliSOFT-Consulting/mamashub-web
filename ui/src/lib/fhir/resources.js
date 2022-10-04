@@ -25,7 +25,7 @@ export let Patient = patient => {
         value: patient.patientPhoneNumber,
       },
     ],
-    birthDate: String(new Date(patient.dob).toISOString()).slice(0, 10),
+    birthDate: new Date(patient.dob).toISOString().slice(0, 10),
     address: [
       {
         line: [

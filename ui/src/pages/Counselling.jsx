@@ -28,62 +28,51 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import counsellingForm from '../lib/forms/counselling';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
 
 export default function Counselling() {
-  let [patient, setPatient] = useState({});
-  let navigate = useNavigate();
   let [open, setOpen] = useState(false);
   let [notes, setNotes] = useState('');
-  let preventiveServicesList = {
-    '1st injection': 'First visit',
-    '2nd injection': '4 weeks after 1st dose but 2 weeks before childbirth',
-    '3rd injection': '6 months after 2nd dose',
-    '4th injection': '1 year after 3rd injection / subsequent pregnancy',
-    '5th injection': '1 year after 4th injection / subsequent pregnancy',
-  };
-  let malariaProphylaxisList = {
-    'Upto 12 weeks': '-',
-    '13-16 weeks': 'IPTp - SP dose 1',
-    '20 weeks': 'IPTp - SP dose 2',
-    '26 weeks': 'IPTp - SP dose 3',
-    '30 weeks': 'IPTp - SP dose 4',
-    '34 weeks': 'IPTp - SP dose 5',
-    '36 weeks': 'No SP, if last dose received <1 Month ago',
-    '38 weeks': 'IPTp - SP dose 6 (if no dose in past month)',
-    '40 weeks': '-',
-  };
+  const [preview, setPreview] = useState(false);
+  const [inputData, setInputData] = useState({});
 
-  let ifasList = {
-    '0 - Upto 12 weeks gestation': '60 tablets',
-    '1 - 12 weeks gestation': '56 tablets',
-    '2 - 20 weeks gestation': '42 tablets',
-    '3 - 26 weeks gestation': '28 tablets',
-    '4 - 30 weeks gestation': '28 tablets',
-    '5 - 34 weeks gestation': '14 tablets',
-    '6 - 36 weeks gestation': '14 tablets',
-    '7 - 38 weeks gestation': '14 tablets',
-    '8 - 40 weeks gestation': '14 tablets',
-  };
-
-  let [serologyList, setSerologyList] = useState([]);
-  let [malariaProphylaxis, setMalariaProphylaxis] = useState();
-  let [preventiveServiceList, setPreventiveServiceList] = useState([]);
   let [visit, setVisit] = useState();
-  let [notesDisplay, setNotesDisplay] = useState('');
-  let [data, setData] = useState({});
   let [preventiveServices, setPreventiveServices] = useState({});
-  let [preventiveService, setPreventiveService] = useState(null);
-  let [maternalSerology, setMaternalSerology] = useState({});
-  let [ifas, setIfas] = useState();
   let [message, setMessage] = useState(false);
   let isMobile = useMediaQuery('(max-width:600px)');
 
   const [value, setValue] = useState('1');
 
-  let saveSerologyResults = async () => {
-    return;
-  };
+  const fieldValues = Object.values(counsellingForm).flat();
+  const validationFields = fieldValues.map(item => ({
+    [item.name]: item.validate,
+  }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({ [item.name]: '' }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
 
   let saveSuccessfully = async () => {
     setMessage('Data saved successfully');
@@ -104,12 +93,8 @@ export default function Counselling() {
     return;
   }, []);
 
-  let saveObservation = async (patientId, code, observationValue) => {
-    let response = await await fetch('/crud/observations', {
-      body: JSON.stringify({}),
-    });
-
-    return;
+  const handleSubmit = async values => {
+    console.log(values);
   };
 
   const sections = Object.keys(counsellingForm);
@@ -127,98 +112,62 @@ export default function Counselling() {
           />
           {visit && <CurrentPatient data={visit} />}
 
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-                aria-label='scrollable auto tabs example'
-              >
-                <Tab label='Counselling' value='1' />
-              </TabList>
-            </Box>
+          {preview ? (
+            <Preview
+              title='Patient Registration Preview'
+              format={counsellingForm}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={handleSubmit}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                    aria-label='scrollable auto tabs example'
+                  >
+                    <Tab label='Counselling' value='1' />
+                  </TabList>
+                </Box>
 
-            {/* Preventive Services  */}
+                {/* Preventive Services  */}
 
-            <TabPanel value='1'>
-              {sections.map((section, index) => {
-                return (
-                  <>
-                    <Typography
-                      variant='p'
-                      sx={{ fontSize: 'large', fontWeight: 'bold' }}
+                <TabPanel value='1'>
+                  <FormFields formData={counsellingForm} formik={formik} />
+
+                  <p></p>
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
                     >
-                      {section}
-                    </Typography>
-                    <Divider />
-
-                    <p />
-                    <Grid container spacing={1} padding='1em'>
-                      {counsellingForm[section].map((item, index) => (
-                        <Grid item xs={12} md={12} key={index}>
-                          <RadioGroup
-                            row
-                            onChange={e => {
-                              setPreventiveServices({
-                                ...preventiveServices,
-                                [item.name]: e.target.value,
-                              });
-                            }}
-                          >
-                            <FormControlLabel
-                              value={0}
-                              sx={{ width: '50%' }}
-                              control={<FormLabel />}
-                              label={item.label}
-                            />
-                            <FormControlLabel
-                              value={'Yes'}
-                              control={<Radio />}
-                              label='Yes'
-                            />
-                            <FormControlLabel
-                              value={'No'}
-                              control={<Radio />}
-                              label='No'
-                            />
-                          </RadioGroup>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </>
-                );
-              })}
-
-              <p></p>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    saveSuccessfully();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-          </TabContext>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      type='submit'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
         </Container>
       </LocalizationProvider>
     </>

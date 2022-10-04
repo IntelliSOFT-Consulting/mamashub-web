@@ -1,15 +1,8 @@
 import {
   Typography,
   Stack,
-  TextField,
   Button,
   Divider,
-  Grid,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
   Container,
   useMediaQuery,
   Box,
@@ -21,15 +14,16 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as qs from 'query-string';
-import Layout from '../components/Layout';
-import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
 import { apiHost } from '../lib/api';
-import referralForm from '../lib/forms/referral';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import referralForm from '../lib/forms/referral';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
 
 function timeSince(date) {
   var seconds = Math.floor((new Date() - date) / 1000);
@@ -66,6 +60,35 @@ export default function PatientList() {
   let [visit, setVisit] = useState();
   const [value, setValue] = useState('1');
   let [message, setMessage] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [inputData, setInputData] = useState({});
+
+  const fieldValues = Object.values(referralForm).flat();
+  const validationFields = fieldValues.map(item => ({
+    [item.name]: item.validate,
+  }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({ [item.name]: '' }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
 
   let getReferrals = async () => {
     let data = await (
@@ -88,16 +111,6 @@ export default function PatientList() {
     return;
   };
 
-  let previewReferral = async () => {
-    if (selected.length === 1) {
-      navigate(`/referral/${selected[0]}`);
-      return;
-    }
-    return;
-  };
-
-  let deleteReferrals = async () => {};
-
   useEffect(() => {
     getReferrals();
   }, []);
@@ -112,24 +125,11 @@ export default function PatientList() {
     }
   }, []);
 
-  const columns = [
-    { field: 'lastName', headerName: 'Last Name', width: 250, editable: true },
-    {
-      field: 'firstName',
-      headerName: 'First Name',
-      width: 250,
-      editable: true,
-    },
-    { field: 'dob', headerName: 'Age', width: 150 },
-    { field: 'createdAt', headerName: 'Referral Time', width: 200 },
-  ];
-
   let isMobile = useMediaQuery('(max-width:600px)');
 
-  let args = qs.parse(window.location.search);
-  // console.log(args)
-
-  const sections = Object.keys(referralForm);
+  const handleSubmit = async values => {
+    console.log(values);
+  };
 
   return (
     <>
@@ -143,120 +143,60 @@ export default function PatientList() {
             key={'loginAlert'}
           />
           {visit && <CurrentPatient data={visit} />}
-
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                // onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-                aria-label='scrollable auto tabs example'
-              >
-                <Tab label='Counselling' value='1' />
-              </TabList>
-            </Box>
-
-            <TabPanel value='1'>
-              {sections.map((section, index) => (
-                <>
-                  <Typography
-                    variant='p'
-                    sx={{ fontSize: 'large', fontWeight: 'bold' }}
+          {preview ? (
+            <Preview
+              title='Patient Registration Preview'
+              format={referralForm}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={handleSubmit}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    // onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                    aria-label='scrollable auto tabs example'
                   >
-                    {section}
-                  </Typography>
+                    <Tab label='Counselling' value='1' />
+                  </TabList>
+                </Box>
+
+                <TabPanel value='1'>
+                  <FormFields formData={referralForm} formik={formik} />
+
+                  <p></p>
                   <Divider />
-
-                  <p />
-                  <Grid container spacing={1} padding='1em'>
-                    {referralForm[section].map((field, index) => {
-                      switch (field.type) {
-                        case 'text':
-                          return (
-                            <Grid item xs={12} md={6}>
-                              <TextField
-                                fullWidth
-                                label={field.label}
-                                variant='outlined'
-                                name={field.name}
-                              />
-                            </Grid>
-                          );
-                        case 'radio':
-                          return (
-                            <Grid item xs={12} md={6}>
-                              <FormControl component='fieldset'>
-                                <FormLabel component='legend'>
-                                  {field.label}
-                                </FormLabel>
-                                <RadioGroup
-                                  aria-label={field.label}
-                                  name={field.name}
-                                  value={field.value}
-                                  onChange={''}
-                                >
-                                  {field.options.map((option, index) => (
-                                    <FormControlLabel
-                                      value={option.label}
-                                      control={<Radio />}
-                                      label={option.value}
-                                      key={index}
-                                    />
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </Grid>
-                          );
-                        case 'textarea':
-                          return (
-                            <Grid item xs={12} md={12}>
-                              <TextField
-                                fullWidth
-                                label={field.label}
-                                variant='outlined'
-                                name={field.name}
-                                multiline
-                                rows={4}
-                              />
-                            </Grid>
-                          );
-                        default:
-                          return null;
-                      }
-                    })}
-                  </Grid>
-                </>
-              ))}
-
-              <p></p>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    // saveSuccessfully();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-          </TabContext>
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                      type='submit'
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
         </Container>
       </LocalizationProvider>
     </>

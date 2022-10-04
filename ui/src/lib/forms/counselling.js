@@ -1,9 +1,18 @@
+import * as yup from 'yup';
+
 const counsellingForm = {
   'counselling Done': [
     {
       name: 'dangerSigns',
       label: 'Danger signs counselling:',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -13,6 +22,13 @@ const counsellingForm = {
       name: 'dentalHealthMother',
       label: 'Dental health tor mother:',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -22,6 +38,13 @@ const counsellingForm = {
       name: 'birthCounselling',
       label: 'Birth plan counselling:',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -31,6 +54,13 @@ const counsellingForm = {
       name: 'rhNegative',
       label: 'Rh negative counselling:',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -42,6 +72,13 @@ const counsellingForm = {
       name: 'extraMeal',
       label: 'Was mother advised to eat one extra meal a day?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -52,6 +89,13 @@ const counsellingForm = {
       label:
         'Was mother advised to eat at least 5 of the 10 food groups everyday?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -62,6 +106,13 @@ const counsellingForm = {
       label:
         'Was mother advised to drink plenty of water at leas 8 glasses (2lts) a day?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -71,6 +122,13 @@ const counsellingForm = {
       name: 'ironAndFolicAcid',
       label: 'Was mother advised to take iron and folic acids (IFAS) everyday?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -80,6 +138,13 @@ const counsellingForm = {
       name: 'avoidHeavyWork',
       label: 'Was mother advised to avoid heavy work, rest more?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -90,6 +155,13 @@ const counsellingForm = {
       label:
         'Was mother advised to to seen under a lona lastina insecticidal net (LLIN)?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -100,6 +172,13 @@ const counsellingForm = {
       label:
         'Was mother advised to go for ANC visit as soon as possible and attend 8 times during pregnancy?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -109,6 +188,13 @@ const counsellingForm = {
       name: 'regularExercise',
       label: 'Was mother advised to do regular non-strenuous exercise?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -120,6 +206,13 @@ const counsellingForm = {
       name: 'infantFeeding',
       label: 'Was infant feeding counselling done?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -130,6 +223,13 @@ const counsellingForm = {
       label:
         'Was counselling on exclusive breastfeeding and benefits of colostrum done?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -141,6 +241,13 @@ const counsellingForm = {
       name: 'paleness',
       label: 'Was the mother pale?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -150,6 +257,13 @@ const counsellingForm = {
       name: 'headache',
       label: 'Does the mother have severe headache?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -159,6 +273,13 @@ const counsellingForm = {
       name: 'vaginalBleeding',
       label: 'Did the mother have vaginal bleeding?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -168,6 +289,13 @@ const counsellingForm = {
       name: 'abdominalPain',
       label: 'Did the mother have severe abdominal pain?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -177,6 +305,13 @@ const counsellingForm = {
       name: 'babyMovement',
       label: 'Did the mother have reduced or no movement of the unborn baby?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -186,6 +321,13 @@ const counsellingForm = {
       name: 'convolutions',
       label: 'Did the mother have convulsions/fits?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -195,6 +337,13 @@ const counsellingForm = {
       name: 'waterBreaking',
       label: 'Was the mothers water breaking?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -204,6 +353,13 @@ const counsellingForm = {
       name: 'swollenFaceAndHands',
       label: 'Did the mother have swollen face and hands?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
@@ -213,6 +369,13 @@ const counsellingForm = {
       name: 'fever',
       label: 'Did the mother have a fever?',
       type: 'radio',
+      validate: yup.string().required('Please select an option'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
       options: [
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },

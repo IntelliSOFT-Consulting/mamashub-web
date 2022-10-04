@@ -1,14 +1,21 @@
 import React from 'react';
-import { Divider, Button, Grid, Typography, Box, Stack, useMediaQuery } from '@mui/material';
+import {
+  Divider,
+  Button,
+  Grid,
+  Typography,
+  Box,
+  Stack,
+  useMediaQuery,
+} from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
-
 export default function Preview({ title, format = {}, data, ...props }) {
-    const sections = Object.keys(format);
-    let isMobile = useMediaQuery('(max-width:600px)');
+  const sections = Object.keys(format);
+  let isMobile = useMediaQuery('(max-width:600px)');
   return (
     <>
       <TabContext value='1'>
@@ -45,7 +52,8 @@ export default function Preview({ title, format = {}, data, ...props }) {
                           >
                             {field.label}
                           </Typography>
-                          : {typeof data[field.name] === 'object' ? JSON.stringify(data[field.name]) : data[field.name]}
+                          :{' '}
+                          {field.type === 'date' ? new Date(data[field.name]).toLocaleDateString('en-GB') : data[field.name]}
                         </Grid>
                       );
                     })}
@@ -66,7 +74,7 @@ export default function Preview({ title, format = {}, data, ...props }) {
             </Button>
             <Button
               variant='contained'
-              onClick={props.submit}
+              onClick={()=>props.submit(data)}
               disableElevation
               sx={{ backgroundColor: 'gray' }}
             >
