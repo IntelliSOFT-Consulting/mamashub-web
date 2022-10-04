@@ -93,11 +93,11 @@ export default function HeaderDrawer({ children }) {
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
-    return
+    return;
   };
   const handleOpenUserMenu = event => {
     setAnchorElUser(event.currentTarget);
-    return
+    return;
   };
 
   let getProfile = async () => {
@@ -115,15 +115,14 @@ export default function HeaderDrawer({ children }) {
     setCookie('role', data.role, 1 / 60);
   };
 
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-    return
+    return;
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-    return
+    return;
   };
 
   useEffect(() => {
@@ -166,12 +165,12 @@ export default function HeaderDrawer({ children }) {
     },
     {
       name: 'Forms',
-      icon: <i class='fa-solid fa-pen-to-square'></i>,
+      icon: <i className='fa-solid fa-pen-to-square'></i>,
       roles: ['NURSE'],
       children: [
         {
           name: 'Client Registration',
-          icon: <i class='fa-solid fa-user-pen'></i>,
+          icon: <i className='fa-solid fa-user-pen'></i>,
           path: '/patient-registration',
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],
         },
@@ -219,7 +218,7 @@ export default function HeaderDrawer({ children }) {
         },
         {
           name: 'Malaria Prophylaxis',
-          icon: <i class='fa-solid fa-mosquito-net'></i>,
+          icon: <i className='fa-solid fa-mosquito-net'></i>,
           path: '/malaria-prophylaxis',
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],
         },
@@ -231,7 +230,7 @@ export default function HeaderDrawer({ children }) {
         },
         {
           name: 'Deworming',
-          icon: <i class='fa-solid fa-pills'></i>,
+          icon: <i className='fa-solid fa-pills'></i>,
           path: '/deworming',
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],
         },
@@ -255,7 +254,7 @@ export default function HeaderDrawer({ children }) {
         },
         {
           name: 'CHW Referrals',
-          icon: <i class='fa-solid fa-circle-nodes'></i>,
+          icon: <i className='fa-solid fa-circle-nodes'></i>,
           path: '/community-referrals',
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],
         },
@@ -301,7 +300,6 @@ export default function HeaderDrawer({ children }) {
     },
   ];
 
-  // console.log('roles', role);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -553,12 +551,14 @@ export default function HeaderDrawer({ children }) {
         <br />
         <Container>
           <Routes>
-            {appRoutes.map((route, index) => (
-              <Route
-                path={route.path}
-                element={<route.element userData={userData} />}
-              />
-            ))}
+            {userData &&
+              appRoutes.map((route, index) => (
+                <Route
+                  path={route.path}
+                  key={index}
+                  element={<route.element userData={userData} />}
+                />
+              ))}
           </Routes>
         </Container>
       </Box>
