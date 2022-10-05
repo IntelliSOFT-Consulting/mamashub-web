@@ -42,6 +42,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient';
 import { apiHost, createEncounter } from './../lib/api';
 import { timeSince } from '../lib/timeSince';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import physicalExaminationFields from '../lib/forms/physicalExamination';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
 
 var Highcharts = require('highcharts');
 // Load module after Highcharts is loaded
@@ -62,10 +67,42 @@ export default function PhysicalExam() {
   let isMobile = useMediaQuery('(max-width:600px)');
   let [observations, setObservations] = useState([]);
   let [openModal, setOpenModal] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [inputData, setInputData] = useState({});
   const handleClose = () => setOpenModal(false);
   const handleOpen = () => setOpenModal(true);
 
   const [value, setValue] = useState('1');
+
+  const fieldValues = Object.values(physicalExaminationFields).flat();
+  const validationFields = fieldValues.map(item => ({
+    [item.name]: item.validate,
+  }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({
+      [item.name]: item.type === 'checkbox' ? [] : '',
+    }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
+
   function prompt(text) {
     setMessage(text);
     setOpen(true);
@@ -114,7 +151,7 @@ export default function PhysicalExam() {
     return;
   };
 
-  let savePhysicalExam = async () => {
+  let savePhysicalExam = async values => {
     //get current patient
     if (!visit) {
       prompt(
@@ -277,796 +314,47 @@ export default function PhysicalExam() {
               </TabList>
             </Box>
             <TabPanel value='1'>
-              {/* <p></p> */}
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                General Examination
-              </Typography>
-
-              <Grid container spacing={1} padding='1em'>
-                {physicalExamEncounters.length > 0 &&
-                  physicalExamEncounters.map(x => {
-                    return (
-                      <Grid item xs={12} md={12} lg={4}>
-                        <Button
-                          variant='contained'
-                          onClick={e => {
-                            getEncounterObservations(x.resource.id);
-                          }}
-                          sx={{ backgroundColor: '#632165', width: '99%' }}
-                        >
-                          Examination -{' '}
-                          {`${timeSince(x.resource.meta.lastUpdated)} ago`}
-                        </Button>
-                      </Grid>
-                    );
-                  })}
-                {physicalExamEncounters.length < 1 && loading && (
-                  <>
-                    <CircularProgress />
-                  </>
-                )}
-              </Grid>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        surgicalOperation: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Surgical Operation: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.surgicalOperation === 'Abnormal' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If abnormal, specify'
-                      placeholder='If abnormal, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          firstName: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-              </Grid>
-              <Divider />
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Blood Pressure
-              </Typography>
-
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='80%'
-                    type='text'
-                    label='Systolic Blood Pressure'
-                    placeholder='Systolic Blood Pressure'
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        bpSystolic: e.target.value,
-                      });
-                    }}
+              {preview ? (
+                <Preview
+                  title='Patient Registration Preview'
+                  format={physicalExaminationFields}
+                  data={{ ...inputData }}
+                  close={() => setPreview(false)}
+                  submit={savePhysicalExam}
+                />
+              ) : (
+                <form onSubmit={formik.handleSubmit}>
+                  <FormFields
+                    formData={physicalExaminationFields}
+                    formik={formik}
                   />
-                </Grid>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Diastolic Blood Pressure'
-                    placeholder='Diastolic Blood Pressure'
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        bpDiastolic: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Pulse Rate'
-                    placeholder='Pulse Rate'
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        pulseRate: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Temperature'
-                    placeholder='Temperature'
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        temperature: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({ ...physicalExam, cvs: e.target.value });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='CVs: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.cvs === 'Abnormal' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If abnormal, specify'
-                      placeholder='If abnormal, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          abnormalCVsSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        respiration: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Respiration: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.respiration === 'Abnormal' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If abnormal, specify'
-                      placeholder='If abnormal, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          respirationAbnormalSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        breastExam: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Breast Exam: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.breastExam === 'Normal' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If normal, record findings'
-                      placeholder='If normal, record findings'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          breastExamFindings: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                {physicalExam.breastExam === 'Abnormal' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If abnormal, specify'
-                      placeholder='If abnormal, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          breastExamAbnormalSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-              </Grid>
 
-              <Divider />
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Weight Monitoring
-              </Typography>
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='100%'
-                    type='number'
-                    label="Mother's weight (kg)"
-                    placeholder="Mother's weight (kg)"
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        mothersWeight: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={3}>
-                  <TextField
-                    fullWidth='100%'
-                    type='number'
-                    label='Gestation in weeks'
-                    placeholder='Gestation in weeks'
-                    size='small'
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        gestation: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Divider />
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Abdmonial Examinations
-              </Typography>
-              <Divider />
-
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        inspectionDone: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Inspection Done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.inspectionDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          inspectionDoneSpecify: e.target.value,
-                        });
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                      onClick={e => {
+                        setPhysicalExam({});
                       }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        palpationDone: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Palpation Done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.palpationDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          palpationDoneSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        auscalationDone: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Auscalation Done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.auscalationDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          auscalationDoneSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-              </Grid>
-
-              <Divider />
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                External Genitalia Examination
-              </Typography>
-              <Divider />
-
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        externalGenitaliaInspectionDone: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Inspection Done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.externalGenitaliaInspectionDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          externalGenitaliaInspectionDoneSpecify:
-                            e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        externalGenitaliaPalpationDone: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Palpation Done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.externalGenitaliaPalpationDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          externalGenitaliaPalpationDoneSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        dischargePresent: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Discharge Present: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.dischargePresent === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          dischargePresentSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        genitalUlcerPresent: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Genital ulcer present: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.genitalUlcerPresent === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='80%'
-                      type='text'
-                      label='If yes, specify'
-                      placeholder='If yes, specify'
-                      size='small'
-                      onChange={e => {
-                        setPhysicalExam({
-                          ...physicalExam,
-                          genitalUlcerPresentSpecify: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPhysicalExam({
-                        ...physicalExam,
-                        fgmDone: e.target.value,
-                      });
-                      console.log(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='FGM done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {physicalExam.fgmDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <FormControl
-                      sx={{ m: 3 }}
-                      component='fieldset'
-                      variant='standard'
                     >
-                      <FormLabel component='legend'>
-                        If yes, select all that apply
-                      </FormLabel>
-                      <FormGroup>
-                        <FormControlLabel
-                          label='Scarring'
-                          control={
-                            <Checkbox
-                              checked={false}
-                              onChange={handleChanges}
-                              name='Scarring'
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label='Dyspaneuria'
-                          control={
-                            <Checkbox
-                              checked={false}
-                              onChange={handleChanges}
-                              name='Dyspaneuria'
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label='Keloids'
-                          control={
-                            <Checkbox
-                              checked={false}
-                              onChange={handleChanges}
-                              name='Keloids'
-                            />
-                          }
-                        />
-                        <FormControlLabel
-                          label='UTI'
-                          control={
-                            <Checkbox
-                              checked={false}
-                              onChange={handleChanges}
-                              name='UTI'
-                            />
-                          }
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
-                )}
-              </Grid>
-
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                  onClick={e => {
-                    setPhysicalExam({});
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    savePhysicalExam();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      type='submit'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </form>
+              )}
             </TabPanel>
 
             <TabPanel value='2'>
