@@ -1,0 +1,361 @@
+import * as yup from 'yup';
+
+const medicalSurgicalHistory = {
+  'Surgical History': [
+    {
+      name: 'surgicalHistory',
+      label: 'Surgical History (Select all that apply)',
+      type: 'checkbox',
+      validate: yup.array().min(1, 'Please select at least one option'),
+      options: [
+        { value: 'No known past surgeries', label: 'No known past surgeries' },
+        { value: 'Oophorectomy', label: 'Oophorectomy' },
+        { value: 'Dilation and curettage', label: 'Dilation and curettage' },
+        { value: 'Salphingectomy', label: 'Salphingectomy' },
+        { value: 'Myomectomy', label: 'Myomectomy' },
+        { value: 'Cervical cone', label: 'Cervical cone' },
+        {
+          value: 'Removal of ovarian cysts',
+          label: 'Removal of ovarian cysts',
+        },
+        {
+          value: 'Other Gynaecological Procedures',
+          label: 'Other Gynaecological Procedures',
+        },
+        { value: 'Other Surgeries', label: 'Other Surgeries' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
+    },
+    {
+      name: 'otherGynaecologicalProcedures',
+      label: 'Other Gynaecological Procedures (Specify)',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values =>
+        values.surgicalHistory.includes('Other Gynaecological Procedures'),
+    },
+    {
+      name: 'otherSurgeries',
+      label: 'Other Surgeries (Specify)',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.surgicalHistory.includes('Other Surgeries'),
+    },
+  ],
+  'Medical History': [
+    {
+      name: 'diabetes',
+      label: 'Diabetes',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'hypertension',
+      label: 'Hypertension',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'otherConditions',
+      label: 'Other Conditions',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'otherConditionsSpecify',
+      label: 'If yes, select all that apply',
+      type: 'checkbox',
+      validate: yup.array(),
+      options: [
+        { value: 'Epilepsy', label: 'Epilepsy' },
+        { value: 'Malaria in pregnancy', label: 'Malaria in pregnancy' },
+        { value: 'Others', label: 'Others' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.otherConditions === 'Yes',
+    },
+    {
+      name: 'bloodTransfusion',
+      label: 'Blood Transfusion',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'bloodTransfusionReaction',
+      label: 'If yes, was there a reaction?',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.bloodTransfusion === 'Yes',
+    },
+    {
+      name: 'bloodTransfusionReactionDetails',
+      label: 'If yes, what was the reaction?',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.bloodTransfusionReaction === 'Yes',
+    },
+    {
+      name: 'tuberculosis',
+      label: 'Tuberculosis',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+  ],
+  'Drug Allergies': [
+    {
+      name: 'drugAllergies',
+      label: 'Drug Allergies',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'drugAllergiesSpecify',
+      label: 'If yes, specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.drugAllergies === 'Yes',
+    },
+    {
+      name: 'otherNonDrugAllergies',
+      label: 'Other Non-Drug Allergies',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'otherNonDrugAllergiesSpecify',
+      label: 'If yes, specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.otherNonDrugAllergies === 'Yes',
+    },
+  ],
+  'Family History': [
+    {
+      name: 'twins',
+      label: 'Twins',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'twinsDetails',
+      label: 'If yes, specify',
+      type: 'checkbox',
+      validate: yup.array(),
+      options: [
+        { value: 'Previous pregnancy', label: 'Previous pregnancy' },
+        { value: "Mother's side", label: "Mother's side" },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.twins === 'Yes',
+    },
+    {
+      name: 'tuberculosisHistory',
+      label: 'Tuberculosis',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
+    },
+    {
+      name: 'relativeWithTuberculosis',
+      label: 'If yes, who is the relative who contracted TB',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.tuberculosisHistory === 'Yes',
+    },
+    {
+      name: 'relativeWithTuberculosisDetails',
+      label: 'Relationship',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.tuberculosisHistory === 'Yes',
+    },
+    {
+      name: 'relativeWithTuberculosisHousehold',
+      label: 'Were they living in the same household',
+      type: 'radio',
+      validate: yup.string(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12,
+      },
+      relevant: values => values.tuberculosisHistory === 'Yes',
+    },
+    {
+      name: 'tuberculosisScreening',
+      label: 'if yes, refer to tuberculosis screening',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.tuberculosisHistory === 'Yes',
+    },
+  ],
+};
+
+export default medicalSurgicalHistory;
