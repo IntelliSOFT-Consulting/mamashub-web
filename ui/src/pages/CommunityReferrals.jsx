@@ -145,7 +145,7 @@ export default function PatientList() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Community Referral Preview'
               format={referralForm}
               data={{ ...inputData }}
               close={() => setPreview(false)}

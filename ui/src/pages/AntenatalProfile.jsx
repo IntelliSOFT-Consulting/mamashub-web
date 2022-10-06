@@ -245,7 +245,7 @@ export default function AntenatalProfile() {
 
             {preview ? (
               <Preview
-                title='Patient Registration Preview'
+                title='Antenatal Preview'
                 format={antenatalFields}
                 data={{ ...inputData }}
                 close={() => setPreview(false)}

@@ -169,7 +169,7 @@ export default function BirthPlan() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
                 <Preview
-                  title='Patient Registration Preview'
+                  title='Birth Plan Preview'
                   format={birthPlan}
                   data={{ ...inputData }}
                   close={() => setPreview(false)}

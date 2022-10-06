@@ -114,7 +114,7 @@ export default function Counselling() {
 
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Counselling Preview'
               format={counsellingForm}
               data={{ ...inputData }}
               close={() => setPreview(false)}

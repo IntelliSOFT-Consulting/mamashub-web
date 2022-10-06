@@ -224,7 +224,7 @@ export default function PreviousPregnancy() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Previous Pregancy Preview'
               format={previousPregnancyFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}

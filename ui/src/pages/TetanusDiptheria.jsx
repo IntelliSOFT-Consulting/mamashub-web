@@ -216,7 +216,7 @@ export default function TetanusDiptheria() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Tetanus and Diptheria Preview'
               format={tetanusAndDiptheria}
               data={{ ...inputData }}
               close={() => setPreview(false)}

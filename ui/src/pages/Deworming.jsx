@@ -107,7 +107,7 @@ export default function Deworming() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Deworming Preview'
               format={dewormingFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}

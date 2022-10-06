@@ -122,7 +122,7 @@ export default function MaternalSerology() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title='Maternal Serology Preview'
               format={maternalSerologyFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
