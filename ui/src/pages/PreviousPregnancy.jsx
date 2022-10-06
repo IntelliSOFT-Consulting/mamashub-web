@@ -42,6 +42,11 @@ import { createEncounter, FhirApi, apiHost } from '../lib/api';
 import { Patient } from '../lib/fhir/resources';
 import CurrentPatient from '../components/CurrentPatient';
 import { timeSince } from '../lib/timeSince';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
+import previousPregnancyFields from '../lib/forms/previousPregnancy';
 
 export default function PreviousPregnancy() {
   let [patient, setPatient] = useState({});
@@ -59,6 +64,38 @@ export default function PreviousPregnancy() {
   let [previousPregnancyEncounters, setPreviousPregnancyEncounters] = useState(
     []
   );
+
+  const [inputData, setInputData] = useState({});
+  const [preview, setPreview] = useState(false);
+
+  const fieldValues = Object.values(previousPregnancyFields).flat();
+  const validationFields = fieldValues
+    .filter(item => item.validate)
+    .map(item => ({
+      [item.name]: item.validate,
+    }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({ [item.name]: '' }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
   const handleClose = () => setOpenModal(false);
   const handleOpen = () => setOpenModal(true);
 
@@ -71,7 +108,7 @@ export default function PreviousPregnancy() {
     return;
   }
 
-  let savePreviousPregnancy = async () => {
+  let savePreviousPregnancy = async values => {
     //get current patient
     if (!visit) {
       prompt(
@@ -185,316 +222,86 @@ export default function PreviousPregnancy() {
             key={'loginAlert'}
           />
           {visit && <CurrentPatient data={visit} />}
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-              >
-                <Tab label='Previous Pregnancy' value='1' />
-              </TabList>
-            </Box>
-            <TabPanel value='1'>
-              <Grid container spacing={1} padding='.5em'>
-                {previousPregnancyEncounters.length > 0 &&
-                  previousPregnancyEncounters.map((x, index) => {
-                    return (
-                      <Grid item xs={12} md={12} lg={3}>
-                        <Button
-                          variant='contained'
-                          onClick={e => {
-                            getEncounterObservations(x.resource.id);
-                          }}
-                          sx={{ backgroundColor: '#632165', width: '99%' }}
-                        >
-                          Pregnancy - {`${index + 1}`}
-                        </Button>
-                      </Grid>
-                    );
-                  })}
-                {previousPregnancyEncounters.length < 1 && loading && (
-                  <>
-                    <CircularProgress />
-                  </>
-                )}
-              </Grid>
-              <Typography variant='h6' sx={{ mb: 1 }}>
-                Pregnancy Details
-              </Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Pregnancy Order'
-                    placeholder='Pregnancy Order'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        pregnancyOrder: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Year'
-                    placeholder='Year'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        ppYear: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
+          {preview ? (
+            <Preview
+              title='Patient Registration Preview'
+              format={previousPregnancyFields}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={savePreviousPregnancy}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                  >
+                    <Tab label='Previous Pregnancy' value='1' />
+                  </TabList>
+                </Box>
+                <TabPanel value='1'>
+                  <Grid container spacing={1} padding='.5em'>
+                    {previousPregnancyEncounters.length > 0 &&
+                      previousPregnancyEncounters.map((x, index) => {
+                        return (
+                          <Grid item xs={12} md={12} lg={3}>
+                            <Button
+                              variant='contained'
+                              onClick={e => {
+                                getEncounterObservations(x.resource.id);
+                              }}
+                              sx={{ backgroundColor: '#632165', width: '99%' }}
+                            >
+                              Pregnancy - {`${index + 1}`}
+                            </Button>
+                          </Grid>
+                        );
+                      })}
+                    {previousPregnancyEncounters.length < 1 && loading && (
+                      <>
+                        <CircularProgress />
+                      </>
+                    )}
+                  </Grid>
 
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='No of times ANC attended for every pregnancy'
-                    placeholder='No of times ANC attended for every pregnancy'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        ancVisits: e.target.value,
-                      });
-                    }}
+                  <FormFields
+                    formData={previousPregnancyFields}
+                    formik={formik}
                   />
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Place of child birth'
-                    placeholder='Place of child birth'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        placeOfBirth: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Gestation (weeks)'
-                    placeholder='Gestation (weeks)'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        gestation: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Duration of labor'
-                    placeholder='Duration of labor'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        durationOfLabor: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
 
-                <Grid item xs={12} md={12} lg={12}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        modeOfDelivery: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '25%' }}
-                      control={<FormLabel />}
-                      label='Mode of delivery: '
-                    />
-                    <FormControlLabel
-                      value={'Vaginal Delivery'}
-                      control={<Radio />}
-                      label='Vaginal Delivery'
-                    />
-                    <FormControlLabel
-                      value={'Assisted Vaginal Delivery'}
-                      control={<Radio />}
-                      label='Assisted Vaginal Delivery'
-                    />
-                    <FormControlLabel
-                      value={'Caeserean Section'}
-                      control={<Radio />}
-                      label='Caeserean Section'
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-              <p></p>
-              <Typography variant='h6'>Baby details</Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Birth weight (g)'
-                    placeholder='Birth weight (g)'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        babyWeight: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        babyWeight: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Baby sex'
-                    />
-                    <FormControlLabel
-                      value={'Male'}
-                      control={<Radio />}
-                      label='Male'
-                    />
-                    <FormControlLabel
-                      value={'Female'}
-                      control={<Radio />}
-                      label='Female'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        babyWeight: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Outcome'
-                    />
-                    <FormControlLabel
-                      value={'Dead'}
-                      control={<Radio />}
-                      label='Dead'
-                    />
-                    <FormControlLabel
-                      value={'Alive'}
-                      control={<Radio />}
-                      label='Alive'
-                    />
-                  </RadioGroup>
-                </Grid>
-                 <Grid item xs={12} md={12} lg={6}/>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      console.log(e);
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Purperium'
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If abnormal, specify'
-                    placeholder='If abnormal, specify'
-                    size='small'
-                    onChange={e => {
-                      setPreviousPregnancy({
-                        ...previousPregnancy,
-                        surgicalOperationReason: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    savePreviousPregnancy();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-          </TabContext>
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      onClick={e => {
+                        savePreviousPregnancy();
+                      }}
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
           <Modal
             keepMounted
             open={openModal}
