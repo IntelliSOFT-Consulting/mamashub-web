@@ -15,7 +15,6 @@ const formData = {
         md: 12,
         lg: 6,
       },
-      // validate: yup.string(),
     },
     {
       name: 'kmhflCode',
@@ -29,7 +28,6 @@ const formData = {
         md: 12,
         lg: 6,
       },
-      // validate: yup.string(),
     },
   ],
   'Client Details': [

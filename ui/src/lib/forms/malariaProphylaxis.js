@@ -1,0 +1,111 @@
+import * as yup from 'yup';
+import malariaContacts from '../../data/malariaProphylaxisContacts.json';
+
+const malariaProphylaxis = {
+  'ANC Visit': [
+    {
+      name: 'timingOfContact',
+      label: 'Timing of contact',
+      type: 'select',
+      validate: yup.string().required('Timing of contact is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 7,
+      },
+      options: Object.keys(malariaContacts).map(key => ({
+        value: key,
+        label: key,
+      })),
+    },
+    {
+      name: 'doseGiven',
+      label: 'Dose given',
+      type: 'radio',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      options: [
+        { label: 'Yes', value: 'Yes' },
+        { label: 'No', value: 'No' },
+      ],
+      relevant: formValues => !formValues.timingOfContact?.includes('12') && !formValues.timingOfContact?.includes('40'),
+    },
+    {
+      name: 'doseGivenDate',
+      label: 'If yes, date given',
+      type: 'date',
+      validate: yup.date(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: formValues => formValues.doseGiven === 'Yes',
+    },
+    {
+      name: 'doseNextVisitDate',
+      label: 'If no, next visit',
+      type: 'date',
+      validate: yup.date(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: formValues => formValues.doseGiven === 'No',
+    },
+    {
+      name: 'nextVisitDate',
+      label: 'Next visit',
+      type: 'date',
+      validate: yup.date().required('Next visit is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+  ],
+  'Long Lasting Insecticide Treated Nets (LLITN)': [
+    {
+      name: 'llitnGiven',
+      label: 'Was LLITN given to the mother?',
+      type: 'radio',
+      validate: yup.string().required('LLITN given is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      options: [
+        { label: 'Yes', value: 'Yes' },
+        { label: 'No', value: 'No' },
+      ],
+    },
+    {
+      name: 'llitnGivenDate',
+      label: 'If yes, date given',
+      type: 'date',
+      validate: yup.date(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: formValues => formValues.llitnGiven === 'Yes',
+    },
+  ],
+};
+
+export default malariaProphylaxis;

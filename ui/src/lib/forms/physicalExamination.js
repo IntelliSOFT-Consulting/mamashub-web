@@ -1,0 +1,460 @@
+import * as yup from 'yup';
+
+const physicalExaminationFields = {
+  'General Examination': [
+    {
+      name: 'surgicalOperation',
+      label: 'Surgical Operation',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Normal', label: 'Normal' },
+        { value: 'Abnormal', label: 'Abnormal' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'surgicalOperationDetails',
+      label: 'If abnormal, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.surgicalOperation === 'Abnormal',
+    },
+  ],
+  'Blood Pressure': [
+    {
+      name: 'systolicBp',
+      label: 'Systolic Blood Pressure',
+      type: 'text',
+
+      validate: yup
+        .number('Systolic Blood Pressure must be a number')
+        .required('Systolic Blood Pressure is required'),
+
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 3,
+      },
+    },
+    {
+      name: 'diastolicBp',
+      label: 'Diastolic Blood Pressure',
+      type: 'text',
+      validate: yup
+        .number('Diastolic Blood Pressure must be a number')
+        .required('Diastolic Blood Pressure is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 3,
+      },
+    },
+    {
+      name: 'pulseRate',
+      label: 'Pulse Rate',
+      type: 'text',
+      validate: yup.number().required('Pulse Rate is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 3,
+      },
+    },
+    {
+      name: 'temperature',
+      label: 'Temperature',
+      type: 'text',
+      validate: yup.number().required('Temperature is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 3,
+      },
+    },
+    {
+      name: 'cvs',
+      label: 'CVs',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Normal', label: 'Normal' },
+        { value: 'Abnormal', label: 'Abnormal' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'cvsDetails',
+      label: 'If abnormal, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.cvs === 'Abnormal',
+    },
+    {
+      name: 'respiration',
+      label: 'Respiration',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Normal', label: 'Normal' },
+        { value: 'Abnormal', label: 'Abnormal' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'respirationDetails',
+      label: 'If abnormal, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.respiration === 'Abnormal',
+    },
+    {
+      name: 'breastExam',
+      label: 'Breast Exam',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Normal', label: 'Normal' },
+        { value: 'Abnormal', label: 'Abnormal' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'breastExamNormalDetails',
+      label: 'If normal, record findings',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.breastExam === 'Normal',
+    },
+    {
+      name: 'breastExamAbnormalDetails',
+      label: 'If abnormal, specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.breastExam === 'Abnormal',
+    },
+  ],
+  'Weight Monitoring': [
+    {
+      name: 'mothersWeight',
+      label: "Mother's Weight",
+      type: 'text',
+      validate: yup.number().required("Mother's Weight is required"),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 6,
+        lg: 3,
+      },
+    },
+    {
+      name: 'gestationInWeeks',
+      label: 'Gestation in Weeks',
+      type: 'text',
+      validate: yup.number().required('Gestation in Weeks is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 6,
+        lg: 3,
+      },
+    },
+  ],
+  'Abdominal Examinations': [
+    {
+      name: 'inspectionDone',
+      label: 'Inspection Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'inspectionDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.inspectionDone === 'Yes',
+    },
+    {
+      name: 'palpationDone',
+      label: 'Palpation Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'palpationDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.palpationDone === 'Yes',
+    },
+    {
+      name: 'auscultationDone',
+      label: 'Auscultation Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'auscultationDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.auscultationDone === 'Yes',
+    },
+  ],
+  'External Genitalia Examination': [
+    {
+      name: 'genitaliaInspectionDone',
+      label: 'Inspection Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'genitaliaInspectionDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.genitaliaInspectionDone === 'Yes',
+    },
+    {
+      name: 'genitaliaPalpationDone',
+      label: 'Palpation Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'genitaliaPalpationDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.genitaliaPalpationDone === 'Yes',
+    },
+    {
+      name: 'dischargePresent',
+      label: 'Discharge Present',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'dischargeDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.dischargePresent === 'Yes',
+    },
+    {
+      name: 'genitalUlcerPresent',
+      label: 'Genital Ulcer Present',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'genitalUlcerDetails',
+      label: 'If yes, please specify',
+      type: 'text',
+      validate: yup.string(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.genitalUlcerPresent === 'Yes',
+    },
+    {
+      name: 'fgmDone',
+      label: 'FGM Done',
+      type: 'radio',
+      validate: yup.string().required(),
+      options: [
+        { value: 'Yes', label: 'Yes' },
+        { value: 'No', label: 'No' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+    },
+    {
+      name: 'fgmDetails',
+      label: 'If yes, select all that apply',
+      type: 'checkbox',
+      validate: yup.array().min(1),
+      options: [
+        { value: 'Scarring', label: 'Scarring' },
+        { value: 'Dyspaneuria', label: 'Dyspaneuria' },
+        { value: 'Keloids', label: 'Keloids' },
+        { value: 'UTI', label: 'UTI' },
+      ],
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: values => values.fgmDone === 'Yes',
+    },
+  ],
+};
+export default physicalExaminationFields;

@@ -39,6 +39,12 @@ import FormLabel from '@mui/material/FormLabel';
 import { v4 as uuidv4 } from 'uuid';
 import { createEncounter, FhirApi, apiHost } from '../lib/api';
 import CurrentPatient from '../components/CurrentPatient';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import medicalSurgicalForm from '../lib/forms/medicalSurgicalHistory';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
+import { getSections } from '../lib/getFormSections';
 
 export default function ANCProfile() {
   let [visit, setVisit] = useState();
@@ -50,6 +56,37 @@ export default function ANCProfile() {
   let [medicalHistory, setMedicalHistory] = useState({});
 
   const [value, setValue] = useState('1');
+  const [inputData, setInputData] = useState({});
+  const [preview, setPreview] = useState(false);
+
+  const fieldValues = Object.values(medicalSurgicalForm).flat();
+  const validationFields = fieldValues.map(item => ({
+    [item.name]: item.validate,
+  }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({
+      [item.name]: item.type === 'checkbox' ? [] : '',
+    }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
 
   function prompt(text) {
     setMessage(text);
@@ -69,7 +106,8 @@ export default function ANCProfile() {
     return;
   };
 
-  let saveMedicalHistory = async () => {
+  let saveMedicalHistory = async values => {
+    console.log(values);
     //get current patient
     if (!visit) {
       prompt(
@@ -155,751 +193,89 @@ export default function ANCProfile() {
                 aria-label='scrollable auto tabs example'
               >
                 <Tab label='Medical and Surgical History' value='1' />
+                <Tab value='2' hidden />
               </TabList>
             </Box>
-            <TabPanel value='1'>
-              {/* <p></p> */}
-              <Typography variant='h6'>Surgical History</Typography>
-              <Divider />
-              <Grid container spacing={1} padding='.5em'>
-                <FormControl
-                  sx={{ m: 3 }}
-                  component='fieldset'
-                  variant='standard'
-                >
-                  <FormLabel component='legend'>
-                    Surgical Operation (Select all that apply):
-                  </FormLabel>
-                  <FormGroup>
-                    <Grid container spacing={1} padding='1em'>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  noSurgeries: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='noSurgeries'
-                            />
-                          }
-                          label='No known past surgeries'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  Oophorectomy: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='Oophorectomy'
-                            />
-                          }
-                          label='Oophorectomy'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  dilation: e.target.checked,
-                                });
-                              }}
-                              name='dilation'
-                            />
-                          }
-                          label='Dilation and curettage'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  Salphingectomy: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='Salphingectomy'
-                            />
-                          }
-                          label='Salphingectomy'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  Myomectomy: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='Myomectomy'
-                            />
-                          }
-                          label='Myomectomy'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  cervicalCone: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='cervicalCone'
-                            />
-                          }
-                          label='Cervical cone'
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              onChange={e => {
-                                setMedicalHistory({
-                                  ...medicalHistory,
-                                  ovarianCystRemoval: e.target.checked,
-                                });
-                                console.log(e.target.value);
-                              }}
-                              name='ovarianCystRemoval'
-                            />
-                          }
-                          label='Removal of ovarian cysts'
-                        />
-                      </Grid>
-                    </Grid>
-                  </FormGroup>
-                </FormControl>
-                <Grid container spacing={1} padding='1em'>
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='100%'
-                      type='text'
-                      label='Other gynaecological procedures (specify)'
-                      placeholder='Other gynaecological procedures (specify)'
-                      size='small'
-                      onChange={e => {
-                        setMedicalHistory({
-                          ...medicalHistory,
-                          otherGynaecologicalProcedures: e.target.value,
-                        });
+            {preview ? (
+              <Preview
+                title='Patient Registration Preview'
+                format={medicalSurgicalForm}
+                data={{ ...inputData }}
+                close={() => setPreview(false)}
+                submit={saveMedicalHistory}
+              />
+            ) : (
+              <form onSubmit={formik.handleSubmit}>
+                <TabPanel value='1'>
+                  <FormFields
+                    formData={getSections(medicalSurgicalForm, 0, 2)}
+                    formik={formik}
+                  />
+
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                      onClick={e => {
+                        setMedicalHistory({});
                       }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='100%'
-                      type='text'
-                      label='Other surgeries (specify)'
-                      placeholder='Other surgeries (specify)'
-                      size='small'
-                      onChange={e => {
-                        setMedicalHistory({
-                          ...medicalHistory,
-                          otherSurgeries: e.target.value,
-                        });
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      onClick={e => {
+                        handleChange(null, '2');
                       }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Divider />
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Medical History
-              </Typography>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        diabetes: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Diabetes: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        hypertension: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Hypertension: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        otherConditions: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Other conditions: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} padding='1em'>
-                {medicalHistory.otherConditions &&
-                  medicalHistory.otherConditions === 'Yes' && (
-                    <Grid item xs={12} md={12} lg={6}>
-                      <FormControl component='fieldset' variant='standard'>
-                        <FormLabel component='legend'>
-                          If yes, select all that apply
-                        </FormLabel>
-                        <FormGroup>
-                          <FormControlLabel
-                            label='Epilepsy'
-                            control={
-                              <Checkbox
-                                checked={false}
-                                onChange={handleChanges}
-                                name='antoine'
-                              />
-                            }
-                          />
-                          <FormControlLabel
-                            label='Malaria in pregnancy'
-                            control={
-                              <Checkbox
-                                checked={false}
-                                onChange={handleChanges}
-                                name='antoine'
-                              />
-                            }
-                          />
-                          <FormControlLabel
-                            label='Others'
-                            control={
-                              <Checkbox
-                                checked={false}
-                                onChange={handleChanges}
-                                name='antoine'
-                              />
-                            }
-                          />
-                        </FormGroup>
-                      </FormControl>
-                    </Grid>
-                  )}
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        bloodTransfusion: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Blood Transfusion: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        bloodTransfusionReaction: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='If yes, was there a reaction? '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={7}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If yes, what was the reaction'
-                    placeholder='If yes, what was the reaction'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        bloodTransfusionReactionResult: e.target.value,
-                      });
-                    }}
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      NEXT
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+                <TabPanel value='2'>
+                  <p></p>
+                  <FormFields
+                    formData={getSections(medicalSurgicalForm, 2, 4)}
+                    formik={formik}
                   />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        bloodTransfusionReactionResult: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Tuberculosis: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                  onClick={e => {
-                    setMedicalHistory({});
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    handleChange(null, '2');
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  NEXT
-                </Button>
-                {/* <Button variant="contained" onClick={e => { saveMedicalHistory() }} disableElevation sx={{ backgroundColor: "#632165" }}>Save</Button> */}
-              </Stack>
-              <p></p>
-            </TabPanel>
-            <TabPanel value='2'>
-              <p></p>
-
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Drug Allergies
-              </Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        drugAllergies: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Drug allergies: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If yes, specify'
-                    placeholder='If yes, specify'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        specificDrugAllergies: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        nonDrugAllergies: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Other non-drug allergies: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If yes, specify'
-                    placeholder='If yes, specify'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        specificNonDrugAllergies: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Family History
-              </Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        twinsBothLiveBorn: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Twins: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <FormControl component='fieldset' variant='standard'>
-                    <FormLabel component='legend'>If yes, specify</FormLabel>
-                    <FormGroup>
-                      <FormControlLabel
-                        label='Previous pregnancy'
-                        control={
-                          <Checkbox
-                            checked={false}
-                            onChange={handleChanges}
-                            name='antoine'
-                          />
-                        }
-                      />
-                      <FormControlLabel
-                        label="Mother's side"
-                        control={
-                          <Checkbox
-                            checked={false}
-                            onChange={handleChanges}
-                            name='antoine'
-                          />
-                        }
-                      />
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        familyHistoryTB: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Tuberculosis: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If yes, who is the relative who contacted TB'
-                    placeholder='If yes, who is the relative who contacted TB'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        familyHistoryTBName: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='Relationship'
-                    placeholder='Relationship'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        familyHistoryTBRelationship: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        familyLivingInSameHousehold: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      value={0}
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Were they living in the same household: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='If yes, refer for TB screening'
-                    placeholder='If yes, refer for TB screening'
-                    size='small'
-                    onChange={e => {
-                      setMedicalHistory({
-                        ...medicalHistory,
-                        referForTBScreening: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                  onClick={e => {
-                    handleChange(null, '1');
-                  }}
-                >
-                  PREVIOUS
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    // handleChange(null, '2');
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  PREVIEW
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                      onClick={e => {
+                        handleChange(null, '1');
+                      }}
+                    >
+                      PREVIOUS
+                    </Button>
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                      type='submit'
+                    >
+                      PREVIEW
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </form>
+            )}
           </TabContext>
         </Container>
       </LocalizationProvider>

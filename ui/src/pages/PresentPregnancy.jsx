@@ -30,6 +30,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import CurrentPatient from '../components/CurrentPatient';
 import { apiHost, createEncounter } from '../lib/api';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
+import presentPregnancyFields from '../lib/forms/presentPregnancy';
 
 export default function PresentPregnancy() {
   let [patient, setPatient] = useState({});
@@ -47,6 +52,38 @@ export default function PresentPregnancy() {
   const handleOpen = () => setOpenModal(true);
   const [value, setValue] = useState('1');
   let [openModal, setOpenModal] = useState(false);
+
+  const [inputData, setInputData] = useState({});
+  const [preview, setPreview] = useState(false);
+
+  const fieldValues = Object.values(presentPregnancyFields).flat();
+  const validationFields = fieldValues
+    .filter(item => item.validate)
+    .map(item => ({
+      [item.name]: item.validate,
+    }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({ [item.name]: '' }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
 
   function prompt(text) {
     setMessage(text);
@@ -182,573 +219,89 @@ export default function PresentPregnancy() {
             key={'loginAlert'}
           />
           {visit && <CurrentPatient data={visit} />}
-
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-                aria-label='scrollable auto tabs example'
-              >
-                <Tab label='Present Pregnancy' value='1' />
-              </TabList>
-            </Box>
-            <TabPanel value='1'>
-              {/* <p></p> */}
-
-              <Grid container spacing={1} padding='.5em'>
-                {presentPregnancyEncounters.length > 0 &&
-                  presentPregnancyEncounters.map((x, index) => {
-                    return (
-                      <Grid item xs={12} md={12} lg={3}>
-                        <Button
-                          variant='contained'
-                          onClick={e => {
-                            getEncounterObservations(x.resource.id);
-                          }}
-                          sx={{ backgroundColor: '#632165', width: '99%' }}
-                        >
-                          Contact - {`${index + 1}`}
-                        </Button>
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-              {presentPregnancyEncounters.length < 1 && loading && (
-                <>
-                  <CircularProgress />
-                </>
-              )}
-              <Divider />
-
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Current Pregnancy Details
-              </Typography>
-              <Divider />
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='Number of contacts'
-                    placeholder='Number of contacts'
-                    size='small'
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentPregnancyDetailsMUAC: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  {!isMobile ? (
-                    <DesktopDatePicker
-                      label='Date'
-                      inputFormat='yyyy-MM-dd'
-                      value={patient.date || null}
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          date: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  ) : (
-                    <MobileDatePicker
-                      label='Date'
-                      inputFormat='yyyy-MM-dd'
-                      value={patient.date || null}
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          date: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  )}
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='90%'
-                    type='text'
-                    label='MUAC (cm)'
-                    placeholder='MUAC (cm)'
-                    size='small'
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentPregnancyDetailsMUAC: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6} />
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentPregnancyUrineTestDone: e.target.value,
-                      });
-                    }}
+          {preview ? (
+            <Preview
+              title='Present Pregnancy Preview'
+              format={presentPregnancyFields}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={savePresentPregnancy}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                    aria-label='scrollable auto tabs example'
                   >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Urine test done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {presentPregnancy.presentPregnancyUrineTestDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='90%'
-                      type='text'
-                      label='If yes, give results'
-                      placeholder='If yes, give results'
-                      size='small'
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          presentPregnancyUrineTestResults: e.target.value,
-                        });
-                      }}
-                    />
+                    <Tab label='Present Pregnancy' value='1' />
+                  </TabList>
+                </Box>
+                <TabPanel value='1'>
+                  {/* <p></p> */}
+
+                  <Grid container spacing={1} padding='.5em'>
+                    {presentPregnancyEncounters.length > 0 &&
+                      presentPregnancyEncounters.map((x, index) => {
+                        return (
+                          <Grid item xs={12} md={12} lg={3}>
+                            <Button
+                              variant='contained'
+                              onClick={e => {
+                                getEncounterObservations(x.resource.id);
+                              }}
+                              sx={{ backgroundColor: '#632165', width: '99%' }}
+                            >
+                              Contact - {`${index + 1}`}
+                            </Button>
+                          </Grid>
+                        );
+                      })}
                   </Grid>
-                )}
-              </Grid>
-
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Blood Pressure
-              </Typography>
-              <Divider />
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='80%'
-                    type='text'
-                    label='Systolic Blood Pressure'
-                    placeholder='Systolic Blood Pressure'
-                    size='small'
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        bpSystolic: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Diastolic Blood Pressure'
-                    placeholder='Diastolic Blood Pressure'
-                    size='small'
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        bpDiastolic: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                HB Test
-              </Typography>
-              <Divider />
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        hbTestHbTestDone: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Hb test done: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                {presentPregnancy.hbTestHbTestDone === 'Yes' && (
-                  <Grid item xs={12} md={12} lg={6}>
-                    <TextField
-                      fullWidth='90%'
-                      type='text'
-                      label='If yes, give results'
-                      placeholder='If yes, give results'
-                      size='small'
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          hbTestHbTestReading: e.target.value,
-                        });
-                      }}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        hbTestPallor: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '50%' }}
-                      control={<FormLabel />}
-                      label='Pallor: '
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Gestation in weeks'
-                    placeholder='Gestation in weeks'
-                    size='small'
-                    onChange={e => {
-                      setPatient({
-                        ...patient,
-                        hbTestGestation: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={6}/>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Fundal Height'
-                    placeholder='Fundal Height'
-                    size='small'
-                    onChange={e => {
-                      setPatient({
-                        ...patient,
-                        hbTestFundalHeight: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Presentation
-              </Typography>
-              <Divider />
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    fullWidth='100%'
-                    type='text'
-                    label='Number of contacts'
-                    placeholder='Number of contacts'
-                    size='small'
-                    onChange={e => {
-                      setPatient({ ...patient, numberOfContacts: e.target.value });
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={8}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentationLie: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '35%' }}
-                      control={<FormLabel />}
-                      label='Lie: '
-                    />
-                    <FormControlLabel
-                      value={'Longitudinal'}
-                      control={<Radio />}
-                      label='Longitudinal'
-                    />
-                    <FormControlLabel
-                      value={'Oblique'}
-                      control={<Radio />}
-                      label='Oblique'
-                    />
-                    <FormControlLabel
-                      value={'Transverse'}
-                      control={<Radio />}
-                      label='Transverse'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentationFoetalHeartRate: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '39%' }}
-                      control={<FormLabel />}
-                      label='Foetal heart rate: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setPresentPregnancy({
-                        ...presentPregnancy,
-                        presentationFoetalMovement: e.target.value,
-                      });
-                    }}
-                  >
-                    <FormControlLabel
-                      sx={{ width: '39%' }}
-                      control={<FormLabel />}
-                      label='Foetal movement: '
-                    />
-                    <FormControlLabel
-                      value={'Normal'}
-                      control={<Radio />}
-                      label='Normal'
-                    />
-                    <FormControlLabel
-                      value={'Abnormal'}
-                      control={<Radio />}
-                      label='Abnormal'
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={4}>
-                  {!isMobile ? (
-                    <DesktopDatePicker
-                      label='Next Visit'
-                      inputFormat='yyyy-MM-dd'
-                      value={patient.dob || new Date()}
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          presentationNextVisit: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  ) : (
-                    <MobileDatePicker
-                      label='Next Visit'
-                      inputFormat='yyyy-MM-dd'
-                      value={patient.dob || new Date()}
-                      onChange={e => {
-                        setPresentPregnancy({
-                          ...presentPregnancy,
-                          presentationNextVisit: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
+                  {presentPregnancyEncounters.length < 1 && loading && (
+                    <>
+                      <CircularProgress />
+                    </>
                   )}
-                </Grid>
-              </Grid>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    savePresentPregnancy();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-            <TabPanel value='2'>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Infant Feeding
-              </Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={8}>
-                  <RadioGroup
-                    row
-                    aria-labelledby='demo-row-radio-buttons-group-label'
-                    name='row-radio-buttons-group'
-                  >
-                    <FormControlLabel
-                      value={0}
-                      control={<FormLabel />}
-                      label='Infant feeding counseling done: '
-                    />
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                  <RadioGroup
-                    row
-                    aria-labelledby='demo-row-radio-buttons-group-label'
-                    name='row-radio-buttons-group'
-                  >
-                    <FormControlLabel
-                      value={0}
-                      control={<FormLabel />}
-                      label='Counseling on exclusive breastfeeding and benefits of colostrum done: '
-                    />
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-              <p></p>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    saveSuccessfully();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-          </TabContext>
+                  <Divider />
+
+                  <FormFields
+                    formData={presentPregnancyFields}
+                    formik={formik}
+                  />
+
+                  <p></p>
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      type='submit'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
           <Modal
             keepMounted
             open={openModal}
