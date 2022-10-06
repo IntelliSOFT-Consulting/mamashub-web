@@ -23,12 +23,46 @@ import counties from '../data/counties.json';
 import countyToConstituency from '../data/constituencies.json';
 import consituencyToWard from '../data/wards.json';
 import { addDays } from 'date-fns';
+import malariaContacts from '../data/malariaProphylaxisContacts.json';
 
 export default function FormFields({ formik, formData, ...props }) {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const sections = Object.keys(formData);
   const inputRef = useRef(null);
+
+  const handleChangeSelect = (e, field, section, idx) => {
+    if (field.name === 'county') {
+      const countyCode = counties.find(
+        item => item.name === e.target.value
+      ).code;
+      const subCountyOptions = countyToConstituency
+        .filter(item => item.county_code == countyCode)
+        ?.map(item => ({
+          label: item.name,
+          value: item.name,
+        }));
+      formData[section][idx + 1].options = subCountyOptions;
+    }
+    if (field.name === 'subCounty') {
+      const constituencyCode = countyToConstituency.find(
+        item => item.name === e.target.value
+      ).code;
+      const wardOptions = consituencyToWard
+        .filter(item => item.constituency_code == constituencyCode)
+        ?.map(item => ({
+          label: item.name,
+          value: item.name,
+        }));
+      formData[section][idx + 1].options = wardOptions;
+    }
+    if(field.name === 'timingOfContact'){
+      formData[section][idx + 1].label = malariaContacts[e.target.value]
+
+    }
+    formik.setFieldValue(field.name, e.target.value);
+    console.log(formik.values);
+  };
 
   const handleChangeChecked = (e, field, option) => {
     if (e.target.checked) {
@@ -310,42 +344,7 @@ export default function FormFields({ formik, formData, ...props }) {
                             id={field.name}
                             name={field.name}
                             value={formik.values[field.name]}
-                            onChange={e => {
-                              if (field.name === 'county') {
-                                const countyCode = counties.find(
-                                  item => item.name === e.target.value
-                                ).code;
-                                const subCountyOptions = countyToConstituency
-                                  .filter(
-                                    item => item.county_code == countyCode
-                                  )
-                                  ?.map(item => ({
-                                    label: item.name,
-                                    value: item.name,
-                                  }));
-                                formData[section][idx + 1].options =
-                                  subCountyOptions;
-                              }
-                              if (field.name === 'subCounty') {
-                                const constituencyCode =
-                                  countyToConstituency.find(
-                                    item => item.name === e.target.value
-                                  ).code;
-                                const wardOptions = consituencyToWard
-                                  .filter(
-                                    item =>
-                                      item.constituency_code == constituencyCode
-                                  )
-                                  ?.map(item => ({
-                                    label: item.name,
-                                    value: item.name,
-                                  }));
-                                formData[section][idx + 1].options =
-                                  wardOptions;
-                              }
-                              formik.setFieldValue(field.name, e.target.value);
-                              console.log(formik.values);
-                            }}
+                            onChange={e => handleChangeSelect(e, field, section, idx)}
                             label={field.label}
                           >
                             {field.options.map((option, i) => (
