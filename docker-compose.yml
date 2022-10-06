@@ -39,11 +39,11 @@ services:
     container_name: hapi-fhir-jpa
     restart: on-failure
     ports:
-      - '8080:8080'
+      - "8080:8080"
     depends_on:
       - hapi-fhir-mysql
     volumes:
-      - './hapi:/hapi'
+      - "./hapi:/hapi"
     environment:
       SPRING_CONFIG_LOCATION: /hapi/application.yaml
 
@@ -54,12 +54,14 @@ services:
     command: --lower_case_table_names=1
     restart: always
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_DATABASE: "hapi"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_ROOT_PASSWORD: "admin"
     volumes:
       - hapi-fhir-mysql:/var/lib/mysql
+
+  
   cloud-messaging:
     build:
       context: cloud-messaging
