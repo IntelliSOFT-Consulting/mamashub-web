@@ -28,6 +28,11 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CurrentPatient from '../components/CurrentPatient';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Preview from '../components/Preview';
+import FormFields from '../components/FormFields';
+import malariaProphylaxisFields from '../lib/forms/malariaProphylaxis';
 
 export default function MalariaProphylaxis() {
   let [patient, setPatient] = useState({});
@@ -57,7 +62,37 @@ export default function MalariaProphylaxis() {
   let isMobile = useMediaQuery('(max-width:600px)');
 
   const [value, setValue] = useState('1');
+  const [inputData, setInputData] = useState({});
+  const [preview, setPreview] = useState(false);
 
+  const fieldValues = Object.values(malariaProphylaxisFields).flat();
+  const validationFields = fieldValues
+    .filter(item => item.validate)
+    .map(item => ({
+      [item.name]: item.validate,
+    }));
+
+  const validationSchema = yup.object({
+    ...Object.assign({}, ...validationFields),
+  });
+
+  const initialValues = Object.assign(
+    {},
+    ...fieldValues.map(item => ({ [item.name]: '' }))
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema: validationSchema,
+    // submit form
+    onSubmit: values => {
+      console.log(values);
+      setPreview(true);
+      setInputData(values);
+    },
+  });
   let saveSuccessfully = async () => {
     setMessage('Data saved successfully');
     setOpen(true);
@@ -89,372 +124,63 @@ export default function MalariaProphylaxis() {
             key={'loginAlert'}
           />
           {visit && <CurrentPatient data={visit} />}
-
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-                aria-label='scrollable auto tabs example'
-              >
-                <Tab label='Malaria Prophylaxis' value='1' />
-              </TabList>
-            </Box>
-
-            {/* Malaria Prophylaxis */}
-            <TabPanel value='1'>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                ANC Visit
-              </Typography>
-              <Divider />
-              {malariaProphylaxis.malariaProphylaxisTimingOfContact && (
-                <>
-                  <p></p>
-                  <Alert severity='info'>
-                    {malariaProphylaxis.malariaProphylaxisTimingOfContact}
-                  </Alert>
-                  <p></p>
-                </>
-              )}
-
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>
-                      Timing of Contact
-                    </InputLabel>
-                    <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      value={
-                        malariaProphylaxis.malariaProphylaxisTimingOfContact ||
-                        ''
-                      }
-                      label='Timing of contact'
-                      placeholder='Timing of contact'
-                      onChange={e => {
-                        setMalariaProphylaxis({
-                          ...malariaProphylaxis,
-                          malariaProphylaxisTimingOfContact: e.target.value,
-                        });
-                        console.log(e.target.value);
-                      }}
-                      size='small'
-                    >
-                      {Object.keys(malariaProphylaxisContacts).map(service => {
-                        return (
-                          <MenuItem value={malariaProphylaxisContacts[service]}>
-                            {service}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              {/* <Divider /> */}
-              <Grid container spacing={1} padding='1em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  {!isMobile ? (
-                    <DesktopDatePicker
-                      label='Dose'
-                      inputFormat='MM/dd/yyyy'
-                      value={
-                        malariaProphylaxis.dose ? malariaProphylaxis.dose : null
-                      }
-                      onChange={e => {
-                        setMalariaProphylaxis({
-                          ...malariaProphylaxis,
-                          dose: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  ) : (
-                    <MobileDatePicker
-                      label='Dose'
-                      inputFormat='MM/dd/yyyy'
-                      value={
-                        malariaProphylaxis.dose ? malariaProphylaxis.dose : null
-                      }
-                      onChange={e => {
-                        setMalariaProphylaxis({
-                          ...malariaProphylaxis,
-                          dose: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  )}
-                </Grid>
-                <p></p>
-                <Grid container spacing={1} padding='1em'>
-                  {malariaProphylaxis.malariaProphylaxisTimingOfContact && (
-                    <Grid item xs={12} md={12} lg={6}>
-                      <RadioGroup
-                        row
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            cvs: e.target.value,
-                          });
-                        }}
-                      >
-                        <FormControlLabel
-                          sx={{ width: '40%' }}
-                          control={<FormLabel />}
-                          label={
-                            `${malariaProphylaxis.malariaProphylaxisTimingOfContact}:` ||
-                            ''
-                          }
-                        />
-                        <FormControlLabel
-                          value={'Yes'}
-                          control={<Radio />}
-                          label='Yes'
-                        />
-                        <FormControlLabel
-                          value={'No'}
-                          control={<Radio />}
-                          label='No'
-                        />
-                      </RadioGroup>
-                    </Grid>
-                  )}
-
-                  <Grid item xs={12} md={12} lg={6}>
-                    {!isMobile ? (
-                      <DesktopDatePicker
-                        label='If yes, date given'
-                        inputFormat='MM/dd/yyyy'
-                        value={
-                          malariaProphylaxis.dateGiven
-                            ? malariaProphylaxis.dateGiven
-                            : null
-                        }
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            dateGiven: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    ) : (
-                      <MobileDatePicker
-                        label='If yes, date given'
-                        inputFormat='MM/dd/yyyy'
-                        value={
-                          malariaProphylaxis.dateGiven
-                            ? malariaProphylaxis.dateGiven
-                            : null
-                        }
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            dateGiven: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={12} md={12} lg={6} />
-                  <Grid item xs={12} md={12} lg={6}>
-                    {!isMobile ? (
-                      <DesktopDatePicker
-                        label='If no, next visit'
-                        inputFormat='MM/dd/yyyy'
-                        value={
-                          malariaProphylaxis.doseNextVisit
-                            ? malariaProphylaxis.doseNextVisit
-                            : null
-                        }
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            doseNextVisit: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    ) : (
-                      <MobileDatePicker
-                        label='If no, next visit'
-                        inputFormat='MM/dd/yyyy'
-                        value={
-                          malariaProphylaxis.doseNextVisit
-                            ? malariaProphylaxis.doseNextVisit
-                            : null
-                        }
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            doseNextVisit: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={12} md={12} lg={4}>
-                    {!isMobile ? (
-                      <DesktopDatePicker
-                        label='Next visit'
-                        inputFormat='MM/dd/yyyy'
-                        value={malariaProphylaxis.nextVisitDate || null}
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            nextVisitDate: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    ) : (
-                      <MobileDatePicker
-                        label='Next visit'
-                        inputFormat='MM/dd/yyyy'
-                        value={malariaProphylaxis.nextVisitDate || null}
-                        onChange={e => {
-                          setMalariaProphylaxis({
-                            ...malariaProphylaxis,
-                            nextVisitDate: e,
-                          });
-                        }}
-                        renderInput={params => (
-                          <TextField {...params} size='small' fullWidth />
-                        )}
-                      />
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-              <p></p>
-              <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
-              >
-                Long Lasting Insecticide Treated Net
-              </Typography>
-              <Divider />
-              <p></p>
-              <Grid container spacing={1} padding='.5em'>
-                <Grid item xs={12} md={12} lg={6}>
-                  <RadioGroup
-                    row
-                    onChange={e => {
-                      setMalariaProphylaxis({
-                        ...malariaProphylaxis,
-                        cvs: e.target.value,
-                      });
-                    }}
+          {preview ? (
+            <Preview
+              title='Malaria Prophylaxis Preview'
+              format={malariaProphylaxisFields}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={saveSuccessfully}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                    aria-label='scrollable auto tabs example'
                   >
-                    <FormControlLabel
-                      sx={{ width: '40%' }}
-                      control={<FormLabel />}
-                      label='Was LLITN given to the mother?'
-                    />
-                    <FormControlLabel
-                      value={'Yes'}
-                      control={<Radio />}
-                      label='Yes'
-                    />
-                    <FormControlLabel
-                      value={'No'}
-                      control={<Radio />}
-                      label='No'
-                    />
-                  </RadioGroup>
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  {!isMobile ? (
-                    <DesktopDatePicker
-                      label='If yes, date given'
-                      inputFormat='MM/dd/yyyy'
-                      value={
-                        malariaProphylaxis.deworming
-                          ? malariaProphylaxis.deworming
-                          : null
-                      }
-                      onChange={e => {
-                        setMalariaProphylaxis({
-                          ...malariaProphylaxis,
-                          deworming: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  ) : (
-                    <MobileDatePicker
-                      label='If yes, date given'
-                      inputFormat='MM/dd/yyyy'
-                      value={
-                        malariaProphylaxis.deworming
-                          ? malariaProphylaxis.deworming
-                          : null
-                      }
-                      onChange={e => {
-                        setMalariaProphylaxis({
-                          ...malariaProphylaxis,
-                          deworming: e,
-                        });
-                      }}
-                      renderInput={params => (
-                        <TextField {...params} size='small' fullWidth />
-                      )}
-                    />
-                  )}
-                </Grid>
-              </Grid>
-              <Divider />
-              <p></p>
-              <Stack direction='row' spacing={2} alignContent='right'>
-                {!isMobile && (
-                  <Typography sx={{ minWidth: '80%' }}></Typography>
-                )}
-                <Button
-                  variant='contained'
-                  disableElevation
-                  sx={{ backgroundColor: 'gray' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant='contained'
-                  onClick={e => {
-                    saveSuccessfully();
-                  }}
-                  disableElevation
-                  sx={{ backgroundColor: '#632165' }}
-                >
-                  Save
-                </Button>
-              </Stack>
-              <p></p>
-            </TabPanel>
-          </TabContext>
+                    <Tab label='Malaria Prophylaxis' value='1' />
+                  </TabList>
+                </Box>
+
+                {/* Malaria Prophylaxis */}
+                <TabPanel value='1'>
+                  <FormFields
+                    formData={malariaProphylaxisFields}
+                    formik={formik}
+                  />
+
+                  <Divider />
+                  <p></p>
+                  <Stack direction='row' spacing={2} alignContent='right'>
+                    {!isMobile && (
+                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                    )}
+                    <Button
+                      variant='contained'
+                      disableElevation
+                      sx={{ backgroundColor: 'gray' }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant='contained'
+                      type='submit'
+                      disableElevation
+                      sx={{ backgroundColor: '#632165' }}
+                    >
+                      Save
+                    </Button>
+                  </Stack>
+                  <p></p>
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
         </Container>
       </LocalizationProvider>
     </>
