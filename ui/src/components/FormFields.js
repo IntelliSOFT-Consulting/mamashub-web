@@ -24,6 +24,8 @@ import countyToConstituency from '../data/constituencies.json';
 import consituencyToWard from '../data/wards.json';
 import { addDays } from 'date-fns';
 import malariaContacts from '../data/malariaProphylaxisContacts.json';
+import ifasOptions from '../data/ifas.json';
+import { FilterDrama } from '@mui/icons-material';
 
 export default function FormFields({ formik, formData, ...props }) {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -56,12 +58,14 @@ export default function FormFields({ formik, formData, ...props }) {
         }));
       formData[section][idx + 1].options = wardOptions;
     }
-    if(field.name === 'timingOfContact'){
-      formData[section][idx + 1].label = malariaContacts[e.target.value]
-
+    if (field.name === 'timingOfContact') {
+      formData[section][idx + 1].label = malariaContacts[e.target.value];
+    }
+    if (field.name === 'ancContact') {
+      formData[section][idx + 1].content = e.target.value;
+      formData[section][idx + 2].content = ifasOptions[e.target.value];
     }
     formik.setFieldValue(field.name, e.target.value);
-    console.log(formik.values);
   };
 
   const handleChangeChecked = (e, field, option) => {
@@ -344,7 +348,9 @@ export default function FormFields({ formik, formData, ...props }) {
                             id={field.name}
                             name={field.name}
                             value={formik.values[field.name]}
-                            onChange={e => handleChangeSelect(e, field, section, idx)}
+                            onChange={e =>
+                              handleChangeSelect(e, field, section, idx)
+                            }
                             label={field.label}
                           >
                             {field.options.map((option, i) => (
@@ -470,6 +476,18 @@ export default function FormFields({ formik, formData, ...props }) {
                             </Grid>
                           </FormGroup>
                         </FormControl>
+                      </Grid>
+                    );
+
+                  case 'display':
+                    return (
+                      <Grid item {...field.width} key={idx}>
+                        <Typography
+                          variant='p'
+                          sx={{ fontSize: 'medium', fontWeight: 'bold' }}
+                        >
+                          {`${field.label}: ${field.content}`}
+                        </Typography>
                       </Grid>
                     );
                   default:
