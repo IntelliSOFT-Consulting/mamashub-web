@@ -181,7 +181,7 @@ export default function HeaderDrawer({ children }) {
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],
         },
         {
-          name: 'Mediacal & Surgical History',
+          name: 'Medical & Surgical History',
           icon: <MedicationRounded />,
           path: '/medical-surgical-history',
           roles: ['ADMINISTRATOR', 'FACILITY_ADMINISTRATOR', 'NURSE'],

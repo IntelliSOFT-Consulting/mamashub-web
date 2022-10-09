@@ -198,7 +198,7 @@ export default function PatientList() {
       return {
         id: r.id,
         index,
-        lastName: r.name[0].family,
+        lastName: r.name ? r.name[0].family : "Not Provided",
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
         )} years`,

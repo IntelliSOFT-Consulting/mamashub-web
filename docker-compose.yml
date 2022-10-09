@@ -68,7 +68,7 @@ services:
       dockerfile: Dockerfile
     container_name: cloud-messaging
     restart: always
-    env_file: ./cloud-messaging/.env
+    # env_file: ./cloud-messaging/.env
 volumes:
   db:
   hapi-fhir-mysql:
