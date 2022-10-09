@@ -149,7 +149,6 @@ export default function PatientList() {
   useEffect(() => {
     if (filter) {
       onFilterChange();
-
     }
   }, [filter]);
 
@@ -193,7 +192,7 @@ export default function PatientList() {
       url: '/fhir/Patient?_count=100',
       method: 'GET',
     });
-    let p = data.data.entry.map((i,index) => {
+    let p = data.data.entry.map((i, index) => {
       let r = i.resource;
       // console.log(r.name)
       return {
@@ -216,7 +215,7 @@ export default function PatientList() {
       case 'All':
         setFilter('');
         break;
-      case 'Referred': 
+      case 'Referred':
         setFilter('');
         break;
       case 'Not referred':
@@ -245,16 +244,23 @@ export default function PatientList() {
   const [selectionModel, setSelectionModel] = useState([]);
 
   const columns = [
-    { field: 'index', headerName: 'Patient ID', width: 100, renderCell: (params) =>params.row.index+1},
+    {
+      field: 'index',
+      headerName: 'Patient ID',
+      width: 100,
+      renderCell: params => params.row.index + 1,
+    },
     { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
     { field: 'age', headerName: 'Age', width: 150 },
     {
       field: 'name',
       headerName: 'Actions',
-      renderCell: (params) =>
-      <Button onClick={() => navigate(`/patients/${params.row.id}`)}>Register</Button>
-  },
-  
+      renderCell: params => (
+        <Button onClick={() => navigate(`/patients/${params.row.id}`)}>
+          Register
+        </Button>
+      ),
+    },
   ];
 
   let isMobile = useMediaQuery('(max-width:600px)');
@@ -289,6 +295,10 @@ export default function PatientList() {
       >
         <Paper
           component='form'
+          onSubmit={e => {
+            e.preventDefault();
+            search(name);
+          }}
           sx={{
             p: '0px',
             display: 'flex',
@@ -307,14 +317,7 @@ export default function PatientList() {
             label='Search'
             autoComplete='off'
           />
-          <IconButton
-            onClick={e => {
-              search(name);
-            }}
-            type='button'
-            sx={{ p: '10px' }}
-            aria-label='search'
-          >
+          <IconButton type='submit' sx={{ p: '10px' }} aria-label='search'>
             <SearchIcon />
           </IconButton>
           <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
