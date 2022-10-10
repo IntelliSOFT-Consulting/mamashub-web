@@ -213,17 +213,10 @@ export default function PhysicalExam() {
     return;
   }, []);
 
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-  };
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  // useEffect(() => )
   useEffect(() => {
     let visit = window.localStorage.getItem('currentPatient');
     if (!visit) {
