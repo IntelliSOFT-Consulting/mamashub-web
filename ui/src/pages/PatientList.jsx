@@ -149,7 +149,6 @@ export default function PatientList() {
   useEffect(() => {
     if (filter) {
       onFilterChange();
-
     }
   }, [filter]);
 
@@ -193,13 +192,13 @@ export default function PatientList() {
       url: '/fhir/Patient?_count=100',
       method: 'GET',
     });
-    let p = data.data.entry.map((i,index) => {
+    let p = data.data.entry.map((i, index) => {
       let r = i.resource;
       // console.log(r.name)
       return {
         id: r.id,
         index,
-        lastName: r.name ? r.name[0].family : "Not Provided",
+        lastName: r.name ? r.name[0].family : 'Not Provided',
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
         )} years`,
@@ -216,7 +215,7 @@ export default function PatientList() {
       case 'All':
         setFilter('');
         break;
-      case 'Referred': 
+      case 'Referred':
         setFilter('');
         break;
       case 'Not referred':
@@ -245,16 +244,33 @@ export default function PatientList() {
   const [selectionModel, setSelectionModel] = useState([]);
 
   const columns = [
-    { field: 'index', headerName: 'Patient ID', width: 100, renderCell: (params) =>params.row.index+1},
-    { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
-    { field: 'age', headerName: 'Age', width: 150 },
+    {
+      field: 'index',
+      headerName: 'Patient ID',
+      width: 100,
+      renderCell: params => params.row.index + 1,
+    },
+    { field: 'lastName', headerName: 'Full Names', flex: 1, editable: true },
+    { field: 'age', headerName: 'Age', flex: 1 },
     {
       field: 'name',
       headerName: 'Actions',
-      renderCell: (params) =>
-      <Button onClick={() => navigate(`/patients/${params.row.id}`)}>Register</Button>
-  },
-  
+      flex: 1,
+      renderCell: params => {
+        // check if patient has an active visit and address field is not empty array
+
+        return (
+          <Button
+            onClick={() => {
+              startVisit(params.row.id);
+              navigate('/antenatal-profile');
+            }}
+          >
+            Start Visit
+          </Button>
+        );
+      },
+    },
   ];
 
   let isMobile = useMediaQuery('(max-width:600px)');
@@ -289,6 +305,10 @@ export default function PatientList() {
       >
         <Paper
           component='form'
+          onSubmit={e => {
+            e.preventDefault();
+            search(name);
+          }}
           sx={{
             p: '0px',
             display: 'flex',
@@ -307,14 +327,7 @@ export default function PatientList() {
             label='Search'
             autoComplete='off'
           />
-          <IconButton
-            onClick={e => {
-              search(name);
-            }}
-            type='button'
-            sx={{ p: '10px' }}
-            aria-label='search'
-          >
+          <IconButton type='submit' sx={{ p: '10px' }} aria-label='search'>
             <SearchIcon />
           </IconButton>
           <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
@@ -363,20 +376,7 @@ export default function PatientList() {
             sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
           ></Typography>
         )}
-        {selected.length > 0 && (
-          <>
-            <Button
-              variant='contained'
-              onClick={e => {
-                deletePatients();
-              }}
-              disableElevation
-              sx={{ backgroundColor: '#632165' }}
-            >
-              Delete Patient{selected.length > 1 && `s`}
-            </Button>{' '}
-          </>
-        )}
+
         {selected.length === 1 && (
           <>
             <Button

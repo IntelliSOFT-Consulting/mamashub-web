@@ -34,7 +34,9 @@ const malariaProphylaxis = {
         { label: 'Yes', value: 'Yes' },
         { label: 'No', value: 'No' },
       ],
-      relevant: formValues => !formValues.timingOfContact?.includes('12') && !formValues.timingOfContact?.includes('40'),
+      relevant: formValues =>
+        !formValues.timingOfContact?.includes('12') &&
+        !formValues.timingOfContact?.includes('40'),
     },
     {
       name: 'doseGivenDate',
@@ -53,7 +55,9 @@ const malariaProphylaxis = {
       name: 'doseNextVisitDate',
       label: 'If no, next visit',
       type: 'date',
-      validate: yup.date(),
+      validate: yup
+        .date()
+        .min(new Date(), 'Next visit date cannot be in the past'),
       width: {
         xs: 12,
         sm: 12,
@@ -66,7 +70,10 @@ const malariaProphylaxis = {
       name: 'nextVisitDate',
       label: 'Next visit',
       type: 'date',
-      validate: yup.date().required('Next visit is required'),
+      validate: yup
+        .date()
+        .min(new Date(), 'Next visit date cannot be in the past')
+        .required('Next visit is required'),
       width: {
         xs: 12,
         sm: 12,

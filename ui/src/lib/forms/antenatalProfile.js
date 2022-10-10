@@ -493,32 +493,6 @@ const antenatalForm = {
         },
       ],
     },
-    {
-      name: 'partnerHivStatus',
-      label: 'Partner HIV Status',
-      type: 'radio',
-      validate: yup.string().required('Partner HIV Status is required'),
-      width: {
-        xs: 12,
-        sm: 12,
-        md: 12,
-        lg: 6,
-      },
-      options: [
-        {
-          label: 'N',
-          value: 'N',
-        },
-        {
-          label: 'U',
-          value: 'U',
-        },
-        {
-          label: 'KP',
-          value: 'KP',
-        },
-      ],
-    },
   ],
   'Maternal HAART': [
     {

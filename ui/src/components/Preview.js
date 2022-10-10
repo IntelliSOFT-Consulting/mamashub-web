@@ -16,6 +16,20 @@ import TabPanel from '@mui/lab/TabPanel';
 export default function Preview({ title, format = {}, data, ...props }) {
   const sections = Object.keys(format);
   let isMobile = useMediaQuery('(max-width:600px)');
+
+  const displayData = (data, field) => {
+    if (field.type === 'date') {
+      console.log(data[field.name]);
+      return data[field.name]
+        ? new Date(data[field.name]).toLocaleDateString('en-GB')
+        : '';
+    }
+    if (Array.isArray(data[field.name])) {
+      return data[field.name].join(', ');
+    }
+    return data[field.name];
+  };
+
   return (
     <>
       <TabContext value='1'>
@@ -45,15 +59,24 @@ export default function Preview({ title, format = {}, data, ...props }) {
                   <Grid container spacing={1} padding='.5em'>
                     {format[section].map((field, index) => {
                       return (
-                        <Grid item xs={12} md={12} lg={6}>
-                          <Typography
-                            variant='p'
-                            sx={{ fontSize: 'small', fontWeight: 'bold' }}
-                          >
-                            {field.label}
-                          </Typography>
-                          :{' '}
-                          {field.type === 'date' ? new Date(data[field.name]).toLocaleDateString('en-GB') : data[field.name]}
+                        <Grid item xs={12} md={12} lg={12}>
+                          {displayData(data, field) && (
+                            <>
+                              <Typography
+                                variant='p'
+                                sx={{ fontSize: 'small', fontWeight: 'bold' }}
+                              >
+                                {field.label}
+                              </Typography>
+                              :{' '}
+                              <Typography
+                                variant='p'
+                                sx={{ fontSize: 'small' }}
+                              >
+                                {displayData(data, field)}
+                              </Typography>
+                            </>
+                          )}
                         </Grid>
                       );
                     })}
@@ -74,7 +97,7 @@ export default function Preview({ title, format = {}, data, ...props }) {
             </Button>
             <Button
               variant='contained'
-              onClick={()=>props.submit(data)}
+              onClick={() => props.submit(data)}
               disableElevation
               sx={{ backgroundColor: 'gray' }}
             >

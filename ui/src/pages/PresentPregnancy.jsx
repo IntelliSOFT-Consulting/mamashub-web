@@ -20,14 +20,10 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box } from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+
 import CurrentPatient from '../components/CurrentPatient';
 import { apiHost, createEncounter } from '../lib/api';
 import { useFormik } from 'formik';
@@ -44,6 +40,7 @@ export default function PresentPregnancy() {
   let [message, setMessage] = useState(false);
   let [observations, setObservations] = useState([]);
   let isMobile = useMediaQuery('(max-width:600px)');
+  const [newVisit, setNewVisit] = useState(false);
   let [presentPregnancy, setPresentPregnancy] = useState({});
   let [presentPregnancyEncounters, setPresentPregnancyEncounters] = useState(
     []
@@ -195,6 +192,7 @@ export default function PresentPregnancy() {
         prompt('Present Pregnancy saved successfully');
         // setValue('2')
         await getPresentPregnancyEncounters(patient);
+        setNewVisit(false);
         return;
       } else {
         prompt(res.error);
@@ -205,6 +203,21 @@ export default function PresentPregnancy() {
       prompt(JSON.stringify(error));
       return;
     }
+  };
+
+  const ordinalSuffix = i => {
+    let j = i % 10,
+      k = i % 100;
+    if (j === 1 && k !== 11) {
+      return i + 'st';
+    }
+    if (j === 2 && k !== 12) {
+      return i + 'nd';
+    }
+    if (j === 3 && k !== 13) {
+      return i + 'rd';
+    }
+    return i + 'th';
   };
 
   return (
@@ -243,25 +256,63 @@ export default function PresentPregnancy() {
                 </Box>
                 <TabPanel value='1'>
                   {/* <p></p> */}
+                  {!newVisit && (
+                    <Grid container spacing={1} padding='.5em'>
+                      {presentPregnancyEncounters.length > 0 &&
+                        presentPregnancyEncounters.map((x, index) => {
+                          return (
+                            <Grid item xs={12} md={12} lg={12}>
+                              <Button
+                                variant='contained'
+                                onClick={e => {
+                                  getEncounterObservations(x.resource.id);
+                                }}
+                                sx={{
+                                  backgroundColor: '#b58dab',
+                                  width: '100%',
+                                  padding: '1rem',
+                                  position: 'relative',
+                                }}
+                              >
+                                {`${ordinalSuffix(index + 1)} Contact`}
 
-                  <Grid container spacing={1} padding='.5em'>
-                    {presentPregnancyEncounters.length > 0 &&
-                      presentPregnancyEncounters.map((x, index) => {
-                        return (
-                          <Grid item xs={12} md={12} lg={3}>
-                            <Button
-                              variant='contained'
-                              onClick={e => {
-                                getEncounterObservations(x.resource.id);
-                              }}
-                              sx={{ backgroundColor: '#632165', width: '99%' }}
-                            >
-                              Contact - {`${index + 1}`}
-                            </Button>
-                          </Grid>
-                        );
-                      })}
-                  </Grid>
+                                <ArrowForwardIosIcon
+                                  sx={{
+                                    position: 'absolute',
+                                    right: '1rem',
+                                  }}
+                                />
+                              </Button>
+                            </Grid>
+                          );
+                        })}
+                      {presentPregnancyEncounters.length < 8 && (
+                        <Grid
+                          item
+                          xs={12}
+                          md={12}
+                          lg={12}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '2rem',
+                          }}
+                        >
+                          <Button
+                            variant='contained'
+                            onClick={e => {
+                              setNewVisit(true);
+                            }}
+                            sx={{
+                              backgroundColor: '#632165',
+                            }}
+                          >
+                            Add a visit
+                          </Button>
+                        </Grid>
+                      )}
+                    </Grid>
+                  )}
                   {presentPregnancyEncounters.length < 1 && loading && (
                     <>
                       <CircularProgress />
@@ -269,35 +320,39 @@ export default function PresentPregnancy() {
                   )}
                   <Divider />
 
-                  <FormFields
-                    formData={presentPregnancyFields}
-                    formik={formik}
-                  />
-
-                  <p></p>
-                  <Divider />
-                  <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
-                    {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
-                    )}
-                    <Button
-                      variant='contained'
-                      disableElevation
-                      sx={{ backgroundColor: 'gray' }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant='contained'
-                      type='submit'
-                      disableElevation
-                      sx={{ backgroundColor: '#632165' }}
-                    >
-                      Save
-                    </Button>
-                  </Stack>
-                  <p></p>
+                  {newVisit && (
+                    <>
+                      <FormFields
+                        formData={presentPregnancyFields}
+                        formik={formik}
+                        encounters={presentPregnancyEncounters}
+                      />
+                      <p></p>
+                      <Divider />
+                      <p></p>
+                      <Stack direction='row' spacing={2} alignContent='right'>
+                        {!isMobile && (
+                          <Typography sx={{ minWidth: '80%' }}></Typography>
+                        )}
+                        <Button
+                          variant='contained'
+                          disableElevation
+                          sx={{ backgroundColor: 'gray' }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant='contained'
+                          type='submit'
+                          disableElevation
+                          sx={{ backgroundColor: '#632165' }}
+                        >
+                          Save
+                        </Button>
+                      </Stack>
+                      <p></p>
+                    </>
+                  )}
                 </TabPanel>
               </TabContext>
             </form>
