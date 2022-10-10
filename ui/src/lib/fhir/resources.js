@@ -22,7 +22,7 @@ export let Patient = patient => {
     ],
     telecom: [
       {
-        value: patient.patientPhoneNumber,
+        value: patient.phone,
       },
     ],
     birthDate: new Date(patient.dob).toISOString().slice(0, 10),
