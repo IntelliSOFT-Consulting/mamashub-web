@@ -158,7 +158,7 @@ export default function PatientRegistration({ userData }) {
       ).json();
 
       if (res.status === 'success') {
-        prompt('Patient created successfully');
+        prompt('Patient created successfully...');
         navigate(`/patients/${id}`);
         return;
       } else {

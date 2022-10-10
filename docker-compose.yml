@@ -34,6 +34,24 @@ services:
   #   links:
   #     - nndak-api
 
+
+  dhis2-db:
+    image: mdillon/postgis:10-alpine
+    command: postgres -c max_locks_per_transaction=100
+    environment:
+      POSTGRES_USER: dhis
+      POSTGRES_DB: dhis2
+      POSTGRES_PASSWORD: dhis
+
+  dhis2-web:
+    image: dhis2/core:2.33.0
+    volumes:
+      - ./dhis.conf:/DHIS2_home/dhis.conf
+    ports:
+      - "8085:8080"
+    depends_on:
+      - dhis2-db
+
   hapi-fhir-jpa:
     image: hapiproject/hapi:latest
     container_name: hapi-fhir-jpa
@@ -61,7 +79,6 @@ services:
     volumes:
       - hapi-fhir-mysql:/var/lib/mysql
 
-  
   cloud-messaging:
     build:
       context: cloud-messaging
@@ -69,6 +86,8 @@ services:
     container_name: cloud-messaging
     restart: always
     # env_file: ./cloud-messaging/.env
+
+
 volumes:
   db:
   hapi-fhir-mysql:
