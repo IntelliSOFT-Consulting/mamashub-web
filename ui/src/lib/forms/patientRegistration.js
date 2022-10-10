@@ -247,7 +247,7 @@ const formData = {
   ],
   'Clinical Information': [
     {
-      name: 'gravida',
+      name: 'gravidae',
       label: 'Gravida',
       type: 'text',
       required: true,
