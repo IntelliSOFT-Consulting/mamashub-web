@@ -80,7 +80,7 @@ export default function PreviousPregnancy() {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({ [item.name]: '' }));
+    ...fieldValues.map(item => ({ [item.name]: '' }))
   );
 
   const formik = useFormik({
