@@ -172,7 +172,7 @@ export default function PhysicalExam() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: physicalExam,
+            observations: values,
           }),
           headers: { 'Content-Type': 'application/json' },
         })
