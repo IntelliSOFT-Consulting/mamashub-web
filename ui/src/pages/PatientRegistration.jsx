@@ -148,10 +148,10 @@ export default function PatientRegistration({ userData }) {
           body: JSON.stringify({
             patientId: patientId,
             encounterId: encounter,
-            observations: JSON.stringify({
+            observations: {
               ...observations,
               physicalAddress: `${values.county}, ${values.subCounty}, ${values.ward}, ${values.estate}`,
-            }),
+            },
           }),
           headers: { 'Content-Type': 'application/json' },
         })

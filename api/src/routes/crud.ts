@@ -21,7 +21,7 @@ router.post('/observations', async (req: Request, res: Response) => {
         }
         let builtObservations: any[] = []
         for (let obs of Object.keys(observations)) {
-            console.log(obs)
+            // console.log(obs)
             let _observation = observations[obs]
             //create observations
             console.log(_observation)
@@ -35,17 +35,18 @@ router.post('/observations', async (req: Request, res: Response) => {
                     system: metaData.split(":")[0], display: metaData.split(":")[2], code: metaData.split(":")[1]
                 }
 
-                let ov = parseFloat(_observation) ? { valueQuantity: createObservationValue(_observation, metaData.split(":")[3] || "") } : { valueString: _observation }
-                console.log(ov)
+                // let ov = parseFloat(_observation) ? { valueQuantity: createObservationValue(_observation, metaData.split(":")[3] || "") } : { valueString: _observation }
+                let ov = { valueString: _observation }
+                console.log(obs)
                 let o = createObservation(patientId, ov, coding, observationId, encounterId)
-                console.log(":observation", o)
+                // console.log(":observation", o)
                 let response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation/${observationId}`, {
                     body: JSON.stringify(o),
                     method: 'PUT',
                     headers: { "Content-Type": "application/json" }
                 })).json()
                 console.log(response)
-                console.log(o)
+                // console.log(o)
                 builtObservations.push(response)
             }
             else {
