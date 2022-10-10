@@ -15,7 +15,7 @@ const birthPlan = {
       },
     },
     {
-      name: 'healthFacilityName',
+      name: 'facilityName',
       label: 'Health Facility Name',
       type: 'text',
       validate: yup.string().required('Health Facility Name is required'),
@@ -27,7 +27,7 @@ const birthPlan = {
       },
     },
     {
-      name: 'healthFacilityNumber',
+      name: 'facilityNumber',
       label: 'Health Facility Number',
       type: 'text',
       validate: yup.string().required('Health Facility Number is required'),
@@ -165,7 +165,7 @@ const birthPlan = {
       },
     },
     {
-      name: 'birthCompanionTransportation',
+      name: 'birthCompanionTransportMeans',
       label: 'Birth Companion Transport Means',
       type: 'text',
       validate: yup
@@ -221,7 +221,7 @@ const birthPlan = {
       },
     },
     {
-      name: 'alternativeBirthCompanionTransportation',
+      name: 'alternativeBirthCompanionTransportMeans',
       label: 'Alternative Birth Companion Transport Means',
       type: 'text',
       validate: yup
