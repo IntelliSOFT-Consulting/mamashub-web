@@ -104,16 +104,13 @@ export default function AntenatalProfile() {
     setValue(newValue);
     return;
   };
-  const handleChanges = event => {
-    console.log(event);
-    return;
-  };
+  
 
   let saveAntenatalProfile = async (profile) => {
     //get current patient
     if (!visit) {
       prompt(
-        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+        "No client visit not been started. To start a visit, Select a client from the Client's list"
       );
       return;
     }
@@ -140,7 +137,7 @@ export default function AntenatalProfile() {
 
       if (res.status === 'success') {
         prompt('Antenatal Profile saved successfully');
-        navigate(`/patient/${patient}`);
+        // navigate(`/patient/${patient}`);
         return;
       } else {
         prompt(res.error);
@@ -153,50 +150,12 @@ export default function AntenatalProfile() {
     }
   };
 
-  let saveBirthPlan = async () => {
-    //get current patient
-    let patient = visit.id;
-    if (!patient) {
-      prompt(
-        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
-      );
-      return;
-    }
-
-    //create encounter
-    let encounter = await createEncounter(patient, 'BIRTH-PLAN');
-    console.log(encounter);
-
-    //save observations
-    let observationsList = [];
-    //Create and Post Observations
-    let res = await (
-      await fetch(`${apiHost}/crud/observations`, {
-        method: 'POST',
-        body: JSON.stringify({
-          patientId: patient,
-          encounterId: encounter,
-          observations: antenatalProfile,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-    ).json();
-    console.log(res);
-
-    if (res.status === 'success') {
-      prompt('Birth Plan saved successfully');
-      return;
-    } else {
-      prompt(res.error);
-      return;
-    }
-  };
 
   useEffect(() => {
     let visit = window.localStorage.getItem('currentPatient');
     if (!visit) {
       prompt(
-        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+        "No client visit not been started. To start a visit, Select a client from the Client's list"
       );
       return;
     }
@@ -279,6 +238,12 @@ export default function AntenatalProfile() {
                     <Button
                       variant='contained'
                       onClick={e => {
+                        if (!visit) {
+                          prompt(
+                            "No client visit not been started. To start a visit, Select a client from the Client's list"
+                          );
+                          return;
+                        }
                         handleChange(null, '2');
                       }}
                       disableElevation
@@ -405,10 +370,10 @@ export default function AntenatalProfile() {
                                     <Typography variant='p'>
                                       {observation.resource.valueQuantity
                                         ? observation.resource.valueQuantity
-                                            .value
+                                          .value
                                         : observation.resource.valueString ??
-                                          observation.resource.valueDateTime ??
-                                          '-'}
+                                        observation.resource.valueDateTime ??
+                                        '-'}
                                     </Typography>
                                     {/* <br /> */}
                                   </>
