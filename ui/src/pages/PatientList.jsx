@@ -198,7 +198,7 @@ export default function PatientList() {
       return {
         id: r.id,
         index,
-        lastName: r.name ? r.name[0].family : "Not Provided",
+        lastName: r.name ? r.name[0].family : 'Not Provided',
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
         )} years`,
@@ -250,16 +250,26 @@ export default function PatientList() {
       width: 100,
       renderCell: params => params.row.index + 1,
     },
-    { field: 'lastName', headerName: 'Full Names', width: 250, editable: true },
-    { field: 'age', headerName: 'Age', width: 150 },
+    { field: 'lastName', headerName: 'Full Names', flex: 1, editable: true },
+    { field: 'age', headerName: 'Age', flex: 1 },
     {
       field: 'name',
       headerName: 'Actions',
-      renderCell: params => (
-        <Button onClick={() => navigate(`/patients/${params.row.id}`)}>
-          Register
-        </Button>
-      ),
+      flex: 1,
+      renderCell: params => {
+        // check if patient has an active visit and address field is not empty array
+
+        return (
+          <Button
+            onClick={() => {
+              startVisit(params.row.id);
+              navigate('/antenatal-profile');
+            }}
+          >
+            Start Visit
+          </Button>
+        );
+      },
     },
   ];
 
@@ -366,20 +376,7 @@ export default function PatientList() {
             sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
           ></Typography>
         )}
-        {selected.length > 0 && (
-          <>
-            <Button
-              variant='contained'
-              onClick={e => {
-                deletePatients();
-              }}
-              disableElevation
-              sx={{ backgroundColor: '#632165' }}
-            >
-              Delete Patient{selected.length > 1 && `s`}
-            </Button>{' '}
-          </>
-        )}
+
         {selected.length === 1 && (
           <>
             <Button
