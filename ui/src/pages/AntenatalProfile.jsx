@@ -85,6 +85,7 @@ export default function AntenatalProfile() {
     // submit form
     onSubmit: values => {
       console.log(values);
+      saveAntenatalProfile(values);
       setPreview(true);
       setInputData(values);
     },
@@ -108,7 +109,7 @@ export default function AntenatalProfile() {
     return;
   };
 
-  let saveAntenatalProfile = async () => {
+  let saveAntenatalProfile = async (profile) => {
     //get current patient
     if (!visit) {
       prompt(
@@ -130,7 +131,7 @@ export default function AntenatalProfile() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: antenatalProfile,
+            observations: profile,
           }),
           headers: { 'Content-Type': 'application/json' },
         })

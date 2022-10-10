@@ -48,7 +48,7 @@ const formData = {
       name: 'pncNumber',
       label: 'PNC No',
       type: 'text',
-      required: true,
+      required: false,
       width: {
         xs: 12,
         sm: 12,
@@ -58,7 +58,7 @@ const formData = {
       validate: yup.number().required('PNC Number is required'),
     },
     {
-      name: 'clientName',
+      name: 'names',
       label: 'Name of Client',
       type: 'text',
       required: true,
