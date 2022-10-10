@@ -34,7 +34,7 @@ const physicalExaminationFields = {
   ],
   'Blood Pressure': [
     {
-      name: 'systolicBp',
+      name: 'bpSystolic',
       label: 'Systolic Blood Pressure',
       type: 'text',
 
@@ -50,7 +50,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'diastolicBp',
+      name: 'bpDiastolic',
       label: 'Diastolic Blood Pressure',
       type: 'text',
       validate: yup
@@ -64,7 +64,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'pulseRate',
+      name: 'pulse',
       label: 'Pulse Rate',
       type: 'text',
       validate: yup.number().required('Pulse Rate is required'),
@@ -104,7 +104,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'cvsDetails',
+      name: 'abnormalCVsSpecify',
       label: 'If abnormal, please specify',
       type: 'text',
       validate: yup.string(),
@@ -133,7 +133,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'respirationDetails',
+      name: 'respirationAbnormalSpecify',
       label: 'If abnormal, please specify',
       type: 'text',
       validate: yup.string(),
@@ -162,7 +162,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'breastExamNormalDetails',
+      name: 'breastExamFindings',
       label: 'If normal, record findings',
       type: 'text',
       validate: yup.string(),
@@ -175,7 +175,7 @@ const physicalExaminationFields = {
       relevant: values => values.breastExam === 'Normal',
     },
     {
-      name: 'breastExamAbnormalDetails',
+      name: 'breastExamFindings',
       label: 'If abnormal, specify',
       type: 'text',
       validate: yup.string(),
@@ -202,7 +202,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'gestationInWeeks',
+      name: 'gestation',
       label: 'Gestation in Weeks',
       type: 'text',
       validate: yup.number().required('Gestation in Weeks is required'),
@@ -232,7 +232,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'inspectionDetails',
+      name: 'inspectionDoneSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -261,7 +261,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'palpationDetails',
+      name: 'palpationDoneSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -290,7 +290,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'auscultationDetails',
+      name: 'auscalationDoneSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -321,7 +321,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'genitaliaInspectionDetails',
+      name: 'externalGenitaliaInspectionDoneSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -350,7 +350,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'genitaliaPalpationDetails',
+      name: 'externalGenitaliaPalpationDone',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -379,7 +379,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'dischargeDetails',
+      name: 'dischargePresentSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -408,7 +408,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'genitalUlcerDetails',
+      name: 'genitalUlcerPresentSpecify',
       label: 'If yes, please specify',
       type: 'text',
       validate: yup.string(),
@@ -437,7 +437,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'fgmDetails',
+      name: 'fgmDone',
       label: 'If yes, select all that apply',
       type: 'checkbox',
       validate: yup.array().min(1),
