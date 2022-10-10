@@ -270,7 +270,8 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      validate: yup.number().required('Parity is required'),
+      // parity cannot be greater than gravida
+      validate: yup.number().max(yup.ref('gravida'), 'Parity cannot be greater than gravida').required('Parity is required'),
     },
     {
       name: 'height',
