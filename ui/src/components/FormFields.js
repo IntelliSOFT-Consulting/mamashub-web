@@ -15,7 +15,8 @@ import {
   Checkbox,
   FormGroup,
 } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import moment from 'moment';
 
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -25,10 +26,12 @@ import consituencyToWard from '../data/wards.json';
 import { addDays } from 'date-fns';
 import malariaContacts from '../data/malariaProphylaxisContacts.json';
 import ifasOptions from '../data/ifas.json';
-import { FilterDrama } from '@mui/icons-material';
+import * as yup from 'yup';
 
-export default function FormFields({ formik, formData, ...props }) {
+export default function FormFields({ formik, formData, encounters, ...props }) {
   const isMobile = useMediaQuery('(max-width:600px)');
+
+  const [dateProps, setDateProps] = useState({ disabled: true });
 
   const sections = Object.keys(formData);
   const inputRef = useRef(null);
@@ -83,13 +86,23 @@ export default function FormFields({ formik, formData, ...props }) {
     console.log(field.name + ':', formik.values[field.name]);
   };
 
-  const handleInputChange = (e, field) => {
+  const handleInputChange = (e, field, section) => {
     formik.setFieldValue(field.name, e.target.value);
 
     if (field.name === 'systolicBp') {
       const currentInput = document.querySelector(
         `input[name="${field.name}"]`
       );
+      // get label element for the current input
+      const currentDiv = currentInput.parentNode;
+      const currentLabel = currentDiv.parentNode.querySelector('label');
+
+      currentLabel.style.color = 'black';
+      currentLabel.style.zIndex = '100';
+      currentLabel.style.background = 'rgba(255, 255, 255,0.8)';
+      currentLabel.style.margin = '0';
+      currentLabel.style.borderRadius = '2px';
+
       if (e.target.value < 71) {
         currentInput.style.backgroundColor = '#d00000';
         currentInput.style.color = 'white';
@@ -147,7 +160,88 @@ export default function FormFields({ formik, formData, ...props }) {
         currentInput.style.color = 'white';
       }
     }
+
+    if (field.name === 'gestationalAge') {
+      let nextVisitDate = formik.values.nextVisitDate;
+      let gestationalAge = Number(e.target.value);
+      switch (true) {
+        case gestationalAge < 20 && encounters.length === 0:
+          nextVisitDate = moment().add(8, 'weeks').format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge < 20 && encounters.length > 0:
+          nextVisitDate = moment(
+            encounters[encounters.length - 1].resource.period.start
+          )
+            .add(8, 'weeks')
+            .format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge >= 20 &&
+          gestationalAge < 26 &&
+          encounters.length === 0:
+          nextVisitDate = moment().add(6, 'weeks').format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge >= 20 &&
+          gestationalAge < 26 &&
+          encounters.length > 0:
+          nextVisitDate = moment(
+            encounters[encounters.length - 1].resource.period.start
+          )
+            .add(6, 'weeks')
+            .format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge >= 26 &&
+          gestationalAge < 34 &&
+          encounters.length === 0:
+          nextVisitDate = moment().add(4, 'weeks').format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge >= 26 &&
+          gestationalAge < 34 &&
+          encounters.length > 0:
+          nextVisitDate = moment(
+            encounters[encounters.length - 1].resource.period.start
+          )
+            .add(4, 'weeks')
+            .format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge >= 34 &&
+          gestationalAge < 40 &&
+          encounters.length === 0:
+          nextVisitDate = moment().add(2, 'weeks').format('YYYY-MM-DD');
+
+          break;
+        case gestationalAge > 40:
+          // disable the date of next visit
+
+          break;
+        default:
+          break;
+      }
+
+      formik.setFieldValue('nextVisitDate', nextVisitDate);
+      //  disable previous dates in the material date picker
+    }
   };
+
+  const handleDateChange = (date, field) => {
+    if (field.name === 'edd') {
+      const lmp = formik.values['lmp'];
+      const edd = new Date(lmp);
+      edd.setDate(edd.getDate() + 280);
+      formik.setFieldValue(
+        field.name,
+        addDays(new Date(formik.values.lmp), 280)
+      );
+    } else {
+      formik.setFieldValue(field.name, date);
+    }
+  };
+
   return (
     <>
       {sections.map((section, index) => (
@@ -178,7 +272,7 @@ export default function FormFields({ formik, formData, ...props }) {
                           name={field.name}
                           value={formik.values[field.name]}
                           onChange={e => {
-                            handleInputChange(e, field);
+                            handleInputChange(e, field, section);
                           }}
                           error={
                             formik.touched[field.name] &&
@@ -208,7 +302,7 @@ export default function FormFields({ formik, formData, ...props }) {
                               }
                               name={field.name}
                               onChange={date => {
-                                formik.setFieldValue(field.name, date);
+                                handleDateChange(date, field, section);
                               }}
                               disabled={!formik.values.lmp}
                               renderInput={params => (
@@ -224,6 +318,9 @@ export default function FormFields({ formik, formData, ...props }) {
                                     formik.touched[field.name] &&
                                     formik.errors[field.name]
                                   }
+                                  disablePast
+                                  minDate={new Date()}
+                                  // {...dateProps}
                                 />
                               )}
                             />
@@ -231,6 +328,8 @@ export default function FormFields({ formik, formData, ...props }) {
                             <MobileDatePicker
                               label={field.label}
                               disabled={!formik.values.lmp}
+                              disablePast
+                              minDate={new Date()}
                               inputFormat='dd/MM/yyyy'
                               value={
                                 (formik.values.edd = formik.values.lmp
@@ -239,7 +338,7 @@ export default function FormFields({ formik, formData, ...props }) {
                               }
                               name={field.name}
                               onChange={date => {
-                                formik.setFieldValue(field.name, date);
+                                handleDateChange(date, field, section);
                               }}
                               renderInput={params => (
                                 <TextField
@@ -254,6 +353,7 @@ export default function FormFields({ formik, formData, ...props }) {
                                     formik.touched[field.name] &&
                                     formik.errors[field.name]
                                   }
+                                  // {...dateProps}
                                 />
                               )}
                             />
@@ -265,17 +365,7 @@ export default function FormFields({ formik, formData, ...props }) {
                             value={formik.values[field.name] || null}
                             name={field.name}
                             onChange={date => {
-                              if (field.name === 'edd') {
-                                const lmp = formik.values['lmp'];
-                                const edd = new Date(lmp);
-                                edd.setDate(edd.getDate() + 280);
-                                formik.setFieldValue(
-                                  field.name,
-                                  addDays(new Date(formik.values.lmp), 280)
-                                );
-                              } else {
-                                formik.setFieldValue(field.name, date);
-                              }
+                              handleDateChange(date, field, section);
                             }}
                             renderInput={params => (
                               <TextField
