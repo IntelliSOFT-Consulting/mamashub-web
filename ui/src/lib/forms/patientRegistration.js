@@ -247,7 +247,7 @@ const formData = {
   ],
   'Clinical Information': [
     {
-      name: 'gravida',
+      name: 'gravidae',
       label: 'Gravida',
       type: 'text',
       required: true,
@@ -271,7 +271,8 @@ const formData = {
         lg: 4,
       },
       // parity cannot be greater than gravida
-      validate: yup.number().max(yup.ref('gravida'), 'Parity cannot be greater than gravida').required('Parity is required'),
+      validate: yup.number().required('Parity is required'),
+
     },
     {
       name: 'height',

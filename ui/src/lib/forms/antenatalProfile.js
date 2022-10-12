@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const antenatalForm = {
   'Blood Tests': [
     {
-      name: 'hbTest',
+      name: 'hbTestHbTestDone',
       label: 'Hb Test',
       type: 'radio',
       validate: yup.string().required('Hb Test is required'),
@@ -25,7 +25,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'hbReading',
+      name: 'hbTestHbTestReading',
       label: 'If yes, specify reading',
       type: 'text',
       validate: yup.string(),
@@ -113,7 +113,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'rhFactor',
+      name: 'rhesusFactor',
       label: 'If yes, specify rhesus factor',
       type: 'radio',
       width: {
@@ -135,7 +135,7 @@ const antenatalForm = {
       relevant: formValues => formValues.rhTest === 'Yes',
     },
     {
-      name: 'rbsTest',
+      name: 'bloodRBSTest',
       label: 'Blood RBS Test',
       type: 'radio',
       validate: yup.string().required('Blood RBS Test is required'),
@@ -157,7 +157,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'rbsReading',
+      name: 'bloodRBSTestResults',
       label: 'If yes, RBS reading',
       type: 'text',
       validate: yup.number(),
@@ -172,7 +172,7 @@ const antenatalForm = {
   ],
   'Urine Test': [
     {
-      name: 'urinalysisTest',
+      name: 'urinalysis',
       label: 'Urinalysis Test',
       type: 'radio',
       validate: yup.string().required('Urinalysis Test is required'),
@@ -194,7 +194,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'urineTestResults',
+      name: 'urinalysisTestResults',
       label: 'If yes, test results',
       type: 'radio',
       validate: yup.string(),
@@ -364,8 +364,8 @@ const antenatalForm = {
   ],
   'Obstetric Ultrasound': [
     {
-      name: 'firstObstetricUltrasound',
-      label: '1st Obstetric Ultrasound',
+      name: 'firstObstreticUltrasound',
+      label: '1st Obstretic Ultrasound',
       type: 'radio',
       validate: yup.string().required('1st Obstetric Ultrasound is required'),
       width: {
@@ -386,7 +386,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'firstObstetricUltrasoundDate',
+      name: 'firstObstreticUltrasoundDate',
       label: 'Date performed',
       type: 'date',
       validate: yup.date(),
@@ -399,8 +399,8 @@ const antenatalForm = {
       relevant: formValues => formValues.firstObstetricUltrasound === 'Yes',
     },
     {
-      name: 'secondObstetricUltrasound',
-      label: '2nd Obstetric Ultrasound',
+      name: 'secondObstreticUltrasound',
+      label: '2nd Obstretic Ultrasound',
       type: 'radio',
       validate: yup.string().required('2nd Obstetric Ultrasound is required'),
       width: {
@@ -421,7 +421,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'secondObstetricUltrasoundDate',
+      name: 'secondObstreticUltrasoundDate',
       label: 'Date performed',
       type: 'date',
       validate: yup.date(),
@@ -494,7 +494,7 @@ const antenatalForm = {
       ],
     },
   ],
-  'Matername HAART': [
+  'Maternal HAART': [
     {
       name: 'onArvBeforeFirstAnc',
       label: 'On ARV before 1st ANC visit',
@@ -604,7 +604,7 @@ const antenatalForm = {
       relevant: formValues => formValues.hivTested === 'Yes',
     },
     {
-      name: 'nextDateOfHivTest',
+      name: 'nextDateOfHivTestNR',
       label: 'If NR, Select the Next Date of Test',
       type: 'date',
       validate: yup.date(),
@@ -810,7 +810,7 @@ const antenatalForm = {
       ],
     },
     {
-      name: 'partnerHivStatus',
+      name: 'partnerHivStatus2',
       label: 'Partner HIV Status',
       type: 'radio',
       validate: yup.string().required('Partner HIV Status is required'),

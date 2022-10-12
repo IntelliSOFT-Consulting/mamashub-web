@@ -50,7 +50,6 @@ import previousPregnancyFields from '../lib/forms/previousPregnancy';
 
 export default function PreviousPregnancy() {
   let [patient, setPatient] = useState({});
-
   let [visit, setVisit] = useState();
   let navigate = useNavigate();
   let [open, setOpen] = useState(false);

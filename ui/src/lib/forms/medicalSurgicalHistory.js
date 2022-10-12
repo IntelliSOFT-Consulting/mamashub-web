@@ -160,7 +160,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.bloodTransfusion === 'Yes',
     },
     {
-      name: 'bloodTransfusionReactionDetails',
+      name: 'bloodTransfusionReactionResult',
       label: 'If yes, what was the reaction?',
       type: 'text',
       validate: yup.string(),
@@ -207,7 +207,7 @@ const medicalSurgicalHistory = {
       },
     },
     {
-      name: 'drugAllergiesSpecify',
+      name: 'specificNonDrugAllergies',
       label: 'If yes, specify',
       type: 'text',
       validate: yup.string(),
@@ -220,7 +220,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.drugAllergies === 'Yes',
     },
     {
-      name: 'otherNonDrugAllergies',
+      name: 'nonDrugAllergies',
       label: 'Other Non-Drug Allergies',
       type: 'radio',
       validate: yup.string(),
@@ -236,7 +236,7 @@ const medicalSurgicalHistory = {
       },
     },
     {
-      name: 'otherNonDrugAllergiesSpecify',
+      name: 'specificNonDrugAllergies',
       label: 'If yes, specify',
       type: 'text',
       validate: yup.string(),
@@ -251,7 +251,7 @@ const medicalSurgicalHistory = {
   ],
   'Family History': [
     {
-      name: 'twins',
+      name: 'twinsBothLiveBorn',
       label: 'Twins',
       type: 'radio',
       validate: yup.string(),
@@ -267,7 +267,7 @@ const medicalSurgicalHistory = {
       },
     },
     {
-      name: 'twinsDetails',
+      name: 'twinsSpecification',
       label: 'If yes, specify',
       type: 'checkbox',
       validate: yup.array(),
@@ -284,7 +284,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.twins === 'Yes',
     },
     {
-      name: 'tuberculosisHistory',
+      name: 'familyHistoryTB',
       label: 'Tuberculosis',
       type: 'radio',
       validate: yup.string(),
@@ -300,7 +300,7 @@ const medicalSurgicalHistory = {
       },
     },
     {
-      name: 'relativeWithTuberculosis',
+      name: 'familyHistoryTBName',
       label: 'If yes, who is the relative who contracted TB',
       type: 'text',
       validate: yup.string(),
@@ -313,7 +313,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.tuberculosisHistory === 'Yes',
     },
     {
-      name: 'relativeWithTuberculosisDetails',
+      name: 'familyHistoryTBRelationship',
       label: 'Relationship',
       type: 'text',
       validate: yup.string(),
@@ -326,7 +326,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.tuberculosisHistory === 'Yes',
     },
     {
-      name: 'relativeWithTuberculosisHousehold',
+      name: 'familyLivingInSameHousehold',
       label: 'Were they living in the same household',
       type: 'radio',
       validate: yup.string(),
@@ -343,7 +343,7 @@ const medicalSurgicalHistory = {
       relevant: values => values.tuberculosisHistory === 'Yes',
     },
     {
-      name: 'tuberculosisScreening',
+      name: 'referForTBScreening',
       label: 'if yes, refer to tuberculosis screening',
       type: 'text',
       validate: yup.string(),
