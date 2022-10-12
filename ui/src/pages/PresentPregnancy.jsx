@@ -11,7 +11,7 @@ import {
   CircularProgress,
   Modal,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { getCookie } from '../lib/cookie';
@@ -140,12 +140,12 @@ export default function PresentPregnancy() {
 
   let getEncounterObservations = async encounter => {
     setObservations([]);
-    handleOpen();
+    // handleOpen();
     let observations = await (
       await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)
     ).json();
     setObservations(observations.observations);
-    return;
+    return observations.observations;
   };
 
   let getPresentPregnancyEncounters = async patientId => {
@@ -261,11 +261,12 @@ export default function PresentPregnancy() {
                       {presentPregnancyEncounters.length > 0 &&
                         presentPregnancyEncounters.map((x, index) => {
                           return (
-                            <Grid item xs={12} md={12} lg={12}>
+                            <Grid item xs={12} md={12} lg={12} key={index}>
                               <Button
                                 variant='contained'
                                 onClick={e => {
                                   getEncounterObservations(x.resource.id);
+                                  handleOpen();
                                 }}
                                 sx={{
                                   backgroundColor: '#b58dab',
@@ -326,6 +327,7 @@ export default function PresentPregnancy() {
                         formData={presentPregnancyFields}
                         formik={formik}
                         encounters={presentPregnancyEncounters}
+                        getEncounterObservations={getEncounterObservations}
                       />
                       <p></p>
                       <Divider />
@@ -385,9 +387,9 @@ export default function PresentPregnancy() {
               )}
               <Grid container columnSpacing={1}>
                 {observations &&
-                  observations.map(observation => {
+                  observations.map((observation, idx) => {
                     return (
-                      <>
+                      <React.Fragment key={idx}>
                         <Grid item lg={4} xl={6} md={6} sm={12}>
                           <Box
                             sx={{
@@ -399,29 +401,32 @@ export default function PresentPregnancy() {
                             {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
                             {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
                             {observation.resource.code.coding &&
-                              observation.resource.code.coding.map(entry => {
-                                return (
-                                  <>
-                                    <Typography variant='h6'>
-                                      {entry.display}
-                                    </Typography>
-                                    <Typography variant='p'>
-                                      {observation.resource.valueQuantity
-                                        ? observation.resource.valueQuantity
-                                            .value
-                                        : observation.resource.valueString ??
-                                          observation.resource.valueDateTime ??
-                                          '-'}
-                                    </Typography>
-                                    {/* <br /> */}
-                                  </>
-                                );
-                              })}
+                              observation.resource.code.coding.map(
+                                (entry, index) => {
+                                  return (
+                                    <React.Fragment key={index}>
+                                      <Typography variant='h6' >
+                                        {entry.display}
+                                      </Typography>
+                                      <Typography variant='p'>
+                                        {observation.resource.valueQuantity
+                                          ? observation.resource.valueQuantity
+                                              .value
+                                          : observation.resource.valueString ??
+                                            observation.resource
+                                              .valueDateTime ??
+                                            '-'}
+                                      </Typography>
+                                      {/* <br /> */}
+                                    </React.Fragment>
+                                  );
+                                }
+                              )}
                             <br />
                           </Box>
                           <p></p>
                         </Grid>
-                      </>
+                      </React.Fragment>
                     );
                   })}
               </Grid>
