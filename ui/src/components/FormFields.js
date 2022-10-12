@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import { useRef, useState } from 'react';
 import moment from 'moment';
-
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import counties from '../data/counties.json';
@@ -26,12 +25,11 @@ import consituencyToWard from '../data/wards.json';
 import { addDays } from 'date-fns';
 import malariaContacts from '../data/malariaProphylaxisContacts.json';
 import ifasOptions from '../data/ifas.json';
-import * as yup from 'yup';
 
 export default function FormFields({ formik, formData, encounters, ...props }) {
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const [dateProps, setDateProps] = useState({ disabled: true });
+  const [dateProps, setDateProps] = useState({});
 
   const sections = Object.keys(formData);
   const inputRef = useRef(null);
@@ -86,8 +84,9 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
     console.log(field.name + ':', formik.values[field.name]);
   };
 
-  const handleInputChange = (e, field, section) => {
+  const handleInputChange = async (e, field, section) => {
     formik.setFieldValue(field.name, e.target.value);
+    console.log(e.target.value);
 
     if (field.name === 'systolicBp') {
       const currentInput = document.querySelector(
@@ -164,67 +163,108 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
     if (field.name === 'gestationalAge') {
       let nextVisitDate = formik.values.nextVisitDate;
       let gestationalAge = Number(e.target.value);
-      switch (true) {
-        case gestationalAge < 20 && encounters.length === 0:
-          nextVisitDate = moment().add(8, 'weeks').format('YYYY-MM-DD');
+      const observations = encounters[0]
+        ? await props.getEncounterObservations(encounters[0].resource.id)
+        : null;
+      const observationGestation = observations?.find(
+        obs => obs.resource.code.coding[0]?.display === 'Gestation (Weeks)'
+      );
+      let firstVisitGestation = observationGestation
+        ? observationGestation.resource.valueQuantity.value
+        : gestationalAge;
+      const lastVisitDate = encounters.length
+        ? new Date(encounters[encounters.length - 1]?.resource.period.start)
+        : new Date();
 
-          break;
-        case gestationalAge < 20 && encounters.length > 0:
-          nextVisitDate = moment(
-            encounters[encounters.length - 1].resource.period.start
-          )
-            .add(8, 'weeks')
-            .format('YYYY-MM-DD');
+      if (firstVisitGestation < 20 && encounters?.length < 8) {
+        switch (true) {
+          case gestationalAge < 20:
+            nextVisitDate = moment(lastVisitDate).add(8, 'weeks');
+            break;
+          case gestationalAge < 26:
+            nextVisitDate = moment(lastVisitDate).add(6, 'weeks');
+            break;
+          case gestationalAge < 34:
+            nextVisitDate = moment(lastVisitDate).add(4, 'weeks');
+            break;
+          case gestationalAge < 40:
+            nextVisitDate = moment(lastVisitDate).add(2, 'weeks');
+            break;
+          case gestationalAge >= 40:
+            setDateProps({
+              ...dateProps,
+              disabled: true,
+            });
+            break;
+          default:
+            break;
+        }
+      }
 
-          break;
-        case gestationalAge >= 20 &&
-          gestationalAge < 26 &&
-          encounters.length === 0:
-          nextVisitDate = moment().add(6, 'weeks').format('YYYY-MM-DD');
+      if (
+        firstVisitGestation >= 22 &&
+        firstVisitGestation <= 23 &&
+        encounters?.length < 8
+      ) {
+        switch (true) {
+          case gestationalAge < 22:
+            nextVisitDate = moment(lastVisitDate).add(8, 'weeks');
+            break;
+          case gestationalAge < 28:
+            nextVisitDate = moment(lastVisitDate).add(6, 'weeks');
+            break;
+          case gestationalAge >= 30 && gestationalAge > 40:
+            nextVisitDate = moment(lastVisitDate).add(2, 'weeks');
+            break;
+          case gestationalAge >= 40:
+            setDateProps({
+              ...dateProps,
+              disabled: true,
+            });
+            break;
+          default:
+            break;
+        }
+      }
 
-          break;
-        case gestationalAge >= 20 &&
-          gestationalAge < 26 &&
-          encounters.length > 0:
-          nextVisitDate = moment(
-            encounters[encounters.length - 1].resource.period.start
-          )
-            .add(6, 'weeks')
-            .format('YYYY-MM-DD');
+      if (
+        firstVisitGestation >= 28 &&
+        firstVisitGestation <= 29 &&
+        encounters?.length < 8
+      ) {
+        switch (true) {
+          case gestationalAge <= 29:
+            nextVisitDate = moment(lastVisitDate).add(8, 'weeks');
+            break;
+          case gestationalAge < 32:
+            nextVisitDate = moment(lastVisitDate).add(6, 'weeks');
+            break;
+          case gestationalAge >= 32 && gestationalAge > 40:
+            nextVisitDate = moment(lastVisitDate).add(2, 'weeks');
+            break;
+          case gestationalAge >= 40:
+            setDateProps({
+              ...dateProps,
+              disabled: true,
+            });
+            break;
+          default:
+            break;
+        }
+      }
 
-          break;
-        case gestationalAge >= 26 &&
-          gestationalAge < 34 &&
-          encounters.length === 0:
-          nextVisitDate = moment().add(4, 'weeks').format('YYYY-MM-DD');
-
-          break;
-        case gestationalAge >= 26 &&
-          gestationalAge < 34 &&
-          encounters.length > 0:
-          nextVisitDate = moment(
-            encounters[encounters.length - 1].resource.period.start
-          )
-            .add(4, 'weeks')
-            .format('YYYY-MM-DD');
-
-          break;
-        case gestationalAge >= 34 &&
-          gestationalAge < 40 &&
-          encounters.length === 0:
-          nextVisitDate = moment().add(2, 'weeks').format('YYYY-MM-DD');
-
-          break;
-        case gestationalAge > 40:
-          // disable the date of next visit
-
-          break;
-        default:
-          break;
+      if (firstVisitGestation >= 30 && encounters?.length < 8) {
+        nextVisitDate = moment(lastVisitDate).add(2, 'weeks');
       }
 
       formik.setFieldValue('nextVisitDate', nextVisitDate);
-      //  disable previous dates in the material date picker
+      setDateProps({
+        ...dateProps,
+        minDate: new Date(nextVisitDate),
+        disablePast: true,
+        value: nextVisitDate,
+        disabled: gestationalAge >= 40,
+      });
     }
   };
 
@@ -287,6 +327,9 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                       </Grid>
                     );
                   case 'date':
+                    const fieldProps =
+                      field.name === 'nextVisitDate' ? { ...dateProps } : {};
+
                     return (
                       <Grid item {...field.width} key={idx}>
                         {/* if the name is edd then we want to disable the date picker if the lmp is not set */}
@@ -318,9 +361,6 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                                     formik.touched[field.name] &&
                                     formik.errors[field.name]
                                   }
-                                  disablePast
-                                  minDate={new Date()}
-                                  // {...dateProps}
                                 />
                               )}
                             />
@@ -328,8 +368,6 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                             <MobileDatePicker
                               label={field.label}
                               disabled={!formik.values.lmp}
-                              disablePast
-                              minDate={new Date()}
                               inputFormat='dd/MM/yyyy'
                               value={
                                 (formik.values.edd = formik.values.lmp
@@ -353,7 +391,6 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                                     formik.touched[field.name] &&
                                     formik.errors[field.name]
                                   }
-                                  // {...dateProps}
                                 />
                               )}
                             />
@@ -367,6 +404,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                             onChange={date => {
                               handleDateChange(date, field, section);
                             }}
+                            {...fieldProps}
                             renderInput={params => (
                               <TextField
                                 {...params}
@@ -389,6 +427,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                             inputFormat='dd/MM/yyyy'
                             value={formik.values[field.name] || null}
                             name={field.name}
+                            {...fieldProps}
                             onChange={date => {
                               if (field.name === 'edd') {
                                 const lmp = formik.values['lmp'];
