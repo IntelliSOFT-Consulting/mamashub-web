@@ -39,7 +39,6 @@ export default function Deworming() {
   let [open, setOpen] = useState(false);
 
   let [visit, setVisit] = useState();
-  let [deworming, setDeworming] = useState({});
   let [message, setMessage] = useState(false);
   let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -114,6 +113,7 @@ export default function Deworming() {
       return;
     }
   };
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
