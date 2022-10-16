@@ -134,23 +134,7 @@ export default function PhysicalExam() {
     }
     console.log(visit);
   }, []);
-
-  let getEncounterObservations = async encounter => {
-    setObservations([]);
-    handleOpen();
-    let observations = await (
-      await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)
-    ).json();
-    console.log(observations);
-    setObservations(observations.observations);
-    return;
-  };
-  const handleChanges = (event, newValue) => {
-    // setValue(event);
-    console.log(event, newValue);
-    return;
-  };
-
+  
   let savePhysicalExam = async values => {
     //get current patient
     if (!visit) {

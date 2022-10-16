@@ -130,7 +130,7 @@
         "maternalSerologyReactiveMaternalSerologyPartnerTest": "snomed:412690006-PR:Maternal Serology Reactive Maternal Serology Partner Test",
         "maternalserologyNonReactiveSerologyBook": "snomed:412690006-B:Maternal Serology Non-Reactive Serology Book",
         "maternalserologyNonReactiveSerologyContinueTest": "snomed:412690006-CT:Maternal Serology Non-Reactive Serology Continue Test",
-        "maternalserologyNonReactiveSerologyappointment": "snomed:412690006-A:Maternal Serology Non-Reactive Serology Appointment",
+        "maternalserologyNonReactiveSerologyAppointment": "snomed:412690006-A:Maternal Serology Non-Reactive Serology Appointment",
         "dewormingDeworming": "snomed:14369007:Deworming Deworming",
         "dewormingDateDewormingWasGiven": "snomed:410671006:Deworming Date Deworming Was Given",
         "iFASIronSuppliments": "snomed:74935093:IFAS Iron Supplements",

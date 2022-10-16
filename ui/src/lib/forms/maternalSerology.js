@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const maternalSerology = {
   'Maternal Serology Results': [
     {
-      name: 'repeatSerologyDone',
+      name: 'maternalSerologyRepeatSerology',
       label: 'Was repeat serology done?',
       type: 'radio',
       validate: yup.string().required('Repeat serology done is required'),
@@ -19,7 +19,7 @@ const maternalSerology = {
       ],
     },
     {
-      name: 'nextAppointmentDate',
+      name: 'maternalSerologyRepeatSerologyDetailsNo',
       label: 'If no, date of next appointment',
       type: 'date',
       validate: yup.date().min(new Date(), 'Date must be in the future'),
@@ -32,7 +32,7 @@ const maternalSerology = {
       relevant: formValues => formValues.repeatSerologyDone === 'No',
     },
     {
-      name: 'dateOfTest',
+      name: 'maternalSerologyRepeatSerologyDetailsYes',
       label: 'If yes, date test was done',
       type: 'date',
       validate: yup.date().max(new Date(), 'Date must be in the past'),
@@ -45,7 +45,7 @@ const maternalSerology = {
       relevant: formValues => formValues.repeatSerologyDone === 'Yes',
     },
     {
-      name: 'testResult',
+      name: 'maternalSerologyRepeatSerologyResults',
       label: 'If yes, test result',
       type: 'radio',
       validate: yup.string(),
@@ -63,7 +63,7 @@ const maternalSerology = {
   ],
   Reactive: [
     {
-      name: 'pmtctRefer',
+      name: 'maternalSerologyReactiveMaternalSerologyPMTCT',
       label: 'If reactive, refer to the PMTCT clinic',
       type: 'text',
       validate: yup.string(),
@@ -76,7 +76,7 @@ const maternalSerology = {
       relevant: formValues => formValues.testResult === 'R',
     },
     {
-      name: 'testPartner',
+      name: 'maternalSerologyReactiveMaternalSerologyPartnerTest',
       label: 'If reactive, test partner',
       type: 'text',
       validate: yup.string(),
@@ -91,7 +91,7 @@ const maternalSerology = {
   ],
   'Non-Reactive': [
     {
-      name: 'repeatSerologyBooking',
+      name: 'maternalserologyNonReactiveSerologyBook',
       label: 'If non-reactive, book for repeat serology test',
       type: 'text',
       validate: yup.string(),
@@ -104,7 +104,7 @@ const maternalSerology = {
       relevant: formValues => formValues.testResult === 'NR',
     },
     {
-      name: 'nonReactiveContinue',
+      name: 'maternalserologyNonReactiveSerologyContinueTest',
       label:
         'If non-reactive, continue testing until complete cessation of breastfeeding',
       type: 'text',
@@ -118,7 +118,7 @@ const maternalSerology = {
       relevant: formValues => formValues.testResult === 'NR',
     },
     {
-      name: 'nonReactiveNextAppointmentDate',
+      name: 'maternalserologyNonReactiveSerologyAppointment',
       label: 'If non-reactive, date of next appointment',
       type: 'date',
       validate: yup.date().min(new Date(), 'Date must be in the future'),

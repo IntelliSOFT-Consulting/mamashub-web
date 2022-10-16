@@ -77,17 +77,6 @@ export default function MaternalSerology() {
     },
   });
 
-  let saveSerologyResults = async () => {
-    return;
-  };
-
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -100,14 +89,43 @@ export default function MaternalSerology() {
     return;
   }, []);
 
-  let saveObservation = async (patientId, code, observationValue) => {
-    let response = await await fetch('/crud/observations', {
-      body: JSON.stringify({}),
-    });
+  let saveMaternalSerology = async values => {
+    //get current patient
+    let patient = visit.id;
+    if (!patient) {
+      prompt(
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+      );
+      return;
+    }
 
-    return;
+    //create encounter
+    let encounter = await createEncounter(patient, 'MATERNAL-SEROLOGY');
+    console.log(encounter);
+
+    //save observations
+    //Create and Post Observations
+    let res = await (
+      await fetch(`${apiHost}/crud/observations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          patientId: patient,
+          encounterId: encounter,
+          observations: values,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    console.log(res);
+
+    if (res.status === 'success') {
+      prompt('Maternal serology saved successfully');
+      return;
+    } else {
+      prompt(res.error);
+      return;
+    }
   };
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -126,7 +144,7 @@ export default function MaternalSerology() {
               format={maternalSerologyFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
-              submit={saveSerologyResults}
+              submit={saveMaternalSerology}
             />
           ) : (
             <form onSubmit={formik.handleSubmit}>
