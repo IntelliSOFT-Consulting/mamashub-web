@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const tetanusAndDiptheria = {
   'Tetanus Diptheria (TD) Injection': [
     {
-      name: 'ttImmunization',
+      name: 'ttTetanusDiptheriaInjectionTTProvided',
       label: 'Was TT immunization provided?',
       type: 'radio',
       validate: yup.string().required('TT immunization is required'),
@@ -19,7 +19,7 @@ const tetanusAndDiptheria = {
       ],
     },
     {
-      name: 'ttImmunizationDate',
+      name: 'tetanusDiptheriaInjectionTTResults',
       label: 'If yes, when was it provided?',
       type: 'date',
       validate: yup.date(),
@@ -32,7 +32,7 @@ const tetanusAndDiptheria = {
       relevant: formValues => formValues.ttImmunization === 'Yes',
     },
     {
-      name: 'nextVisitDate',
+      name: 'tetanusDiptheriaInjectionNextVisit',
       label: 'Next visit',
       type: 'date',
       validate: yup.date().required('Next visit is required'),
