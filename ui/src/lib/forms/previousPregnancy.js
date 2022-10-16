@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const previousPregnancy = {
   'Pregnancy Details': [
     {
-      name: 'pergnancyOrder',
+      name: 'previousPregnancyOrder',
       label: 'Pregnancy Order',
       type: 'text',
       validate: yup.string(),
@@ -15,7 +15,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'year',
+      name: 'previousPregnancyYear',
       label: 'Year',
       type: 'text',
       validate: yup
@@ -29,7 +29,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'noOfAncAttendances',
+      name: 'previousPregnancynoOfTimesANCAttended',
       label: 'Number of times ANC attended for every pregnancy',
       type: 'text',
       validate: yup.number(),
@@ -41,7 +41,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'placeOfBirth',
+      name: 'previousPregnancychildBirthPlace',
       label: 'Place of child birth',
       type: 'text',
       validate: yup.string(),
@@ -53,7 +53,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'gestationAge',
+      name: 'previousPregnancyGestation',
       label: 'Gestation (weeks)',
       type: 'text',
       validate: yup.number(),
@@ -65,7 +65,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'durationOfLabour',
+      name: 'previousPregnancyDurationOfLabour',
       label: 'Duration of labour',
       type: 'text',
       validate: yup.string(),
@@ -77,7 +77,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'deliveryMode',
+      name: 'previousPregnancyDeliveryMode',
       label: 'Mode of delivery',
       type: 'radio',
       validate: yup.string(),
@@ -105,7 +105,7 @@ const previousPregnancy = {
   ],
   'Baby Details': [
     {
-      name: 'birthWeight',
+      name: 'previousPregnancyBabyWeight',
       label: 'Birth weight (g)',
       type: 'text',
       validate: yup.number(),
@@ -117,7 +117,7 @@ const previousPregnancy = {
       },
     },
     {
-      name: 'babySex',
+      name: 'previousPregnancyBabySex',
       label: 'Baby sex',
       type: 'radio',
       validate: yup.string(),
@@ -133,7 +133,7 @@ const previousPregnancy = {
       ],
     },
     {
-      name: 'outcome',
+      name: 'previousPregnancyOutcome',
       label: 'Outcome',
       type: 'radio',
       validate: yup.string(),
@@ -149,7 +149,7 @@ const previousPregnancy = {
       ],
     },
     {
-      name: 'purperium',
+      name: 'previousPregnancyPurperium',
       label: 'Purperium',
       type: 'radio',
       validate: yup.string(),
@@ -165,7 +165,7 @@ const previousPregnancy = {
       ],
     },
     {
-      name: 'purperiumDetails',
+      name: 'previousPregnancyAbnornmalPurperium',
       label: 'If abnormal, please specify',
       type: 'text',
       validate: yup.string(),
