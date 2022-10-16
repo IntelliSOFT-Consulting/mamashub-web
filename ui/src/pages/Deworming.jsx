@@ -39,7 +39,6 @@ export default function Deworming() {
   let [open, setOpen] = useState(false);
 
   let [visit, setVisit] = useState();
-  let [deworming, setDeworming] = useState({});
   let [message, setMessage] = useState(false);
   let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -77,9 +76,44 @@ export default function Deworming() {
     },
   });
 
-  let saveDeworming = async () => {
-    return;
+  let saveDeworming = async values => {
+    //get current patient
+    let patient = visit.id;
+    if (!patient) {
+      prompt(
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+      );
+      return;
+    }
+
+    //create encounter
+    let encounter = await createEncounter(patient, 'DEWORMING');
+    console.log(encounter);
+
+    //save observations
+    //Create and Post Observations
+    let res = await (
+      await fetch(`${apiHost}/crud/observations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          patientId: patient,
+          encounterId: encounter,
+          observations: values,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    console.log(res);
+
+    if (res.status === 'success') {
+      prompt('Deworming saved successfully');
+      return;
+    } else {
+      prompt(res.error);
+      return;
+    }
   };
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
