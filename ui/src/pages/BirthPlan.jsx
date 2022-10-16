@@ -110,7 +110,6 @@ export default function BirthPlan() {
     console.log(encounter);
 
     //save observations
-    let observationsList = [];
     //Create and Post Observations
     let res = await (
       await fetch(`${apiHost}/crud/observations`, {
@@ -118,7 +117,7 @@ export default function BirthPlan() {
         body: JSON.stringify({
           patientId: patient,
           encounterId: encounter,
-          observations: birthPlan,
+          observations: values,
         }),
         headers: { 'Content-Type': 'application/json' },
       })

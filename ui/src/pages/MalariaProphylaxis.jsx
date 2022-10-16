@@ -93,13 +93,46 @@ export default function MalariaProphylaxis() {
       setInputData(values);
     },
   });
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
+  
+
+  let saveMalariaProphylaxis = async values => {
+    //get current patient
+    let patient = visit.id;
+    if (!patient) {
+      prompt(
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+      );
+      return;
+    }
+
+    //create encounter
+    let encounter = await createEncounter(patient, 'MALARIA-PROPHYLAXIS');
+    console.log(encounter);
+
+    //save observations
+    //Create and Post Observations
+    let res = await (
+      await fetch(`${apiHost}/crud/observations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          patientId: patient,
+          encounterId: encounter,
+          observations: values,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    console.log(res);
+
+    if (res.status === 'success') {
+      prompt('Malaria Prophylaxis saved successfully');
+      return;
+    } else {
+      prompt(res.error);
+      return;
+    }
   };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -130,7 +163,7 @@ export default function MalariaProphylaxis() {
               format={malariaProphylaxisFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
-              submit={saveSuccessfully}
+              submit={saveMalariaProphylaxis}
             />
           ) : (
             <form onSubmit={formik.handleSubmit}>

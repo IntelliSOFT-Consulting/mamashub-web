@@ -4,7 +4,7 @@ import malariaContacts from '../../data/malariaProphylaxisContacts.json';
 const malariaProphylaxis = {
   'ANC Visit': [
     {
-      name: 'timingOfContact',
+      name: 'malariaProphylaxisTimingOfContact',
       label: 'Timing of contact',
       type: 'select',
       validate: yup.string().required('Timing of contact is required'),
@@ -20,7 +20,7 @@ const malariaProphylaxis = {
       })),
     },
     {
-      name: 'doseGiven',
+      name: 'malariaProphylaxisDose',
       label: 'Dose given',
       type: 'radio',
       validate: yup.string(),
@@ -39,7 +39,7 @@ const malariaProphylaxis = {
         !formValues.timingOfContact?.includes('40'),
     },
     {
-      name: 'doseGivenDate',
+      name: 'malariaProphylaxisYesResult',
       label: 'If yes, date given',
       type: 'date',
       validate: yup.date(),
@@ -52,7 +52,7 @@ const malariaProphylaxis = {
       relevant: formValues => formValues.doseGiven === 'Yes',
     },
     {
-      name: 'doseNextVisitDate',
+      name: 'malariaProphylaxisNoResult',
       label: 'If no, next visit',
       type: 'date',
       validate: yup
@@ -67,7 +67,7 @@ const malariaProphylaxis = {
       relevant: formValues => formValues.doseGiven === 'No',
     },
     {
-      name: 'nextVisitDate',
+      name: 'malariaProphylaxisNextVisit',
       label: 'Next visit',
       type: 'date',
       validate: yup
@@ -84,7 +84,7 @@ const malariaProphylaxis = {
   ],
   'Long Lasting Insecticide Treated Nets (LLITN)': [
     {
-      name: 'llitnGiven',
+      name: 'malariaProphylaxisLLITNGiven',
       label: 'Was LLITN given to the mother?',
       type: 'radio',
       validate: yup.string().required('LLITN given is required'),
@@ -100,7 +100,7 @@ const malariaProphylaxis = {
       ],
     },
     {
-      name: 'llitnGivenDate',
+      name: 'malariaProphylaxisLLITNYesResulst',
       label: 'If yes, date given',
       type: 'date',
       validate: yup.date(),

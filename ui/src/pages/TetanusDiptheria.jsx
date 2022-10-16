@@ -157,7 +157,7 @@ export default function TetanusDiptheria() {
     setLoading(false);
     return;
   };
-  let saveTetanusDiptheria = async () => {
+  let saveTetanusDiptheria = async values => {
     //get current patient
     if (!visit) {
       prompt(
@@ -178,7 +178,7 @@ export default function TetanusDiptheria() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: tetanusDiptheria,
+            observations: values,
           }),
           headers: { 'Content-Type': 'application/json' },
         })
