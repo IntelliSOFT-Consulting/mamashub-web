@@ -128,7 +128,7 @@ export default function PreviousPregnancy() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: previousPregnancy,
+            observations: values,
           }),
           headers: { 'Content-Type': 'application/json' },
         })

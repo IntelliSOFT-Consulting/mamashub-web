@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const presentPregnancy = {
   'Current Pregnancy Details': [
     {
-      name: 'numberOfContacts',
+      name: 'presentPregnancyDetailsNumberOfContacts',
       label: 'Number of contacts',
       type: 'text',
       validate: yup.number().required('Number of contacts is required'),
@@ -15,7 +15,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'dateOfLastContact',
+      name: 'presentPregnancyDetailsDateOfLastContact',
       label: 'Date',
       type: 'date',
       validate: yup.date().required('Date is required'),
@@ -27,7 +27,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'muac',
+      name: 'presentPregnancyDetailsMUAC',
       label: 'MUAC (cm)',
       type: 'text',
       validate: yup.number().required('MUAC is required'),
@@ -39,7 +39,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'urineTestDone',
+      name: 'presentPregnancyUrineTestDone',
       label: 'Urine test done',
       type: 'radio',
       validate: yup.string().required('Urine test done is required'),
@@ -55,7 +55,7 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'urineTestResult',
+      name: 'presentPregnancyUrineTestResults',
       label: 'If yes, give result',
       type: 'text',
       validate: yup.string(),
@@ -70,7 +70,7 @@ const presentPregnancy = {
   ],
   'Blood Pressure': [
     {
-      name: 'systolicBp',
+      name: 'presentPregnancyBpSystolic',
       label: 'Systolic blood pressure',
       type: 'text',
       validate: yup.number().required('Systolic blood pressure is required'),
@@ -82,7 +82,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'diastolicBp',
+      name: 'presentPregnancyBpDiastolic',
       label: 'Diastolic blood pressure',
       type: 'text',
       validate: yup.number().required('Diastolic blood pressure is required'),
@@ -96,7 +96,7 @@ const presentPregnancy = {
   ],
   'HB Test': [
     {
-      name: 'hbTestDone',
+      name: 'hbTestHbTestDone',
       label: 'HB test done',
       type: 'radio',
       validate: yup.string().required('HB test done is required'),
@@ -112,7 +112,7 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'hbTestResult',
+      name: 'hbTestHbTestReading',
       label: 'If yes, give result',
       type: 'text',
       validate: yup.string(),
@@ -125,7 +125,7 @@ const presentPregnancy = {
       relevant: formValues => formValues.hbTestDone === 'Yes',
     },
     {
-      name: 'pallor',
+      name: 'hbTestPallor',
       label: 'Pallor',
       type: 'radio',
       validate: yup.string().required('Pallor is required'),
@@ -153,7 +153,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'fundalHeight',
+      name: 'hbTestFundalHeight',
       label: 'Fundal height (cm)',
       type: 'text',
       validate: yup.number().required('Fundal height is required'),
@@ -179,7 +179,7 @@ const presentPregnancy = {
       },
     },
     {
-      name: 'lie',
+      name: 'presentationLie',
       label: 'Lie',
       type: 'radio',
       validate: yup.string().required('Lie is required'),
@@ -196,7 +196,7 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'heartRate',
+      name: 'presentationFoetalHeartRate',
       label: 'Foetal heart rate',
       type: 'radio',
       validate: yup.string().required('Foetal heart rate is required'),
@@ -212,7 +212,7 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'foetalMovement',
+      name: 'presentationFoetalMovement',
       label: 'Foetal movement',
       type: 'radio',
       validate: yup.string().required('Foetal movement is required'),
@@ -228,7 +228,7 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'nextVisitDate',
+      name: 'presentationNextVisit',
       label: 'Next visit',
       type: 'date',
       validate: yup.date().required('Next visit date is required'),
