@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const deworming = {
   Deworming: [
     {
-      name: 'dewormingGiven',
+      name: 'dewormingDeworming',
       label:
         'Was deworming (Mebendazole 500mgs) given once in the 2nd trimester?',
       type: 'radio',
@@ -20,7 +20,7 @@ const deworming = {
       ],
     },
     {
-      name: 'dewormingGivenDate',
+      name: 'dewormingDateDewormingWasGiven',
       label: 'If yes, date given',
       type: 'date',
       validate: yup.date(),
