@@ -48,10 +48,7 @@ export default function PMTCTInterventions() {
   let [visit, setVisit] = useState();
   let [notesDisplay, setNotesDisplay] = useState('');
   let [data, setData] = useState({});
-  let [preventiveServices, setPreventiveServices] = useState({});
-  let [preventiveService, setPreventiveService] = useState(null);
-  let [maternalSerology, setMaternalSerology] = useState({});
-  let [ifas, setIfas] = useState();
+  
   let [message, setMessage] = useState(false);
   let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -91,16 +88,44 @@ export default function PMTCTInterventions() {
     },
   });
 
-  let saveSerologyResults = async () => {
-    return;
-  };
+  
 
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
+  let savePMTCTInterventions = async values => {
+    //get current patient
+    let patient = visit.id;
+    if (!patient) {
+      prompt(
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+      );
+      return;
+    }
+
+    //create encounter
+    let encounter = await createEncounter(patient, 'PMTCT Interventions');
+    console.log(encounter);
+
+    //save observations
+    //Create and Post Observations
+    let res = await (
+      await fetch(`${apiHost}/crud/observations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          patientId: patient,
+          encounterId: encounter,
+          observations: values,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    console.log(res);
+
+    if (res.status === 'success') {
+      prompt('PMTCT Interventions saved successfully');
+      return;
+    } else {
+      prompt(res.error);
+      return;
+    }
   };
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -114,13 +139,6 @@ export default function PMTCTInterventions() {
     return;
   }, []);
 
-  let saveObservation = async (patientId, code, observationValue) => {
-    let response = await await fetch('/crud/observations', {
-      body: JSON.stringify({}),
-    });
-
-    return;
-  };
 
   return (
     <>
@@ -136,11 +154,11 @@ export default function PMTCTInterventions() {
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Present Pregnancy Preview'
+              title='PMTCT Interventions Preview'
               format={pmtctFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
-              submit={saveSuccessfully}
+              submit={savePMTCTInterventions}
             />
           ) : (
             <form onSubmit={formik.handleSubmit}>

@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const pmtct = {
   'Intervention Given': [
     {
-      name: 'interventionGiven',
+      name: 'interventionInterventionGiven',
       label: 'Intervention Given',
       type: 'checkbox',
       validate: yup.array().min(1, 'Please select at least one option'),
@@ -21,7 +21,7 @@ const pmtct = {
   ],
   'ART for life': [
     {
-      name: 'dateOfArtInitiation',
+      name: 'interventionDateStarted',
       label: 'If yes, date started',
       type: 'date',
       validate: yup.date(),
@@ -34,7 +34,7 @@ const pmtct = {
       relevant: values => values.interventionGiven.includes('ART for life'),
     },
     {
-      name: 'artRegimen',
+      name: 'interventionRegimen',
       label: 'ART Regimen (Select all that apply)',
       type: 'radio',
       options: [],
@@ -73,7 +73,7 @@ const pmtct = {
       relevant: values => values.dolutegravir.includes('Dolutegravir'),
     },
     {
-      name: 'dolutegravirDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -86,7 +86,7 @@ const pmtct = {
       relevant: values => values.dolutegravir.includes('Dolutegravir'),
     },
     {
-      name: 'dolutegravirFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -185,7 +185,7 @@ const pmtct = {
         ),
     },
     {
-      name: 'tenofovoirAlafenamideFumarateDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -201,7 +201,7 @@ const pmtct = {
         ),
     },
     {
-      name: 'tenofovoirAlafenamideFumarateFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -217,7 +217,7 @@ const pmtct = {
         ),
     },
     {
-      name: 'zidovudine',
+      name: 'interventionOtherRegimen',
       label: '',
       type: 'checkbox',
       width: {
@@ -243,7 +243,7 @@ const pmtct = {
       relevant: values => values.zidovudine.includes('Zidovudine'),
     },
     {
-      name: 'zidovudineDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -256,7 +256,7 @@ const pmtct = {
       relevant: values => values.zidovudine.includes('Zidovudine'),
     },
     {
-      name: 'zidovudineFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -282,7 +282,7 @@ const pmtct = {
       relevant: values => values.interventionGiven.includes('ART for life'),
     },
     {
-      name: 'lamivudineAmount',
+      name: 'interventionARTDosageAmount',
       label: 'Amount',
       type: 'text',
       validate: yup.string(),
@@ -295,7 +295,7 @@ const pmtct = {
       relevant: values => values.lamivudine.includes('Lamivudine'),
     },
     {
-      name: 'lamivudineDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -308,7 +308,7 @@ const pmtct = {
       relevant: values => values.lamivudine.includes('Lamivudine'),
     },
     {
-      name: 'lamivudineFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -334,7 +334,7 @@ const pmtct = {
       relevant: values => values.interventionGiven.includes('ART for life'),
     },
     {
-      name: 'nevirapineAmount',
+      name: 'interventionARTDosageAmount',
       label: 'Amount',
       type: 'text',
       validate: yup.string(),
@@ -347,7 +347,7 @@ const pmtct = {
       relevant: values => values.nevirapine.includes('Nevirapine'),
     },
     {
-      name: 'nevirapineDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -360,7 +360,7 @@ const pmtct = {
       relevant: values => values.nevirapine.includes('Nevirapine'),
     },
     {
-      name: 'nevirapineFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -386,7 +386,7 @@ const pmtct = {
       relevant: values => values.interventionGiven.includes('ART for life'),
     },
     {
-      name: 'efavirenzAmount',
+      name: 'interventionARTDosageAmount',
       label: 'Amount',
       type: 'text',
       validate: yup.string(),
@@ -399,7 +399,7 @@ const pmtct = {
       relevant: values => values.efavirenz.includes('Efavirenz'),
     },
     {
-      name: 'efavirenzDosage',
+      name: 'interventionARTDosageAmount',
       label: 'Dosage',
       type: 'text',
       validate: yup.string(),
@@ -412,7 +412,7 @@ const pmtct = {
       relevant: values => values.efavirenz.includes('Efavirenz'),
     },
     {
-      name: 'efavirenzFrequency',
+      name: 'interventionARTFrequency',
       label: 'Frequency',
       type: 'text',
       validate: yup.string(),
@@ -451,7 +451,7 @@ const pmtct = {
       relevant: values => values.other.includes('Other'),
     },
     {
-      name: 'regimenChanged',
+      name: 'interventionRegimenChange',
       label: 'Was the regimen changed?',
       type: 'radio',
       width: {
@@ -467,7 +467,7 @@ const pmtct = {
       relevant: values => values.interventionGiven.includes('ART for life'),
     },
     {
-      name: 'reasonForChange',
+      name: 'interventionReasonForRegimenChange',
       label: 'If yes, give reason (select all that apply)',
       type: 'checkbox',
       width: {
@@ -490,7 +490,7 @@ const pmtct = {
       relevant: values => values.regimenChanged.includes('Yes'),
     },
     {
-      name: 'reasonForChangeOther',
+      name: 'interventionOtherReasonForRegimenChange',
       label: 'If other, please specify',
       type: 'text',
       validate: yup.string(),
@@ -505,7 +505,7 @@ const pmtct = {
   ],
   'Viral Load (VL) Sample': [
     {
-      name: 'viralLoadSampleTakenDate',
+      name: 'interventionViralLoadDate',
       label: 'If yes, date viral load was taken',
       type: 'date',
       validate: yup.string(),
@@ -519,7 +519,7 @@ const pmtct = {
         values.interventionGiven.includes('Viral Load (VL) sample'),
     },
     {
-      name: 'viralLoadResult',
+      name: 'interventionViralLoadResults',
       label: 'Results',
       type: 'text',
       validate: yup.string(),
