@@ -89,7 +89,7 @@ export default function Counselling() {
     try {
       //create Encounter
       let patient = visit.id;
-      let encounter = await createEncounter(patient, 'ANTENATAL_PROFILE');
+      let encounter = await createEncounter(patient, 'COUNSELLING');
       console.log(encounter);
 
       //Create and Post Observations
