@@ -35,6 +35,7 @@ import * as yup from 'yup';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
 import pmtctFields from '../lib/forms/pmtct';
+import { apiHost, createEncounter } from './../lib/api';
 
 export default function PMTCTInterventions() {
   let [patient, setPatient] = useState({});
