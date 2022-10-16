@@ -94,14 +94,7 @@ export default function PresentPregnancy() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-    return;
-  };
+  
   useEffect(() => {
     let visit = window.localStorage.getItem('currentPatient');
     if (!visit) {
@@ -160,7 +153,7 @@ export default function PresentPregnancy() {
     setLoading(false);
     return;
   };
-  let savePresentPregnancy = async () => {
+  let savePresentPregnancy = async values => {
     //get current patient
     if (!visit) {
       prompt(
@@ -181,7 +174,7 @@ export default function PresentPregnancy() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: presentPregnancy,
+            observations: values,
           }),
           headers: { 'Content-Type': 'application/json' },
         })
