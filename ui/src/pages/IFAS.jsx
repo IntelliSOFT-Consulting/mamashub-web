@@ -96,17 +96,8 @@ export default function IFAS() {
     },
   });
 
-  let saveSerologyResults = async () => {
-    return;
-  };
+ 
 
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

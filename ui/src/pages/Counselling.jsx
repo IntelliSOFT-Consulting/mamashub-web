@@ -33,6 +33,8 @@ import * as yup from 'yup';
 import counsellingForm from '../lib/forms/counselling';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
+import { createEncounter } from '../lib/api';
+import { apiHost } from '../lib/api';
 
 export default function Counselling() {
   let [open, setOpen] = useState(false);
@@ -41,7 +43,7 @@ export default function Counselling() {
   const [inputData, setInputData] = useState({});
 
   let [visit, setVisit] = useState();
-  let [preventiveServices, setPreventiveServices] = useState({});
+  let [counselling, setConselling] = useState({});
   let [message, setMessage] = useState(false);
   let isMobile = useMediaQuery('(max-width:600px)');
 
@@ -71,18 +73,56 @@ export default function Counselling() {
       console.log(values);
       setPreview(true);
       setInputData(values);
+      return;
     },
   });
 
-  let saveSuccessfully = async () => {
-    setMessage('Data saved successfully');
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-    }, 2000);
+  let saveCounsellingForm = async values => {
+    //get current patient
+    if (!visit) {
+      prompt(
+        "No client visit not been started. To start a visit, Select a client from the Client's list"
+      );
+      return;
+    }
+
+    try {
+      //create Encounter
+      let patient = visit.id;
+      let encounter = await createEncounter(patient, 'ANTENATAL_PROFILE');
+      console.log(encounter);
+
+      //Create and Post Observations
+      let res = await (
+        await fetch(`${apiHost}/crud/observations`, {
+          method: 'POST',
+          body: JSON.stringify({
+            patientId: patient,
+            encounterId: encounter,
+            observations: values,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        })
+      ).json();
+      console.log(res);
+
+      if (res.status === 'success') {
+        prompt('Conselling Form saved successfully');
+        // navigate(`/patient/${patient}`);
+        return;
+      } else {
+        prompt(res.error);
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    return
   };
   useEffect(() => {
     let visit = window.localStorage.getItem('currentPatient');
@@ -92,11 +132,6 @@ export default function Counselling() {
     setVisit(JSON.parse(visit));
     return;
   }, []);
-
-  const handleSubmit = async values => {
-    console.log(values);
-  };
-
   const sections = Object.keys(counsellingForm);
 
   return (
@@ -118,7 +153,7 @@ export default function Counselling() {
               format={counsellingForm}
               data={{ ...inputData }}
               close={() => setPreview(false)}
-              submit={handleSubmit}
+              submit={saveCounsellingForm}
             />
           ) : (
             <form onSubmit={formik.handleSubmit}>

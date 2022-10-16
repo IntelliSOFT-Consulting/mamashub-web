@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
 const counsellingForm = {
-  'counselling Done': [
+  'Counselling Done': [
     {
-      name: 'dangerSigns',
+      name: 'counsellingDangerSigns',
       label: 'Danger signs counselling:',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -19,8 +19,8 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'dentalHealthMother',
-      label: 'Dental health tor mother:',
+      name: 'counsellingDentalHealth',
+      label: 'Dental health for mother:',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
       width: {
@@ -35,7 +35,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'birthCounselling',
+      name: 'counsellingBirthPlan',
       label: 'Birth plan counselling:',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -51,7 +51,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'rhNegative',
+      name: 'counsellingRhNegative',
       label: 'Rh negative counselling:',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -69,7 +69,7 @@ const counsellingForm = {
   ],
   'Pregnancy Care Counselling Done:': [
     {
-      name: 'extraMeal',
+      name: 'pregnancyCareMotherAdvicedToEatOneMeal',
       label: 'Was mother advised to eat one extra meal a day?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -85,7 +85,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'fiveFoodGroups',
+      name: 'pregnancyCareMotherAdvicedToEatAtleast5/10Foods',
       label:
         'Was mother advised to eat at least 5 of the 10 food groups everyday?',
       type: 'radio',
@@ -102,7 +102,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'drinkWater',
+      name: 'pregnancyCareMotherAdvicedToDrinkWater',
       label:
         'Was mother advised to drink plenty of water at leas 8 glasses (2lts) a day?',
       type: 'radio',
@@ -119,7 +119,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'ironAndFolicAcid',
+      name: 'pregnancyCareMotherAdvicedToTakeIFAS',
       label: 'Was mother advised to take iron and folic acids (IFAS) everyday?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -135,7 +135,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'avoidHeavyWork',
+      name: 'pregnancyCareMotherAdvicedToAvoidHeavyWork',
       label: 'Was mother advised to avoid heavy work, rest more?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -151,9 +151,9 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'lln',
+      name: 'pregnancyCareMotherAdvicedToSleepUnderLLIN',
       label:
-        'Was mother advised to to seen under a lona lastina insecticidal net (LLIN)?',
+        'Was mother advised to to seen under a long lasting insecticidal net (LLIN)?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
       width: {
@@ -168,7 +168,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'visitAnc',
+      name: 'pregnancyCareMotherAdvicedToGoForANC',
       label:
         'Was mother advised to go for ANC visit as soon as possible and attend 8 times during pregnancy?',
       type: 'radio',
@@ -185,7 +185,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'regularExercise',
+      name: 'pregnancyCareMotherAdvicedToGoForRegularNonStrenous',
       label: 'Was mother advised to do regular non-strenuous exercise?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -203,7 +203,7 @@ const counsellingForm = {
   ],
   'Infant Feeding Counselling': [
     {
-      name: 'infantFeeding',
+      name: 'infantFeedingCousellingInfantFeedingCounselling',
       label: 'Was infant feeding counselling done?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -219,7 +219,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'breastFeeding',
+      name: 'infantFeedingCousellingCounsellingOnExclusiveBreastfeedingAndBenefits',
       label:
         'Was counselling on exclusive breastfeeding and benefits of colostrum done?',
       type: 'radio',
@@ -238,7 +238,7 @@ const counsellingForm = {
   ],
   'Danger Signs During Pregnancy': [
     {
-      name: 'paleness',
+      name: 'dangerSignsDuringPregnancyWasTheMotherPale',
       label: 'Was the mother pale?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -254,7 +254,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'headache',
+      name: 'dangerSignsDuringPregnancyDoesTheMotherHaveSevereHeadache',
       label: 'Does the mother have severe headache?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -270,7 +270,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'vaginalBleeding',
+      name: 'dangerSignsDuringPregnancyMotherHaveVaginalBleeding',
       label: 'Did the mother have vaginal bleeding?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -286,7 +286,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'abdominalPain',
+      name: 'dangerSignsDuringPregnancyMotherHaveSevereAbdominalPain',
       label: 'Did the mother have severe abdominal pain?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -302,7 +302,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'babyMovement',
+      name: 'dangerSignsDuringPregnancyReducedOrNoMovementofTheUnborn',
       label: 'Did the mother have reduced or no movement of the unborn baby?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -318,7 +318,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'convolutions',
+      name: 'dangerSignsDuringPregnancyMotherHaveFits',
       label: 'Did the mother have convulsions/fits?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -334,7 +334,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'waterBreaking',
+      name: 'dangerSignsDuringPregnancyMotherWaterBreaking',
       label: 'Was the mothers water breaking?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -350,7 +350,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'swollenFaceAndHands',
+      name: 'dangerSignsDuringPregnancyMotherHaveSwollenFaceAndHands',
       label: 'Did the mother have swollen face and hands?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
@@ -366,7 +366,7 @@ const counsellingForm = {
       ],
     },
     {
-      name: 'fever',
+      name: 'dangerSignsDuringPregnancyMotherHaveFever',
       label: 'Did the mother have a fever?',
       type: 'radio',
       validate: yup.string().required('Please select an option'),
