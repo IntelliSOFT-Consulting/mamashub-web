@@ -33,6 +33,8 @@ import * as yup from 'yup';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
 import dewormingFields from '../lib/forms/deworming';
+import { apiHost, createEncounter } from './../lib/api';
+
 
 export default function Deworming() {
   let navigate = useNavigate();

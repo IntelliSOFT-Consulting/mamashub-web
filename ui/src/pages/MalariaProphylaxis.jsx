@@ -33,6 +33,7 @@ import * as yup from 'yup';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
 import malariaProphylaxisFields from '../lib/forms/malariaProphylaxis';
+import { apiHost, createEncounter } from './../lib/api';
 
 export default function MalariaProphylaxis() {
   let [patient, setPatient] = useState({});

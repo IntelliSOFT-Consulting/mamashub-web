@@ -33,6 +33,8 @@ import * as yup from 'yup';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
 import maternalSerologyFields from '../lib/forms/maternalSerology';
+import { apiHost, createEncounter } from './../lib/api';
+
 
 export default function MaternalSerology() {
   let [patient, setPatient] = useState({});
