@@ -372,7 +372,7 @@ const antenatalForm = {
         xs: 12,
         sm: 12,
         md: 12,
-        lg: 6,
+        lg: 7,
       },
       options: [
         {
@@ -396,7 +396,20 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.firstObstetricUltrasound === 'Yes',
+      relevant: formValues => formValues.firstObstreticUltrasound === 'Yes',
+    },
+    {
+      name: 'gestationByFirstObstreticUltrasound',
+      label: 'Gestation by 1st Obstetric Ultrasound',
+      type: 'text',
+      validate: yup.number(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: formValues => formValues.firstObstreticUltrasound === 'Yes',
     },
     {
       name: 'secondObstreticUltrasound',
@@ -407,7 +420,7 @@ const antenatalForm = {
         xs: 12,
         sm: 12,
         md: 12,
-        lg: 6,
+        lg: 7,
       },
       options: [
         {
@@ -431,7 +444,20 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.secondObstetricUltrasound === 'Yes',
+      relevant: formValues => formValues.secondObstreticUltrasound === 'Yes',
+    },
+    {
+      name: 'gestationBySecondObstreticUltrasound',
+      label: 'Gestation by 2nd Obstetric Ultrasound',
+      type: 'text',
+      validate: yup.number(),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      },
+      relevant: formValues => formValues.secondObstreticUltrasound === 'Yes',
     },
   ],
   'HIV Status': [
