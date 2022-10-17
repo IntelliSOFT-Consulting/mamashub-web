@@ -85,7 +85,7 @@ export default function AntenatalProfile() {
     // submit form
     onSubmit: values => {
       console.log(values);
-      saveAntenatalProfile(values);
+      // saveAntenatalProfile(values);
       setPreview(true);
       setInputData(values);
     },
@@ -106,7 +106,7 @@ export default function AntenatalProfile() {
   };
   
 
-  let saveAntenatalProfile = async (profile) => {
+  let saveAntenatalProfile = async values => {
     //get current patient
     if (!visit) {
       prompt(
@@ -128,7 +128,7 @@ export default function AntenatalProfile() {
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
-            observations: profile,
+            observations: values,
           }),
           headers: { 'Content-Type': 'application/json' },
         })
@@ -209,7 +209,7 @@ export default function AntenatalProfile() {
                 format={antenatalFields}
                 data={{ ...inputData }}
                 close={() => setPreview(false)}
-                submit={handleSubmit}
+                submit={saveAntenatalProfile}
               />
             ) : (
               <form onSubmit={formik.handleSubmit}>
