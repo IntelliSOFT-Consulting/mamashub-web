@@ -88,7 +88,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
     formik.setFieldValue(field.name, e.target.value);
     console.log(e.target.value);
 
-    if (field.name === 'systolicBp') {
+    if (field.name === 'bpSystolic') {
       const currentInput = document.querySelector(
         `input[name="${field.name}"]`
       );
@@ -98,9 +98,6 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
 
       currentLabel.style.color = 'black';
       currentLabel.style.zIndex = '100';
-      currentLabel.style.background = 'rgba(255, 255, 255,0.8)';
-      currentLabel.style.margin = '0';
-      currentLabel.style.borderRadius = '2px';
 
       if (e.target.value < 71) {
         currentInput.style.backgroundColor = '#d00000';
@@ -119,10 +116,15 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
       }
     }
 
-    if (field.name === 'diastolicBp') {
+    if (field.name === 'bpDiastolic') {
       const currentInput = document.querySelector(
         `input[name="${field.name}"]`
       );
+      const currentDiv = currentInput.parentNode;
+      const currentLabel = currentDiv.parentNode.querySelector('label');
+
+      currentLabel.style.color = 'black';
+      currentLabel.style.zIndex = '100';
       if (e.target.value <= 60) {
         currentInput.style.backgroundColor = '#ffd60a';
         currentInput.style.color = 'black';
@@ -137,10 +139,15 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
       }
     }
 
-    if (field.name === 'pulseRate') {
+    if (field.name === 'pulse') {
       const currentInput = document.querySelector(
         `input[name="${field.name}"]`
       );
+      const currentDiv = currentInput.parentNode;
+      const currentLabel = currentDiv.parentNode.querySelector('label');
+
+      currentLabel.style.color = 'black';
+      currentLabel.style.zIndex = '100';
       if (e.target.value < 60) {
         currentInput.style.backgroundColor = '#d00000';
         currentInput.style.color = 'white';
