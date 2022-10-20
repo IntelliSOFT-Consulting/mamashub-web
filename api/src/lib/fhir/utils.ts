@@ -2,11 +2,11 @@ import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import { reports } from './allReports.json'
 
-export let createObservationValue = (value: number, unit: any) => {
+export const createObservationValue = (value: number, unit: any) => {
     return { value, unit, system: "http://unitsofmeasure.org" }
 }
 
-export let createObservation = (patientId: string, observationValue: any, coding: any, id: string, encounterId: string) => {
+export const createObservation = (patientId: string, observationValue: any, coding: any, id: string, encounterId: string) => {
     return {
         "resourceType": "Observation",
         ...(id) && { "id": id },
@@ -37,7 +37,7 @@ export let createObservation = (patientId: string, observationValue: any, coding
 }
 
 
-export let createEncounter = (patientId: string, encounterId: string, encounterType: number = 2, encounterCode: string | null = null) => {
+export const createEncounter = (patientId: string, encounterId: string, encounterType: number = 2, encounterCode: string | null = null) => {
     if (encounterType > 3 || encounterType < 1) {
         console.error("Encounter type is either 1, 2 or 3")
         return
@@ -103,48 +103,48 @@ export let registerFacility = async () => {
 
 export let apiHost = "http://localhost:8080/fhir"
 
-export let FhirApi = async (params: any) => {
+export const FhirApi = async (params: any) => {
     let _defaultHeaders = { "Content-Type": 'application/json' }
     if (!params.method) {
-        params.method = 'GET'
+        params.method = 'GET';
     }
     try {
         let response = await fetch(String(`${apiHost}${params.url}`), {
             headers: _defaultHeaders,
             method: params.method ? String(params.method) : 'GET',
             ...(params.method !== 'GET' && params.method !== 'DELETE') && { body: String(params.data) }
-        })
-        let responseJSON = await response.json()
+        });
+        let responseJSON = await response.json();
         let res = {
             status: "success",
             statusText: response.statusText,
             data: responseJSON
-        }
-        return res
+        };
+        return res;
     } catch (error) {
-        console.error(error)
+        console.error(error);
         let res = {
             statusText: "FHIRFetch: server error",
             status: "error",
             data: error
-        }
-        console.error(error)
-        return res
+        };
+        console.error(error);
+        return res;
     }
 }
 
-export let generateReport = async (name: any) => {
+export const generateReport = async (name: any) => {
     const reportName = name as keyof typeof reports
     let report = reports[reportName]
     // console.log(report)
-    let data = await FhirApi({ url: report.q })
+    let data = await FhirApi({ url: report.q });
     if (data.status === 'success') {
         // console.log(data.data[report.query])
         if (report.query !== "entry") {
-            return parseFloat(((data.data[report.query]) || 0).toString())
+            return parseFloat(((data.data[report.query]) || 0).toString());
         }
         else {
-            return (data.data[report.query] || [])
+            return (data.data[report.query] || []);
         }
     }
     return parseFloat("0.0")
@@ -203,13 +203,72 @@ let generateANCNumber = async () => {
 
 }
 
-
 export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
     try {
-        let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data
-        return res.entry ? res.entry[0].resource : null
+        let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data;
+        return res.entry ? res.entry[0].resource : null;
     } catch (error) {
-        console.log(error)
-        return null
+        console.log(error);
+        return null;
     }
+}
+
+export const getObservationsWhere = async (observationCode: string, value: any | null) => {
+    try {
+        let res = await (await FhirApi({ url: `/Observation?code=${observationCode}${value && `&value-string=${value}`}` })).data
+        return res.entry ? res.entry : [];
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export const countObservationsWhere = async (observationCode: string, value: any | null = null) => {
+    try {
+        let res = await getObservationsWhere(observationCode, value);
+        if (res) {
+            return res.length;
+        }
+        return 0;
+    } catch (error) {
+        console.error(error);
+        return 0;
+    }
+}
+
+
+// export const getEncountersWhere = async (encounterCode: string, value: any, patient: string | null) => {
+//     try {
+//         let res = await (await FhirApi({ url: `/Encounter?code=${encounterCode}` })).data
+//         return res.entry ? res.entry : [];
+//     } catch (error) {
+//         console.error(error);
+//         return null;
+//     }
+// }
+
+
+// export const countEncountersWhere = async (observationCode: string, value: any) => {
+//     try {
+//         let res = await getEncountersWhere(observationCode, value);
+//         if (res) {
+//             return res.length;
+//         }
+//         return 0;
+//     } catch (error) {
+//         console.error(error);
+//         return 0;
+//     }
+// }
+
+
+
+
+export const countUniquePatients = async (resources: Array<any>, list: Boolean = false) => {
+    let patients = [];
+    for (let resource of resources) {
+        patients.push(resource.resource.subject.reference);
+    }
+    let unique = [...new Set(patients)];
+    return list ? unique : unique.length;
 }
