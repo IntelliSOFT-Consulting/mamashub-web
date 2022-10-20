@@ -6,10 +6,12 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: "jdbc:mysql://hapi-fhir-mysql:3306/hapi"
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://db:5432/hapi
+    dialect: org.hibernate.dialect.PostgreSQL95Dialect
     username: admin
     password: admin
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: org.postgresql.Driver
 
   jpa:
     properties:

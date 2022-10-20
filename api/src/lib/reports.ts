@@ -1,10 +1,11 @@
-import { FhirApi, generateReport } from "./fhir/utils"
+import { FhirApi, generateReport, getObservationsWhere, countObservationsWhere, countUniquePatients } from "./fhir/utils"
 import * as observationCodes from "./fhir/observationCode.json"
 
-const codes: any = observationCodes.codes
+
+const codes: any = observationCodes.codes;
 
 let getNoOfAncVisits = async (patientId: string) => {
-    let visits = []
+    let visits = [];
     let encounters = await (await FhirApi({ url: `/Encounter?patient=${patientId}&_limit=99999` })).data
     encounters = encounters?.entry ?? []
 
@@ -30,7 +31,7 @@ export let generateGeneralReport = async (patientId: string, from: string | null
         'partnerHIVTesting', 'partnerHIVResults', 'ppfpCounselling', 'otherConditions', 'deworming', 'ipt',
         'ttDose', 'supplimentation', 'receivedLLITN', 'referralsFrom',
         'referralsTo', 'reasonsForReferral', 'remarks'
-    ]
+    ];
     let results: { [index: string]: any } = {}
     let _codes = Object.keys(codes).map((code) => {
         if (reportFields.indexOf(code) > -1) {
@@ -70,6 +71,23 @@ export let generateGeneralReport = async (patientId: string, from: string | null
 }
 
 
+let noOfPatients = async (from: Date = new Date(), to: Date = new Date()) => {
+    let data = await (await FhirApi({ url: `/Patient` })).data;
+    return data.total || (data.entry ? data.entry.length : 0)
+}
+
+
+let countUniqueObservations = async (code: string, value: any | null = null) => {
+    let list = await getObservationsWhere(code, value)
+    return countUniquePatients(list)
+
+}
+
+
+let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date()) => {
+    let data = await (await FhirApi({ url: `/Patient` })).data;
+    return data.total || (data.entry ? data.entry.length : 0)
+}
 
 let getPatientCountByCode = async (code: string) => {
     let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
@@ -112,14 +130,15 @@ export let generateMOH711Report = async () => {
 }
 
 
+
 export const generateANCSummary = async () => {
     return {
-        "No. of ANC Clients": await getPatientCountByCode("74935093"),
+        "No. of ANC Clients": await noOfPatients(),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
-        "Women with FGM Complications": await getPatientCountByCode("95041000119101-C"),
-        "Women positive for Syphyllis": await getPatientCountByCode("76272004-Y"),
+        "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
+        "Women positive for Syphyllis": await countObservationsWhere("10759921000119107", "Inconclusive"),
         "Women who are HIV Positive": await getPatientCountByCode("31676001-Y"),
         "Women who have TB": await getPatientCountByCode("371569005"),
-        "Women who have received LLITN": await getPatientCountByCode("784030374-Y")
+        "Women who have received LLITN": await countObservationsWhere("412894909", "Yes")
     }
 }
