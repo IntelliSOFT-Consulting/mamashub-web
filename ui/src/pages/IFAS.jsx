@@ -110,7 +110,7 @@ export default function IFAS() {
     return;
   }, []);
 
-  let saveIFAS = async (patientId, code, observationValue) => {
+  let saveIFAS = async values => {
     //get current patient
     let patient = visit.id;
     if (!patient) {
@@ -133,7 +133,7 @@ export default function IFAS() {
         body: JSON.stringify({
           patientId: patient,
           encounterId: encounter,
-          observations: ifas,
+          observations: values,
         }),
         headers: { 'Content-Type': 'application/json' },
       })
