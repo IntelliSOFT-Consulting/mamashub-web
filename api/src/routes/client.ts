@@ -138,7 +138,7 @@ router.post("/register", async (req: Request, res: Response) => {
         res.statusCode = 400;
         console.error(error)
         if (error.code === 'P2002') {
-            res.json({ status: "error", error: `Client with the ${error.meta.target} provided already exists` });
+            res.json({ status: "error", error: `You are already registered. Proceed to login.` });
             return
         }
         res.json(error);
