@@ -206,7 +206,8 @@ let generateANCNumber = async () => {
 export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
     try {
         let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data;
-        return res.entry ? res.entry[0].resource : null;
+        console.log(res)
+        return res.entry[0].resource ||  null;
     } catch (error) {
         console.log(error);
         return null;
