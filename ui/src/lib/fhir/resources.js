@@ -28,9 +28,9 @@ export let Patient = patient => {
     birthDate: new Date(patient.dob).toISOString().slice(0, 10),
     address: [
       {
-        line: [
-          `${patient.county}, ${patient.subCounty}, ${patient.ward}, ${patient.estate}`,
-        ],
+        state: patient.county,
+        district: patient.subCounty,
+        village: patient.ward,
       },
     ],
     contact: [

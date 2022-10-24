@@ -121,6 +121,15 @@ export default function PatientList() {
         url: `/fhir/Patient?${filter}`,
         method: 'GET',
       });
+      if(data.data.total === 0){
+        setMessage(`Found 0 clients`);
+        setPatients([]);
+        setLoading(false);
+        setTimeout(() => {
+          setOpen(false);
+        }, 1500);
+        return; 
+      }
       let p = data.data.entry.map(i => {
         let r = i.resource;
         return {
@@ -189,7 +198,7 @@ export default function PatientList() {
   let getPatients = async () => {
     setLoading(true);
     let data = await FhirApi({
-      url: '/fhir/Patient?_count=100',
+      url: '/fhir/Patient?_count=999999',
       method: 'GET',
     });
     let p = data.data.entry.map((i, index) => {

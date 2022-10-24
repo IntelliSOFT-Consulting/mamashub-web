@@ -55,7 +55,6 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      validate: yup.number().required('PNC Number is required'),
     },
     {
       name: 'names',
