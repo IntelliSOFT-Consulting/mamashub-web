@@ -80,7 +80,7 @@ export default function PatientRegistration({ userData }) {
     setOpen(true);
     setTimeout(() => {
       setOpen(false);
-    }, 4000);
+    }, 3000);
     return;
   }
 
@@ -133,7 +133,7 @@ export default function PatientRegistration({ userData }) {
 
       if (response.status === 'success') {
         setOpen(false);
-        setMessage('Patient created successfully');
+        setMessage('Created patient successfully');
         setOpen(true);
       }
       //Create Encounter
