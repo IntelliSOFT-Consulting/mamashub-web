@@ -12,13 +12,16 @@ export const sendSMS = async (phone: string, message: string) => {
         const response = await client.sendSms({
             to: [phone],
             message: message,
+            from: process.env['ATK_SENDER'] || undefined
         })
-        console.log(response)
+        console.log(response);
         return { status: "success", message: response }
     } catch (error) {
+        console.log(error)
         return { status: "error", error }
     }
 }
+
 
 
 export const generateOTP = async (phone: string, idNumber: string) => {
@@ -37,7 +40,14 @@ export const generateOTP = async (phone: string, idNumber: string) => {
         if (!user) {
             return { status: "error", error: "invalid client credentials" }
         }
-        let smsResponse = await sendSMS(phone, user?.otp || otp);
+
+        let otpMessage = `
+        Dear ${user.names[0]},
+
+        Welcome to Mama's Hub\n
+        Use the code ${user?.otp || otp} to verify you account.
+        `
+        let smsResponse = await sendSMS(phone, otpMessage);
         // console.log(smsResponse);
         return { status: "success", message: "OTP generated successfully", otp }
     } catch (error) {
