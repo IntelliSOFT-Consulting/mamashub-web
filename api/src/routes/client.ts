@@ -108,7 +108,6 @@ router.post("/register", async (req: Request, res: Response) => {
         }
         // check if client is registered
         let patient = await db.patient.findFirst({ where: { idNumber, phone } })
-        console.log(patient)
         if (patient) {
             res.statusCode = 400
             res.json({ status: "error", error: `Client already registered` });
@@ -117,14 +116,14 @@ router.post("/register", async (req: Request, res: Response) => {
 
         // proceed with registration
         let fhirPatient = await getPatientByIdentifier(null, idNumber);
-        if (!fhirPatient) {
-            res.statusCode = 400
+        if (!(fhirPatient)) {
+            res.statusCode = 400;
             res.json({ status: "error", error: `Invalid credentials. Ensure client is registered on Mama's Hub` });
             return
         }
 
         let phoneNumber = fhirPatient.telecom[0].value || ''
-        if (phoneNumber !== phone) {
+        if (parsePhoneNumber(phoneNumber) !== parsePhoneNumber(phone)) {
             res.statusCode = 400
             res.json({ status: "error", error: `Invalid credentials. Ensure client is registered on Mama's Hub` });
             return
