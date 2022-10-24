@@ -19,7 +19,7 @@ services:
       POSTGRES_DB: hapi
       POSTGRES_PASSWORD: hapi123
     volumes:
-      - 'db:/var/lib/postgresql/data'
+      - 'hapi-fhir-postgres:/var/lib/postgresql/data'
 
   nndak-api:
     build: ./api
@@ -69,26 +69,10 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-    depends_on:
-      - hapi-fhir-mysql
     volumes:
       - "./hapi:/hapi"
     environment:
       SPRING_CONFIG_LOCATION: /hapi/application.yaml
-
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
-    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
-    command: --lower_case_table_names=1
-    restart: always
-    environment:
-      MYSQL_DATABASE: "hapi"
-      MYSQL_USER: "admin"
-      MYSQL_PASSWORD: "admin"
-      MYSQL_ROOT_PASSWORD: "admin"
-    volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
 
   cloud-messaging:
     build:
@@ -101,6 +85,6 @@ services:
 
 volumes:
   db:
-  hapi-fhir-mysql:
+  hapi-fhir-postgres:
   hapi:
     external: true
