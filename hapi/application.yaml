@@ -7,10 +7,10 @@ spring:
     baselineOnMigrate: true
   datasource:
     driver: org.postgresql.Driver
-    url: jdbc:postgresql://db:5432/hapi
+    url: jdbc:postgresql://hapi-fhir-postgres:5432/hapi
     dialect: org.hibernate.dialect.PostgreSQL95Dialect
-    username: admin
-    password: admin
+    username: postgres
+    password: hapi123
     driverClassName: org.postgresql.Driver
 
   jpa:
