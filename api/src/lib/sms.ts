@@ -41,9 +41,7 @@ export const generateOTP = async (phone: string, idNumber: string) => {
             return { status: "error", error: "invalid client credentials" }
         }
 
-        let otpMessage = `Dear ${user.names[0]},
-        Welcome to Mama's Hub\n
-        Use the code ${user?.otp || otp} to verify your account\n.
+        let otpMessage = `Dear ${(user.names).split(" ")[0]},\nWelcome to Mama's Hub\n\nUse the code ${user?.otp || otp} to verify your account\n.
         `
         let smsResponse = await sendSMS(phone, otpMessage);
         // console.log(smsResponse);
