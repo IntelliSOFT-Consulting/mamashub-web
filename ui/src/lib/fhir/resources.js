@@ -11,8 +11,13 @@ export let Patient = patient => {
     },
     identifier: [
       {
-        value: patient.id,
+        "value": patient.id,
+        "id":"NATIONAL_ID"
       },
+      {
+        "value":patient.ancCode,
+        "id": "ANC_NUMBER"
+      }
     ],
     name: [
       {
@@ -30,7 +35,8 @@ export let Patient = patient => {
       {
         state: patient.county,
         district: patient.subCounty,
-        village: patient.ward,
+        city: patient.ward,
+        village: patient.village
       },
     ],
     contact: [

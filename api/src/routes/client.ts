@@ -64,16 +64,30 @@ router.post("/login", async (req: Request, res: Response) => {
         if (patient?.verified !== true) {
             // console.log(patient)
             res.statusCode = 401
-            res.json({ status: "error", error: "Kindly complete password reset or verify your account to proceed. Check reset instructions in your email." })
+            res.json({ status: "error", error: "Kindly complete account registration first." })
             return
         }
         const validPassword = await bcrypt.compare(password, patient?.password as string);
         if (validPassword) {
+            // proceed with registration
+            let fhirPatient = await getPatientByIdentifier(null, idNumber);
+            if (!(fhirPatient)) {
+                res.statusCode = 400;
+                res.json({ status: "error", error: `Invalid credentials. Ensure client is registered on Mama's Hub` });
+                return
+            }
+
+            let phoneNumber = fhirPatient.telecom[0].value || ''
+            let p = await db.patient.update({
+                where: { idNumber: idNumber },
+                data: { names: fhirPatient.name[0].family, idNumber, phone: parsePhoneNumber(phoneNumber) || '', patientId: fhirPatient.id }
+            })
+
             let session = encodeSession(process.env['SECRET_KEY'] as string, {
                 createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
                 userId: patient?.id as string,
             })
-            let patientData: any = patient?.data
+            let patientData: any = p?.data
             if (patientData.newUser === true) {
                 newUser = true
                 await db.patient.update({
@@ -89,8 +103,8 @@ router.post("/login", async (req: Request, res: Response) => {
             return
         }
     } catch (error) {
-        console.log(error)
-        res.statusCode = 401
+        console.log(error);
+        res.statusCode = 401;
         res.json({ error: "incorrect email or password" });
         return
     }
@@ -208,14 +222,14 @@ router.post("/new-password", async (req: Request, res: Response) => {
             data: {
                 password: _password, verified: true
             }
-        })
-        console.log(response)
-        res.statusCode = 200
+        });
+        console.log(response);
+        res.statusCode = 200;
         res.json({ message: "Password Reset Successfully", status: "success" });
         return
     } catch (error) {
-        console.log(error)
-        res.statusCode = 401
+        console.log(error);
+        res.statusCode = 401;
         res.json({ error: error, status: "error" });
         return
     }
@@ -230,17 +244,17 @@ router.delete("/:id", async (req: Request, res: Response) => {
             where: {
                 id: id
             }
-        })
-        let responseData = patient
-        res.statusCode = 201
-        res.json({ patient: responseData, status: "success" })
+        });
+        let responseData = patient;
+        res.statusCode = 201;
+        res.json({ patient: responseData, status: "success" });
         return
     } catch (error: any) {
-        res.statusCode = 400
-        console.error(error)
+        res.statusCode = 400;
+        console.error(error);
         if (error.code === 'P2002') {
             res.json({ status: "error", error: `patient with the ${error.meta.target} provided already exists` });
-            return
+            return;
         }
         res.json(error)
         return
