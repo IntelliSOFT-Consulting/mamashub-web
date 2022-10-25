@@ -1,0 +1,1 @@
+git pull origin master && sudo docker compose -f docker-compose-prod.yml up -d  --build && sudo ./api/run-dev-migrations.sh
