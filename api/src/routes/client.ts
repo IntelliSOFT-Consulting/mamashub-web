@@ -186,7 +186,7 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         console.log(error)
         res.statusCode = 401;
         if (error.code === 'P2025') {
-            res.json({ error: `Password reset instructions have been sent to your email`, status: "error" });
+            res.json({ error: `Error while sending OTP. Check credentials and try again.`, status: "error" });
             return
         }
         res.json({ error: error, status: "error" });
@@ -240,15 +240,12 @@ router.post("/new-password", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
     try {
         let { id } = req.params;
-        let patient = await db.patient.delete({
-            where: {
-                id: id
-            }
-        });
+        let patient = await db.patient.delete({ where: { id: id } });
         let responseData = patient;
         res.statusCode = 201;
         res.json({ patient: responseData, status: "success" });
-        return
+        return;
+
     } catch (error: any) {
         res.statusCode = 400;
         console.error(error);
@@ -256,7 +253,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
             res.json({ status: "error", error: `patient with the ${error.meta.target} provided already exists` });
             return;
         }
-        res.json(error)
+        res.json(error);
         return
     }
 });

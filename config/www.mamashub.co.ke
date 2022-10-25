@@ -1,0 +1,14 @@
+server {
+
+        server_name mamashub.co.ke www.mamashub.co.ke;
+
+        location / {
+            proxy_pass http://127.0.0.1:8082/;
+        }
+
+        location /api/ {
+            proxy_pass http://127.0.0.1:8081/;
+        }
+        
+
+}
