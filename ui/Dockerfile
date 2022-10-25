@@ -3,10 +3,10 @@ FROM node:16-alpine as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
-RUN npm install -g npm@8.7.0
-RUN npm install react-scripts@3.4.1 -g --silent
+RUN npm install -g npm
+RUN npm install react-scripts -g --silent
 RUN yarn install
-COPY . ./
+COPY ./src ./
 RUN yarn build
 
 # production environment
