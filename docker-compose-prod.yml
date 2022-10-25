@@ -42,6 +42,8 @@ services:
       - mhis-api
     ports:
       - '8082:80'
+    env_file:
+      - ./ui/.env
     links:
       - mhis-api
 
