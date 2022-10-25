@@ -16,4 +16,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd /opt/kabarak-mhis-web-app/ && cat pass | sudo -S ./deploy.sh
+        script: cd /opt/kabarak-mhis-web-app/ && cat pass | sudo -S ./deploy-dev.sh
