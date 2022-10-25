@@ -6,7 +6,8 @@ COPY package.json ./
 RUN npm install -g npm@8.7.0
 RUN npm install react-scripts@3.4.1 -g --silent
 RUN yarn install
-COPY . ./
+COPY src /app/src
+COPY public /app/public
 RUN yarn build
 
 # production environment
