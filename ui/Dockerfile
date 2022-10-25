@@ -12,6 +12,6 @@ RUN yarn build
 # production environment
 FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
-COPY default /etc/nginx/sites-enabled/default
+COPY default /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
