@@ -1,1 +1,1 @@
-docker-compose exec -T nndak-api yarn prisma:deploy
+docker compose exec -T nndak-api yarn prisma:deploy
