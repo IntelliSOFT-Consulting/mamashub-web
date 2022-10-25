@@ -9,6 +9,8 @@ RUN npm install --silent
 
 COPY . .
 
+RUN npm run fcm-keygen
+
 ENV TZ Africa/Nairobi
 
 CMD ["npm", "run", "build"]
