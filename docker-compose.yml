@@ -21,9 +21,9 @@ services:
     volumes:
       - 'hapi-fhir-postgres:/var/lib/postgresql/data'
 
-  nndak-api:
+  mhis-api:
     build: ./api
-    container_name: nndak_api
+    container_name: mhis_api
     restart: always
     depends_on:
       - postgres
@@ -35,15 +35,15 @@ services:
     links:
       - postgres
 
-  # nndak-ui:
+  # mhis-ui:
   #   build: ./ui
   #   restart:  always
   #   depends_on:
-  #     - nndak-api
+  #     - mhis-api
   #   ports:
   #     - '8082:80'
   #   links:
-  #     - nndak-api
+  #     - mhis-api
 
 
   dhis2-db:
