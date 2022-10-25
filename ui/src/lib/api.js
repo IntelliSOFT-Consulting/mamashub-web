@@ -2,7 +2,7 @@
 
 import { getCookie } from './cookie';
 
-export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? "http://127.0.0.1:8080" : 'https://devmhis.netlify.app/api';
+export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "dev") ? "http://127.0.0.1:8080" : process.env['REACT_APP_API_URL'];
 
 export let createEncounter = async (patientId, encounterCode) => {
     try {
