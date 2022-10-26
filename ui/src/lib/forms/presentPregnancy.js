@@ -223,8 +223,8 @@ const presentPregnancy = {
         lg: 6,
       },
       options: [
-        { label: 'Normal', value: 'Normal' },
-        { label: 'Abnormal', value: 'Abnormal' },
+        { label: 'Present', value: 'Present' },
+        { label: 'Absent', value: 'Absent' },
       ],
     },
     {
