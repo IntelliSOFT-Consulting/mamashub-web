@@ -1,5 +1,5 @@
 FROM node:alpine
-WORKDIR /usr/nndak-api
+WORKDIR /usr/mhis-api
 COPY package.json .
 RUN npm install typescript yarn -g --force
 RUN yarn install
