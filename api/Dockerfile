@@ -1,7 +1,7 @@
 FROM node:alpine
 WORKDIR /usr/mhis-api
 COPY package.json .
-RUN npm install typescript yarn -g --force
+RUN npm install typescript yarn prisma -g --force
 RUN yarn install
 COPY . .
 RUN yarn prisma:generate
