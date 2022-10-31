@@ -10,6 +10,15 @@ cron.schedule('0 18 * * *', () => {
   sendMsgList();
 });
 
+app.post('/notifications_x', (req, res) => {
+  try {
+    sendMsgList();
+    res.status(200).send('Notifications sent');
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 app.listen(Port, () => {
   console.log(`Server is running on port ${Port}`);
 });

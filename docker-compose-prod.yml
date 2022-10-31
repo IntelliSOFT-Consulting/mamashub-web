@@ -1,6 +1,5 @@
 version: '3.7'
 services:
-
   postgres:
     image: postgres:14-alpine
     container_name: mhis-db
@@ -37,7 +36,7 @@ services:
   mhis-web:
     build: ./ui
     container_name: mhis-web
-    restart:  always
+    restart: always
     depends_on:
       - mhis-api
     ports:
@@ -50,9 +49,9 @@ services:
     container_name: hapi-fhir-jpa
     restart: on-failure
     ports:
-      - "8080:8080"
+      - '8080:8080'
     volumes:
-      - "./hapi:/hapi"
+      - './hapi:/hapi'
     environment:
       SPRING_CONFIG_LOCATION: /hapi/application.yaml
 
@@ -62,8 +61,9 @@ services:
       dockerfile: Dockerfile
     container_name: cloud-messaging
     restart: always
+    ports:
+      - '8000:8000'
     # env_file: ./cloud-messaging/.env
-
 
 volumes:
   db:

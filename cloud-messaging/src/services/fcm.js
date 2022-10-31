@@ -32,6 +32,8 @@ const sendMsgList = async () => {
   try {
     const recipients = await getPushList();
 
+    console.log(recipients);
+
     if (!recipients || recipients?.total === 0) return;
 
     recipients.entry.forEach(async entry => {
