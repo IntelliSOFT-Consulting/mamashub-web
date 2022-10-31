@@ -1,1 +1,1 @@
-git pull origin master && sudo docker compose -f docker-compose-dev.yml up -d  --build && sudo ./api/run-dev-migrations.sh
+git pull origin master && sudo docker compose -f docker-compose-dev.yml up -d  --build && sudo docker compose -f docker-compose-dev.yml exec -T mhis-api yarn prisma:deploy

@@ -1,1 +1,1 @@
-docker compose exec nndak-api yarn prisma:studio
+docker compose exec mhis-api yarn prisma:studio

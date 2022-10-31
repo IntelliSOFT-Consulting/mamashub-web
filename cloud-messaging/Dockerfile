@@ -5,10 +5,12 @@ WORKDIR /app
 COPY ./package.json .
 COPY ./package-lock.json .
 
-RUN npm install --silent
+RUN yarn
 
 COPY . .
 
 ENV TZ Africa/Nairobi
 
-CMD ["npm", "run", "build"]
+RUN yarn build
+
+CMD ["yarn", "start"]

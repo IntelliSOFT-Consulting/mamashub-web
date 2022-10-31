@@ -211,10 +211,10 @@ router.post("/new-password", async (req: Request, res: Response) => {
         if (!patient) {
             res.statusCode = 401;
             res.json({ error: `Invalid client credentials provided`, status: "error" })
-            return
+            return;
         }
-        let salt = await bcrypt.genSalt(10)
-        let _password = await bcrypt.hash(password, salt)
+        let salt = await bcrypt.genSalt(10);
+        let _password = await bcrypt.hash(password, salt);
         let response = await db.patient.update({
             where: {
                 id: patient.id

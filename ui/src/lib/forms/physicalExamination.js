@@ -35,7 +35,7 @@ const physicalExaminationFields = {
   'Blood Pressure': [
     {
       name: 'bpSystolic',
-      label: 'Systolic Blood Pressure',
+      label: 'Systolic BP (mmHg)',
       type: 'text',
 
       validate: yup
@@ -51,7 +51,7 @@ const physicalExaminationFields = {
     },
     {
       name: 'bpDiastolic',
-      label: 'Diastolic Blood Pressure',
+      label: 'Diastolic BP (mmHg)',
       type: 'text',
       validate: yup
         .number('Diastolic Blood Pressure must be a number')
