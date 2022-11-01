@@ -8,8 +8,8 @@ import { sendPasswordResetEmail, validateEmail, sendWelcomeEmail } from "../lib/
 import { getPatientByIdentifier } from "../lib/fhir/utils";
 import { generateOTP, parsePhoneNumber, verifyOTP } from "../lib/sms";
 
-const router = express.Router()
-router.use(express.json())
+const router = express.Router();
+router.use(express.json());
 
 
 
@@ -50,14 +50,14 @@ router.post("/login", async (req: Request, res: Response) => {
         if (!idNumber || !password) {
             res.statusCode = 401;
             res.json({ status: "error", error: "ID Number and password are required to login" })
-            return
+            return;
         }
 
-        let patient = await db.patient.findUnique({ where: { idNumber } })
+        let patient = await db.patient.findUnique({ where: { idNumber } });
 
         if (!patient) {
-            res.statusCode = 401
-            res.json({ status: "error", error: "Invalid ID Number or password provided." })
+            res.statusCode = 401;
+            res.json({ status: "error", error: "Invalid ID Number or password provided." });
             return
         }
 
@@ -105,7 +105,7 @@ router.post("/login", async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.statusCode = 401;
-        res.json({ error: "incorrect email or password" });
+        res.json({ error: "Invalid login credentials provided", status:"error" });
         return
     }
 });
@@ -167,12 +167,12 @@ router.post("/reset-password", async (req: Request, res: Response) => {
         let { phone, idNumber } = req.body;
         // Initiate password reset.
         if (!parsePhoneNumber(phone)) {
-            res.statusCode = 400
+            res.statusCode = 400;
             res.json({ error: "Invalid phone number provided", status: "error" });
             return
         }
         let otpResponse = await generateOTP(parsePhoneNumber(phone) || phone, idNumber)
-        console.log(otpResponse)
+        console.log(otpResponse);
         if (otpResponse.status === "error") {
             res.statusCode = 400
             res.json(otpResponse);
