@@ -1,11 +1,12 @@
 import express from 'express';
 import cron from 'node-cron';
 import sendMsgList from './services/fcm';
+import * as dotenv from 'dotenv'
+
+dotenv.config() // Load environment variables
 
 const app = express();
 const Port = process.env.PORT || 8000;
-
-
 
 // set up the cron job to run every day 6:00 pm
 // cron.schedule('0 18 * * *', () => {
