@@ -41,7 +41,7 @@ const sendMsgList = async () => {
       //   const data = entry.resource;
       const msg = {
         body: `You have an appointment tomorrow at ${format(
-          new Date(entry.resource?.start),
+          new Date(entry.resource?.valueString),
           'HH:mm'
         )}`,
         title: 'Next Visit Reminder',
