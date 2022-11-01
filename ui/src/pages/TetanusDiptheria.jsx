@@ -305,7 +305,7 @@ export default function TetanusDiptheria() {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '80%',
+                width: '90%',
                 bgcolor: 'background.paper',
                 border: '2px solid #000',
                 boxShadow: 24,
@@ -324,37 +324,30 @@ export default function TetanusDiptheria() {
                   observations.map(observation => {
                     return (
                       <>
-                        <Grid item lg={4} xl={6} md={6} sm={12}>
-                          <Box
-                            sx={{
-                              padding: '1em',
-                              border: '1px grey solid',
-                              borderRadius: '10px',
-                            }}
-                          >
-                            {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
-                            {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
-                            {observation.resource.code.coding &&
-                              observation.resource.code.coding.map(entry => {
-                                return (
-                                  <>
-                                    <Typography variant='h6'>
+                        <Grid container>
+                          {observation.resource.code.coding &&
+                            observation.resource.code.coding.map(entry => {
+                              return (
+                                <>
+                                  <Grid item lg={6} xl={6} md={6} sm={6}>
+                                    <Typography>
                                       {entry.display}
                                     </Typography>
+                                  </Grid>
+                                  <Grid item lg={6} xl={6} md={6} sm={6}>
                                     <Typography variant='p'>
                                       {observation.resource.valueQuantity
                                         ? observation.resource.valueQuantity
-                                            .value
+                                          .value
                                         : observation.resource.valueString ??
-                                          observation.resource.valueDateTime ??
-                                          '-'}
+                                        observation.resource.valueDateTime ??
+                                        '-'}
                                     </Typography>
-                                    {/* <br /> */}
-                                  </>
-                                );
-                              })}
-                            <br />
-                          </Box>
+                                  </Grid>
+                                </>
+                              );
+                            })}
+                          {/* <br /> */}
                           <p></p>
                         </Grid>
                       </>

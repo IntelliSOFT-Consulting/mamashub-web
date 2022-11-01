@@ -47,7 +47,7 @@ router.post('/observations', async (req: Request, res: Response) => {
                 })).json()
                 console.log(response)
                 // console.log(o)
-                builtObservations.push(response)
+                builtObservations.push(response);
             }
             else {
                 console.log({ error: `observation key for ${obs} not found`, status: "error" })
