@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
+import { FhirApi } from "../lib/fhir/utils";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
+import { parsePhoneNumber, sendSMS } from "../lib/sms";
 
 const router = express.Router();
 router.use(express.json());
@@ -143,7 +145,7 @@ router.post("/facilities/:id", [requireJWT], async (req: Request, res: Response)
         res.json({ facility: facility.kmhflCode, status: "success" });
         return;
     } catch (error: any) {
-        res.statusCode = 400
+        res.statusCode = 400;
         console.error(error)
         if (error.code === 'P2002') {
             res.json({ status: "error", message: `User with the ${error.meta.target} provided already exists` });
@@ -156,6 +158,28 @@ router.post("/facilities/:id", [requireJWT], async (req: Request, res: Response)
 
 
 
+router.post('/x_admin_sms', async (req, res) => {
+    try {
+        let { patient, message } = req.body;
+        let phone = await (await FhirApi({url:`/Patient/${patient}`})).data?.telecom[0].value || null
+        if (!phone || !message) {
+            res.json({ status: "error", message: "phone number and message are required." })
+            return; 
+        }
+        phone = parsePhoneNumber(phone);
+        if (!phone) {
+            res.json({ status: "error", message: "invalid phone number provided" })
+            return;
+        }
+        let response = await sendSMS(phone, message);
+        res.json({ message: response.message ?? response.error, status: response.status })
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+        return;
+    }
+
+})
 
 
 export default router
