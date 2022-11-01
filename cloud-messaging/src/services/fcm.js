@@ -46,6 +46,10 @@ const sendMsgList = async () => {
         )}`,
         title: 'Next Visit Reminder',
       };
+      console.log(process.env.API_URL)
+      // await axios.post(`${process.env.API_URL}/admin/x_admin_sms`, {
+      //   message: msg.body, patient: entry.resource?.patient?.reference?.split('/')[1]
+      // })
       await sendMsg({ topic, data: msg });
     });
   } catch (error) {
