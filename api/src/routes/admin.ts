@@ -158,9 +158,10 @@ router.post("/facilities/:id", [requireJWT], async (req: Request, res: Response)
 
 
 
-router.post('/x_admin_sms', async (req, res) => {
+router.post('/x_admin_sms', async (req: Request, res: Response) => {
     try {
         let { patient, message } = req.body;
+        console.log(req.body)
         let phone = await (await FhirApi({url:`/Patient/${patient}`})).data?.telecom[0].value || null
         if (!phone || !message) {
             res.json({ status: "error", message: "phone number and message are required." })
@@ -172,6 +173,7 @@ router.post('/x_admin_sms', async (req, res) => {
             return;
         }
         let response = await sendSMS(phone, message);
+        console.log(response)
         res.json({ message: response.message ?? response.error, status: response.status })
     } catch (error) {
         console.log(error);
