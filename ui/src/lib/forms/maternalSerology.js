@@ -22,27 +22,41 @@ const maternalSerology = {
       name: 'maternalSerologyRepeatSerologyDetailsNo',
       label: 'If no, date of next appointment',
       type: 'date',
-      validate: yup.date().min(new Date(), 'Date must be in the future'),
+      validate: yup.date().when('maternalSerologyRepeatSerology', {
+        is: 'No',
+        then: yup
+          .date()
+          .min(new Date(), 'Date must be in the future')
+          .required('Date of next appointment is required'),
+      }),
       width: {
         xs: 12,
         sm: 12,
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.repeatSerologyDone === 'No',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerology === 'No',
     },
     {
       name: 'maternalSerologyRepeatSerologyDetailsYes',
       label: 'If yes, date test was done',
       type: 'date',
-      validate: yup.date().max(new Date(), 'Date must be in the past'),
+      validate: yup.date().when('maternalSerologyRepeatSerology', {
+        is: 'Yes',
+        then: yup
+          .date()
+          .max(new Date(), 'Date must be in the past')
+          .required('Date test was done is required'),
+      }),
       width: {
         xs: 12,
         sm: 12,
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.repeatSerologyDone === 'Yes',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerology === 'Yes',
     },
     {
       name: 'maternalSerologyRepeatSerologyResults',
@@ -73,7 +87,8 @@ const maternalSerology = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.testResult === 'R',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerologyResults === 'R',
     },
     {
       name: 'maternalSerologyReactiveMaternalSerologyPartnerTest',
@@ -86,7 +101,8 @@ const maternalSerology = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.testResult === 'R',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerologyResults === 'R',
     },
   ],
   'Non-Reactive': [
@@ -101,7 +117,8 @@ const maternalSerology = {
         md: 12,
         lg: 8,
       },
-      relevant: formValues => formValues.testResult === 'NR',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerologyResults === 'NR',
     },
     {
       name: 'maternalserologyNonReactiveSerologyContinueTest',
@@ -115,7 +132,8 @@ const maternalSerology = {
         md: 12,
         lg: 8,
       },
-      relevant: formValues => formValues.testResult === 'NR',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerologyResults === 'NR',
     },
     {
       name: 'maternalserologyNonReactiveSerologyAppointment',
@@ -128,7 +146,8 @@ const maternalSerology = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.testResult === 'NR',
+      relevant: formValues =>
+        formValues.maternalSerologyRepeatSerologyResults === 'NR',
     },
   ],
 };
