@@ -25,18 +25,18 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         // console.log(decodedSession)
         if (decodedSession.type == 'valid') {
-            let patientId = decodedSession.session.userId
-            let patient = await db.patient.findFirst({ where: { id: patientId } })
+            let patientId = decodedSession.session.userId;
+            let patient = await db.patient.findFirst({ where: { id: patientId } });
             let responseData = { id: patient?.id, createdAt: patient?.createdAt, updatedAt: patient?.updatedAt, names: patient?.names, idNumber: patient?.idNumber, fhirPatientId: patient?.patientId }
-            res.statusCode = 200
-            res.json({ data: responseData, status: "success" })
-            return
+            res.statusCode = 200;
+            res.json({ data: responseData, status: "success" });
+            return;
         }
     } catch (error) {
         // console.log(error)
-        res.statusCode = 400
-        res.json({ status: "error", error: error })
-        return
+        res.statusCode = 400;
+        res.json({ status: "error", error: error });
+        return;
     }
 });
 

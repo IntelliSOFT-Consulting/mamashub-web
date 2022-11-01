@@ -37,8 +37,9 @@ const sendMsgList = async () => {
     if (!recipients || recipients?.total === 0) return;
 
     recipients.entry.forEach(async entry => {
-      const topic = entry.resource?.patient?.reference?.split('/')[1];
+      const topic = entry.resource?.subject?.reference?.split('/')[1];
       //   const data = entry.resource;
+      console.log(topic)
       const msg = {
         body: `You have an appointment tomorrow at ${format(
           new Date(entry.resource?.valueString),
@@ -47,9 +48,10 @@ const sendMsgList = async () => {
         title: 'Next Visit Reminder',
       };
       console.log(process.env.API_URL)
-      // await axios.post(`${process.env.API_URL}/admin/x_admin_sms`, {
-      //   message: msg.body, patient: entry.resource?.patient?.reference?.split('/')[1]
-      // })
+      await axios.post(`${process.env.API_URL}/admin/x_admin_sms`,
+        JSON.stringify({ message: msg.body, patient: topic}),
+        { headers: { "Content-Type": "application/json" } }
+      )
       await sendMsg({ topic, data: msg });
     });
   } catch (error) {
