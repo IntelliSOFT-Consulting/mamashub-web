@@ -69,7 +69,7 @@ const birthPlan = {
     {
       name: 'birthAttendantDesignation',
       label: 'Birth Attendant Designation',
-      type: 'text',
+      type: 'select',
       validate: yup
         .string()
         .required('Birth Attendant Designation is required'),
@@ -79,6 +79,10 @@ const birthPlan = {
         md: 6,
         lg: 4,
       },
+      options: [
+        { value: 'Midwife', label: 'Midwife' },
+        { value: 'Obstetrician', label: 'Obstetrician' },
+      ],
     },
   ],
   'Alternative Birth Attendant': [
@@ -113,7 +117,7 @@ const birthPlan = {
     {
       name: 'alternativeBirthAttendantDesignation',
       label: 'Alternative Birth Attendant Designation',
-      type: 'text',
+      type: 'select',
       validate: yup
         .string()
         .required('Alternative Birth Attendant Designation is required'),
@@ -123,6 +127,10 @@ const birthPlan = {
         md: 6,
         lg: 4,
       },
+      options: [
+        { value: 'Midwife', label: 'Midwife' },
+        { value: 'Obstetrician', label: 'Obstetrician' },
+      ],
     },
   ],
   'Birth Companion': [
@@ -155,7 +163,7 @@ const birthPlan = {
     {
       name: 'birthCompanionRelationship',
       label: 'Birth Companion Relationship',
-      type: 'text',
+      type: 'select',
       validate: yup.string(),
       width: {
         xs: 12,
@@ -163,11 +171,18 @@ const birthPlan = {
         md: 6,
         lg: 3,
       },
+      options: [
+        { value: 'Spouse', label: 'Spouse' },
+        { value: 'Child(B)', label: 'Child(B)' },
+        { value: 'Child(R)', label: 'Child(R)' },
+        { value: 'Parent', label: 'Parent' },
+        { value: 'Relatives', label: 'Relatives' },
+      ],
     },
     {
       name: 'birthCompanionTransportMeans',
       label: 'Birth Companion Transport Means',
-      type: 'text',
+      type: 'select',
       validate: yup
         .string()
         .required('Birth Companion Transport Means is required'),
@@ -177,6 +192,13 @@ const birthPlan = {
         md: 6,
         lg: 3,
       },
+      options: [
+        { value: 'Taxi', label: 'Taxi' },
+        { value: 'Personal vehicle', label: 'Personal vehicle' },
+        { value: 'Donkey Cart', label: 'Donkey Cart' },
+        { value: 'Ambulance', label: 'Ambulance' },
+        { value: 'Motorcycle', label: 'Motorcycle' },
+      ],
     },
   ],
   'Alternative Birth Companion': [
@@ -211,7 +233,7 @@ const birthPlan = {
     {
       name: 'alternativeBirthCompanionRelationship',
       label: 'Alternative Birth Companion Relationship',
-      type: 'text',
+      type: 'select',
       validate: yup.string(),
       width: {
         xs: 12,
@@ -219,11 +241,18 @@ const birthPlan = {
         md: 6,
         lg: 3,
       },
+      options: [
+        { value: 'Spouse', label: 'Spouse' },
+        { value: 'Child(B)', label: 'Child(B)' },
+        { value: 'Child(R)', label: 'Child(R)' },
+        { value: 'Parent', label: 'Parent' },
+        { value: 'Relatives', label: 'Relatives' },
+      ],
     },
     {
       name: 'alternativeBirthCompanionTransportMeans',
       label: 'Alternative Birth Companion Transport Means',
-      type: 'text',
+      type: 'select',
       validate: yup
         .string()
         .required('Alternative Birth Companion Transport Means is required'),
@@ -233,6 +262,13 @@ const birthPlan = {
         md: 6,
         lg: 3,
       },
+      options: [
+        { value: 'Taxi', label: 'Taxi' },
+        { value: 'Personal vehicle', label: 'Personal vehicle' },
+        { value: 'Donkey Cart', label: 'Donkey Cart' },
+        { value: 'Ambulance', label: 'Ambulance' },
+        { value: 'Motorcycle', label: 'Motorcycle' },
+      ],
     },
   ],
   'Blood Donor': [

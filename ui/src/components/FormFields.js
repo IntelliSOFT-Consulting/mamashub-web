@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { useRef, useState } from 'react';
 import moment from 'moment';
+import { useLocation } from 'react-router-dom';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import counties from '../data/counties.json';
@@ -30,6 +31,8 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const [dateProps, setDateProps] = useState({});
+
+  const { pathname } = useLocation();
 
   const sections = Object.keys(formData);
   const inputRef = useRef(null);
@@ -276,7 +279,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
   };
 
   const handleDateChange = (date, field) => {
-    if (field.name === 'edd') {
+    if (field.name === 'edd' && formik.values['lmp']) {
       const lmp = formik.values['lmp'];
       const edd = new Date(lmp);
       edd.setDate(edd.getDate() + 280);
@@ -288,6 +291,8 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
       formik.setFieldValue(field.name, date);
     }
   };
+
+  console.log(pathname)
 
   return (
     <>
@@ -340,7 +345,8 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
                     return (
                       <Grid item {...field.width} key={idx}>
                         {/* if the name is edd then we want to disable the date picker if the lmp is not set */}
-                        {field.name === 'edd' ? (
+                        {field.name === 'edd' &&
+                        pathname === '/patient-registration' ? (
                           !isMobile ? (
                             <DesktopDatePicker
                               label={field.label}

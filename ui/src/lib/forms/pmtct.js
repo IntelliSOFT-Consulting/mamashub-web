@@ -31,7 +31,8 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven?.includes('ART for life'),
     },
     {
       name: 'interventionRegimen',
@@ -44,7 +45,8 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven?.includes('ART for life'),
     },
     {
       name: 'dolutegravir',
@@ -57,7 +59,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Dolutegravir', label: 'Dolutegravir' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'dolutegravirAmount',
@@ -109,7 +112,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Emitricitabine', label: 'Emitricitabine' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'emitricitabineAmount',
@@ -166,7 +170,8 @@ const pmtct = {
           label: 'Tenofovoir alafenamide fumarate',
         },
       ],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'tenofovoirAlafenamideFumarateAmount',
@@ -227,7 +232,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Zidovudine', label: 'Zidovudine' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'zidovudineAmount',
@@ -240,7 +246,8 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.zidovudine.includes('Zidovudine'),
+      relevant: values =>
+        values.interventionOtherRegimen.includes('Zidovudine'),
     },
     {
       name: 'interventionARTDosageAmount',
@@ -253,7 +260,8 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.zidovudine.includes('Zidovudine'),
+      relevant: values =>
+        values.interventionOtherRegimen.includes('Zidovudine'),
     },
     {
       name: 'interventionARTFrequency',
@@ -266,7 +274,8 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.zidovudine.includes('Zidovudine'),
+      relevant: values =>
+        values.interventionOtherRegimen.includes('Zidovudine'),
     },
     {
       name: 'lamivudine',
@@ -279,7 +288,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Lamivudine', label: 'Lamivudine' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'interventionARTDosageAmount',
@@ -331,7 +341,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Nevirapine', label: 'Nevirapine' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'interventionARTDosageAmount',
@@ -383,7 +394,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Efavirenz', label: 'Efavirenz' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'interventionARTDosageAmount',
@@ -435,7 +447,8 @@ const pmtct = {
         lg: 7,
       },
       options: [{ value: 'Other', label: 'Other' }],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'otherAmount',
@@ -464,7 +477,8 @@ const pmtct = {
         { value: 'Yes', label: 'Yes' },
         { value: 'No', label: 'No' },
       ],
-      relevant: values => values.interventionGiven.includes('ART for life'),
+      relevant: values =>
+        values.interventionInterventionGiven.includes('ART for life'),
     },
     {
       name: 'interventionReasonForRegimenChange',
@@ -487,7 +501,7 @@ const pmtct = {
         { value: 'Pregnancy trimester', label: 'Pregnancy trimester' },
         { value: 'Other', label: 'Other' },
       ],
-      relevant: values => values.regimenChanged.includes('Yes'),
+      relevant: values => values.interventionRegimenChange.includes('Yes'),
     },
     {
       name: 'interventionOtherReasonForRegimenChange',
@@ -500,7 +514,7 @@ const pmtct = {
         md: 12,
         lg: 7,
       },
-      relevant: values => values.reasonForChange.includes('Other'),
+      relevant: values => values.interventionReasonForRegimenChange.includes('Other'),
     },
   ],
   'Viral Load (VL) Sample': [
@@ -516,7 +530,7 @@ const pmtct = {
         lg: 6,
       },
       relevant: values =>
-        values.interventionGiven.includes('Viral Load (VL) sample'),
+        values.interventionInterventionGiven.includes('Viral Load (VL) sample'),
     },
     {
       name: 'interventionViralLoadResults',
@@ -530,7 +544,7 @@ const pmtct = {
         lg: 6,
       },
       relevant: values =>
-        values.interventionGiven.includes('Viral Load (VL) sample'),
+        values.interventionInterventionGiven.includes('Viral Load (VL) sample'),
     },
   ],
 };

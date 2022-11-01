@@ -40,7 +40,7 @@ import birthPlan from '../lib/forms/birthPlan';
 import Preview from '../components/Preview';
 import FormFields from '../components/FormFields';
 
-export default function BirthPlan() {
+export default function BirthPlan({userData}) {
   let [visit, setVisit] = useState();
   let navigate = useNavigate();
   let [open, setOpen] = useState(false);
@@ -71,6 +71,8 @@ export default function BirthPlan() {
   const formik = useFormik({
     initialValues: {
       ...initialValues,
+      facilityName: userData.facilityName,
+      facilityNumber: userData.kmhflCode,
     },
     validationSchema: validationSchema,
     // submit form
@@ -139,12 +141,14 @@ export default function BirthPlan() {
       prompt(
         "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
       );
+      setTimeout(() => {
+        navigate('/patients');
+      }, 3000);
       return;
     }
     setVisit(JSON.parse(visit));
     return;
   }, []);
-
   useEffect(() => {
     if (getCookie('token')) {
       return;
@@ -167,29 +171,28 @@ export default function BirthPlan() {
           />
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
-                <Preview
-                  title='Birth Plan Preview'
-                  format={birthPlan}
-                  data={{ ...inputData }}
-                  close={() => setPreview(false)}
-                  submit={saveBirthPlan}
-                />
-              ) : (
-                <form onSubmit={formik.handleSubmit}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList
-                value={value}
-                onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-              >
-                <Tab label='Birth Plan' value='1' />
-              </TabList>
-            </Box>
+            <Preview
+              title='Birth Plan Preview'
+              format={birthPlan}
+              data={{ ...inputData }}
+              close={() => setPreview(false)}
+              submit={saveBirthPlan}
+            />
+          ) : (
+            <form onSubmit={formik.handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList
+                    value={value}
+                    onChange={handleChange}
+                    variant='scrollable'
+                    scrollButtons='auto'
+                  >
+                    <Tab label='Birth Plan' value='1' />
+                  </TabList>
+                </Box>
 
-            <TabPanel value='1'>
-             
+                <TabPanel value='1'>
                   <FormFields formData={birthPlan} formik={formik} />
 
                   <Stack direction='row' spacing={2} alignContent='right'>
@@ -200,7 +203,6 @@ export default function BirthPlan() {
                       variant='contained'
                       disableElevation
                       sx={{ backgroundColor: 'gray' }}
-                    
                     >
                       Cancel
                     </Button>
@@ -214,10 +216,10 @@ export default function BirthPlan() {
                     </Button>
                   </Stack>
                   <p></p>
-            </TabPanel>
-          </TabContext>
-          </form>
-        )}
+                </TabPanel>
+              </TabContext>
+            </form>
+          )}
         </Container>
       </LocalizationProvider>
     </>
