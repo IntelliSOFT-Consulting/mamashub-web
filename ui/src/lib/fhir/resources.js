@@ -11,7 +11,7 @@ export let Patient = patient => {
     },
     identifier: [
       {
-        "value": patient.id,
+        "value": patient.idNumber,
         "id":"NATIONAL_ID"
       },
       {

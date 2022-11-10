@@ -83,6 +83,19 @@ const formData = {
       validate: yup.date().required('Date of birth is required'),
     },
     {
+      name: 'idNumber',
+      label: 'ID Number',
+      type: 'text',
+      required: true,
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 4,
+      },
+      validate: yup.string().required('ID Number is required'),
+    },
+    {
       name: 'phone',
       label: 'Phone Number',
       type: 'text',
