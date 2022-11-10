@@ -121,6 +121,7 @@ const formData = {
       },
       options: [
         { value: "Don't know level of education", label: "Don't know level of education" },
+        { value: "No education", label: "No education" },
         { value: 'Primary School', label: 'Primary School' },
         { value: 'Secondary School', label: 'Secondary School' },
         { value: 'Higher education', label: 'Higher education' },
@@ -236,8 +237,7 @@ const formData = {
         { value: 'Parent', label: 'Parent' },
         { value: 'Sibling', label: 'Sibling' },
         { value: 'Child', label: 'Child' },
-        { value: 'Friend', label: 'Friend' },
-        { value: 'Other', label: 'Other' },
+        { value: 'Relatives', label: 'Relatives' },
       ],
       validate: yup.string().required('Relationship is required'),
     },
@@ -321,7 +321,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      validate: yup.date().required('LMP is required'),
+      validate: yup.date().required('LMP is required').min(new Date(new Date().setMonth(new Date().getMonth() - 1)), "LMP cannot be less than a month ago"),
     },
     {
       name: 'edd',
