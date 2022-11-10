@@ -207,7 +207,7 @@ export const getPatientByIdentifier = async (ancNumber: string | null = null, id
     try {
         let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data;
         console.log(res)
-        return res.entry[0].resource ||  null;
+        return res.entry[0].resource || null;
     } catch (error) {
         console.log(error);
         return null;
@@ -263,6 +263,15 @@ export const countObservationsWhere = async (observationCode: string, value: any
 // }
 
 
+export const getObservationFromEncounter = async (patient: String, encounterCode: String, observationCode: String) => {
+    try {
+        let res = await (await FhirApi({ url: `/Observation?code=${observationCode}${encounterCode && `&encounter=${encounterCode}`}` })).data
+        return res.entry ? res.entry : [];
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
 
 export const countUniquePatients = async (resources: Array<any>, list: Boolean = false) => {

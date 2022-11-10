@@ -5,7 +5,7 @@ import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { sendPasswordResetEmail, validateEmail, sendWelcomeEmail } from "../lib/email";
-import { getPatientByIdentifier } from "../lib/fhir/utils";
+import { getObservationFromEncounter, getPatientByIdentifier } from "../lib/fhir/utils";
 import { generateOTP, parsePhoneNumber, verifyOTP } from "../lib/sms";
 
 const router = express.Router();
@@ -105,7 +105,7 @@ router.post("/login", async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.statusCode = 401;
-        res.json({ error: "Invalid login credentials provided", status:"error" });
+        res.json({ error: "Invalid login credentials provided", status: "error" });
         return
     }
 });
@@ -202,8 +202,8 @@ router.post("/new-password", async (req: Request, res: Response) => {
             where: {
                 ...(idNumber) && { idNumber }, ...(phone) && { phone }, otp
             }
-        })
-        let otpValidation = await verifyOTP(phone, otp)
+        });
+        let otpValidation = await verifyOTP(phone, otp);
         if (otpValidation.status !== "success") {
             res.json(otpValidation)
             return
@@ -258,6 +258,27 @@ router.delete("/:id", async (req: Request, res: Response) => {
     }
 });
 
+
+router.get("/bp/:patientId", [requireJWT], async (req: Request, res: Response) => {
+    try {
+        let { patientId } = req.params;
+        let observations = getObservationFromEncounter(patientId, "", "")
+        let patient = await db.patient.delete({ where: { id: patientId } });
+        let responseData = patient;
+        res.statusCode = 201;
+        res.json({ patient: responseData, status: "success" });
+        return;
+    } catch (error: any) {
+        res.statusCode = 400;
+        console.error(error);
+        if (error.code === 'P2002') {
+            res.json({ status: "error", error: `patient with the ${error.meta.target} provided already exists` });
+            return;
+        }
+        res.json(error);
+        return
+    }
+})
 
 
 export default router

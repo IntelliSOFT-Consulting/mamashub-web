@@ -83,6 +83,19 @@ const formData = {
       validate: yup.date().required('Date of birth is required'),
     },
     {
+      name: 'idNumber',
+      label: 'ID Number',
+      type: 'text',
+      required: true,
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 4,
+      },
+      validate: yup.string().required('ID Number is required'),
+    },
+    {
       name: 'phone',
       label: 'Phone Number',
       type: 'text',
@@ -108,6 +121,7 @@ const formData = {
       },
       options: [
         { value: "Don't know level of education", label: "Don't know level of education" },
+        { value: "No education", label: "No education" },
         { value: 'Primary School', label: 'Primary School' },
         { value: 'Secondary School', label: 'Secondary School' },
         { value: 'Higher education', label: 'Higher education' },
@@ -223,8 +237,7 @@ const formData = {
         { value: 'Parent', label: 'Parent' },
         { value: 'Sibling', label: 'Sibling' },
         { value: 'Child', label: 'Child' },
-        { value: 'Friend', label: 'Friend' },
-        { value: 'Other', label: 'Other' },
+        { value: 'Relatives', label: 'Relatives' },
       ],
       validate: yup.string().required('Relationship is required'),
     },
@@ -308,7 +321,7 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      validate: yup.date().required('LMP is required'),
+      validate: yup.date().required('LMP is required').min(new Date(new Date().setMonth(new Date().getMonth() - 1)), "LMP cannot be less than a month ago"),
     },
     {
       name: 'edd',
