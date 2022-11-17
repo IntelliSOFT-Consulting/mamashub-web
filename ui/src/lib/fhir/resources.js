@@ -17,6 +17,10 @@ export let Patient = patient => {
       {
         "value":patient.ancCode,
         "id": "ANC_NUMBER"
+      },
+      {
+        "value":patient.kmhflCode,
+        "id": "KMHFL_CODE"
       }
     ],
     name: [
