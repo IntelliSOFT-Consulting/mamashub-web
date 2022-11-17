@@ -24,7 +24,7 @@ import * as qs from 'query-string';
 import Layout from '../components/Layout';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCookie } from '../lib/cookie';
-import { FhirApi } from './../lib/api';
+import { FhirApi, apiHost } from './../lib/api';
 import { startVisit } from '../lib/startVisit';
 
 const useStyles = makeStyles({
@@ -78,12 +78,28 @@ export default function PatientList() {
   let [patients, setPatients] = useState([]);
   let navigate = useNavigate();
   let [open, setOpen] = useState(false);
+  let [profile, setProfile] = useState({});
   let [message, setMessage] = useState(false);
   let [loading, setLoading] = useState(false);
   let [selected, setSelected] = useState([]);
   let [name, setName] = useState('');
   const [filter, setFilter] = useState('name');
   const classes = useStyles();
+
+
+  let getProfile = async () => {
+    let data = await (
+      await fetch(`${apiHost}/auth/me`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+      })
+    ).json();
+    console.log(data);
+    setProfile(data.data);
+  };
 
   let startPatientVisit = async () => {
     if (selected.length === 1) {
@@ -198,7 +214,7 @@ export default function PatientList() {
   let getPatients = async () => {
     setLoading(true);
     let data = await FhirApi({
-      url: '/fhir/Patient?_count=999999',
+      url: `/fhir/Patient?_count=10000&identifier=${profile.kmhflCode}`,
       method: 'GET',
     });
     let p = data.data.entry.map((i, index) => {
