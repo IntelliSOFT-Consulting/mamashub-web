@@ -220,7 +220,6 @@ router.post("/reset-password", async (req: Request, res: Response) => {
             },
             data: {
                 resetToken: session.token,
-                verified: false,
                 resetTokenExpiresAt: new Date(session.expires)
             }
         })
