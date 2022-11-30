@@ -20,7 +20,7 @@ import Layout from "../components/Layout";
 import { timeSince } from "../lib/timeSince";
 
 export default function PatientDetails() {
-  let [patient, setPatient] = useState();
+  let [patient, setPatient] = useState(null);
   let { id } = useParams();
   let navigate = useNavigate();
   let [open, setOpen] = useState(false);
@@ -37,7 +37,7 @@ export default function PatientDetails() {
 
   let getFacilityVisits = async (patientId) => {
     let visits = await FhirApi({
-      url: `/crud/encounters?patient=${patientId}`
+      url: `/crud/encounters?patient=${patientId}`,
     });
     setEncounters(visits.data.encounters);
     console.log(visits);
@@ -46,7 +46,7 @@ export default function PatientDetails() {
 
   let getPatientObservations = async (patientId) => {
     let observations = await FhirApi({
-        url: `/crud/observations?patientId=${patientId}`
+      url: `/crud/observations?patientId=${patientId}`,
     });
     setObservations(observations.data.observations);
     return;
@@ -66,7 +66,7 @@ export default function PatientDetails() {
   let getPatientDetails = async (id) => {
     setOpen(false);
     let data = await FhirApi({
-      url: `/fhir/Patient/${id}`,
+      url: `/crud/patients/${id}`,
       method: "GET",
     });
     console.log(data);
@@ -76,7 +76,7 @@ export default function PatientDetails() {
       setOpen(true);
       return;
     } else {
-      setPatient(data.data);
+      setPatient(data.data.patient);
       return;
     }
   };
@@ -117,7 +117,7 @@ export default function PatientDetails() {
                 {patient ? (
                   <>
                     <Typography variant="h5">
-                      {patient.name[0].family ?? ""}{" "}
+                      {patient.name[0].family || ""}{" "}
                     </Typography>
                     <Typography>Patient ID: {id}</Typography>
                     <Typography>
