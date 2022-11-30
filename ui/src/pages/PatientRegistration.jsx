@@ -6,38 +6,38 @@ import {
   Typography,
   Divider,
   useMediaQuery,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { Box } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Patient } from '../lib/fhir/resources';
-import { v4 as uuidv4 } from 'uuid';
-import { FhirApi, apiHost } from './../lib/api';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { createEncounter } from '../lib/api';
-import patientRegistrationFields from '../lib/forms/patientRegistration';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Box } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Patient } from "../lib/fhir/resources";
+import { v4 as uuidv4 } from "uuid";
+import { FhirApi, apiHost } from "./../lib/api";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { createEncounter } from "../lib/api";
+import patientRegistrationFields from "../lib/forms/patientRegistration";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
 
 export default function PatientRegistration({ userData }) {
   let [open, setOpen] = useState(false);
   let [message, setMessage] = useState(false);
   const [preview, setPreview] = useState(false);
   let navigate = useNavigate();
-  let isMobile = useMediaQuery('(max-width:600px)');
-  const [value, setValue] = useState('1');
+  let isMobile = useMediaQuery("(max-width:600px)");
+  const [value, setValue] = useState("1");
   const [inputData, setInputData] = useState({});
 
   const geneRateAncCode = () => {
-    let ancCode = '';
+    let ancCode = "";
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -46,7 +46,7 @@ export default function PatientRegistration({ userData }) {
   };
 
   const fieldValues = Object.values(patientRegistrationFields).flat();
-  const validationFields = fieldValues.map(item => ({
+  const validationFields = fieldValues.map((item) => ({
     [item.name]: item.validate,
   }));
 
@@ -56,7 +56,7 @@ export default function PatientRegistration({ userData }) {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({ [item.name]: '' }))
+    ...fieldValues.map((item) => ({ [item.name]: "" }))
   );
 
   const formik = useFormik({
@@ -68,7 +68,7 @@ export default function PatientRegistration({ userData }) {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
@@ -84,7 +84,7 @@ export default function PatientRegistration({ userData }) {
     return;
   }
 
-  let displayAlert = async message => {
+  let displayAlert = async (message) => {
     setMessage(message);
     setOpen(true);
     setTimeout(() => {
@@ -94,12 +94,12 @@ export default function PatientRegistration({ userData }) {
   };
 
   useEffect(() => {
-    if (getCookie('token')) {
-      window.localStorage.setItem('activeTab', 'patient-registration');
+    if (getCookie("token")) {
+      window.localStorage.setItem("activeTab", "patient-registration");
       return;
     } else {
-      navigate('/login');
-      window.localStorage.setItem('next_page', '/patient-registration');
+      navigate("/login");
+      window.localStorage.setItem("next_page", "/patient-registration");
       return;
     }
   }, []);
@@ -109,7 +109,7 @@ export default function PatientRegistration({ userData }) {
     return;
   };
 
-  let registerPatient = async values => {
+  let registerPatient = async (values) => {
     try {
       const observations = {
         edd: values.edd,
@@ -126,25 +126,21 @@ export default function PatientRegistration({ userData }) {
 
       let id = uuidv4();
       let response = await FhirApi({
-        url: `/fhir/Patient/${id}`,
-        method: 'PUT',
-        data: JSON.stringify(Patient({ ...values, id: id })),
+        url: `/crud/patients/${id}`,
+        method: "POST",
+        data: JSON.stringify({ ...values, id: id }),
       });
 
-      if (response.status === 'success') {
-        setOpen(false);
-        setMessage('Created patient successfully');
-        setOpen(true);
-      }
+      
       //Create Encounter
       let patientId = id;
       //create encounter
-      let encounter = await createEncounter(patientId, 'MATERNAL_PROFILE');
+      let encounter = await createEncounter(patientId, "MATERNAL_PROFILE");
 
       //Create and Post Observations
       let res = await (
         await fetch(`${apiHost}/crud/observations`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify({
             patientId: patientId,
             encounterId: encounter,
@@ -153,12 +149,12 @@ export default function PatientRegistration({ userData }) {
               physicalAddress: `${values.county}, ${values.subCounty}, ${values.ward}, ${values.estate}`,
             },
           }),
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         })
       ).json();
 
-      if (res.status === 'success') {
-        prompt('Patient created successfully...');
+      if (res.status === "success") {
+        prompt("Patient created successfully...");
         navigate(`/patients/${id}`);
         return;
       } else {
@@ -174,11 +170,11 @@ export default function PatientRegistration({ userData }) {
   };
 
   useEffect(() => {
-    if (getCookie('token')) {
+    if (getCookie("token")) {
       return;
     } else {
-      navigate('/login');
-      window.localStorage.setItem('next_page', '/patient-registration');
+      navigate("/login");
+      window.localStorage.setItem("next_page", "/patient-registration");
       return;
     }
   }, []);
@@ -186,17 +182,17 @@ export default function PatientRegistration({ userData }) {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {preview ? (
             <Preview
-              title='Patient Registration Preview'
+              title="Patient Registration Preview"
               format={patientRegistrationFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
@@ -205,18 +201,18 @@ export default function PatientRegistration({ userData }) {
           ) : (
             <form onSubmit={formik.handleSubmit}>
               <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <TabList
                     value={value}
                     onChange={handleChange}
-                    variant='scrollable'
-                    scrollButtons='auto'
-                    aria-label='scrollable auto tabs example'
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
                   >
-                    <Tab label='Client Registration' value='1' />
+                    <Tab label="Client Registration" value="1" />
                   </TabList>
                 </Box>
-                <TabPanel value='1'>
+                <TabPanel value="1">
                   <FormFields
                     formData={patientRegistrationFields}
                     formik={formik}
@@ -225,22 +221,22 @@ export default function PatientRegistration({ userData }) {
                   <p></p>
                   <Divider />
                   <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
+                      sx={{ backgroundColor: "gray" }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
-                      type='submit'
+                      sx={{ backgroundColor: "#632165" }}
+                      type="submit"
                     >
                       Save
                     </Button>

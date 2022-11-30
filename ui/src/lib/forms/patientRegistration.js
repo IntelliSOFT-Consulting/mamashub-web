@@ -80,7 +80,14 @@ const formData = {
         md: 12,
         lg: 4,
       },
-      validate: yup.date().required('Date of birth is required'),
+      validate: yup.date().required('Date of birth is required').test(
+        "dob_test",
+        "DOB cannot be a future date.",
+        function (value) {
+          // const { startDate } = this.parent;
+          return value.getTime() < (new Date()).getTime();
+        }
+      ),
     },
     {
       name: 'idNumber',
@@ -257,7 +264,7 @@ const formData = {
   ],
   'Clinical Information': [
     {
-      name: 'gravidae',
+      name: 'gravida',
       label: 'Gravida',
       type: 'text',
       required: true,
@@ -281,8 +288,14 @@ const formData = {
         lg: 4,
       },
       // parity cannot be greater than gravida
-      validate: yup.number().required('Parity is required'),
-
+      validate: yup.number().required('Parity is required').test(
+        "parity_test",
+        "Parity cannot be greater than Gravida",
+        function (value) {
+          const { gravida } = this.parent;
+          return value <= gravida;
+        }
+      ),
     },
     {
       name: 'height',

@@ -89,7 +89,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
 
   const handleInputChange = async (e, field, section) => {
     formik.setFieldValue(field.name, e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
 
     if (field.name === 'bpSystolic') {
       const currentInput = document.querySelector(
@@ -292,7 +292,7 @@ export default function FormFields({ formik, formData, encounters, ...props }) {
     }
   };
 
-  console.log(pathname)
+  // console.log(pathname)
 
   return (
     <>

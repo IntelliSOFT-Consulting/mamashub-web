@@ -1,5 +1,5 @@
-import { FhirApi, generateReport, getObservationsWhere, countObservationsWhere, countUniquePatients } from "./fhir/utils"
-import * as observationCodes from "./fhir/observationCode.json"
+import { FhirApi, generateReport, getObservationsWhere, countObservationsWhere, countUniquePatients } from "./utils"
+import * as observationCodes from "./observationCodes.json"
 
 
 const codes: any = observationCodes.codes;
@@ -80,7 +80,6 @@ let noOfPatients = async (from: Date = new Date(), to: Date = new Date()) => {
 let countUniqueObservations = async (code: string, value: any | null = null) => {
     let list = await getObservationsWhere(code, value)
     return countUniquePatients(list)
-
 }
 
 
@@ -136,7 +135,7 @@ export const generateANCSummary = async () => {
         "No. of ANC Clients": await noOfPatients(),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
-        "Women positive for Syphyllis": await countObservationsWhere("10759921000119107", "Inconclusive"),
+        "Women positive for Syphyllis": await countObservationsWhere("76272004"),
         "Women who are HIV Positive": await getPatientCountByCode("31676001-Y"),
         "Women who have TB": await getPatientCountByCode("371569005"),
         "Women who have received LLITN": await countObservationsWhere("412894909", "Yes")

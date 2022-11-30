@@ -5,7 +5,7 @@ import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { sendPasswordResetEmail, validateEmail, sendWelcomeEmail } from "../lib/email";
-import { getObservationFromEncounter, getPatientByIdentifier } from "../lib/fhir/utils";
+import { getObservationFromEncounter, getPatientByIdentifier } from "../lib/utils";
 import { generateOTP, parsePhoneNumber, verifyOTP } from "../lib/sms";
 
 const router = express.Router();

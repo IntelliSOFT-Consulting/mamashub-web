@@ -15,9 +15,8 @@ export let createEncounter = async (patientId, encounterCode) => {
                 "Authorization": `Bearer ${getCookie("token")}`,
             }
         })).json()
-        console.log(encounter)
-
-        return encounter.id
+        console.log(encounter.id)
+        return encounter.encounter
     } catch (error) {
         return null
     }

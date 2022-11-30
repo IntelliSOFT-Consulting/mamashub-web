@@ -1,5 +1,5 @@
 import express, { NextFunction, Response, Request } from "express";
-import { FhirApi } from "../lib/fhir/utils";
+import { FhirApi } from "../lib/utils";
 import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
 import { generateANCSummary, generateGeneralReport, generateMOH711Report } from "../lib/reports";
 

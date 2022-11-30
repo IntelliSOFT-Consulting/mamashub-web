@@ -42,7 +42,7 @@ export default function SetNewPassword() {
             setOpen(true)
             setTimeout(() => {
                 navigate('/login')
-            }, 3000);
+            }, 1500);
             return
         }
 
