@@ -14,62 +14,62 @@ import {
   Divider,
   Input,
   MenuItem,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import * as qs from 'query-string';
-import Layout from '../components/Layout';
-import { DataGrid } from '@mui/x-data-grid';
-import { getCookie } from '../lib/cookie';
-import { FhirApi, apiHost } from './../lib/api';
-import { startVisit } from '../lib/startVisit';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import SearchIcon from "@mui/icons-material/Search";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import * as qs from "query-string";
+import Layout from "../components/Layout";
+import { DataGrid } from "@mui/x-data-grid";
+import { getCookie } from "../lib/cookie";
+import { FhirApi, apiHost } from "./../lib/api";
+import { startVisit } from "../lib/startVisit";
 
 const useStyles = makeStyles({
   patientSearch: {
-    marginLeft: '5px',
-    borderBottom: 'none',
-    '& div': {
-      '&::before': {
-        borderBottom: 'none !important',
+    marginLeft: "5px",
+    borderBottom: "none",
+    "& div": {
+      "&::before": {
+        borderBottom: "none !important",
       },
-      '&::after': {
-        borderBottom: 'none !important',
+      "&::after": {
+        borderBottom: "none !important",
       },
-      '&&:hover': {
-        borderBottom: 'none',
-        '&&:before': {
-          borderBottom: 'none',
+      "&&:hover": {
+        borderBottom: "none",
+        "&&:before": {
+          borderBottom: "none",
         },
       },
     },
-    '& .Mui-focused': {
-      color: 'black !important',
-      fontWeight: 'bold',
+    "& .Mui-focused": {
+      color: "black !important",
+      fontWeight: "bold",
     },
-    '& input': {
-      fontWeight: '300',
+    "& input": {
+      fontWeight: "300",
     },
-    '&&:before': {
-      borderBottom: 'none',
+    "&&:before": {
+      borderBottom: "none",
     },
-    '&&:after': {
-      borderBottom: 'none !important',
+    "&&:after": {
+      borderBottom: "none !important",
     },
-    '&&:hover': {
-      borderBottom: 'none',
-      '&&:before': {
-        borderBottom: 'none',
+    "&&:hover": {
+      borderBottom: "none",
+      "&&:before": {
+        borderBottom: "none",
       },
     },
   },
   filterList: {
-    display: 'flex !important',
-    alignItems: 'center !important',
-    '& span': {
-      marginLeft: '5px',
+    display: "flex !important",
+    alignItems: "center !important",
+    "& span": {
+      marginLeft: "5px",
     },
   },
 });
@@ -82,10 +82,9 @@ export default function PatientList() {
   let [message, setMessage] = useState(false);
   let [loading, setLoading] = useState(false);
   let [selected, setSelected] = useState([]);
-  let [name, setName] = useState('');
-  const [filter, setFilter] = useState('name');
+  let [name, setName] = useState("");
+  const [filter, setFilter] = useState("name");
   const classes = useStyles();
-
 
   let getProfile = async () => {
     let data = await (
@@ -104,7 +103,7 @@ export default function PatientList() {
   let startPatientVisit = async () => {
     if (selected.length === 1) {
       await startVisit(selected[0]);
-      navigate('/antenatal-profile');
+      navigate("/antenatal-profile");
     }
     return;
   };
@@ -121,7 +120,7 @@ export default function PatientList() {
       for (let i of selected) {
         let data = await FhirApi({
           url: `/crud/patients/${i}`,
-          method: 'DELETE',
+          method: "DELETE",
         });
         console.log(data);
       }
@@ -135,21 +134,22 @@ export default function PatientList() {
       setLoading(true);
       let data = await FhirApi({
         url: `/crud/patients?${filter}`,
-        method: 'GET',
+        method: "GET",
       });
-      if(data.data.count === 0){
+      if (data.data.count === 0) {
         setMessage(`Found 0 clients`);
         setPatients([]);
         setLoading(false);
         setTimeout(() => {
           setOpen(false);
         }, 1500);
-        return; 
+        return;
       }
-      let p = data.data.patients.map(i => {
+      let p = data.data.patients.map((i) => {
         let r = i;
         return {
           id: r.id,
+          ancNo: r.identifier[1].value,
           lastName: r.name[0].family,
           age: `${Math.floor(
             (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
@@ -160,7 +160,7 @@ export default function PatientList() {
       setLoading(false);
       return;
     } catch (error) {
-      console.error(error)
+      console.error(error);
       setMessage(`Error fetching patients`);
       setOpen(true);
       setLoading(false);
@@ -178,19 +178,20 @@ export default function PatientList() {
     }
   }, [filter]);
 
-  let search = async name => {
+  let search = async (name) => {
     try {
       setLoading(true);
       let data = await FhirApi({
-        url: `/fhir/Patient?name=${name}`,
-        method: 'GET',
+        url: `/crud/patients?name=${name}`,
+        method: "GET",
       });
-      let p = data.data.entry.map((i, index) => {
+      let p = data.data.patients.map((i, index) => {
         let r = i.resource;
         console.log(r.name);
         return {
           index,
           id: r.id,
+          ancNo: r.identifier[1].value,
           lastName: r.name[0].family,
           age: `${Math.floor(
             (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
@@ -216,16 +217,17 @@ export default function PatientList() {
     setLoading(true);
     let data = await FhirApi({
       url: `/crud/patients`,
-      method: 'GET',
+      method: "GET",
     });
-    console.log("data", data)
+    console.log("data", data);
 
     let p = data.data.patients.map((i, index) => {
       let r = i;
       console.log(r);
       return {
         id: r.id,
-        lastName: r.name ? r.name[0].family : 'Not Provided',
+        ancNo: r.identifier[1].value,
+        lastName: r.name ? r.name[0].family : "Not Provided",
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
         )} years`,
@@ -236,20 +238,20 @@ export default function PatientList() {
     return;
   };
 
-  const changeFilter = e => {
+  const changeFilter = (e) => {
     const { value } = e.target;
     switch (value) {
-      case 'All':
-        setFilter('');
+      case "All":
+        setFilter("");
         break;
-      case 'Referred':
-        setFilter('');
+      case "Referred":
+        setFilter("");
         break;
-      case 'Not referred':
-        setFilter('');
+      case "Not referred":
+        setFilter("");
         break;
       default:
-        setFilter('');
+        setFilter("");
         break;
     }
   };
@@ -259,12 +261,12 @@ export default function PatientList() {
   }, []);
 
   useEffect(() => {
-    if (getCookie('token')) {
-      window.localStorage.setItem('activeTab', 'patients');
+    if (getCookie("token")) {
+      window.localStorage.setItem("activeTab", "patients");
       return;
     } else {
-      navigate('/login');
-      window.localStorage.setItem('next_page', '/patients');
+      navigate("/login");
+      window.localStorage.setItem("next_page", "/patients");
       return;
     }
   }, []);
@@ -272,25 +274,33 @@ export default function PatientList() {
 
   const columns = [
     {
-      field: 'id',
-      headerName: 'ANC ID',
+      field: "id",
+      headerName: "Patient ID",
       width: 100,
-      renderCell: params => params.row.id,
+      renderCell: (params) => params.row.id,
+      editable: false,
     },
-    { field: 'lastName', headerName: 'Full Names', flex: 1, editable: true },
-    { field: 'age', headerName: 'Age', flex: 1 },
     {
-      field: 'name',
-      headerName: 'Actions',
+      field: "ancNo",
+      headerName: "ANC No",
+      width: 160,
+      renderCell: (params) => params.row.ancNo,
+      editable: false,
+    },
+    { field: "lastName", headerName: "Full Names", flex: 1, editable: false },
+    { field: "age", headerName: "Age", flex: 1, editable: false },
+    {
+      field: "name",
+      headerName: "Actions",
       flex: 1,
-      renderCell: params => {
+      renderCell: (params) => {
         // check if patient has an active visit and address field is not empty array
 
         return (
           <Button
             onClick={() => {
               startVisit(params.row.id);
-              navigate('/antenatal-profile');
+              navigate("/antenatal-profile");
             }}
           >
             Start Visit
@@ -298,81 +308,101 @@ export default function PatientList() {
         );
       },
     },
+    {
+      field: "view",
+      headerName: "View Patient",
+      flex: 1,
+      renderCell: (params) => {
+        // check if patient has an active visit and address field is not empty array
+
+        return (
+          <Button
+            onClick={() => {
+              startVisit(params.row.id);
+              // navigate('/antenatal-profile');
+              navigate(`/patients/${params.row.id}`);
+            }}
+          >
+            View Patient
+          </Button>
+        );
+      },
+    },
   ];
 
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
 
   let args = qs.parse(window.location.search);
 
   const categories = [
-    'All',
-    'Referred',
-    'Not referred',
-    'Upcoming appointments',
+    "All",
+    "Referred",
+    "Not referred",
+    "Upcoming appointments",
   ];
 
   return (
     <>
       <br />
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={open}
-        onClose={''}
+        onClose={""}
         message={message}
-        key={'loginAlert'}
+        key={"loginAlert"}
       />
       <Stack
-        direction='row'
+        direction="row"
         gap={1}
         sx={{
-          paddingLeft: isMobile ? '1em' : '2em',
-          paddingRight: isMobile ? '1em' : '2em',
+          paddingLeft: isMobile ? "1em" : "2em",
+          paddingRight: isMobile ? "1em" : "2em",
         }}
-        justifyContent='space-between'
+        justifyContent="space-between"
       >
         <Paper
-          component='form'
-          onSubmit={e => {
+          component="form"
+          onSubmit={(e) => {
             e.preventDefault();
             search(name);
           }}
           sx={{
-            p: '0px',
-            display: 'flex',
-            alignItems: 'center',
-            width: '60%',
+            p: "0px",
+            display: "flex",
+            alignItems: "center",
+            width: "60%",
           }}
         >
           <TextField
             sx={{ ml: 1, flex: 1 }}
-            placeholder='Type here'
+            placeholder="Type here"
             className={classes.patientSearch}
-            onChange={e => {
+            onChange={(e) => {
               setName(e.target.value);
             }}
-            variant='standard'
-            label='Search'
-            autoComplete='off'
+            variant="standard"
+            label="Search"
+            autoComplete="off"
           />
-          <IconButton type='submit' sx={{ p: '10px' }} aria-label='search'>
+          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
             <SearchIcon />
           </IconButton>
-          <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
+          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
           <>
-            <InputLabel id='demo-simple-select-label'>Filter By </InputLabel>
+            <InputLabel id="demo-simple-select-label">Filter By </InputLabel>
             <Select
               onChange={changeFilter}
               input={<Input className={classes.patientSearch} />}
-              renderValue={selected => {
+              renderValue={(selected) => {
                 if (!selected) {
                   return <em>Filter By</em>;
                 }
 
                 return selected;
               }}
-              inputProps={{ 'aria-label': 'Standard label' }}
+              inputProps={{ "aria-label": "Standard label" }}
             >
-              {categories.map(category => (
+              {categories.map((category) => (
                 <MenuItem
                   key={category}
                   value={category}
@@ -386,32 +416,32 @@ export default function PatientList() {
           </>
         </Paper>
         <Button
-          variant='contained'
+          variant="contained"
           disableElevation
-          sx={{ backgroundColor: '#632165' }}
-          onClick={e => {
-            navigate('/patient-registration');
+          sx={{ backgroundColor: "#632165" }}
+          onClick={(e) => {
+            navigate("/patient-registration");
           }}
         >
           Register Patient
         </Button>
       </Stack>
       <br />
-      <Stack direction='row' spacing={2} alignContent='right'>
+      <Stack direction="row" spacing={2} alignContent="right">
         {!isMobile && (
           <Typography
-            sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
+            sx={{ minWidth: selected.length > 0 ? "35%" : "70%" }}
           ></Typography>
         )}
         {selected.length > 1 && (
           <>
             <Button
-              variant='contained'
-              onClick={e => {
+              variant="contained"
+              onClick={(e) => {
                 deletePatients();
               }}
               disableElevation
-              sx={{ backgroundColor: '#632165' }}
+              sx={{ backgroundColor: "#632165" }}
             >
               Delete Patient
             </Button>
@@ -421,22 +451,22 @@ export default function PatientList() {
         {selected.length === 1 && (
           <>
             <Button
-              variant='contained'
-              onClick={e => {
+              variant="contained"
+              onClick={(e) => {
                 startPatientVisit();
               }}
               disableElevation
-              sx={{ backgroundColor: '#632165' }}
+              sx={{ backgroundColor: "#632165" }}
             >
               Start Visit
             </Button>
             <Button
-              variant='contained'
-              onClick={e => {
+              variant="contained"
+              onClick={(e) => {
                 viewPatient();
               }}
               disableElevation
-              sx={{ backgroundColor: '#632165' }}
+              sx={{ backgroundColor: "#632165" }}
             >
               View Patient
             </Button>
@@ -444,9 +474,9 @@ export default function PatientList() {
         )}
       </Stack>
       <br />
-      <Container maxWidth='lg'>
+      <Container maxWidth="lg">
         {selectionModel.length < 1 && (
-          <Alert severity='error'>
+          <Alert severity="error">
             Select a patient from the list to Start visit, View Profile
             Information etc.
           </Alert>
@@ -461,7 +491,7 @@ export default function PatientList() {
           checkboxSelection
           autoHeight
           disableSelectionOnClick
-          onSelectionModelChange={e => {
+          onSelectionModelChange={(e) => {
             setSelected(e);
           }}
           // onCellEditStop={e => {
