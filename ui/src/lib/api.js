@@ -1,6 +1,6 @@
 import { getCookie } from './cookie';
 
-export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "development") ? "http://127.0.0.1:8080" :  process.env['REACT_APP_API_URL'];
+export let apiHost = (process.env['REACT_APP_NODE_ENV'] === "development") ? "http://127.0.0.1:8080" : process.env['REACT_APP_API_URL'];
 
 export let createEncounter = async (patientId, encounterCode) => {
     try {
@@ -32,7 +32,7 @@ export let FhirApi = async (params) => {
         let response = await fetch(String(`${apiHost}${params.url}`), {
             headers: _defaultHeaders,
             method: params.method ? String(params.method) : 'GET',
-            ...(params.method !== 'GET') && (params.method !== 'DELETE') && { body: String(params.data) }
+            ...(params.method !== 'GET') && (params.method !== 'DELETE') && (params.method) && { body: String(params.data) }
         })
         let responseJSON = await response.json()
         let res = {
