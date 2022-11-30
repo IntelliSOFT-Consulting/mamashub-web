@@ -157,13 +157,30 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
 
 
 //delete patient
-router.delete('/patients/:id', [requireJWTMiddleware], async (req: Request, res: Response) => { 
+router.delete('/patients/:id', [requireJWTMiddleware], async (req: Request, res: Response) => {
     try {
         let token = req.headers.authorization || null;
         let { id } = req.params;
         let response = await FhirApi({ url: `/Patient/${id}?_cascade=delete`, method: "DELETE" })
         console.log(response);
         res.json({ message: "Created patient successfully", status: "success" });
+        return;
+
+    } catch (error) {
+        res.json({ error, status: "error" });
+        return;
+    }
+})
+
+
+//get single patient details
+router.get('/patients/:id', [requireJWTMiddleware], async (req: Request, res: Response) => {
+    try {
+        let token = req.headers.authorization || null;
+        let { id } = req.params;
+        let response = await FhirApi({ url: `/Patient/${id}`, method: "GET" })
+        console.log(response);
+        res.json({ patient: response.data, status: "success", id });
         return;
 
     } catch (error) {
