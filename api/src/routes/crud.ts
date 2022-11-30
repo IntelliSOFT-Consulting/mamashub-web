@@ -138,8 +138,9 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
                     id: userId
                 }
             });
-            // let patients = await (await FhirApi({ url: `/Patient${!user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
-            let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
+            console.log(user?.facilityKmhflCode)
+            let patients = await (await FhirApi({ url: `/Patient${user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
+            // let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
             let _patients = [];
             for (let patient of patients) {
                 console.log(patient);
