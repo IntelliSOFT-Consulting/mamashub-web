@@ -132,8 +132,10 @@ export default function PatientRegistration({ userData }) {
       });
 
       console.log(response);
+      if (response.status !== "success") {
+        return;
+      }
 
-      
       //Create Encounter
       let patientId = id;
       //create encounter
@@ -157,16 +159,15 @@ export default function PatientRegistration({ userData }) {
 
       if (res.status === "success") {
         prompt("Patient created successfully...");
-        // navigate(`/patients/${id}`);
+        navigate(`/patients/${id}`);
         return;
       } else {
         prompt(res.error);
         return;
       }
     } catch (error) {
-      setOpen(true);
       console.log(error);
-      setMessage(String(error));
+      prompt(JSON.stringify(error));
       return;
     }
   };
