@@ -131,6 +131,8 @@ export default function PatientRegistration({ userData }) {
         data: JSON.stringify({ ...values, id: id }),
       });
 
+      console.log(response);
+
       
       //Create Encounter
       let patientId = id;
@@ -155,7 +157,7 @@ export default function PatientRegistration({ userData }) {
 
       if (res.status === "success") {
         prompt("Patient created successfully...");
-        navigate(`/patients/${id}`);
+        // navigate(`/patients/${id}`);
         return;
       } else {
         prompt(res.error);
