@@ -12,7 +12,7 @@ router.use(function (err: any, req: Request, res: Response, next: NextFunction) 
     res.end();
 });
 
-router.get('/general', async (req: Request, res: Response) => {
+router.get('/general', [requireJWT], async (req: Request, res: Response) => {
     try {
         res.statusCode = 200
         let report = []

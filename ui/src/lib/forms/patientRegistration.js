@@ -82,10 +82,12 @@ const formData = {
       },
       validate: yup.date().required('Date of birth is required').test(
         "dob_test",
-        "DOB cannot be a future date.",
+        "DOB must be between 10 and 49 yrs and cannot be a future date.",
         function (value) {
           // const { startDate } = this.parent;
-          return value.getTime() < (new Date()).getTime();
+          return (value.getTime() < (new Date()).getTime()) && (
+            (new Date().getFullYear() - value.getFullYear()) > 9
+          ) && ((new Date().getFullYear() - value.getFullYear()) < 50);
         }
       ),
     },
