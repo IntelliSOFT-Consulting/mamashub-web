@@ -177,31 +177,6 @@ export let clearObservations = async (patient: string | null, code: string | nul
     }
 }
 
-// clearEncounters("75c31174-ea3b-4752-9979-af5f95d47ab3", "PHYSICAL_EXAMINATION")
-
-
-let generateANCNumber = async () => {
-
-
-    let today = new Date()
-    let beginningOfMonth = new Date(new Date().setDate(1)).toISOString()
-    let patients = [];
-    let allPatients = await (await FhirApi({ url: `/Patient?_lastUpdated=gte${beginningOfMonth}` })).data
-    allPatients = allPatients?.entry || []
-    for (let patient of allPatients) {
-        let identifiers = patient.resource.identifier
-        for (let i of identifiers) {
-            if (!i.value) {
-                let khmfl = i.issuer
-                //No ANC Number
-            }
-        }
-    }
-
-    let lastAncNumber = ""
-    let anc = `${today.getFullYear()}-${today.getMonth() + 1}-${lastAncNumber}`
-
-}
 
 export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
     try {

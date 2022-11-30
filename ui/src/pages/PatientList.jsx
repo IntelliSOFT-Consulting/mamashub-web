@@ -283,17 +283,16 @@ export default function PatientList() {
     { field: "lastName", headerName: "Full Names", flex: 1, editable: false },
     { field: "age", headerName: "Age", flex: 1, editable: false },
     {
-      field: "name",
-      headerName: "Actions",
+      field: "startVisit",
+      headerName: "Start Visit",
       flex: 1,
+      editable: false,
       renderCell: (params) => {
         // check if patient has an active visit and address field is not empty array
-
         return (
           <Button
             onClick={() => {
               startVisit(params.row.id);
-              navigate("/antenatal-profile");
             }}
           >
             Start Visit
@@ -305,14 +304,13 @@ export default function PatientList() {
       field: "view",
       headerName: "View Patient",
       flex: 1,
+      editable: false,
       renderCell: (params) => {
         // check if patient has an active visit and address field is not empty array
 
         return (
           <Button
             onClick={() => {
-              startVisit(params.row.id);
-              // navigate('/antenatal-profile');
               navigate(`/patients/${params.row.id}`);
             }}
           >
