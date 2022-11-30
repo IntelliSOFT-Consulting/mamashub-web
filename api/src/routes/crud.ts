@@ -39,14 +39,10 @@ router.post('/observations', async (req: Request, res: Response) => {
                 console.log(obs)
                 let o = createObservation(patientId, ov, coding, observationId, encounterId)
                 // console.log(":observation", o)
-                let response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation/${observationId}`, {
-                    body: JSON.stringify(o),
-                    method: 'PUT',
-                    headers: { "Content-Type": "application/json" }
-                })).json()
-                console.log(response)
+                let response = await FhirApi({ url: `/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(o) })
+                console.log(response.data)
                 // console.log(o)
-                builtObservations.push(response);
+                builtObservations.push(response.data);
             }
             else {
                 console.log({ error: `observation key for ${obs} not found`, status: "error" })
@@ -67,13 +63,13 @@ router.get('/observations', [], async (req: Request, res: Response) => {
         let { patientId, encounter, count } = req.query;
         let response;
         if (encounter) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?encounter=${encounter}&_count=${count ?? 50}`)).json()
+            response = await (await FhirApi({ url: `/Observation?encounter=${encounter}&_count=${count ?? 50}` })).data
         }
         if (patientId) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?patient=${patientId}&_count=${count ?? 50}`)).json()
+            response = await (await FhirApi({ url: `/Observation?patient=${patientId}&_count=${count ?? 50}` })).data
         }
         if (!patientId && !encounter) {
-            response = await (await fetch(`http://127.0.0.1:8080/fhir/Observation?_count=${count ?? 50}`)).json()
+            response = await (await FhirApi({ url: `Observation?_count=${count ?? 50}` })).data
         }
         res.json({ observations: response.entry || [], status: "success" })
         return
@@ -89,11 +85,11 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
         let { encounterCode, patientId, encounterType } = req.body;
         let encounterId = uuidv4();
         let encounter = createEncounter(patientId, encounterId, encounterType ?? 2, encounterCode);
-        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter/${encounterId}`, {
-            body: JSON.stringify(encounter),
+        let response = await (await FhirApi({
+            url: `/Encounter/${encounterId}`,
+            data: JSON.stringify(encounter),
             method: 'PUT',
-            headers: { "Content-Type": "application/json" }
-        })).json()
+        })).data
         // console.log(response)
         res.json({ status: "success", id: response.id, encounter: encounter })
         return;
@@ -107,7 +103,7 @@ router.get('/encounters', [requireJWTMiddleware], async (req: Request, res: Resp
     try {
         let { patient, encounterCode, count } = req.query
         console.log(patient)
-        let response = await (await fetch(`http://127.0.0.1:8080/fhir/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=date`)).json()
+        let response = await (await FhirApi({ url: `/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=date` })).data
         console.log(response)
         res.json({ encounters: response.entry ?? [], status: "success" })
         return
