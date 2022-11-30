@@ -274,13 +274,6 @@ export default function PatientList() {
 
   const columns = [
     {
-      field: "id",
-      headerName: "Patient ID",
-      width: 100,
-      renderCell: (params) => params.row.id,
-      editable: false,
-    },
-    {
       field: "ancNo",
       headerName: "ANC No",
       width: 160,
@@ -488,7 +481,7 @@ export default function PatientList() {
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}
-          checkboxSelection
+          checkboxSelection={false}
           autoHeight
           disableSelectionOnClick
           onSelectionModelChange={(e) => {
