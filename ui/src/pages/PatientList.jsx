@@ -120,7 +120,7 @@ export default function PatientList() {
     if (selected.length > 0) {
       for (let i of selected) {
         let data = await FhirApi({
-          url: `/fhir/Patient/${i}?_cascade=delete`,
+          url: `/crud/patients/${i}`,
           method: 'DELETE',
         });
         console.log(data);
@@ -134,10 +134,10 @@ export default function PatientList() {
     try {
       setLoading(true);
       let data = await FhirApi({
-        url: `/fhir/Patient?${filter}`,
+        url: `/crud/patients?${filter}`,
         method: 'GET',
       });
-      if(data.data.total === 0){
+      if(data.data.count === 0){
         setMessage(`Found 0 clients`);
         setPatients([]);
         setLoading(false);
@@ -146,8 +146,8 @@ export default function PatientList() {
         }, 1500);
         return; 
       }
-      let p = data.data.entry.map(i => {
-        let r = i.resource;
+      let p = data.data.patients.map(i => {
+        let r = i;
         return {
           id: r.id,
           lastName: r.name[0].family,
@@ -156,10 +156,11 @@ export default function PatientList() {
           )} years`,
         };
       });
-      // setPatients(p);
+      setPatients(p);
       setLoading(false);
       return;
     } catch (error) {
+      console.error(error)
       setMessage(`Error fetching patients`);
       setOpen(true);
       setLoading(false);
@@ -214,15 +215,16 @@ export default function PatientList() {
   let getPatients = async () => {
     setLoading(true);
     let data = await FhirApi({
-      url: `/fhir/Patient?_count=10000&identifier=${profile.kmhflCode}`,
+      url: `/crud/patients`,
       method: 'GET',
     });
-    let p = data.data.entry.map((i, index) => {
-      let r = i.resource;
-      // console.log(r.name)
+    console.log("data", data)
+
+    let p = data.data.patients.map((i, index) => {
+      let r = i;
+      console.log(r);
       return {
         id: r.id,
-        index,
         lastName: r.name ? r.name[0].family : 'Not Provided',
         age: `${Math.floor(
           (new Date() - new Date(r.birthDate).getTime()) / 3.15576e10
@@ -234,7 +236,7 @@ export default function PatientList() {
     return;
   };
 
-  const chageFilter = e => {
+  const changeFilter = e => {
     const { value } = e.target;
     switch (value) {
       case 'All':
@@ -270,10 +272,10 @@ export default function PatientList() {
 
   const columns = [
     {
-      field: 'index',
-      headerName: 'Patient ID',
+      field: 'id',
+      headerName: 'ANC ID',
       width: 100,
-      renderCell: params => params.row.index + 1,
+      renderCell: params => params.row.id,
     },
     { field: 'lastName', headerName: 'Full Names', flex: 1, editable: true },
     { field: 'age', headerName: 'Age', flex: 1 },
@@ -359,7 +361,7 @@ export default function PatientList() {
           <>
             <InputLabel id='demo-simple-select-label'>Filter By </InputLabel>
             <Select
-              onChange={chageFilter}
+              onChange={changeFilter}
               input={<Input className={classes.patientSearch} />}
               renderValue={selected => {
                 if (!selected) {
@@ -400,6 +402,20 @@ export default function PatientList() {
           <Typography
             sx={{ minWidth: selected.length > 0 ? '35%' : '70%' }}
           ></Typography>
+        )}
+        {selected.length > 1 && (
+          <>
+            <Button
+              variant='contained'
+              onClick={e => {
+                deletePatients();
+              }}
+              disableElevation
+              sx={{ backgroundColor: '#632165' }}
+            >
+              Delete Patient
+            </Button>
+          </>
         )}
 
         {selected.length === 1 && (

@@ -101,7 +101,7 @@ export let registerFacility = async () => {
 }
 
 
-export let apiHost = "http://localhost:8080/fhir"
+export let apiHost = process.env.FHIR_BASE_URL
 
 export const FhirApi = async (params: any) => {
     let _defaultHeaders = { "Content-Type": 'application/json' }
@@ -282,3 +282,69 @@ export const countUniquePatients = async (resources: Array<any>, list: Boolean =
     let unique = [...new Set(patients)];
     return list ? unique : unique.length;
 }
+
+
+
+export let Patient = (patient:any) => {
+    return {
+      resourceType: 'Patient',
+      ...(patient.id && { id: patient.id }),
+      meta: {
+        profile: [
+          'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-patient',
+          'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-base-patient',
+          'http://fhir.org/guides/who/core/StructureDefinition/who-patient',
+        ],
+      },
+      identifier: [
+        {
+          "value": patient.idNumber,
+          "id":"NATIONAL_ID"
+        },
+        {
+          "value":patient.ancCode,
+          "id": "ANC_NUMBER"
+        },
+        {
+          "value":patient.kmhflCode,
+          "id": "KMHFL_CODE"
+        }
+      ],
+      name: [
+        {
+          family: patient.names,
+          given: [patient.names],
+        },
+      ],
+      telecom: [
+        {
+          value: patient.phone,
+        },
+      ],
+      birthDate: new Date(patient.dob).toISOString().slice(0, 10),
+      address: [
+        {
+          state: patient.county,
+          district: patient.subCounty,
+          city: patient.ward,
+          village: patient.village
+        },
+      ],
+      contact: [
+        {
+          telecom: [
+            {
+              value: patient.nextOfKinPhone,
+            },
+          ],
+          name: {
+            family: patient.nextOfKinName,
+          },
+          relationship: [{
+            text: patient.nextOfKinRelationship
+          }]
+        },
+      ],
+    };
+  };
+  

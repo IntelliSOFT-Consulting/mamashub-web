@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { FhirApi } from "../lib/fhir/utils";
+import { FhirApi } from "../lib/utils";
 import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
 import { parsePhoneNumber, sendSMS } from "../lib/sms";
