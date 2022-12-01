@@ -83,7 +83,7 @@ export default function Deworming() {
     let patient = visit.id;
     if (!patient) {
       prompt(
-        "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
+        "No patient visit not been initiated. To start a visit, Select a client from the Client list"
       );
       return;
     }

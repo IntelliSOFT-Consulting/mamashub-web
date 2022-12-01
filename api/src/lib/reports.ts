@@ -16,7 +16,7 @@ let getNoOfAncVisits = async (patientId: string) => {
     return unique.length;
 }
 
-export let generateGeneralReport = async (patientId: string, from: string | null, to: string | null) => {
+export let generateMOH405Report = async (patientId: string, from: string | null, to: string | null) => {
 
     let fromDate = from ? new Date(from) : new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))
     let toDate = to ? new Date(to) : new Date();
