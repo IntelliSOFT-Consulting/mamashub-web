@@ -10,15 +10,15 @@ import {
   Typography,
   Divider,
   useMediaQuery,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import {
   Box,
   FormControl,
@@ -27,35 +27,35 @@ import {
   MenuItem,
   Card,
   CardContent,
-} from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createEncounter, apiHost } from '../lib/api';
-import CurrentPatient from '../components/CurrentPatient';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import birthPlan from '../lib/forms/birthPlan';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
+} from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { createEncounter, apiHost, FhirApi } from "../lib/api";
+import CurrentPatient from "../components/CurrentPatient";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import birthPlan from "../lib/forms/birthPlan";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
 
-export default function BirthPlan({userData}) {
+export default function BirthPlan({ userData }) {
   let [visit, setVisit] = useState();
   let navigate = useNavigate();
   let [open, setOpen] = useState(false);
   let [data, setData] = useState({});
   let [message, setMessage] = useState(false);
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
 
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
   const [inputData, setInputData] = useState({});
   const [preview, setPreview] = useState(false);
 
   const fieldValues = Object.values(birthPlan).flat();
   const validationFields = fieldValues
-    .filter(item => item.validate)
-    .map(item => ({
+    .filter((item) => item.validate)
+    .map((item) => ({
       [item.name]: item.validate,
     }));
 
@@ -65,7 +65,7 @@ export default function BirthPlan({userData}) {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({ [item.name]: '' }))
+    ...fieldValues.map((item) => ({ [item.name]: "" }))
   );
 
   const formik = useFormik({
@@ -76,7 +76,7 @@ export default function BirthPlan({userData}) {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
@@ -97,7 +97,7 @@ export default function BirthPlan({userData}) {
     return;
   };
 
-  let saveBirthPlan = async values => {
+  let saveBirthPlan = async (values) => {
     //get current patient
     let patient = visit.id;
     if (!patient) {
@@ -108,26 +108,26 @@ export default function BirthPlan({userData}) {
     }
 
     //create encounter
-    let encounter = await createEncounter(patient, 'BIRTH-PLAN');
+    let encounter = await createEncounter(patient, "BIRTH-PLAN");
     console.log(encounter);
 
     //save observations
     //Create and Post Observations
     let res = await (
-      await fetch(`${apiHost}/crud/observations`, {
-        method: 'POST',
-        body: JSON.stringify({
+      await FhirApi({
+        url: `${apiHost}/crud/observations`,
+        method: "POST",
+        data: JSON.stringify({
           patientId: patient,
           encounterId: encounter,
           observations: values,
         }),
-        headers: { 'Content-Type': 'application/json' },
       })
-    ).json();
+    ).data;
     console.log(res);
 
-    if (res.status === 'success') {
-      prompt('Birth Plan saved successfully');
+    if (res.status === "success") {
+      prompt("Birth Plan saved successfully");
       return;
     } else {
       prompt(res.error);
@@ -136,13 +136,13 @@ export default function BirthPlan({userData}) {
   };
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       prompt(
         "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
       );
       setTimeout(() => {
-        navigate('/patients');
+        navigate("/patients");
       }, 3000);
       return;
     }
@@ -150,29 +150,29 @@ export default function BirthPlan({userData}) {
     return;
   }, []);
   useEffect(() => {
-    if (getCookie('token')) {
+    if (getCookie("token")) {
       return;
     } else {
-      window.localStorage.setItem('next_page', '/patient-profile');
-      navigate('/login');
+      window.localStorage.setItem("next_page", "/patient-profile");
+      navigate("/login");
       return;
     }
   }, []);
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Birth Plan Preview'
+              title="Birth Plan Preview"
               format={birthPlan}
               data={{ ...inputData }}
               close={() => setPreview(false)}
@@ -181,36 +181,36 @@ export default function BirthPlan({userData}) {
           ) : (
             <form onSubmit={formik.handleSubmit}>
               <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <TabList
                     value={value}
                     onChange={handleChange}
-                    variant='scrollable'
-                    scrollButtons='auto'
+                    variant="scrollable"
+                    scrollButtons="auto"
                   >
-                    <Tab label='Birth Plan' value='1' />
+                    <Tab label="Birth Plan" value="1" />
                   </TabList>
                 </Box>
 
-                <TabPanel value='1'>
+                <TabPanel value="1">
                   <FormFields formData={birthPlan} formik={formik} />
 
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
+                      sx={{ backgroundColor: "gray" }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
-                      type='submit'
+                      variant="contained"
+                      type="submit"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
+                      sx={{ backgroundColor: "#632165" }}
                     >
                       Save
                     </Button>
