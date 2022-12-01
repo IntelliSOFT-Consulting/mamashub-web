@@ -10,32 +10,32 @@ import {
   useMediaQuery,
   CircularProgress,
   Modal,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { Box } from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import CurrentPatient from '../components/CurrentPatient';
-import { apiHost, createEncounter } from '../lib/api';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
-import tetanusDiptheriaFields from '../lib/forms/tetanusAndDiptheria';
-import tetanusAndDiptheria from '../lib/forms/tetanusAndDiptheria';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Box } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import CurrentPatient from "../components/CurrentPatient";
+import { apiHost, createEncounter, FhirApi } from "../lib/api";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
+import tetanusDiptheriaFields from "../lib/forms/tetanusAndDiptheria";
+import tetanusAndDiptheria from "../lib/forms/tetanusAndDiptheria";
 
 export default function TetanusDiptheria() {
   let [visit, setVisit] = useState();
@@ -44,14 +44,14 @@ export default function TetanusDiptheria() {
   let [loading, setLoading] = useState(false);
   let [message, setMessage] = useState(false);
   let [observations, setObservations] = useState([]);
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
   let [tetanusDiptheria, setTetanusDiptheria] = useState({});
   let [tetanusDiptheriaEncounters, setTetanusDiptheriaEncounters] = useState(
     []
   );
   const handleClose = () => setOpenModal(false);
   const handleOpen = () => setOpenModal(true);
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
   let [openModal, setOpenModal] = useState(false);
 
   const [inputData, setInputData] = useState({});
@@ -59,8 +59,8 @@ export default function TetanusDiptheria() {
 
   const fieldValues = Object.values(tetanusAndDiptheria).flat();
   const validationFields = fieldValues
-    .filter(item => item.validate)
-    .map(item => ({
+    .filter((item) => item.validate)
+    .map((item) => ({
       [item.name]: item.validate,
     }));
 
@@ -70,7 +70,7 @@ export default function TetanusDiptheria() {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({ [item.name]: '' }))
+    ...fieldValues.map((item) => ({ [item.name]: "" }))
   );
 
   const formik = useFormik({
@@ -79,7 +79,7 @@ export default function TetanusDiptheria() {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
@@ -100,10 +100,10 @@ export default function TetanusDiptheria() {
   };
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       setMessage(
-        'No patient visit not been initiated. To start a visit, Select a patient in the Patients list'
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patients list"
       );
       setOpen(true);
       setTimeout(() => {
@@ -116,10 +116,10 @@ export default function TetanusDiptheria() {
   }, []);
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       prompt(
-        'No patient visit not been initiated. To start a visit, Select a patient in the Patients list'
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patients list"
       );
       return;
     }
@@ -128,36 +128,38 @@ export default function TetanusDiptheria() {
   }, []);
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient') ?? null;
+    let visit = window.localStorage.getItem("currentPatient") ?? null;
     visit = JSON.parse(visit) ?? null;
     if (visit) {
       getTetanusDiptheriaEncounters(visit.id);
     }
   }, []);
 
-  let getEncounterObservations = async encounter => {
+  let getEncounterObservations = async (encounter) => {
     setObservations([]);
     handleOpen();
     let observations = await (
-      await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)
-    ).json();
+      await FhirApi({
+        url: `/crud/observations?encounter=${encounter}`,
+      })
+    ).data;
     setObservations(observations.observations);
     return;
   };
 
-  let getTetanusDiptheriaEncounters = async patientId => {
+  let getTetanusDiptheriaEncounters = async (patientId) => {
     setLoading(true);
     let encounters = await (
-      await fetch(
-        `${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${'TETANUS_DIPTHERIA'}`
-      )
-    ).json();
+      await FhirApi({
+        url: `/crud/encounters?patient=${patientId}&encounterCode=${"TETANUS_DIPTHERIA"}`,
+      })
+    ).data;
     console.log(encounters);
     setTetanusDiptheriaEncounters(encounters.encounters);
     setLoading(false);
     return;
   };
-  let saveTetanusDiptheria = async values => {
+  let saveTetanusDiptheria = async (values) => {
     //get current patient
     if (!visit) {
       prompt(
@@ -168,25 +170,25 @@ export default function TetanusDiptheria() {
     let patient = visit.id;
     try {
       //create Encounter
-      let encounter = await createEncounter(patient, 'TETANUS_DIPTHERIA');
+      let encounter = await createEncounter(patient, "TETANUS_DIPTHERIA");
       // console.log(encounter)
 
       //Create and Post Observations
       let res = await (
         await fetch(`${apiHost}/crud/observations`, {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
             observations: values,
           }),
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         })
       ).json();
       console.log(res);
 
-      if (res.status === 'success') {
-        prompt('Tetanus Diptheria saved successfully');
+      if (res.status === "success") {
+        prompt("Tetanus Diptheria saved successfully");
         // setValue('2')
         navigate(`/patients/${patient}`);
         await getTetanusDiptheriaEncounters(patient);
@@ -205,18 +207,18 @@ export default function TetanusDiptheria() {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Tetanus and Diptheria Preview'
+              title="Tetanus and Diptheria Preview"
               format={tetanusAndDiptheria}
               data={{ ...inputData }}
               close={() => setPreview(false)}
@@ -225,30 +227,30 @@ export default function TetanusDiptheria() {
           ) : (
             <form onSubmit={formik.handleSubmit}>
               <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <TabList
                     value={value}
                     onChange={handleChange}
-                    variant='scrollable'
-                    scrollButtons='auto'
-                    aria-label='scrollable auto tabs example'
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
                   >
-                    <Tab label='Tetanus & Diptheria' value='1' />
+                    <Tab label="Tetanus & Diptheria" value="1" />
                   </TabList>
                 </Box>
-                <TabPanel value='1'>
+                <TabPanel value="1">
                   {/* <p></p> */}
-                  <Grid container spacing={1} padding='.5em'>
+                  <Grid container spacing={1} padding=".5em">
                     {tetanusDiptheriaEncounters.length > 0 &&
                       tetanusDiptheriaEncounters.map((x, index) => {
                         return (
                           <Grid item xs={12} md={12} lg={3}>
                             <Button
-                              variant='contained'
-                              onClick={e => {
+                              variant="contained"
+                              onClick={(e) => {
                                 getEncounterObservations(x.resource.id);
                               }}
-                              sx={{ backgroundColor: '#632165', width: '99%' }}
+                              sx={{ backgroundColor: "#632165", width: "99%" }}
                             >
                               TT - {`${index + 1}`}
                             </Button>
@@ -265,25 +267,26 @@ export default function TetanusDiptheria() {
 
                   <FormFields formData={tetanusAndDiptheria} formik={formik} />
 
+                  
                   <p></p>
                   <Divider />
                   <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
+                      sx={{ backgroundColor: "gray" }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
-                      type='submit'
+                      variant="contained"
+                      type="submit"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
+                      sx={{ backgroundColor: "#632165" }}
                     >
                       Save
                     </Button>
@@ -296,18 +299,18 @@ export default function TetanusDiptheria() {
           <Modal
             keepMounted
             open={openModal}
-            sx={{ overflow: 'scroll' }}
+            sx={{ overflow: "scroll" }}
             onClose={handleClose}
           >
             <Box
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '90%',
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "90%",
+                bgcolor: "background.paper",
+                border: "2px solid #000",
                 boxShadow: 24,
                 p: 4,
               }}
@@ -316,32 +319,30 @@ export default function TetanusDiptheria() {
               {((observations && observations.length < 1) || !observations) && (
                 <>
                   <CircularProgress />
-                  <Typography variant='h6'>Loading</Typography>
+                  <Typography variant="h6">Loading</Typography>
                 </>
               )}
               <Grid container columnSpacing={1}>
                 {observations &&
-                  observations.map(observation => {
+                  observations.map((observation) => {
                     return (
                       <>
                         <Grid container>
                           {observation.resource.code.coding &&
-                            observation.resource.code.coding.map(entry => {
+                            observation.resource.code.coding.map((entry) => {
                               return (
                                 <>
                                   <Grid item lg={6} xl={6} md={6} sm={6}>
-                                    <Typography>
-                                      {entry.display}
-                                    </Typography>
+                                    <Typography>{entry.display}</Typography>
                                   </Grid>
                                   <Grid item lg={6} xl={6} md={6} sm={6}>
-                                    <Typography variant='p'>
+                                    <Typography variant="p">
                                       {observation.resource.valueQuantity
                                         ? observation.resource.valueQuantity
-                                          .value
+                                            .value
                                         : observation.resource.valueString ??
-                                        observation.resource.valueDateTime ??
-                                        '-'}
+                                          observation.resource.valueDateTime ??
+                                          "-"}
                                     </Typography>
                                   </Grid>
                                 </>
