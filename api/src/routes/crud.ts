@@ -1,8 +1,7 @@
 import express, { Response, Request } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import db from '../lib/prisma';
-import { createEncounter, createObservation, createObservationValue, FhirApi, Patient } from "../lib/utils";
-import fetch from 'cross-fetch';
+import { createEncounter, createObservation, FhirApi, Patient } from "../lib/utils";
 import observationCodes from '../lib/observationCodes.json';
 import { decodeSession, requireJWTMiddleware } from "../lib/jwt";
 
@@ -95,7 +94,7 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
         return;
     } catch (error) {
         res.json({ error, status: "error" });
-        return
+        return;
     }
 })
 
@@ -106,10 +105,10 @@ router.get('/encounters', [requireJWTMiddleware], async (req: Request, res: Resp
         let response = await (await FhirApi({ url: `/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=date` })).data
         console.log(response)
         res.json({ encounters: response.entry ?? [], status: "success" })
-        return
+        return;
     } catch (error) {
         res.json({ error, status: "error" })
-        return
+        return;
     }
 })
 
@@ -138,7 +137,6 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
             // let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
             let _patients = [];
             for (let patient of patients) {
-                console.log(patient);
                 _patients.push({ ...patient.resource, text: null });
             }
             console.log(_patients.length);

@@ -71,8 +71,13 @@ export let generateMOH405Report = async (patientId: string, from: string | null,
 }
 
 
-let noOfPatients = async (from: Date = new Date(), to: Date = new Date()) => {
-    let data = await (await FhirApi({ url: `/Patient` })).data;
+let noOfPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
+    let data;
+    if (facilityKmhflCode) {
+        data = await (await FhirApi({ url: `/Patient${facilityKmhflCode && `?identifier=${facilityKmhflCode}`}` })).data;
+    } else {
+        data = await (await FhirApi({ url: `/Patient` })).data;
+    }
     return data.total || (data.entry ? data.entry.length : 0)
 }
 
@@ -101,7 +106,7 @@ let aggregateByCode = async (code: string) => {
 export let generateMOH711Report = async () => {
 
     return {
-        "newAncClients": await await noOfPatients(),
+        "newAncClients": await noOfPatients(),
         "revisitAncClients": await getPatientCountByCode("74935093"),
         "iptDose1": await countObservationsWhere("520474952"),
         "iptDose2": await countObservationsWhere("520474952"),

@@ -10,11 +10,16 @@ import {
   FormControlLabel,
   CircularProgress,
   Typography,
+  TextField,
 } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useState, useEffect } from "react";
 import { apiHost, FhirApi } from "../lib/api";
 import { exportToCsv } from "../lib/exportCSV";
 import { DataGrid } from "@mui/x-data-grid";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Layout from "../components/Layout";
 
 export default function GeneralPatientLevel() {
@@ -22,6 +27,8 @@ export default function GeneralPatientLevel() {
   const [message, setMessage] = useState(false);
   const [results, setResults] = useState([]);
   const [data, setData] = useState({});
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   const [selected, setSelected] = useState({});
   const [selectionModel, setSelectionModel] = useState([]);
 
@@ -168,84 +175,162 @@ export default function GeneralPatientLevel() {
 
   return (
     <>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={open}
-        onClose={(e) => {
-          console.log(e);
-        }}
-        message={message}
-        key={"loginAlert"}
-      />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={open}
+          onClose={(e) => {
+            console.log(e);
+          }}
+          message={message}
+          key={"loginAlert"}
+        />
 
-      <Container maxWidth="lg">
-        <br />
-        {/* {results.length > 0 && <Button variant="contained"
+        <Container maxWidth="lg">
+          {/* {results.length > 0 && <Button variant="contained"
                         disableElevation
                         onClick={e => { setOpenModal(true) }}
                         sx={{ width: "20%", backgroundColor: "#632165", borderRadius: "10px", float: "right" }}>Select Indicators</Button>} */}
-        <Button
-          variant="contained"
-          disableElevation
-          disabled={results.length < 1}
-          onClick={(e) => {
-            exportReport();
-          }}
-          sx={{
-            width: "20%",
-            backgroundColor: "#632165",
-            borderRadius: "10px",
-            float: "right",
-          }}
-        >
-          Export Report
-        </Button>
 
-        <br />
-        <br />
-        {results.length > 0 ? (
-          <DataGrid
-            loading={!results}
-            rows={results ? results : []}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            autoHeight
-            disableSelectionOnClick={true}
-            onCellEditStop={(e) => {
-              console.log(e);
-            }}
-          />
-        ) : (
-          <>
-            <CircularProgress />
-            <Typography variant="h5">Loading Report..</Typography>
-          </>
-        )}
-        <Modal
-          keepMounted
-          open={openModal}
-          onClose={handleClose}
-          aria-labelledby="parent-modal-title"
-          aria-describedby="parent-modal-description"
-        >
-          <Box sx={{ ...modalStyle, width: "80%", borderRadius: "10px" }}>
-            <Grid container justifyContent="center" alignItems="center">
-              {columns.slice(3).map((column) => {
-                return (
-                  <Grid item xs={3} lg={3} md={2}>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label={column.headerName}
-                    />
-                  </Grid>
-                );
-              })}
+          <br />
+          <Grid container spacing={1} padding=".5em">
+            <Grid item xs={12} md={12} lg={4}>
+              {!isMobile ? (
+                <DesktopDatePicker
+                  label="From Date"
+                  inputFormat="dd/MM/yyyy"
+                  value={
+                    data.fromDate
+                      ? data.fromDate
+                      : new Date().setFullYear(2000).toString()
+                  }
+                  onChange={(e) => {
+                    console.log(e);
+                    setData({ ...data, fromDate: new Date(e).toISOString() });
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} size="small" fullWidth />
+                  )}
+                />
+              ) : (
+                <MobileDatePicker
+                  label="From Date"
+                  inputFormat="dd/MM/yyyy"
+                  value={
+                    data.fromDate
+                      ? data.fromDate
+                      : new Date().setFullYear(2000).toISOString()
+                  }
+                  onChange={(e) => {
+                    console.log(e);
+                    setData({ ...data, fromDate: new Date(e).toISOString() });
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} size="small" fullWidth />
+                  )}
+                />
+              )}
             </Grid>
-            <Button variant="contained">Generate Report</Button>
-          </Box>
-        </Modal>
-      </Container>
+            <Grid item xs={12} md={12} lg={4}>
+              {!isMobile ? (
+                <DesktopDatePicker
+                  label="To Date"
+                  inputFormat="dd/MM/yyyy"
+                  value={
+                    data.toDate
+                      ? data.toDate
+                      : new Date().setHours(23).toString()
+                  }
+                  onChange={(e) => {
+                    console.log(e);
+                    setData({ ...data, toDate: new Date(e).toISOString() });
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} size="small" fullWidth />
+                  )}
+                />
+              ) : (
+                <MobileDatePicker
+                  label="To Date"
+                  inputFormat="dd/MM/yyyy"
+                  value={
+                    data.toDate
+                      ? data.toDate
+                      : new Date().setHours(23).toISOString()
+                  }
+                  onChange={(e) => {
+                    console.log(e);
+                    setData({ ...data, toDate: new Date(e).toISOString() });
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} size="small" fullWidth />
+                  )}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12} md={12} lg={3}>
+              <Button
+                variant="contained"
+                disableElevation
+                disabled={results.length < 1}
+                onClick={(e) => {
+                  exportReport();
+                }}
+                sx={{
+                  // width: "20%",
+                  backgroundColor: "#632165",
+                  borderRadius: "10px",
+                  float: "right",
+                }}
+              >
+                Export Report
+              </Button>
+            </Grid>
+          </Grid>
+          {results.length > 0 ? (
+            <DataGrid
+              loading={!results}
+              rows={results ? results : []}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              autoHeight
+              disableSelectionOnClick={true}
+              onCellEditStop={(e) => {
+                console.log(e);
+              }}
+            />
+          ) : (
+            <>
+              <CircularProgress />
+              <Typography variant="h5">Loading Report..</Typography>
+            </>
+          )}
+          <Modal
+            keepMounted
+            open={openModal}
+            onClose={handleClose}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+          >
+            <Box sx={{ ...modalStyle, width: "80%", borderRadius: "10px" }}>
+              <Grid container justifyContent="center" alignItems="center">
+                {columns.slice(3).map((column) => {
+                  return (
+                    <Grid item xs={3} lg={3} md={2}>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        label={column.headerName}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+              <Button variant="contained">Generate Report</Button>
+            </Box>
+          </Modal>
+        </Container>
+      </LocalizationProvider>
     </>
   );
 }
