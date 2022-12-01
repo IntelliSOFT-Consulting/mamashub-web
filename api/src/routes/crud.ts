@@ -102,7 +102,7 @@ router.get('/encounters', [requireJWTMiddleware], async (req: Request, res: Resp
     try {
         let { patient, encounterCode, count } = req.query
         console.log(patient)
-        let response = await (await FhirApi({ url: `/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=date` })).data
+        let response = await (await FhirApi({ url: `/Encounter?patient=${patient}${encounterCode ? `&reason-code=${encounterCode}` : ''}&_count=${count || 50}&_sort=-date` })).data
         console.log(response)
         res.json({ encounters: response.entry ?? [], status: "success" })
         return;
@@ -110,10 +110,7 @@ router.get('/encounters', [requireJWTMiddleware], async (req: Request, res: Resp
         res.json({ error, status: "error" })
         return;
     }
-})
-
-
-// router.get('/')
+   })
 
 
 
