@@ -268,12 +268,11 @@ export default function MOH711Report() {
               <Button
                 variant="contained"
                 disableElevation
-                disabled={results.length < 1}
+                disabled={Object.keys(results).length < 1}
                 onClick={(e) => {
                   exportReport();
                 }}
                 sx={{
-                  // width: "20%",
                   backgroundColor: "#632165",
                   borderRadius: "10px",
                   float: "right",
