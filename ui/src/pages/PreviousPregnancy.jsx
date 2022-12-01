@@ -123,16 +123,16 @@ export default function PreviousPregnancy() {
 
       //Create and Post Observations
       let res = await (
-        await fetch(`${apiHost}/crud/observations`, {
+        await FhirApi({
+          url: `/crud/observations`,
           method: "POST",
-          body: JSON.stringify({
+          data: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
             observations: values,
           }),
-          headers: { "Content-Type": "application/json" },
         })
-      ).json();
+      ).data;
       console.log(res);
 
       if (res.status === "success") {
@@ -175,8 +175,10 @@ export default function PreviousPregnancy() {
   let getEncounterObservations = async (encounter) => {
     setObservations([]);
     handleOpen();
-    let observations = await (
-      await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)
+    let observations = (
+      await FhirApi({
+        url: `/crud/observations?encounter=${encounter}`,
+      })
     ).json();
     setObservations(observations.observations);
     return;

@@ -16,15 +16,15 @@ import {
   FormControlLabel,
   FormLabel,
   CircularProgress,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import {
   Box,
   FormControl,
@@ -34,23 +34,23 @@ import {
   Card,
   CardContent,
   LinearProgress,
-} from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CurrentPatient from '../components/CurrentPatient';
-import { apiHost, createEncounter } from './../lib/api';
-import { timeSince } from '../lib/timeSince';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import physicalExaminationFields from '../lib/forms/physicalExamination';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
+} from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import CurrentPatient from "../components/CurrentPatient";
+import { apiHost, createEncounter, FhirApi } from "./../lib/api";
+import { timeSince } from "../lib/timeSince";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import physicalExaminationFields from "../lib/forms/physicalExamination";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
 
-var Highcharts = require('highcharts');
+var Highcharts = require("highcharts");
 // Load module after Highcharts is loaded
-require('highcharts/modules/exporting')(Highcharts);
+require("highcharts/modules/exporting")(Highcharts);
 
 export default function PhysicalExam() {
   let navigate = useNavigate();
@@ -64,7 +64,7 @@ export default function PhysicalExam() {
   let [physicalExamEncounters, setPhysicalExamEncounters] = useState([]);
   let [data, setData] = useState({});
   let [message, setMessage] = useState(false);
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
   let [observations, setObservations] = useState([]);
   let [openModal, setOpenModal] = useState(false);
   const [preview, setPreview] = useState(false);
@@ -72,10 +72,10 @@ export default function PhysicalExam() {
   const handleClose = () => setOpenModal(false);
   const handleOpen = () => setOpenModal(true);
 
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
 
   const fieldValues = Object.values(physicalExaminationFields).flat();
-  const validationFields = fieldValues.map(item => ({
+  const validationFields = fieldValues.map((item) => ({
     [item.name]: item.validate,
   }));
 
@@ -85,8 +85,8 @@ export default function PhysicalExam() {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({
-      [item.name]: item.type === 'checkbox' ? [] : '',
+    ...fieldValues.map((item) => ({
+      [item.name]: item.type === "checkbox" ? [] : "",
     }))
   );
 
@@ -96,7 +96,7 @@ export default function PhysicalExam() {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
@@ -112,13 +112,13 @@ export default function PhysicalExam() {
     return;
   }
 
-  let getPhysicalExamEncounters = async patientId => {
+  let getPhysicalExamEncounters = async (patientId) => {
     setLoading(true);
     let encounters = await (
-      await fetch(
-        `${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${'PHYSICAL_EXAMINATION'}`
-      )
-    ).json();
+      await FhirApi({
+        url: `${apiHost}/crud/encounters?patient=${patientId}&encounterCode=${"PHYSICAL_EXAMINATION"}`,
+      })
+    ).data;
     console.log(encounters);
     setPhysicalExamEncounters(encounters.encounters);
     setLoading(false);
@@ -126,7 +126,7 @@ export default function PhysicalExam() {
   };
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient') ?? null;
+    let visit = window.localStorage.getItem("currentPatient") ?? null;
     visit = JSON.parse(visit) ?? null;
     if (visit) {
       getPhysicalExamEncounters(visit.id);
@@ -134,8 +134,8 @@ export default function PhysicalExam() {
     }
     console.log(visit);
   }, []);
-  
-  let savePhysicalExam = async values => {
+
+  let savePhysicalExam = async (values) => {
     //get current patient
     if (!visit) {
       prompt(
@@ -146,25 +146,24 @@ export default function PhysicalExam() {
     let patient = visit.id;
     try {
       //create Encounter
-      let encounter = await createEncounter(patient, 'PHYSICAL_EXAMINATION');
+      let encounter = await createEncounter(patient, "PHYSICAL_EXAMINATION");
       console.log(encounter);
 
       //Create and Post Observations
       let res = await (
-        await fetch(`${apiHost}/crud/observations`, {
-          method: 'POST',
-          body: JSON.stringify({
+        await FhirApi(`${apiHost}/crud/observations`, {
+          method: "POST",
+          data: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
             observations: values,
           }),
-          headers: { 'Content-Type': 'application/json' },
         })
-      ).json();
+      ).data;
       console.log(res);
 
-      if (res.status === 'success') {
-        prompt('Physical Examination saved successfully');
+      if (res.status === "success") {
+        prompt("Physical Examination saved successfully");
         // setValue('2')
         setTimeout(() => {
           getPhysicalExamEncounters(patient);
@@ -182,10 +181,10 @@ export default function PhysicalExam() {
   };
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       setMessage(
-        'No patient visit not been initiated. To start a visit, Select a patient in the Patients list'
+        "No patient visit not been initiated. To start a visit, Select a patient in the Patients list"
       );
       setOpen(true);
       setTimeout(() => {
@@ -197,12 +196,11 @@ export default function PhysicalExam() {
     return;
   }, []);
 
-  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       return;
     }
@@ -211,39 +209,39 @@ export default function PhysicalExam() {
   }, []);
 
   useEffect(() => {
-    if (document.getElementById('container')) {
-      Highcharts.chart('container', {
+    if (document.getElementById("container")) {
+      Highcharts.chart("container", {
         chart: {
-          type: 'line',
+          type: "line",
         },
         title: {
-          text: 'Weight Monitoring',
+          text: "Weight Monitoring",
         },
         subtitle: {
-          text: 'Reload to refresh data',
+          text: "Reload to refresh data",
         },
         xAxis: {
           categories: [
-            '4',
-            '6',
-            '8',
-            '10',
-            '12',
-            '14',
-            '16',
-            '18',
-            '20',
-            '22',
-            '24',
-            '26',
+            "4",
+            "6",
+            "8",
+            "10",
+            "12",
+            "14",
+            "16",
+            "18",
+            "20",
+            "22",
+            "24",
+            "26",
           ],
           title: {
-            text: 'Gestation in weeks',
+            text: "Gestation in weeks",
           },
         },
         yAxis: {
           title: {
-            text: 'Weight',
+            text: "Weight",
           },
         },
         plotOptions: {
@@ -256,44 +254,44 @@ export default function PhysicalExam() {
         },
         series: [
           {
-            name: 'Patient',
+            name: "Patient",
             data: [70, 69, 69, 72, 73, 73, 72, 74, 76, 78, 77, 77],
           },
         ],
       });
       return;
     }
-  }, [document.getElementById('container')]);
+  }, [document.getElementById("container")]);
 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {visit && <CurrentPatient data={visit} />}
 
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
                 value={value}
                 onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
+                variant="scrollable"
+                scrollButtons="auto"
               >
-                <Tab label='Physical Examination' value='1' />
-                <Tab label='Weight Monitoring Chart' value='2' />
+                <Tab label="Physical Examination" value="1" />
+                <Tab label="Weight Monitoring Chart" value="2" />
               </TabList>
             </Box>
-            <TabPanel value='1'>
+            <TabPanel value="1">
               {preview ? (
                 <Preview
-                  title='Patient Registration Preview'
+                  title="Patient Registration Preview"
                   format={physicalExaminationFields}
                   data={{ ...inputData }}
                   close={() => setPreview(false)}
@@ -306,25 +304,25 @@ export default function PhysicalExam() {
                     formik={formik}
                   />
 
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
-                      onClick={e => {
+                      sx={{ backgroundColor: "gray" }}
+                      onClick={(e) => {
                         setPhysicalExam({});
                       }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
-                      type='submit'
+                      variant="contained"
+                      type="submit"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
+                      sx={{ backgroundColor: "#632165" }}
                     >
                       Save
                     </Button>
@@ -334,18 +332,18 @@ export default function PhysicalExam() {
               )}
             </TabPanel>
 
-            <TabPanel value='2'>
+            <TabPanel value="2">
               <Typography
-                variant='p'
-                sx={{ fontSize: 'large', fontWeight: 'bold' }}
+                variant="p"
+                sx={{ fontSize: "large", fontWeight: "bold" }}
               >
                 Weight Monitoring
               </Typography>
               <Divider />
               <p></p>
               <div
-                id='container'
-                style={{ width: '100%', height: '400px' }}
+                id="container"
+                style={{ width: "100%", height: "400px" }}
               ></div>
               <p></p>
             </TabPanel>
@@ -353,20 +351,20 @@ export default function PhysicalExam() {
           <Modal
             keepMounted
             open={openModal}
-            sx={{ overflow: 'scroll' }}
+            sx={{ overflow: "scroll" }}
             onClose={handleClose}
-            aria-labelledby='keep-mounted-modal-title'
-            aria-describedby='keep-mounted-modal-description'
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
           >
             <Box
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '80%',
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "80%",
+                bgcolor: "background.paper",
+                border: "2px solid #000",
                 boxShadow: 24,
                 p: 4,
               }}
@@ -376,38 +374,38 @@ export default function PhysicalExam() {
               {((observations && observations.length < 1) || !observations) && (
                 <>
                   <CircularProgress />
-                  <Typography variant='h6'>Loading</Typography>
+                  <Typography variant="h6">Loading</Typography>
                 </>
               )}
               <Grid container columnSpacing={1}>
                 {observations &&
-                  observations.map(observation => {
+                  observations.map((observation) => {
                     return (
                       <>
                         <Grid item lg={4} xl={6} md={6} sm={12}>
                           <Box
                             sx={{
-                              padding: '1em',
-                              border: '1px grey solid',
-                              borderRadius: '10px',
+                              padding: "1em",
+                              border: "1px grey solid",
+                              borderRadius: "10px",
                             }}
                           >
                             {/* <Typography sx={{ fontWeight: "bold" }} variant="p">Time: {new Date(observation.resource.meta.lastUpdated).toUTCString()}</Typography><br /> */}
                             {/* <Typography variant="p">Observation Code: {JSON.stringify(observation.resource.code.coding)}</Typography> */}
                             {observation.resource.code.coding &&
-                              observation.resource.code.coding.map(entry => {
+                              observation.resource.code.coding.map((entry) => {
                                 return (
                                   <>
-                                    <Typography variant='h6'>
+                                    <Typography variant="h6">
                                       {entry.display}
                                     </Typography>
-                                    <Typography variant='p'>
+                                    <Typography variant="p">
                                       {observation.resource.valueQuantity
                                         ? observation.resource.valueQuantity
                                             .value
                                         : observation.resource.valueString ??
                                           observation.resource.valueDateTime ??
-                                          '-'}
+                                          "-"}
                                     </Typography>
                                     {/* <br /> */}
                                   </>

@@ -10,15 +10,15 @@ import {
   Typography,
   Divider,
   useMediaQuery,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import {
   Box,
   FormControl,
@@ -27,24 +27,24 @@ import {
   MenuItem,
   Card,
   CardContent,
-} from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import { v4 as uuidv4 } from 'uuid';
-import { createEncounter, FhirApi, apiHost } from '../lib/api';
-import CurrentPatient from '../components/CurrentPatient';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import medicalSurgicalForm from '../lib/forms/medicalSurgicalHistory';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
-import { getSections } from '../lib/getFormSections';
+} from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import { v4 as uuidv4 } from "uuid";
+import { createEncounter, FhirApi, apiHost } from "../lib/api";
+import CurrentPatient from "../components/CurrentPatient";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import medicalSurgicalForm from "../lib/forms/medicalSurgicalHistory";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
+import { getSections } from "../lib/getFormSections";
 
 export default function ANCProfile() {
   let [visit, setVisit] = useState();
@@ -52,15 +52,15 @@ export default function ANCProfile() {
   let [open, setOpen] = useState(false);
   let [data, setData] = useState({});
   let [message, setMessage] = useState(false);
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
   let [medicalHistory, setMedicalHistory] = useState({});
 
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
   const [inputData, setInputData] = useState({});
   const [preview, setPreview] = useState(false);
 
   const fieldValues = Object.values(medicalSurgicalForm).flat();
-  const validationFields = fieldValues.map(item => ({
+  const validationFields = fieldValues.map((item) => ({
     [item.name]: item.validate,
   }));
 
@@ -70,8 +70,8 @@ export default function ANCProfile() {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({
-      [item.name]: item.type === 'checkbox' ? [] : '',
+    ...fieldValues.map((item) => ({
+      [item.name]: item.type === "checkbox" ? [] : "",
     }))
   );
 
@@ -81,7 +81,7 @@ export default function ANCProfile() {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
@@ -101,12 +101,12 @@ export default function ANCProfile() {
     setValue(newValue);
     return;
   };
-  const handleChanges = event => {
+  const handleChanges = (event) => {
     console.log(event);
     return;
   };
 
-  let saveMedicalHistory = async values => {
+  let saveMedicalHistory = async (values) => {
     console.log(values);
     //get current patient
     if (!visit) {
@@ -118,25 +118,25 @@ export default function ANCProfile() {
     let patient = visit.id;
     try {
       //create Encounter
-      let encounter = await createEncounter(patient, 'MEDICAL_HISTORY');
+      let encounter = await createEncounter(patient, "MEDICAL_HISTORY");
       console.log(encounter);
 
       //Create and Post Observations
-      let res = await (
-        await fetch(`${apiHost}/crud/observations`, {
-          method: 'POST',
-          body: JSON.stringify({
+      let res = (
+        await FhirApi({
+          url: `/crud/observations`,
+          method: "POST",
+          data: JSON.stringify({
             patientId: patient,
             encounterId: encounter,
             observations: medicalHistory,
           }),
-          headers: { 'Content-Type': 'application/json' },
         })
-      ).json();
+      ).data;
       console.log(res);
 
-      if (res.status === 'success') {
-        prompt('Medical and Surgical History saved successfully');
+      if (res.status === "success") {
+        prompt("Medical and Surgical History saved successfully");
         navigate(`/patients/${patient}`);
         return;
       } else {
@@ -151,7 +151,7 @@ export default function ANCProfile() {
   };
 
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       prompt(
         "No patient visit not been initiated. To start a visit, Select a patient in the Patient's list"
@@ -163,42 +163,42 @@ export default function ANCProfile() {
   }, []);
 
   useEffect(() => {
-    if (getCookie('token')) {
+    if (getCookie("token")) {
       return;
     } else {
-      window.localStorage.setItem('next_page', '/patient-profile');
-      navigate('/login');
+      window.localStorage.setItem("next_page", "/patient-profile");
+      navigate("/login");
       return;
     }
   }, []);
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {visit && <CurrentPatient data={visit} />}
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
                 value={value}
                 onChange={handleChange}
-                variant='scrollable'
-                scrollButtons='auto'
-                aria-label='scrollable auto tabs example'
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="scrollable auto tabs example"
               >
-                <Tab label='Medical and Surgical History' value='1' />
-                <Tab value='2' hidden />
+                <Tab label="Medical and Surgical History" value="1" />
+                <Tab value="2" hidden />
               </TabList>
             </Box>
             {preview ? (
               <Preview
-                title='Patient Registration Preview'
+                title="Patient Registration Preview"
                 format={medicalSurgicalForm}
                 data={{ ...inputData }}
                 close={() => setPreview(false)}
@@ -206,7 +206,7 @@ export default function ANCProfile() {
               />
             ) : (
               <form onSubmit={formik.handleSubmit}>
-                <TabPanel value='1'>
+                <TabPanel value="1">
                   <FormFields
                     formData={getSections(medicalSurgicalForm, 0, 2)}
                     formik={formik}
@@ -214,34 +214,34 @@ export default function ANCProfile() {
 
                   <Divider />
                   <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
-                      onClick={e => {
+                      sx={{ backgroundColor: "gray" }}
+                      onClick={(e) => {
                         setMedicalHistory({});
                       }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
-                      onClick={e => {
-                        handleChange(null, '2');
+                      variant="contained"
+                      onClick={(e) => {
+                        handleChange(null, "2");
                       }}
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
+                      sx={{ backgroundColor: "#632165" }}
                     >
                       NEXT
                     </Button>
                   </Stack>
                   <p></p>
                 </TabPanel>
-                <TabPanel value='2'>
+                <TabPanel value="2">
                   <p></p>
                   <FormFields
                     formData={getSections(medicalSurgicalForm, 2, 4)}
@@ -249,25 +249,25 @@ export default function ANCProfile() {
                   />
                   <Divider />
                   <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
-                      onClick={e => {
-                        handleChange(null, '1');
+                      sx={{ backgroundColor: "gray" }}
+                      onClick={(e) => {
+                        handleChange(null, "1");
                       }}
                     >
                       PREVIOUS
                     </Button>
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
-                      type='submit'
+                      sx={{ backgroundColor: "#632165" }}
+                      type="submit"
                     >
                       PREVIEW
                     </Button>
