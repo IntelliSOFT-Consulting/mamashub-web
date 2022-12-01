@@ -56,8 +56,8 @@ export default function PatientDetails() {
     setObservations([]);
     handleOpen();
     let observations = await (
-      await fetch(`${apiHost}/crud/observations?encounter=${encounter}`)
-    ).json();
+      await FhirApi({ url: `/crud/observations?encounter=${encounter}` })
+    ).data;
     console.log(observations);
     setObservations(observations.observations);
     return;
