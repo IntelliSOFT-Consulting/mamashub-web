@@ -13,27 +13,27 @@ import {
   Alert,
   FormControlLabel,
   FormLabel,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import { getCookie } from '../lib/cookie';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CurrentPatient from '../components/CurrentPatient';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import Preview from '../components/Preview';
-import FormFields from '../components/FormFields';
-import malariaProphylaxisFields from '../lib/forms/malariaProphylaxis';
-import { apiHost, createEncounter } from './../lib/api';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getCookie } from "../lib/cookie";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import CurrentPatient from "../components/CurrentPatient";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import Preview from "../components/Preview";
+import FormFields from "../components/FormFields";
+import malariaProphylaxisFields from "../lib/forms/malariaProphylaxis";
+import { apiHost, createEncounter, FhirApi } from "./../lib/api";
 
 export default function MalariaProphylaxis() {
   let [patient, setPatient] = useState({});
@@ -41,18 +41,18 @@ export default function MalariaProphylaxis() {
   let [open, setOpen] = useState(false);
   let [malariaProphylaxis, setMalariaProphylaxis] = useState({});
   let [malariaProphylaxisList, setMalariaProphylaxisList] = useState([]);
-  let [notes, setNotes] = useState('');
+  let [notes, setNotes] = useState("");
 
   let malariaProphylaxisContacts = {
-    'Upto 12 weeks': '-',
-    '13-16 weeks': 'IPTp - SP dose 1',
-    '20 weeks': 'IPTp - SP dose 2',
-    '26 weeks': 'IPTp - SP dose 3',
-    '30 weeks': 'IPTp - SP dose 4',
-    '34 weeks': 'IPTp - SP dose 5',
-    '36 weeks': 'No SP, if last dose received <1 Month ago',
-    '38 weeks': 'IPTp - SP dose 6 (if no dose in past month)',
-    '40 weeks': '-',
+    "Upto 12 weeks": "-",
+    "13-16 weeks": "IPTp - SP dose 1",
+    "20 weeks": "IPTp - SP dose 2",
+    "26 weeks": "IPTp - SP dose 3",
+    "30 weeks": "IPTp - SP dose 4",
+    "34 weeks": "IPTp - SP dose 5",
+    "36 weeks": "No SP, if last dose received <1 Month ago",
+    "38 weeks": "IPTp - SP dose 6 (if no dose in past month)",
+    "40 weeks": "-",
   };
 
   let [visit, setVisit] = useState();
@@ -60,16 +60,16 @@ export default function MalariaProphylaxis() {
   let [preventiveService, setPreventiveService] = useState(null);
   let [maternalSerology, setMaternalSerology] = useState({});
   let [message, setMessage] = useState(false);
-  let isMobile = useMediaQuery('(max-width:600px)');
+  let isMobile = useMediaQuery("(max-width:600px)");
 
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
   const [inputData, setInputData] = useState({});
   const [preview, setPreview] = useState(false);
 
   const fieldValues = Object.values(malariaProphylaxisFields).flat();
   const validationFields = fieldValues
-    .filter(item => item.validate)
-    .map(item => ({
+    .filter((item) => item.validate)
+    .map((item) => ({
       [item.name]: item.validate,
     }));
 
@@ -79,7 +79,7 @@ export default function MalariaProphylaxis() {
 
   const initialValues = Object.assign(
     {},
-    ...fieldValues.map(item => ({ [item.name]: '' }))
+    ...fieldValues.map((item) => ({ [item.name]: "" }))
   );
 
   const formik = useFormik({
@@ -88,15 +88,14 @@ export default function MalariaProphylaxis() {
     },
     validationSchema: validationSchema,
     // submit form
-    onSubmit: values => {
+    onSubmit: (values) => {
       console.log(values);
       setPreview(true);
       setInputData(values);
     },
   });
-  
 
-  let saveMalariaProphylaxis = async values => {
+  let saveMalariaProphylaxis = async (values) => {
     //get current patient
     let patient = visit.id;
     if (!patient) {
@@ -107,26 +106,27 @@ export default function MalariaProphylaxis() {
     }
 
     //create encounter
-    let encounter = await createEncounter(patient, 'MALARIA-PROPHYLAXIS');
+    let encounter = await createEncounter(patient, "MALARIA-PROPHYLAXIS");
     console.log(encounter);
 
     //save observations
     //Create and Post Observations
     let res = await (
-      await fetch(`${apiHost}/crud/observations`, {
-        method: 'POST',
-        body: JSON.stringify({
+      await FhirApi({
+        url: `/crud/observations`,
+        method: "POST",
+        data: JSON.stringify({
           patientId: patient,
           encounterId: encounter,
           observations: values,
         }),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       })
-    ).json();
+    ).data;
     console.log(res);
 
-    if (res.status === 'success') {
-      prompt('Malaria Prophylaxis saved successfully');
+    if (res.status === "success") {
+      prompt("Malaria Prophylaxis saved successfully");
       return;
     } else {
       prompt(res.error);
@@ -138,7 +138,7 @@ export default function MalariaProphylaxis() {
     setValue(newValue);
   };
   useEffect(() => {
-    let visit = window.localStorage.getItem('currentPatient');
+    let visit = window.localStorage.getItem("currentPatient");
     if (!visit) {
       return;
     }
@@ -149,18 +149,18 @@ export default function MalariaProphylaxis() {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Container sx={{ border: '1px white dashed' }}>
+        <Container sx={{ border: "1px white dashed" }}>
           <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             open={open}
-            onClose={''}
+            onClose={""}
             message={message}
-            key={'loginAlert'}
+            key={"loginAlert"}
           />
           {visit && <CurrentPatient data={visit} />}
           {preview ? (
             <Preview
-              title='Malaria Prophylaxis Preview'
+              title="Malaria Prophylaxis Preview"
               format={malariaProphylaxisFields}
               data={{ ...inputData }}
               close={() => setPreview(false)}
@@ -169,20 +169,20 @@ export default function MalariaProphylaxis() {
           ) : (
             <form onSubmit={formik.handleSubmit}>
               <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <TabList
                     value={value}
                     onChange={handleChange}
-                    variant='scrollable'
-                    scrollButtons='auto'
-                    aria-label='scrollable auto tabs example'
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
                   >
-                    <Tab label='Malaria Prophylaxis' value='1' />
+                    <Tab label="Malaria Prophylaxis" value="1" />
                   </TabList>
                 </Box>
 
                 {/* Malaria Prophylaxis */}
-                <TabPanel value='1'>
+                <TabPanel value="1">
                   <FormFields
                     formData={malariaProphylaxisFields}
                     formik={formik}
@@ -190,22 +190,22 @@ export default function MalariaProphylaxis() {
 
                   <Divider />
                   <p></p>
-                  <Stack direction='row' spacing={2} alignContent='right'>
+                  <Stack direction="row" spacing={2} alignContent="right">
                     {!isMobile && (
-                      <Typography sx={{ minWidth: '80%' }}></Typography>
+                      <Typography sx={{ minWidth: "80%" }}></Typography>
                     )}
                     <Button
-                      variant='contained'
+                      variant="contained"
                       disableElevation
-                      sx={{ backgroundColor: 'gray' }}
+                      sx={{ backgroundColor: "gray" }}
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant='contained'
-                      type='submit'
+                      variant="contained"
+                      type="submit"
                       disableElevation
-                      sx={{ backgroundColor: '#632165' }}
+                      sx={{ backgroundColor: "#632165" }}
                     >
                       Save
                     </Button>

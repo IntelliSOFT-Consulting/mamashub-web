@@ -101,8 +101,7 @@ export default function Deworming() {
           patientId: patient,
           encounterId: encounter,
           observations: values,
-        }),
-        headers: { "Content-Type": "application/json" },
+        })
       })
     ).data;
     console.log(res);
