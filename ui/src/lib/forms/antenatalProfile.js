@@ -325,7 +325,7 @@ const antenatalForm = {
       },
     },
   ],
-  'Multiple Babies': [
+  'Multiple Pregnancy': [
     {
       name: 'multipleBabies',
       label: 'Multiple Babies',
