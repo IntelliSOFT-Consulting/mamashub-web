@@ -20,7 +20,6 @@ import { exportToCsv } from "../lib/exportCSV";
 import { DataGrid } from "@mui/x-data-grid";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import Layout from "../components/Layout";
 
 export default function GeneralPatientLevel() {
   const [open, setOpen] = useState(false);
