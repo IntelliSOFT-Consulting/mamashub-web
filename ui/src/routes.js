@@ -12,7 +12,7 @@ import CommunityReferrals from './pages/CommunityReferrals';
 import Observations from './pages/Observations';
 import ViewMOH100 from './pages/ViewMOH100';
 import Treatment from './pages/Treatment';
-import Reports from './pages/Reports';
+import Reports from './pages/MOH405';
 import BirthPlan from './pages/BirthPlan';
 import PreviousPregnancy from './pages/PreviousPregnancy';
 import TetanusDiptheria from './pages/TetanusDiptheria';

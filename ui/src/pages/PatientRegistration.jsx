@@ -17,7 +17,6 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Box } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Patient } from "../lib/fhir/resources";
 import { v4 as uuidv4 } from "uuid";
 import { FhirApi, apiHost } from "./../lib/api";
 import { useFormik } from "formik";
