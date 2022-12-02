@@ -35,7 +35,7 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.hbTest === 'Yes',
+      relevant: formValues => formValues.hbTestHbTestDone === 'Yes',
     },
     {
       name: 'bloodGroupTest',
@@ -167,7 +167,7 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.rbsTest === 'Yes',
+      relevant: formValues => formValues.bloodRBSTest === 'Yes',
     },
   ],
   'Urine Test': [
@@ -214,7 +214,7 @@ const antenatalForm = {
           value: 'Abnormal',
         },
       ],
-      relevant: formValues => formValues.urinalysisTest === 'Yes',
+      relevant: formValues => formValues.urinalysis === 'Yes',
     },
   ],
   'TB Screening': [
@@ -729,6 +729,7 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
+      relevant: formValues => formValues.syphilisTested === 'Yes',
       options: [
         {
           label: 'R',
@@ -794,6 +795,7 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
+        relevant: formValues => formValues.hepatitisBTested === 'Yes',
       options: [
         {
           label: 'R',
