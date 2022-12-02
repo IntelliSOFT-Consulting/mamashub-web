@@ -437,7 +437,7 @@ const physicalExaminationFields = {
       },
     },
     {
-      name: 'fgmDone',
+      name: 'fgmComplications',
       label: 'If yes, select all that apply',
       type: 'checkbox',
       validate: yup.array().min(1),

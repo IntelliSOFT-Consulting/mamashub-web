@@ -210,7 +210,7 @@
         "genitalUlcerPresent": "snomed:267037003-A:Genital ulcer present",
         "genitalUlcerPresentSpecify": "snomed:267037003-A:Genital Ulcer Present Specify",
         "fgmDone": "snomed:95041000119101:FGM Done",
-        "fgmComplications": "snomed:95041000119101-C:FGM Done",
+        "fgmComplications": "snomed:95041000119101-C:FGM Complications",
         "ppYear": "snomed:267037003-A:Year",
         "ancVisits": "snomed:267037003-A:ANC Visits",
         "placeOfBirth": "snomed:267037003-A:Place of Birth",
