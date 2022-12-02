@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { requireJWTMiddleware as requireJWT, decodeSession } from "../lib/jwt";
 import db from '../lib/prisma'
+import { getObservationFromEncounter } from "../lib/utils";
 
 const router = express.Router()
 router.use(express.json())
@@ -8,10 +9,10 @@ router.use(express.json())
 // Get User Information.
 router.get("/", [requireJWT], async (req: Request, res: Response) => {
     try {
-            let data = await db.patient.findMany()
-            res.statusCode = 200
-            res.json({ status: "success", data })
-            return
+        let data = await db.patient.findMany()
+        res.statusCode = 200
+        res.json({ status: "success", data })
+        return
     }
     catch (error) {
         console.error(error)
@@ -22,16 +23,16 @@ router.get("/", [requireJWT], async (req: Request, res: Response) => {
 });
 
 // Modify User Details
-router.get("/:id",[requireJWT], async (req: Request, res: Response) => {
+router.get("/:id", [requireJWT], async (req: Request, res: Response) => {
     try {
         let { id } = req.params
         let patient = await db.patient.findUnique({
-            where:{
-                id:id
+            where: {
+                id: id
             }
         })
         res.statusCode = 201
-        res.json({ status: "success", data:patient })
+        res.json({ status: "success", data: patient })
         return
     } catch (error: any) {
         res.statusCode = 400
@@ -81,6 +82,27 @@ router.post("/:id", [requireJWT], async (req: Request, res: Response) => {
         }
         res.json(error)
         return
+    }
+});
+
+// Modify User Details
+router.get("/weight-monitoring/:id", [requireJWT], async (req: Request, res: Response) => {
+    try {
+        let { id } = req.params
+        let gestationCode = "";
+        let weight = "";
+        
+        let weightObservations = await getObservationFromEncounter(id, "PHYSICAL_EXAMINATION", weight);
+        let gestationObservations = await getObservationFromEncounter(id, "PHYSICAL_EXAMINATION", gestationCode);
+        res.statusCode = 201;
+        res.json({ status: "success", data: [] })
+        return
+    } catch (error: any) {
+        res.statusCode = 400
+        console.error(error)
+        res.json({ status: "error", error: JSON.stringify(error) });
+        return
+
     }
 });
 
