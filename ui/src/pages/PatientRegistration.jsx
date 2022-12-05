@@ -146,7 +146,7 @@ export default function PatientRegistration({ userData }) {
           method: "POST",
           body: JSON.stringify({
             patientId: patientId,
-            encounterId: encounter,
+            encounterId: encounter.id,
             observations: {
               ...observations,
               physicalAddress: `${values.county}, ${values.subCounty}, ${values.ward}, ${values.estate}`,

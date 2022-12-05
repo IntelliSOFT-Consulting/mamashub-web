@@ -81,7 +81,7 @@ let noOfPatients = async (from: Date = new Date(), to: Date = new Date(), facili
     return data.total || (data.entry ? data.entry.length : 0);
 }
 
-let getPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
+export let getPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
     let data;
     if (facilityKmhflCode) {
         data = await (await FhirApi({ url: `/Patient${facilityKmhflCode && `?identifier=${facilityKmhflCode}`}` })).data;
@@ -150,7 +150,7 @@ export let generateMOH711Report = async () => {
 
 export const generateANCSummary = async (facility: string) => {
     return {
-        "No. of ANC Clients": await noOfPatients(undefined, undefined, undefined),
+        "No. of ANC Clients": await noOfPatients(undefined, undefined, facility),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
         "Women positive for Syphyllis": await countObservationsWhere("76272004"),
