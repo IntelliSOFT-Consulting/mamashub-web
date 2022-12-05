@@ -78,8 +78,19 @@ let noOfPatients = async (from: Date = new Date(), to: Date = new Date(), facili
     } else {
         data = await (await FhirApi({ url: `/Patient` })).data;
     }
-    return data.total || (data.entry ? data.entry.length : 0)
+    return data.total || (data.entry ? data.entry.length : 0);
 }
+
+let getPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
+    let data;
+    if (facilityKmhflCode) {
+        data = await (await FhirApi({ url: `/Patient${facilityKmhflCode && `?identifier=${facilityKmhflCode}`}` })).data;
+    } else {
+        data = await (await FhirApi({ url: `/Patient` })).data;
+    }
+    return data.entry ? data.entry : [];
+}
+
 
 
 let countUniqueObservations = async (code: string, value: any | null = null) => {
@@ -89,14 +100,16 @@ let countUniqueObservations = async (code: string, value: any | null = null) => 
 
 
 let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date()) => {
+    let patients = await getPatients();
     let data = await (await FhirApi({ url: `/Patient` })).data;
     return data.total || (data.entry ? data.entry.length : 0)
 }
 
-let getPatientCountByCode = async (code: string) => {
+let getPatientCountByCode = async (code: string, facility: string | null = null) => {
     let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
     return data.total || (data.entry ? data.entry.length : 0)
 }
+
 
 let aggregateByCode = async (code: string) => {
     let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
@@ -137,7 +150,7 @@ export let generateMOH711Report = async () => {
 
 export const generateANCSummary = async (facility: string) => {
     return {
-        "No. of ANC Clients": await noOfPatients(undefined, undefined, facility),
+        "No. of ANC Clients": await noOfPatients(undefined, undefined, undefined),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
         "Women positive for Syphyllis": await countObservationsWhere("76272004"),
