@@ -129,6 +129,7 @@ export default function PatientRegistration({ userData }) {
         method: "POST",
         data: JSON.stringify({ ...values, id: id }),
       });
+      prompt("Registering patient");
 
       console.log(response);
       if (response.status !== "success") {
@@ -138,7 +139,11 @@ export default function PatientRegistration({ userData }) {
       //Create Encounter
       let patientId = id;
       //create encounter
+      setOpen(false)
       let encounter = await createEncounter(patientId, "MATERNAL_PROFILE");
+      prompt("Registering patient");
+
+      
 
       //Create and Post Observations
       let res = await (
@@ -155,6 +160,7 @@ export default function PatientRegistration({ userData }) {
           headers: { "Content-Type": "application/json" },
         })
       ).json();
+      setOpen(false);
 
       if (res.status === "success") {
         prompt("Patient created successfully...");

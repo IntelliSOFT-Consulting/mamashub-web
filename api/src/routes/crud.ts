@@ -38,10 +38,10 @@ router.post('/observations', async (req: Request, res: Response) => {
                 console.log(obs)
                 let o = createObservation(patientId, ov, coding, observationId, encounterId)
                 // console.log(":observation", o)
-                let response = await FhirApi({ url: `/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(o) })
-                console.log(response.data)
+                FhirApi({ url: `/Observation/${observationId}`, method: 'PUT', data: JSON.stringify(o) })
+                // console.log(response.data)
                 // console.log(o)
-                builtObservations.push(response.data);
+                builtObservations.push(observationId);
             }
             else {
                 console.log({ error: `observation key for ${obs} not found`, status: "error" })
@@ -131,7 +131,7 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
                 }
             });
             //get args..
-            
+
             let patients = await (await FhirApi({ url: `/Patient${user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
             // let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
             let _patients = [];
