@@ -274,7 +274,7 @@ const antenatalForm = {
         md: 12,
         lg: 6,
       },
-      relevant: formValues => formValues.tbScreeningResults === 'Positive',
+      relevant: formValues => (formValues.tbScreeningResults === 'Positive' && formValues.tbScreening === 'Yes' ),
     },
     {
       name: 'ipt',
