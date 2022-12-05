@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import { reports } from './allReports.json'
+import { getPatients } from './reports'
 
 export const createObservationValue = (value: number, unit: any) => {
     return { value, unit, system: "http://unitsofmeasure.org" }
@@ -169,11 +170,11 @@ export let clearEncounters = async (patient: string | null, code: string | null 
 export let clearObservations = async (patient: string | null, code: string | null = null) => {
 
     let _observations = (await FhirApi({ url: `/Observation?${(patient && code) ? `patient=${patient}&code=${code}` : code ? `code=${code}` : patient ? `patient=${patient}` : ''} ` })).data
-    let observations: any = _observations.entry ?? []
-    console.log(_observations)
+    let observations: any = _observations.entry ?? [];
+    console.log(_observations);
     for (let observation of observations) {
         console.log(observation)
-        let res = await FhirApi({ url: `/Observation/${observation.resource.id}`, method: "DELETE" })
+        let res = await FhirApi({ url: `/Observation/${observation.resource.id}`, method: "DELETE" });
     }
 }
 
@@ -189,19 +190,26 @@ export const getPatientByIdentifier = async (ancNumber: string | null = null, id
     }
 }
 
-export const getObservationsWhere = async (observationCode: string, value: any | null) => {
+export const getObservationsWhere = async (observationCode: string, value: any | null, facility: string | null = null) => {
     try {
-        let res = await (await FhirApi({ url: `/Observation?code=${observationCode}${value && `&value-string=${value}`}` })).data
-        return res.entry ? res.entry : [];
+        let observations = [];
+        let patients = await getPatients(undefined, undefined, facility);
+        for (let patient of patients) {
+            let res = await (await FhirApi({ url: `/Observation?patient=${patient.id}&code=${observationCode}${value && `&value-string=${value}`}` })).data
+            if (res.entry) {
+                observations.push(res);
+            }
+        }
+        return observations;
     } catch (error) {
         console.error(error);
-        return null;
+        return [];
     }
 }
 
-export const countObservationsWhere = async (observationCode: string, value: any | null = null) => {
+export const countObservationsWhere = async (observationCode: string, value: any | null = null, facility: string | null = null) => {
     try {
-        let res = await getObservationsWhere(observationCode, value);
+        let res = await getObservationsWhere(observationCode, value, facility);
         if (res) {
             return res.length;
         }
@@ -213,29 +221,30 @@ export const countObservationsWhere = async (observationCode: string, value: any
 }
 
 
-// export const getEncountersWhere = async (encounterCode: string, value: any, patient: string | null) => {
-//     try {
-//         let res = await (await FhirApi({ url: `/Encounter?code=${encounterCode}` })).data
-//         return res.entry ? res.entry : [];
-//     } catch (error) {
-//         console.error(error);
-//         return null;
-//     }
-// }
+export const getEncountersWhere = async (encounterCode: string, value: any, patient: string | null, facility: string | null = null) => {
+    try {
+        let encounters = [];
+        let res = await (await FhirApi({ url: `/Encounter?reason-code=${encounterCode}` })).data
+        return res.entry ? res.entry : [];
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
 
-// export const countEncountersWhere = async (observationCode: string, value: any) => {
-//     try {
-//         let res = await getEncountersWhere(observationCode, value);
-//         if (res) {
-//             return res.length;
-//         }
-//         return 0;
-//     } catch (error) {
-//         console.error(error);
-//         return 0;
-//     }
-// }
+export const countEncountersWhere = async (observationCode: string, value: any, patient: string | null, facility: string | null = null) => {
+    try {
+        let res = await getEncountersWhere(observationCode, value, patient, facility);
+        if (res) {
+            return res.length;
+        }
+        return 0;
+    } catch (error) {
+        console.error(error);
+        return 0;
+    }
+}
 
 
 export const getObservationFromEncounter = async (patient: String, encounterCode: String, observationCode: String) => {
@@ -260,66 +269,65 @@ export const countUniquePatients = async (resources: Array<any>, list: Boolean =
 
 
 
-export let Patient = (patient:any) => {
+export let Patient = (patient: any) => {
     return {
-      resourceType: 'Patient',
-      ...(patient.id && { id: patient.id }),
-      meta: {
-        profile: [
-          'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-patient',
-          'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-base-patient',
-          'http://fhir.org/guides/who/core/StructureDefinition/who-patient',
-        ],
-      },
-      identifier: [
-        {
-          "value": patient.idNumber,
-          "id":"NATIONAL_ID"
+        resourceType: 'Patient',
+        ...(patient.id && { id: patient.id }),
+        meta: {
+            profile: [
+                'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-patient',
+                'http://fhir.org/guides/who/anc-cds/StructureDefinition/anc-base-patient',
+                'http://fhir.org/guides/who/core/StructureDefinition/who-patient',
+            ],
         },
-        {
-          "value":patient.ancCode,
-          "id": "ANC_NUMBER"
-        },
-        {
-          "value":patient.kmhflCode,
-          "id": "KMHFL_CODE"
-        }
-      ],
-      name: [
-        {
-          family: patient.names,
-          given: [patient.names],
-        },
-      ],
-      telecom: [
-        {
-          value: patient.phone,
-        },
-      ],
-      birthDate: new Date(patient.dob).toISOString().slice(0, 10),
-      address: [
-        {
-          state: patient.county,
-          district: patient.subCounty,
-          city: patient.ward,
-          village: patient.village
-        },
-      ],
-      contact: [
-        {
-          telecom: [
+        identifier: [
             {
-              value: patient.nextOfKinPhone,
+                "value": patient.idNumber,
+                "id": "NATIONAL_ID"
             },
-          ],
-          name: {
-            family: patient.nextOfKinName,
-          },
-          relationship: [{
-            text: patient.nextOfKinRelationship
-          }]
-        },
-      ],
+            {
+                "value": patient.ancCode,
+                "id": "ANC_NUMBER"
+            },
+            {
+                "value": patient.kmhflCode,
+                "id": "KMHFL_CODE"
+            }
+        ],
+        name: [
+            {
+                family: patient.names,
+                given: [patient.names],
+            },
+        ],
+        telecom: [
+            {
+                value: patient.phone,
+            },
+        ],
+        birthDate: new Date(patient.dob).toISOString().slice(0, 10),
+        address: [
+            {
+                state: patient.county,
+                district: patient.subCounty,
+                city: patient.ward,
+                village: patient.village
+            },
+        ],
+        contact: [
+            {
+                telecom: [
+                    {
+                        value: patient.nextOfKinPhone,
+                    },
+                ],
+                name: {
+                    family: patient.nextOfKinName,
+                },
+                relationship: [{
+                    text: patient.nextOfKinRelationship
+                }]
+            },
+        ],
     };
-  };
-  
+};
