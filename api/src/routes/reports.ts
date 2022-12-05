@@ -69,13 +69,36 @@ router.get('/moh-711', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/anc-summary', async (req: Request, res: Response) => {
+router.get('/anc-summary', [requireJWT], async (req: Request, res: Response) => {
 
     try {
-        res.statusCode = 200;
-        let report = (await generateANCSummary());
-        res.json({ report, status: "success" });
-        return;
+        let token = req.headers.authorization || null;
+        if (!token) {
+            res.statusCode = 401;
+            res.json({ error: "Invalid access token", status: "error" });
+            return;
+        }
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1]);
+        if (decodedSession.type == 'valid') {
+            let userId = decodedSession.session.userId
+            let user = await db.user.findFirst({
+                where: {
+                    id: userId
+                }
+            });
+
+            let { from, to } = req.params;
+            let patientIds: any = [];
+            let patients = await (await FhirApi({ url: `/Patient${user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
+            patients.map((patient: any) => {
+                patientIds.push(patient.resource.id);
+            })
+            let today = new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0).toLocaleString()
+            let report = (await generateANCSummary(user?.facilityKmhflCode || ''));
+            res.statusCode = 200;
+            res.json({ report, status: "success" });
+            return
+        }
     } catch (error) {
         console.error(error);
         res.statusCode = 400;

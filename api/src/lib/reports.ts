@@ -135,9 +135,9 @@ export let generateMOH711Report = async () => {
 
 
 
-export const generateANCSummary = async () => {
+export const generateANCSummary = async (facility: string) => {
     return {
-        "No. of ANC Clients": await noOfPatients(),
+        "No. of ANC Clients": await noOfPatients(undefined, undefined, facility),
         "No. of ANC Revisits": await getPatientCountByCode("74935093"),
         "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
         "Women positive for Syphyllis": await countObservationsWhere("76272004"),
