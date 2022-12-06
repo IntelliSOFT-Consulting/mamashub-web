@@ -110,7 +110,34 @@ router.get('/encounters', [requireJWTMiddleware], async (req: Request, res: Resp
         res.json({ error, status: "error" })
         return;
     }
-   })
+})
+
+router.get('/observation', [], async (req: Request, res: Response) => {
+    try {
+        let { patient, observationCode, observation } = req.query;
+        if (!patient) {
+            res.statusCode = 400;
+            res.json({ error: "patient is required", status: "error" })
+            return;
+        }
+        console.log(patient);
+        let response = await (await FhirApi({ url: `/Observation?sort=-date&patient=${patient}${observationCode ? `&code=${observationCode}` : ''}` })).data;
+        console.log(response);
+
+        if (response.entry && (observationCode || observation)) {
+            res.statusCode = 200;
+            res.json({ [observationCode?.toString() || "data"]: response.entry[0].resource.valueString || null, status: "success" })
+            return;
+        }
+        res.statusCode = 200;
+        res.json({ observations: response.entry || [], status: "success" })
+        return;
+    } catch (error) {
+        res.statusCode = 400;
+        res.json({ error, status: "error" })
+        return;
+    }
+})
 
 
 
@@ -198,5 +225,6 @@ router.post('/patients/:id', [requireJWTMiddleware], async (req: Request, res: R
         return;
     }
 })
+
 
 export default router

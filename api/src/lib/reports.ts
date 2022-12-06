@@ -106,8 +106,15 @@ let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date()) => 
 }
 
 let getPatientCountByCode = async (code: string, facility: string | null = null) => {
-    let data = await (await FhirApi({ url: `/Observation?code=${code}` })).data;
-    return data.total || (data.entry ? data.entry.length : 0)
+    let patients = await getPatients(undefined, undefined, facility);
+    let count = 0;
+    for (let patient of patients) {
+        let data = await (await FhirApi({ url: `/Observation?code=${code}&patient=${patient.resource.id}` })).data;
+        if (data.entry) {
+            count++;
+        }
+    }
+    return count;
 }
 
 
@@ -147,15 +154,14 @@ export let generateMOH711Report = async () => {
 }
 
 
-
 export const generateANCSummary = async (facility: string) => {
     return {
         "No. of ANC Clients": await noOfPatients(undefined, undefined, facility),
-        "No. of ANC Revisits": await getPatientCountByCode("74935093"),
-        "Women with FGM Complications": await countObservationsWhere("95041000119101-C"),
-        "Women positive for Syphyllis": await countObservationsWhere("76272004"),
-        "Women who are HIV Positive": await getPatientCountByCode("31676001-Y"),
-        "Women who have TB": await getPatientCountByCode("371569005"),
-        "Women who have received LLITN": await countObservationsWhere("412894909", "Yes")
+        "No. of ANC Revisits": await getPatientCountByCode("74935093", facility),
+        "Women with FGM Complications": await countObservationsWhere("95041000119101-C", facility),
+        "Women positive for Syphyllis": await countObservationsWhere("76272004", facility),
+        "Women who are HIV Positive": await getPatientCountByCode("31676001-Y", facility),
+        "Women who have TB": await getPatientCountByCode("371569005", facility),
+        "Women who have received LLITN": await countObservationsWhere("412894909", "Yes", facility)
     }
 }
