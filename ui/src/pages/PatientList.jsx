@@ -96,7 +96,7 @@ export default function PatientList() {
         },
       })
     ).json();
-    console.log(data);
+    // console.log(data);
     setProfile(data.data);
   };
 
@@ -122,9 +122,12 @@ export default function PatientList() {
           url: `/crud/patients/${i}`,
           method: "DELETE",
         });
-        console.log(data);
+        // console.log(data);
       }
     }
+    setOpen(!open);
+    setMessage("Successfully deleted");
+    setOpen(!open);
     getPatients();
     return;
   };
