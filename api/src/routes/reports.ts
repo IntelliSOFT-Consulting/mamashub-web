@@ -41,6 +41,7 @@ router.get('/moh-405', [requireJWT], async (req: Request, res: Response) => {
             for (let id of patientIds) {
                 report.push(await generateMOH405Report(id, from || null, to || null));
             }
+            res.append('Expires', new Date(new Date().setMinutes(new Date().getMinutes() + 3)).toISOString())
             res.json({ report, status: "success" });
             return
         }
