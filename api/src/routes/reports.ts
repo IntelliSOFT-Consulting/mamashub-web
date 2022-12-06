@@ -55,12 +55,33 @@ router.get('/moh-405', [requireJWT], async (req: Request, res: Response) => {
     }
 })
 
-router.get('/moh-711', async (req: Request, res: Response) => {
+router.get('/moh-711', [requireJWT], async (req: Request, res: Response) => {
     try {
         res.statusCode = 200;
-        let report = (await generateMOH711Report());
-        res.json({ report, status: "success" });
-        return
+        let token = req.headers.authorization || null;
+        if (!token) {
+            res.statusCode = 401;
+            res.json({ error: "Invalid access token", status: "error" });
+            return;
+        }
+        let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1]);
+        if (decodedSession.type == 'valid') {
+            let userId = decodedSession.session.userId
+            let user = await db.user.findFirst({
+                where: {
+                    id: userId
+                }
+            });
+
+            let report = (await generateMOH711Report(user?.facilityKmhflCode || null));
+            let { from, to } = req.params;
+            let today = new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0).toLocaleString()
+            res.json({ report, status: "success" });
+            return
+        }
+        res.statusCode = 401;
+        res.json({ error: "Invalid access token", status: "error" });
+        return;
     } catch (error) {
         console.error(error);
         res.statusCode = 400;

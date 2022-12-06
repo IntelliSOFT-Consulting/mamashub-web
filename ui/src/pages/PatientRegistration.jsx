@@ -140,7 +140,7 @@ export default function PatientRegistration({ userData }) {
       let patientId = id;
       //create encounter
       setOpen(false)
-      let encounter = await createEncounter(patientId, "MATERNAL_PROFILE");
+      let encounter = await createEncounter(patientId, "PATIENT_INFO");
       prompt("Registering patient");
 
       
