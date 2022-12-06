@@ -13,7 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { apiHost } from "../lib/api";
+import { apiHost, FhirApi } from "../lib/api";
 import { exportToCsv } from "../lib/exportCSV";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -38,12 +38,12 @@ export default function MOH711Report() {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   let getReport = async () => {
-    let data = await (await fetch(`${apiHost}/reports/moh-711`)).json();
+    let data = await (await FhirApi(`/reports/moh-711`)).data;
     setLoading(false);
     if (data.status === "success") {
       setResults(data.report);
       setOpen(true);
-      setMessage("Successfully generated report generated");
+      setMessage("Successfully generated report");
       setTimeout(() => {
         setOpen(false);
       }, 1500);

@@ -37,7 +37,7 @@ export default function GeneralPatientLevel() {
     if (data.status === "success") {
       setResults(data.report);
       setOpen(true);
-      setMessage("Successfully generated report generated");
+      setMessage("Successfully generated report");
       setTimeout(() => {
         setOpen(false);
       }, 1500);

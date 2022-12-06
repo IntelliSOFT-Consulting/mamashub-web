@@ -41,6 +41,7 @@ router.get('/moh-405', [requireJWT], async (req: Request, res: Response) => {
             for (let id of patientIds) {
                 report.push(await generateMOH405Report(id, from || null, to || null));
             }
+            res.append('Expires', new Date(new Date().setMinutes(new Date().getMinutes() + 3)).toISOString())
             res.json({ report, status: "success" });
             return
         }
@@ -76,6 +77,7 @@ router.get('/moh-711', [requireJWT], async (req: Request, res: Response) => {
             let report = (await generateMOH711Report(user?.facilityKmhflCode || null));
             let { from, to } = req.params;
             let today = new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0).toLocaleString()
+            res.append('Expires', new Date(new Date().setMinutes(new Date().getMinutes() + 3)).toISOString())
             res.json({ report, status: "success" });
             return
         }
