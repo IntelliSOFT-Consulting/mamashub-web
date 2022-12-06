@@ -99,10 +99,18 @@ let countUniqueObservations = async (code: string, value: any | null = null) => 
 }
 
 
-let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date()) => {
-    let patients = await getPatients();
-    let data = await (await FhirApi({ url: `/Patient` })).data;
-    return data.total || (data.entry ? data.entry.length : 0)
+let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date(), facility: string | null | undefined = undefined) => {
+    let patients = await getPatients(undefined, undefined, facility)
+    for (let patient of patients) {
+        let encounters = await (await FhirApi({ url: `/Encounter?patient=${patient.resource.id}&_limit=99999` })).data;
+        encounters = encounters?.entry ?? []
+        let visits = [];
+        for (let encounter of encounters) {
+            visits.push(new Date(encounter.resource.meta.lastUpdated).toDateString())
+        }
+        let unique = [...new Set(visits)];
+        return unique.length;
+    }
 }
 
 let getPatientCountByCode = async (code: string, facility: string | null = null) => {
@@ -123,27 +131,27 @@ let aggregateByCode = async (code: string) => {
     return data.total || (data.entry ? data.entry.length : 0)
 }
 
-export let generateMOH711Report = async () => {
+export let generateMOH711Report = async (facility: string | null | undefined = undefined) => {
 
     return {
-        "newAncClients": await noOfPatients(),
-        "revisitAncClients": await getPatientCountByCode("74935093"),
-        "iptDose1": await countObservationsWhere("520474952"),
-        "iptDose2": await countObservationsWhere("520474952"),
-        "iptDose3": await countObservationsWhere("520474952"),
-        "hb": await countObservationsWhere("128241005-R"),
-        "completed4ANCVisits": await getPatientCountByCode("74935093"),
-        "LLINSUnder1Year": await countObservationsWhere("412894909", "Yes"),
-        "LLINSToAncClients": await countObservationsWhere("412894909", "Yes"),
-        "testedForSyphylis": await countObservationsWhere("76272004-Y"),
-        "hivPositive": await getPatientCountByCode("31676001-Y"),
-        "doneBreastExamination": await getPatientCountByCode("185712006"),
-        "10-14": await getPatientCountByCode("74935093"),
-        "15-19": await getPatientCountByCode("74935093"),
-        "20-24": await getPatientCountByCode("74935093"),
-        "pregnancyAtFirstAnc": await getPatientCountByCode("74935093"),
-        "issuedWithIron": await getPatientCountByCode("6709950"),
-        "issuedWithFolic": await getPatientCountByCode("74935093"),
+        "newAncClients": await noOfPatients(undefined, undefined, facility),
+        "revisitAncClients": await getPatientCountByCode("74935093", facility),
+        "iptDose1": await countObservationsWhere("520474952", facility),
+        "iptDose2": await countObservationsWhere("520474952", facility),
+        "iptDose3": await countObservationsWhere("520474952", facility),
+        "hb": await countObservationsWhere("128241005-R", facility),
+        "completed4ANCVisits": await getPatientCountByCode("74935093", facility),
+        "LLINSUnder1Year": await countObservationsWhere("412894909", "Yes", facility),
+        "LLINSToAncClients": await countObservationsWhere("412894909", "Yes", facility),
+        "testedForSyphylis": await countObservationsWhere("76272004-Y", facility),
+        "hivPositive": await getPatientCountByCode("31676001-Y", facility),
+        "doneBreastExamination": await getPatientCountByCode("185712006", facility),
+        "10-14": await getPatientCountByCode("74935093", facility),
+        "15-19": await getPatientCountByCode("74935093", facility),
+        "20-24": await getPatientCountByCode("74935093", facility),
+        "pregnancyAtFirstAnc": await getPatientCountByCode("74935093", facility),
+        "issuedWithIron": await getPatientCountByCode("6709950", facility),
+        "issuedWithFolic": await getPatientCountByCode("74935093", facility),
         "issuedWithCombinedFF": await getPatientCountByCode("74935093"),
         "FGMAssociatedComplication": await getPatientCountByCode("95041000119101-C"),
         "totalScreened": await getPatientCountByCode("74935093"),
