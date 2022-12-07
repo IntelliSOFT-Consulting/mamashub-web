@@ -116,6 +116,7 @@ router.get('/anc-summary', [requireJWT], async (req: Request, res: Response) => 
             patients.map((patient: any) => {
                 patientIds.push(patient.resource.id);
             })
+            console.log(user?.facilityKmhflCode)
             let today = new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0).toLocaleString()
             let report = (await generateANCSummary(user?.facilityKmhflCode || ''));
             res.statusCode = 200;
