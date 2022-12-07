@@ -72,13 +72,8 @@ export let generateMOH405Report = async (patientId: string, from: string | null,
 
 
 let noOfPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
-    let data;
-    if (facilityKmhflCode) {
-        data = await (await FhirApi({ url: `/Patient${facilityKmhflCode && `?identifier=${facilityKmhflCode}`}` })).data;
-    } else {
-        data = await (await FhirApi({ url: `/Patient` })).data;
-    }
-    return data.total || (data.entry ? data.entry.length : 0);
+    let data = await getPatients(undefined, undefined, facilityKmhflCode)
+    return data.length;
 }
 
 export let getPatients = async (from: Date = new Date(), to: Date = new Date(), facilityKmhflCode: string | null = null) => {
@@ -97,7 +92,7 @@ let countUniqueObservations = async (code: string, value: any | null = null) => 
     let list = await getObservationsWhere(code, value)
     return countUniquePatients(list)
 }
- 
+
 
 let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date(), facility: string | null | undefined = undefined) => {
     let patients = await getPatients(undefined, undefined, facility)

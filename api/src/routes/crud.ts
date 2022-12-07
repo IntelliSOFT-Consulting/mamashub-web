@@ -4,6 +4,7 @@ import db from '../lib/prisma';
 import { createEncounter, createObservation, FhirApi, Patient } from "../lib/utils";
 import observationCodes from '../lib/observationCodes.json';
 import { decodeSession, requireJWTMiddleware } from "../lib/jwt";
+import { getPatients } from "../lib/reports";
 
 const router = express.Router();
 
@@ -161,8 +162,8 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
 
             console.log(user?.facilityKmhflCode)
 
-            let patients = await (await FhirApi({ url: `/Patient${user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
-            console.log(patients)
+            let patients = await getPatients(undefined, undefined, user?.facilityKmhflCode)
+            console.log(patients.length)
             // let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
             let _patients = [];
             for (let patient of patients) {
