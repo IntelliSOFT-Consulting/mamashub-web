@@ -159,16 +159,22 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
             });
             //get args..
 
+            console.log(user?.facilityKmhflCode)
+
             let patients = await (await FhirApi({ url: `/Patient${user?.facilityKmhflCode && `?identifier=${user?.facilityKmhflCode}`}` })).data?.entry || [];
+            console.log(patients)
             // let patients = await (await FhirApi({ url: `/Patient?_count=1000` })).data?.entry || [];
             let _patients = [];
             for (let patient of patients) {
                 _patients.push({ ...patient.resource, text: null });
             }
-            console.log(_patients.length);
+            // console.log(_patients.length);
             res.json({ patients: _patients, status: "success", count: _patients.length });
+            return;
         }
-        return
+        res.statusCode = 401;
+        res.json({ error: "Invalid access token", status: "error" });
+        return;
     } catch (error) {
         res.json({ error, status: "error" });
         return;

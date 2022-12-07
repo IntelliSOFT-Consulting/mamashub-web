@@ -177,6 +177,17 @@ const presentPregnancy = {
         md: 12,
         lg: 6,
       },
+      options: [
+        { label: '1st', value: '1' },
+        { label: '2nd', value: '2' },
+        { label: '3rd', value: '3' },
+        { label: '4th', value: '4' },
+        { label: '5th', value: '5' },
+        { label: '6th', value: '6' },
+        { label: '7th', value: '7' },
+        { label: '8th', value: '8' },
+
+      ],
     },
     {
       name: 'presentationLie',
@@ -196,22 +207,6 @@ const presentPregnancy = {
       ],
     },
     {
-      name: 'presentationFoetalHeartRate',
-      label: 'Foetal heart rate',
-      type: 'radio',
-      validate: yup.string().required('Foetal heart rate is required'),
-      width: {
-        xs: 12,
-        sm: 12,
-        md: 12,
-        lg: 6,
-      },
-      options: [
-        { label: 'Normal', value: 'Normal' },
-        { label: 'Abnormal', value: 'Abnormal' },
-      ],
-    },
-    {
       name: 'presentationFoetalMovement',
       label: 'Foetal movement',
       type: 'radio',
@@ -226,6 +221,18 @@ const presentPregnancy = {
         { label: 'Present', value: 'Present' },
         { label: 'Absent', value: 'Absent' },
       ],
+    },
+    {
+      name: 'presentationFoetalHeartRate',
+      label: 'Foetal heart rate',
+      type: 'text',
+      validate: yup.string().required('Foetal heart rate is required'),
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 6,
+      }
     },
     {
       name: 'presentationNextVisit',

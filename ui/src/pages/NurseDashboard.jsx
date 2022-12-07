@@ -36,7 +36,6 @@ export default function NurseDashboard() {
         url: `/auth/me`,
       })
     ).data;
-    // console.log(_data);
     setRole(_data.data.role);
     if (!(_data.data.role === "NURSE")) {
       navigate("/");

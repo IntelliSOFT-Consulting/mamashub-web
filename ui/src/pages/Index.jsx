@@ -36,7 +36,6 @@ export default function Index() {
                 method: "GET",
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getCookie("token")}` }
             })).json());
-        // console.log(_data);
         setRole(_data.data.role);
         if (_data.data.role === "NURSE") {
             navigate("/nurse-dashboard");

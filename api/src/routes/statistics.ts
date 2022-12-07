@@ -35,8 +35,8 @@ router.get("/dashboard", [requireJWT], async (req: Request, res: Response) => {
                 console.log(facilities)
             }
             res.statusCode = 200;
-            res.setHeader('Date', new Date().toString());
-            res.append('Expires', new Date(new Date().setMinutes(new Date().getMinutes() + 3)).toISOString())
+            // res.setHeader('Date', new Date().toString());
+            // res.append('Expires', new Date(new Date().setMinutes(new Date().getMinutes() + 3)).toISOString())
             res.json({ status: "success", data: { users, ...(role === 'ADMINISTRATOR') && { facilities: facilities } } });
             return;
         }
