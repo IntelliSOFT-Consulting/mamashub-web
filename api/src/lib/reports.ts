@@ -97,7 +97,7 @@ let countUniqueObservations = async (code: string, value: any | null = null) => 
     let list = await getObservationsWhere(code, value)
     return countUniquePatients(list)
 }
-
+ 
 
 let noOfANCRevisits = async (from: Date = new Date(), to: Date = new Date(), facility: string | null | undefined = undefined) => {
     let patients = await getPatients(undefined, undefined, facility)

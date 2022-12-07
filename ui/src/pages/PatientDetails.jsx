@@ -14,9 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCookie } from "../lib/cookie";
 import { FhirApi, apiHost } from "../lib/api";
-import Layout from "../components/Layout";
 import { timeSince } from "../lib/timeSince";
 
 export default function PatientDetails() {
