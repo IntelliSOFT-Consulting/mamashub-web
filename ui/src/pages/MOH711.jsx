@@ -38,7 +38,7 @@ export default function MOH711Report() {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   let getReport = async () => {
-    let data = await (await FhirApi(`/reports/moh-711`)).data;
+    let data = await (await FhirApi({ url: `/reports/moh-711` })).data;
     setLoading(false);
     if (data.status === "success") {
       setResults(data.report);
@@ -190,7 +190,7 @@ export default function MOH711Report() {
 
         <Container maxWidth="lg">
           <Grid container spacing={1} padding=".5em">
-            <Grid item xs={12} md={12} lg={4}>
+            {/* <Grid item xs={12} md={12} lg={4}>
               {!isMobile ? (
                 <DesktopDatePicker
                   label="From Date"
@@ -263,7 +263,7 @@ export default function MOH711Report() {
                   )}
                 />
               )}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={12} lg={3}>
               <Button
                 variant="contained"

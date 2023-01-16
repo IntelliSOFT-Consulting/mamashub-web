@@ -38,7 +38,7 @@ export default function PatientDetails() {
       url: `/crud/encounters?patient=${patientId}`,
     });
     setEncounters(visits.data.encounters);
-    console.log(visits);
+    // console.log(visits);
     return;
   };
 
@@ -68,13 +68,14 @@ export default function PatientDetails() {
       method: "GET",
     });
     console.log(data);
+    data = data.data;
     setOpen(false);
     if (data.status === "error") {
       setMessage(data.error);
       setOpen(true);
       return;
     } else {
-      setPatient(data.data.patient);
+      setPatient(data.patient);
       return;
     }
   };
@@ -107,26 +108,20 @@ export default function PatientDetails() {
           <Grid item xs={12} lg={10} md={12} sx={{ paddingTop: "2%" }}>
             <Card sx={{ backgroundColor: "", border: "1px black solid" }}>
               <CardHeader
-                title={`Patient Card`}
+                title={`Patient Information`}
                 sx={{ color: "#632165" }}
               ></CardHeader>
               <Divider></Divider>
               <CardContent>
                 {patient ? (
                   <>
-                    <Typography variant="h5">
-                      {patient.name[0].family || ""}{" "}
-                    </Typography>
-                    <Typography>Patient ID: {id}</Typography>
+                    <Typography variant="h5">{patient.fullNames}</Typography>
+                    <Typography>Patient ID: {(id).substring(0, 7 )}</Typography>
+                    <Typography>ANC Number: {patient.ancNumber}</Typography>
                     <Typography>
-                      Age: {timeSince(new Date(patient.birthDate))}
+                      Age: {timeSince(new Date(patient.dob))}
                     </Typography>
-                    <Typography>
-                      Phone:{" "}
-                      {patient.telecom
-                        ? patient.telecom[0].value
-                        : " - " || "Not Provided"}
-                    </Typography>
+                    <Typography>Phone: {patient.phone}</Typography>
                   </>
                 ) : (
                   <Typography>Loading</Typography>
@@ -234,7 +229,7 @@ export default function PatientDetails() {
                           observation.resource.code.coding.map((entry) => {
                             return (
                               <>
-                                <Typography variant="h6">
+                                <Typography variant="p">
                                   {entry.display}
                                 </Typography>
                                 <Typography variant="p">

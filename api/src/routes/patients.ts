@@ -6,7 +6,7 @@ import { getObservationFromEncounter } from "../lib/utils";
 const router = express.Router()
 router.use(express.json())
 
-// Get User Information.
+// Get Patients
 router.get("/", [requireJWT], async (req: Request, res: Response) => {
     try {
         let data = await db.patient.findMany()

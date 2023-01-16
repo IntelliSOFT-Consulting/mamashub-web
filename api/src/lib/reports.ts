@@ -1,8 +1,6 @@
-import { FhirApi, generateReport, getObservationsWhere, countObservationsWhere, countUniquePatients } from "./utils"
+import { FhirApi, generateReport, getObservationsWhere, countObservationsWhere, countUniquePatients, getAllPatientsObservations, getAllPatientsObservationsMapped, parseFhirPatient } from "./utils"
 import * as observationCodes from "./observationCodes.json"
-
-
-const codes: any = observationCodes.codes;
+import { indexedCodes, codes } from './utils'
 
 let getNoOfAncVisits = async (patientId: string) => {
     let visits = [];
@@ -16,14 +14,25 @@ let getNoOfAncVisits = async (patientId: string) => {
     return unique.length;
 }
 
-export let generateMOH405Report = async (patientId: string, from: string | null, to: string | null) => {
+export let generateMOH405Report = async (kmhflCode: string, from: Date | null, to: Date | null) => {
+    let patientIds: any = [];
+    let _observations: any = [];
+    let report: any = [];
+    let patients = await (await FhirApi({ url: `/Patient${kmhflCode && `?identifier=${kmhflCode}`}` })).data?.entry || [];
+    patients.map((patient: any) => {
+        patientIds.push(patient.resource.id);
+    })
 
-    let fromDate = from ? new Date(from) : new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))
-    let toDate = to ? new Date(to) : new Date();
-    let _toDate = `${toDate.getFullYear()}-${toDate.getMonth()}-${toDate.getDate()}`
-    let _fromDate = `${fromDate.getFullYear()}-${fromDate.getMonth()}-${fromDate.getDate()}`
+    for (let patient of patientIds) {
+        let observations = await getAllPatientsObservationsMapped(patient, from, to)
+        let _patient = await (await FhirApi({ url: `/Patient/${patient}` })).data
+        let demographics = parseFhirPatient(_patient)
+        _observations.push({ ...observations, ...demographics, noOfANCVisits: await getNoOfAncVisits(patient) })
+    }
+
     let reportFields = [
-        'parity', 'gravidae', 'lmp', 'edd',
+        'ancNumber', 'id', 'fullNames', 'dob', 'noOfANCVisits', 'subCounty', 'village', 'estate', 'phone', 'maritalStatus',
+        'county', 'parity', 'gravidae', 'lmp', 'edd',
         'gestation', 'muacCodes', 'height', 'fgm', 'haemoglobin', 'bloodSugar',
         'bloodGroupAndRhesus', 'urynalysis', 'dualTesting', 'testResults',
         'treated', 'hivStatusBeforeANC', 'hivTesting', 'hivResults',
@@ -32,42 +41,20 @@ export let generateMOH405Report = async (patientId: string, from: string | null,
         'ttDose', 'supplimentation', 'receivedLLITN', 'referralsFrom',
         'referralsTo', 'reasonsForReferral', 'remarks'
     ];
-    let results: { [index: string]: any } = {}
-    let _codes = Object.keys(codes).map((code) => {
-        if (reportFields.indexOf(code) > -1) {
-            return String(codes[code]).split(":")[1];
-        }
-    })
-    let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&code=${_codes.join()}&_count=99999&_updatedAt=ge${_fromDate}&_updatedAt=le${_toDate}` })).data
-    observations = observations?.entry ?? [];
-    // console.log(observations)
-    let patient = await (await FhirApi({ url: `/Patient/${patientId}` })).data;
 
-    for (let observation of observations) {
-        for (let code of Object.keys(codes)) {
-            if (reportFields.indexOf(code) > -1) {
-                // console.log(code, observation.resource.code.coding[0].code, String(codes[code]).split(":")[1])
-                if (observation.resource.code.coding[0].code === String(codes[code]).split(":")[1]) {
-                    results[code] = observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString ?? observation.resource.valueDateTime ?? "-")
-                }
+    for (let observation of _observations) {
+        let _res: any = {}
+        for (let k of reportFields) {
+            console.log(k)
+            if (Object.keys(observation).indexOf(k) > -1) {
+                _res[k] = observation[k];
+            } else {
+                _res[k] = "-"
             }
         }
+        report.push(_res);
     }
-
-    let report = {
-        ancNumber: patient.identifier ? patient.identifier[0].value : " - ",
-        id: patient.id,
-        noOfAncVisits: await getNoOfAncVisits(patientId),
-        fullNames: (patient.name ? patient.name[0].family : " ") || " ",
-        dob: new Date(patient.birthDate).toDateString(),
-        subCounty: (patient.address ? patient.address[0].district : " - ") || " - ",
-        county: (patient.address ? patient.address[0].state : " - ") || " - ",
-        village: (patient.address ? patient.address[0].city : " - ") || " - ",
-        estate: (patient.address ? patient.address[0].text : " - ") || " - ",
-        tel: patient.telecom ? patient.telecom[0].value : "-" ?? "-",
-        maritalStatus: patient.maritalStatus ? patient.maritalStatus.text : "-",
-    }
-    return { ...report, ...results }
+    return { report }
 }
 
 
@@ -126,7 +113,7 @@ let aggregateByCode = async (code: string) => {
     return data.total || (data.entry ? data.entry.length : 0)
 }
 
-export let generateMOH711Report = async (facility: string | null | undefined = undefined) => {
+export let generateMOH711Report = async (facility: string | null | undefined = undefined, from: string, to: string) => {
 
     return {
         "newAncClients": await noOfPatients(undefined, undefined, facility),

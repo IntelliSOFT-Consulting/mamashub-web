@@ -26,13 +26,19 @@ export default function GeneralPatientLevel() {
   const [message, setMessage] = useState(false);
   const [results, setResults] = useState([]);
   const [data, setData] = useState({});
+  const [filters, setFilters] = useState({});
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const [selected, setSelected] = useState({});
   const [selectionModel, setSelectionModel] = useState([]);
 
-  let getReport = async () => {
-    let data = await FhirApi({ url: `/reports/moh-405` });
+  let getReport = async (from, to) => {
+    let data = await FhirApi({
+      url:
+        from || to
+          ? `/reports/moh-405?from=${from}&to=${to}`
+          : `/reports/moh-405`,
+    });
     data = data.data;
     if (data.status === "success") {
       setResults(data.report);
@@ -91,7 +97,7 @@ export default function GeneralPatientLevel() {
     { field: "county", headerName: "County", width: 150 },
     { field: "village", headerName: "Village", width: 150 },
     { field: "estate", headerName: "Estate", width: 150 },
-    { field: "tel", headerName: "Tel", width: 120 },
+    { field: "phone", headerName: "Tel", width: 120 },
     { field: "maritalStatus", headerName: "Marital Status", width: 130 },
     { field: "parity", headerName: "Parity", width: 100 },
     { field: "gravidae", headerName: "Gravidae", width: 100 },
@@ -193,19 +199,22 @@ export default function GeneralPatientLevel() {
 
           <br />
           <Grid container spacing={1} padding=".5em">
-            <Grid item xs={12} md={12} lg={4}>
+            <Grid item xs={12} md={12} lg={3}>
               {!isMobile ? (
                 <DesktopDatePicker
                   label="From Date"
                   inputFormat="dd/MM/yyyy"
                   value={
-                    data.fromDate
-                      ? data.fromDate
+                    filters.fromDate
+                      ? filters.fromDate
                       : new Date().setFullYear(2000).toString()
                   }
                   onChange={(e) => {
                     console.log(e);
-                    setData({ ...data, fromDate: new Date(e).toISOString() });
+                    setFilters({
+                      ...filters,
+                      fromDate: new Date(e).toISOString(),
+                    });
                   }}
                   renderInput={(params) => (
                     <TextField {...params} size="small" fullWidth />
@@ -216,13 +225,16 @@ export default function GeneralPatientLevel() {
                   label="From Date"
                   inputFormat="dd/MM/yyyy"
                   value={
-                    data.fromDate
-                      ? data.fromDate
+                    filters.fromDate
+                      ? filters.fromDate
                       : new Date().setFullYear(2000).toISOString()
                   }
                   onChange={(e) => {
                     console.log(e);
-                    setData({ ...data, fromDate: new Date(e).toISOString() });
+                    setFilters({
+                      ...filters,
+                      fromDate: new Date(e).toISOString(),
+                    });
                   }}
                   renderInput={(params) => (
                     <TextField {...params} size="small" fullWidth />
@@ -230,19 +242,22 @@ export default function GeneralPatientLevel() {
                 />
               )}
             </Grid>
-            <Grid item xs={12} md={12} lg={4}>
+            <Grid item xs={12} md={12} lg={3}>
               {!isMobile ? (
                 <DesktopDatePicker
                   label="To Date"
                   inputFormat="dd/MM/yyyy"
                   value={
-                    data.toDate
-                      ? data.toDate
+                    filters.toDate
+                      ? filters.toDate
                       : new Date().setHours(23).toString()
                   }
                   onChange={(e) => {
                     console.log(e);
-                    setData({ ...data, toDate: new Date(e).toISOString() });
+                    setFilters({
+                      ...filters,
+                      toDate: new Date(e).toISOString(),
+                    });
                   }}
                   renderInput={(params) => (
                     <TextField {...params} size="small" fullWidth />
@@ -253,19 +268,40 @@ export default function GeneralPatientLevel() {
                   label="To Date"
                   inputFormat="dd/MM/yyyy"
                   value={
-                    data.toDate
-                      ? data.toDate
+                    filters.toDate
+                      ? filters.toDate
                       : new Date().setHours(23).toISOString()
                   }
                   onChange={(e) => {
                     console.log(e);
-                    setData({ ...data, toDate: new Date(e).toISOString() });
+                    setFilters({
+                      ...filters,
+                      toDate: new Date(e).toISOString(),
+                    });
                   }}
                   renderInput={(params) => (
                     <TextField {...params} size="small" fullWidth />
                   )}
                 />
               )}
+            </Grid>
+            <Grid item xs={12} md={12} lg={3}>
+              <Button
+                variant="contained"
+                disableElevation
+                disabled={results.length < 1}
+                onClick={(e) => {
+                  getReport(filters.fromDate, filters.toDate);
+                }}
+                sx={{
+                  // width: "20%",
+                  backgroundColor: "#632165",
+                  borderRadius: "10px",
+                  float: "right",
+                }}
+              >
+                Filter Report
+              </Button>
             </Grid>
             <Grid item xs={12} md={12} lg={3}>
               <Button
