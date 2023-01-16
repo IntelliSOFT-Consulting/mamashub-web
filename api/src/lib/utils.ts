@@ -2,6 +2,71 @@ import fetch from 'cross-fetch'
 import { v4 as uuidv4 } from 'uuid'
 import { reports } from './allReports.json'
 import { getPatients } from './reports'
+import * as observationCodes from "./observationCodes.json"
+
+
+
+
+export let codes: any = observationCodes.codes;
+
+let codesIndex: any = {}
+Object.keys(codes).map((code: string) => {
+    codesIndex[codes[code].split(":")[1]] = code;
+})
+
+export let indexedCodes = codesIndex;
+
+
+export const parseIdentifiers = async (patientId: string) => {
+    let patient = (await FhirApi({ url: `/Patient?identifier=${patientId}`, })).data
+    if (!(patient?.total > 0 || patient?.entry.length > 0)) {
+        return null;
+    }
+    let identifiers = patient.entry[0].resource.identifier;
+    return identifiers.map((id: any) => {
+        return {
+            [id.id]: id
+        }
+    })
+}
+
+
+
+
+
+
+// parseIdentifiers("KE-2023-01-FBE66").then((res)=> {
+//     console.log(res)
+// })
+export const parseFhirPatient = (patient: any) => {
+    let identifiers = patient.identifier;
+    let _ids: any = {}
+    for (let id of identifiers) {
+        _ids[id.id] = id
+    }
+    return {
+        id: patient.id,
+        fullNames: patient.name[0].family,
+        ancNumber: _ids.ANC_NUMBER?.value || '',
+        idNumber: _ids.NATIONAL_ID?.value || '',
+        otherNames: patient.name[0].given[0],
+        sex: patient.gender,
+        dob: new Date(patient.birthDate).toDateString(),
+        // maritalStatus: patient.maritalStatus.coding[0].display,
+        deceased: patient.deceasedBoolean,
+        phone: patient.telecom[0].value,
+        country: patient.address[0].country,
+        ward: patient.address[0].city,
+        county: patient.address[0].state,
+        subCounty: patient.address[0].district,
+        nextOfKinName: patient.contact[0].relationship[0].text,
+        nextOfKinRelationship: patient.contact[0].name.family,
+        nextOfKinPhone: patient.contact[0].telecom.value,
+    }
+}
+
+
+
 
 export const createObservationValue = (value: number, unit: any) => {
     return { value, unit, system: "http://unitsofmeasure.org" }
@@ -171,9 +236,9 @@ export let clearObservations = async (patient: string | null, code: string | nul
 
     let _observations = (await FhirApi({ url: `/Observation?${(patient && code) ? `patient=${patient}&code=${code}` : code ? `code=${code}` : patient ? `patient=${patient}` : ''} ` })).data
     let observations: any = _observations.entry ?? [];
-    console.log(_observations);
+    // console.log(_observations);
     for (let observation of observations) {
-        console.log(observation)
+        // console.log(observation)
         let res = await FhirApi({ url: `/Observation/${observation.resource.id}`, method: "DELETE" });
     }
 }
@@ -182,11 +247,63 @@ export let clearObservations = async (patient: string | null, code: string | nul
 export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
     try {
         let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data;
-        console.log(res)
+        // console.log(res)
         return res.entry[0].resource || null;
     } catch (error) {
         console.log(error);
         return null;
+    }
+}
+
+
+export const getAllPatientsObservations = async (patientId: string, from: Date | null = null, to: Date | null = null) => {
+    try {
+        let observations = await (await FhirApi({ url: `/Observation?patient=${patientId}&_count=100000&` })).data
+        // console.log(observations)
+        if (observations.total > 0) {
+            let _observations: any = {}
+            observations = observations.entry;
+            for (let observation of observations) {
+                let value = observation.resource.valueQuantity ? observation.resource.valueQuantity.value : (observation.resource.valueString || observation.resource.valueDateTime || "-");
+                _observations[getObservationCode(observation.resource)] = value;
+            }
+            // console.log(_observations);
+            return _observations;
+        }
+        return {}
+
+    } catch (error) {
+        console.log(error)
+        return {}
+    }
+
+}
+
+export const getAllPatientsObservationsMapped = async (patientId: string, from: Date | null = null, to: Date | null = null) => {
+    try {
+        let observations = await getAllPatientsObservations(patientId, from, to);
+        let _map: any = {};
+        Object.keys(observations).map((observation: string) => {
+            _map[codesIndex[observation]] = observations[observation]
+        })
+        // console.log(_map)
+        return _map
+    } catch (error) {
+        console.log(error);
+        return {}
+    }
+
+}
+
+// getAllPatientsObservationsMapped("059dc9eb-790c-48d4-85ea-9c83fa7498f1")
+
+export const getObservationCode = (observation: any) => {
+    try {
+        let code = observation.code.coding[0].code;
+        return code
+    } catch (error) {
+        console.log(error)
+        return null
     }
 }
 
@@ -195,7 +312,8 @@ export const getObservationsWhere = async (observationCode: string, value: any |
         let observations = [];
         let patients = await getPatients(undefined, undefined, facility);
         for (let patient of patients) {
-            let res = await (await FhirApi({ url: `/Observation?patient=${patient.id}&code=${observationCode}${value && `&value-string=${value}`}` })).data
+            // console.log(patient);
+            let res = await (await FhirApi({ url: `/Observation?patient=${patient.resource.id}&code=${observationCode}${value && `&value-string=${value}`}` })).data
             if (res.entry) {
                 observations.push(res);
             }

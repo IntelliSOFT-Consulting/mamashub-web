@@ -4,13 +4,14 @@ import db from '../lib/prisma';
 import { createEncounter, createObservation, FhirApi, Patient } from "../lib/utils";
 import observationCodes from '../lib/observationCodes.json';
 import { decodeSession, requireJWTMiddleware } from "../lib/jwt";
+import { parseFhirPatient } from "../lib/utils";
 import { getPatients } from "../lib/reports";
 
 const router = express.Router();
 
 router.use(express.json());
 
-let codes: { [index: string]: string } = observationCodes.codes
+let codes: { [index: string]: string } = observationCodes.codes;
 
 router.post('/observations', async (req: Request, res: Response) => {
     try {
@@ -89,8 +90,7 @@ router.post('/encounters', [requireJWTMiddleware], async (req: Request, res: Res
             url: `/Encounter/${encounterId}`,
             data: JSON.stringify(encounter),
             method: 'PUT',
-        })).data
-        // console.log(response)
+        })).data;
         res.json({ status: "success", id: response.id, encounter: encounter })
         return;
     } catch (error) {
@@ -152,7 +152,7 @@ router.get('/patients', [requireJWTMiddleware], async (req: Request, res: Respon
         }
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1]);
         if (decodedSession.type == 'valid') {
-            let userId = decodedSession.session.userId
+            let userId = decodedSession.session.userId;
             let user = await db.user.findFirst({
                 where: {
                     id: userId
@@ -205,12 +205,14 @@ router.get('/patients/:id', [requireJWTMiddleware], async (req: Request, res: Re
     try {
         let token = req.headers.authorization || null;
         let { id } = req.params;
-        let response = await FhirApi({ url: `/Patient/${id}`, method: "GET" })
-        console.log(response);
-        res.json({ patient: response.data, status: "success", id });
+        let response = await (await FhirApi({ url: `/Patient/${id}`, method: "GET" })).data
+        let patient = parseFhirPatient(response)
+        console.log(patient)
+        res.json({ patient: patient, status: "success", id });
         return;
 
     } catch (error) {
+        console.log(error);
         res.json({ error, status: "error" });
         return;
     }

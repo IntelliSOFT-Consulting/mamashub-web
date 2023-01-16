@@ -1,6 +1,7 @@
 {
     "codes": {
         "bodyHeight": "snomed:1153637007:Body height:cm",
+        "ancNumber": "snomed:76967697:ANC Number",
         "bodyWeight": "snomed:726527001:Body weight:kgs",
         "lmp": "snomed:21840007:LMP:weeks",
         "edd": "snomed:161714006:EDD:weeks",
