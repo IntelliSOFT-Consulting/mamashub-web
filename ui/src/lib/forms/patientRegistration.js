@@ -215,6 +215,31 @@ const formData = {
       },
       validate: yup.string(),
     },
+    {
+      name: 'town',
+      label: 'Town/Village',
+      type: 'text',
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 4,
+      },
+      validate: yup.string(),
+    },
+    {
+      name: 'physicalAddress',
+      label: 'Physical Address',
+      type: 'text',
+      width: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 4,
+      },
+      validate: yup.string(),
+    },
+
   ],
   'Next of Kin': [
     {
@@ -303,7 +328,7 @@ const formData = {
       name: 'height',
       label: 'Height (cm)',
       type: 'text',
-      required: true,
+      required: false,
       width: {
         xs: 12,
         sm: 12,
