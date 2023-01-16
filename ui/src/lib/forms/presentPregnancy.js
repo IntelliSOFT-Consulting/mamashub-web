@@ -5,7 +5,7 @@ const presentPregnancy = {
     {
       name: 'presentPregnancyDetailsNumberOfContacts',
       label: 'Number of contacts',
-      type: 'text',
+      type: 'select',
       validate: yup.number().required('Number of contacts is required'),
       width: {
         xs: 12,
@@ -13,6 +13,12 @@ const presentPregnancy = {
         md: 12,
         lg: 6,
       },
+      options: [
+        { value: "1", label: "1" },
+        { value: "2", label: "2" },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' },
+      ],
     },
     {
       name: 'presentPregnancyDetailsDateOfLastContact',
