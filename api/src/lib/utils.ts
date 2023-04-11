@@ -492,6 +492,9 @@ export const createPractitioner = async (userId: string) => {
                 id: userId
             }
         });
+        if (user?.role !== "NURSE"){
+            return null;
+        }
         if (user?.practitionerId) {
             console.log(`Practitioner ${user.practitionerId} already exists`);
             return null;
