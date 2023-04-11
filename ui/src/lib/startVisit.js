@@ -21,7 +21,7 @@ export let startVisit = async (patientId) => {
         let patient = await getPatientDetails(patientId)
         patient = patient.patient;
         console.log(patient);
-        let name = (patient.surname);
+        let name = (patient.fullNames);
         let id = patient.id;
         let age = timeSince(new Date(patient.dob));
         window.localStorage.setItem("currentPatient", JSON.stringify({ name, id, age }));

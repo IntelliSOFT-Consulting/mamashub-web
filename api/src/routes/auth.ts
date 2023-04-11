@@ -3,6 +3,7 @@ import { requireJWTMiddleware as requireJWT, encodeSession, decodeSession } from
 import db from '../lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { sendPasswordResetEmail, validateEmail, sendWelcomeEmail } from "../lib/email";
+import { createPractitioner } from "../lib/utils";
 
 const router = express.Router()
 router.use(express.json())
@@ -20,6 +21,8 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
         let decodedSession = decodeSession(process.env['SECRET_KEY'] as string, token.split(' ')[1])
         if (decodedSession.type == 'valid') {
             let userId = decodedSession.session.userId
+            // console.log("user id", userId)
+            let practitioner = await createPractitioner(userId);
             let user = await db.user.findFirst({
                 where: {
                     id: userId
@@ -27,15 +30,16 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             })
             let responseData = {
                 id: user?.id, createdAt: user?.createdAt, updatedAt: user?.updatedAt, names: user?.names, email: user?.email, role: user?.role,
-                kmhflCode: user?.facilityKmhflCode, phone: user?.phone
+                kmhflCode: user?.facilityKmhflCode, phone: user?.phone, practitionerId: user?.practitionerId
             }
             if (user?.role !== "ADMINISTRATOR") {
                 let facility = await db.facility.findFirst({
                     where: {
                         ...(user?.facilityKmhflCode) && { kmhflCode: user.facilityKmhflCode }
                     }
-                })
-                res.statusCode = 200
+                });
+                console.log(responseData)
+                res.statusCode = 200;
                 res.json({ data: { ...responseData, facilityName: facility?.name }, status: "success" })
                 return
             }
@@ -154,8 +158,17 @@ router.post("/register", async (req: Request, res: Response) => {
                 email, names, role: (role), salt: salt, password: _password, facilityKmhflCode: kmhflCode || null, phone
 
             }
-        })
-        console.log(user)
+        });
+        if (user.role === "NURSE") {
+            db.user.update({
+                where: {
+                    id: user.id
+                }, data: {
+                    practitionerId: await createPractitioner(user.id)
+                }
+            })
+        }
+        // console.log(user)
         let userId = user.id
         let session = encodeSession(process.env['SECRET_KEY'] as string, {
             createdAt: ((new Date().getTime() * 10000) + 621355968000000000),
@@ -174,7 +187,10 @@ router.post("/register", async (req: Request, res: Response) => {
         let resetUrl = `${process.env['WEB_URL']}/new-password?id=${user?.id}&token=${user?.resetToken}`
         let response = await sendWelcomeEmail(user, resetUrl)
         // console.log("Email API Response: ", response)
-        let responseData = { id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email, role: user.role, phone: user.phone }
+        let responseData = {
+            id: user.id, createdAt: user.createdAt, updatedAt: user.updatedAt, names: user.names, email: user.email,
+            role: user.role, phone: user.phone, practitionerId: user.practitionerId
+        }
         res.statusCode = 201
         res.json({ user: responseData, status: "success", message: `Password reset instructions have been sent to your email, ${user?.email}` })
         return

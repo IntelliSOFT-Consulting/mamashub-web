@@ -33,6 +33,7 @@ export default function GeneralPatientLevel() {
   const [selectionModel, setSelectionModel] = useState([]);
 
   let getReport = async (from, to) => {
+    setResults([]);
     let data = await FhirApi({
       url:
         from || to
