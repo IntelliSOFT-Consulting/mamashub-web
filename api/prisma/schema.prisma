@@ -27,6 +27,7 @@ model User {
   facility            Facility? @relation(fields: [facilityKmhflCode], references: [kmhflCode])
   facilityKmhflCode   String?
   disabled            Boolean   @default(false)
+  practitionerId      String?
 }
 
 model Patient {
@@ -51,7 +52,7 @@ model Facility {
   data      Json     @default("{\"county\":\"\", \"subCounty\":\"\"}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  disabled Boolean @default(false)
+  disabled  Boolean  @default(false)
 
   User User[]
 }

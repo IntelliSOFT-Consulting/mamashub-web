@@ -4,8 +4,7 @@ import { reports } from './allReports.json'
 import { getPatients } from './reports'
 import * as observationCodes from "./observationCodes.json"
 
-
-
+import db from './prisma'
 
 export let codes: any = observationCodes.codes;
 
@@ -16,22 +15,69 @@ Object.keys(codes).map((code: string) => {
 
 export let indexedCodes = codesIndex;
 
-
-export const parseIdentifiers = async (patientId: string) => {
-    let patient = (await FhirApi({ url: `/Patient?identifier=${patientId}`, })).data
-    if (!(patient?.total > 0 || patient?.entry.length > 0)) {
+export const parseIdentifiers = async (patientId: string | null = null, patientResource: any | null = null) => {
+    try {
+        if (patientId) {
+            let patient = (await FhirApi({ url: `/Patient/${patientId}`, })).data
+            if (!(patient?.total > 0 || patient?.entry.length > 0)) {
+                return null;
+            }
+            let identifiers = patient.entry[0].resource.identifier;
+            return identifiers.map((id: any) => {
+                return {
+                    [id.id]: id
+                }
+            })
+        } else if (patientResource) {
+            let identifiers = patientResource.identifier;
+            return identifiers.map((id: any) => {
+                return {
+                    [id.id]: id
+                }
+            })
+        }
+    } catch (error) {
+        console.log(error);
         return null;
     }
-    let identifiers = patient.entry[0].resource.identifier;
-    return identifiers.map((id: any) => {
-        return {
-            [id.id]: id
-        }
-    })
 }
 
 
 
+export const getRegistrationDate = async (patientId: string | null = null, patientResource: any | null = null) => {
+    try {
+        if (patientId) {
+            let patient = await (await FhirApi({ url: `/Patient/${patientId}/_history/1` })).data;
+            return patient.meta.lastUpdated;
+        }
+        else if (patientResource) {
+            return patientResource.meta.lastUpdated;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const filterPatientsByRegistrationDate = async (kmhflCode: string, from: Date, to: Date) => {
+    try {
+        let _patients = await (await FhirApi({ url: `/Patient/_history/1` })).data;
+        let patients = [];
+        for (let patient of _patients) {
+            let registrationDate = await getRegistrationDate(null, patient.resource);
+            let identifiers = await parseIdentifiers(null, patient);
+            if (registrationDate >= from && registrationDate <= to && identifiers.KMHFL_CODE.value === kmhflCode) {
+                patients.push(patient.resource);
+            }
+        }
+        return patients;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
 
 
 
@@ -244,6 +290,7 @@ export let clearObservations = async (patient: string | null, code: string | nul
 }
 
 
+//PATIENT UTILS
 export const getPatientByIdentifier = async (ancNumber: string | null = null, idNumber: string | null = null) => {
     try {
         let res = await (await FhirApi({ url: `/Patient?identifier=${idNumber ?? ancNumber}` })).data;
@@ -273,7 +320,7 @@ export const getAllPatientsObservations = async (patientId: string, from: Date |
         return {}
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return {}
     }
 
@@ -297,6 +344,8 @@ export const getAllPatientsObservationsMapped = async (patientId: string, from: 
 
 // getAllPatientsObservationsMapped("059dc9eb-790c-48d4-85ea-9c83fa7498f1")
 
+
+//OBSERVATION UTILS
 export const getObservationCode = (observation: any) => {
     try {
         let code = observation.code.coding[0].code;
@@ -338,7 +387,7 @@ export const countObservationsWhere = async (observationCode: string, value: any
     }
 }
 
-
+// ENCOUNTER UTILS
 export const getEncountersWhere = async (encounterCode: string, value: any, patient: string | null, facility: string | null = null) => {
     try {
         let encounters = [];
@@ -399,30 +448,14 @@ export let Patient = (patient: any) => {
             ],
         },
         identifier: [
-            {
-                "value": patient.idNumber,
-                "id": "NATIONAL_ID"
-            },
-            {
-                "value": patient.ancCode,
-                "id": "ANC_NUMBER"
-            },
-            {
-                "value": patient.kmhflCode,
-                "id": "KMHFL_CODE"
-            }
+            { "value": patient.idNumber, "id": "NATIONAL_ID" },
+            { "value": patient.ancCode, "id": "ANC_NUMBER" },
+            { "value": patient.kmhflCode, "id": "KMHFL_CODE" }
         ],
         name: [
-            {
-                family: patient.names,
-                given: [patient.names],
-            },
+            { family: patient.names, given: [patient.names], },
         ],
-        telecom: [
-            {
-                value: patient.phone,
-            },
-        ],
+        telecom: [{ value: patient.phone, },],
         birthDate: new Date(patient.dob).toISOString().slice(0, 10),
         address: [
             {
@@ -449,3 +482,45 @@ export let Patient = (patient: any) => {
         ],
     };
 };
+
+
+
+export const createPractitioner = async (userId: string) => {
+    try {
+        let user = await db.user.findFirst({
+            where: {
+                id: userId
+            }
+        });
+        if (user?.practitionerId) {
+            console.log(`Practitioner ${user.practitionerId} already exists`);
+            return null;
+        }
+        let data = {
+            resourceType: "Practitioner",
+            name: [{
+                "use": "usual",
+                "text": user?.names
+            }]
+        }
+        let res = await FhirApi({ url: `/Practitioner`, method: "POST", data: JSON.stringify(data) });
+        await db.user.update({
+            where: { id: userId }, data: { practitionerId: res.data.id }
+        });
+        return res.data.id;
+    } catch (error) {
+        // console.error(error);
+        return null;
+    }
+}
+
+export const Practitioner = async (id: string) => {
+    try {
+        let res = await FhirApi({ url: `/Practitioner/${id}`, method: "GET" });
+        console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}

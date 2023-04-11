@@ -4,7 +4,7 @@ import { indexedCodes, codes } from './utils'
 
 let getNoOfAncVisits = async (patientId: string) => {
     let visits = [];
-    let encounters = await (await FhirApi({ url: `/Encounter?patient=${patientId}&_limit=99999` })).data
+    let encounters = await (await FhirApi({ url: `/Encounter?patient=${patientId}&_limit=100000` })).data
     encounters = encounters?.entry ?? []
 
     for (let encounter of encounters) {
