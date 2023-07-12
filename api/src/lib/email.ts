@@ -69,7 +69,7 @@ export let sendWelcomeEmail = async (user:any, resetLink:string) => {
                 email: "railamolo@gmail.com"
             },
             body: `Dear ${user.names},\n\n\nUse the link below to create your password \n\n${resetLink}`,
-            html: `Dear ${user.names},\n\n\nUse the link below to create your password \n\n${resetLink}`,
+            html: "",
         })
         return response
     } catch (error) {
