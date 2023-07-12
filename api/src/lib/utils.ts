@@ -492,7 +492,8 @@ export const createPractitioner = async (userId: string) => {
                 id: userId
             }
         });
-        if (user?.role !== "NURSE"){
+        if (!(user?.role === "NURSE" || user?.role === "CHW")){
+            console.log(`Practitioner supported for CHW and NURSE users only`)
             return null;
         }
         if (user?.practitionerId) {
