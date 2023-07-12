@@ -44,19 +44,8 @@ export let sendPasswordResetEmail = async (user:any, resetLink:string) => {
                 name: "Mama's Hub",
                 email: "railamolo@gmail.com"
             },
-            body: `Dear ${user.username},\n\n\nUse the link below to reset your password \n\n${resetLink}`,
-            html: `
-            <a href=${"https://devmhis.netlify.app"}><button style="background-color: #632165;border: none;padding: 15px 32px;color: white;width: 400px;font-weight: bold;">Mama's Hub</button></a>
-            
-            <br/>
-            <p>Dear ${user.username},<p>
-            <h3>Click on the button or link below to reset your password<h3/>
-            <a href=${resetLink}><button style="background-color:#632165;border: none;padding: 15px 32px;color:white;">Click Here</button></a>
-            <br/><br/>
-            <a href=${resetLink}>Reset Link</a>
-            <br/><br/>
-            <a href=${"https://devmhis.netlify.app"}>MHIS Website</a>
-            `
+            body: `Dear ${user.names},\n\n\nUse the link below to reset your password \n\n${resetLink}`,
+            html: ""
         })
         return response
     } catch (error) {
@@ -79,22 +68,8 @@ export let sendWelcomeEmail = async (user:any, resetLink:string) => {
                 name: "Mama's Hub",
                 email: "railamolo@gmail.com"
             },
-            body: `Dear ${user.names.split(" ")[0]},\n\n\nUse the link below to create your password \n\n${resetLink}`,
-            html: `
-            <div style="margin:auto; padding: 2em;">
-            <a href=${"https://devmhis.netlify.app"}><button style="background-color: #632165;border: none;padding: 15px 32px;color: white;width: 400px;font-weight: bold;">Mama's Hub</button></a>
-            
-            <br/>
-            <p>Dear ${user.username},<p>
-            <h3>Click on the button or link below to create your password<h3/>
-            <a href=${resetLink}><button style="background-color:#632165;border: none;padding: 15px 32px;color:white;">Click Here</button></a>
-            <br/><br/>
-            <a href=${resetLink}>Reset Link</a>
-            <br/><br/>
-            <a href=${"https://devmhis.netlify.app"}>Mama's Hub</a>
-            
-            </div>
-            `
+            body: `Dear ${user.names},\n\n\nUse the link below to create your password \n\n${resetLink}`,
+            html: `Dear ${user.names},\n\n\nUse the link below to create your password \n\n${resetLink}`,
         })
         return response
     } catch (error) {

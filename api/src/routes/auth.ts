@@ -48,7 +48,6 @@ router.get("/me", [requireJWT], async (req: Request, res: Response) => {
             return
         }
     } catch (error) {
-        // console.log(error)
         res.statusCode = 400;
         res.json({ status: "error", error: error });
         return;
@@ -199,7 +198,7 @@ router.post("/register", async (req: Request, res: Response) => {
         console.error(error)
         if (error.code === 'P2002') {
             res.json({ status: "error", error: `User with the ${error.meta.target} provided already exists` });
-            return
+            return;
         }
         res.json(error)
         return
